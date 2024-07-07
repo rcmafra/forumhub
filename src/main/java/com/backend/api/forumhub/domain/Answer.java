@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Table(schema = "hub")
@@ -22,7 +23,7 @@ public class Answer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "answer_id")
     private Long id;
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns(value = @JoinColumn(name = "topic_id"), foreignKey = @ForeignKey(name = "topic_id"))
     @JsonIgnore
     private Topic topic;
@@ -33,15 +34,13 @@ public class Answer {
     private boolean betterAnswer;
     @Column
     private LocalDateTime createdAt;
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns(value = @JoinColumn(name = "user_id"), foreignKey = @ForeignKey(name = "user_id"))
     private User author;
 
-    public Answer(Topic topic, String solution, User author){
-        this.topic = topic;
+    public Answer(String solution){
         this.solution = solution;
         this.createdAt = LocalDateTime.now();
-        this.author = author;
     }
 
 }
