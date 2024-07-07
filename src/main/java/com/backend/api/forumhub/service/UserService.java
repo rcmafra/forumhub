@@ -7,6 +7,8 @@ import com.backend.api.forumhub.dto.request.UpdateUser;
 import com.backend.api.forumhub.dto.response.UserResponse;
 import com.backend.api.forumhub.repository.ProfileRepository;
 import com.backend.api.forumhub.repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -37,8 +39,12 @@ public class UserService {
         this.userRepository.save(user);
     }
 
-    public User getUser(Long user_id) {
+    public User getInfoUser(Long user_id) {
         return this.getUserById(user_id);
+    }
+
+    public Page<UserResponse> getAllUser(Pageable pageable){
+        return this.userRepository.findAll(pageable).map(UserResponse::new);
     }
 
     public UserResponse updateUser(Long user_id, UpdateUser updateUser) {
@@ -53,6 +59,7 @@ public class UserService {
         return new UserResponse(user);
     }
 
+    /*todo estabaelecer condicação para deleção de usuários*/
     public void deleteUser(Long user_id){
         User user = this.getUserById(user_id);
         this.userRepository.delete(user);
@@ -62,9 +69,6 @@ public class UserService {
         return this.userRepository.findById(user_id).orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    public User getUserByEmail(String email) {
-        return this.userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
-    }
 
     private Profile getProfileByName(Profile.ProfileName profileName){
         return profileRepository.findByProfileName(profileName).orElseThrow();
