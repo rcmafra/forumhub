@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(schema = "hub")
@@ -30,18 +30,17 @@ public class Topic {
     private String message;
     @Column
     private LocalDateTime createdAt;
-    @Column(name = "status", nullable = false, unique = true)
+    @Column(name = "status", length = 10, nullable = false)
     @Enumerated(EnumType.STRING)
     private Status status;
     @ManyToOne
     @JoinColumns(@JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "user_id")))
     private User author;
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumns(@JoinColumn(name = "course_id", foreignKey = @ForeignKey(name = "course_id")))
     private Course course;
-    @OneToMany(cascade = CascadeType.PERSIST)
-    @JoinColumns(@JoinColumn(name = "answer_id", foreignKey = @ForeignKey(name = "answer_id")))
-    private List<Answer> answer;
+    @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<Answer> answers;
 
     public Topic(String title, String message, User author, Course course){
         this.title = title;
