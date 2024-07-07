@@ -20,7 +20,7 @@ public class Profile {
     @Column(name = "profile_id")
     @JsonIgnore
     private Long id;
-    @Column(name = "profile", nullable = false, unique = true)
+    @Column(name = "profile", length = 50, nullable = false, unique = true)
     @Enumerated(EnumType.STRING)
     private ProfileName profileName;
 

@@ -18,15 +18,14 @@ public class Course {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "course_id")
     private Long id;
-    @Column
+    @Column(nullable = false, unique = true)
     private String name;
-    @Column(name = "category", nullable = false, length = 50, unique = true)
+    @Column(name = "category", nullable = false, length = 50)
     @Enumerated(EnumType.STRING)
     private Category category;
 
-    public Course(String name, Category category){
+    public Course(String name){
         this.name = name;
-        this.category = category;
     }
 
     public enum Category {
