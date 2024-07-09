@@ -2,7 +2,9 @@ package com.backend.api.forumhub.service;
 
 import com.backend.api.forumhub.domain.Course;
 import com.backend.api.forumhub.dto.request.CreateCourseDTO;
-import com.backend.api.forumhub.dto.response.CourseResponse;
+import com.backend.api.forumhub.dto.request.UpdateCourse;
+import com.backend.api.forumhub.dto.response.CourseCollection;
+import com.backend.api.forumhub.dto.response.CourseDTO;
 import com.backend.api.forumhub.repository.CourseRepository;
 import org.springframework.stereotype.Service;
 
@@ -24,8 +26,8 @@ public class CourseService {
         this.courseRepository.save(course);
     }
 
-    public List<CourseResponse> getAllCourse(){
-        return List.of(new CourseResponse(this.courseRepository.findAll()));
+    public List<CourseCollection> getAllCourse(){
+        return List.of(new CourseCollection(this.courseRepository.findAll()));
     }
 
     public void deleteCourse(String courseName){
@@ -38,7 +40,7 @@ public class CourseService {
     }
 
     public Course getCourseById(Long id) throws Exception {
-        return this.courseRepository.findById(id).orElseThrow(() -> new Exception("Course not found"));
+        return this.courseRepository.findById(id).orElseThrow(() -> new Exception("CourseDTO not found"));
     }
 
 

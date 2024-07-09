@@ -1,7 +1,9 @@
 package com.backend.api.forumhub.controller;
 
 import com.backend.api.forumhub.dto.request.CreateCourseDTO;
-import com.backend.api.forumhub.dto.response.CourseResponse;
+import com.backend.api.forumhub.dto.request.UpdateCourse;
+import com.backend.api.forumhub.dto.response.CourseCollection;
+import com.backend.api.forumhub.dto.response.CourseDTO;
 import com.backend.api.forumhub.dto.response.HttpMessage;
 import com.backend.api.forumhub.service.CourseService;
 import jakarta.validation.Valid;
@@ -29,9 +31,9 @@ public class CourseController {
     }
 
     @GetMapping("/")
-    private ResponseEntity<List<CourseResponse>> getAllCourse(){
-        List<CourseResponse> courseResponse = this.courseService.getAllCourse();
-        return new ResponseEntity<>(courseResponse, HttpStatus.OK);
+    private ResponseEntity<List<CourseCollection>> getAllCourse(){
+        List<CourseCollection> courseCollection = this.courseService.getAllCourse();
+        return new ResponseEntity<>(courseCollection, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{courseName}")
