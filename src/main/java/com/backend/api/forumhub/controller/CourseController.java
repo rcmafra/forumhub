@@ -43,4 +43,11 @@ public class CourseController {
 
     }
 
+    @PutMapping("/{courseName}")
+    private ResponseEntity<CourseDTO> updateNameCourse(@PathVariable String courseName, @RequestBody UpdateCourse updateCourse){
+        CourseDTO courseDTO = this.courseService.updateNameCourse(courseName, updateCourse);
+        return ResponseEntity.ok(courseDTO);
+    }
+
+
 }

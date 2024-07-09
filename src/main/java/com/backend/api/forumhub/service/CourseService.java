@@ -35,6 +35,15 @@ public class CourseService {
         this.courseRepository.delete(course);
     }
 
+    public CourseDTO updateNameCourse(String courseName, UpdateCourse updateCourse){
+        Course course1 = this.getCourseByName(courseName);
+        course1.setName(updateCourse.name());
+
+        this.courseRepository.save(course1);
+
+        return new CourseDTO(course1);
+    }
+
     private Course getCourseByName(String courseName){
         return this.courseRepository.findCourseByName(courseName).orElseThrow();
     }
