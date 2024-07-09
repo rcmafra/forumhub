@@ -34,4 +34,11 @@ public class CourseController {
         return new ResponseEntity<>(courseResponse, HttpStatus.OK);
     }
 
+    @DeleteMapping("/delete/{courseName}")
+    private ResponseEntity<HttpMessage> deleteCourse(@PathVariable String courseName){
+        this.courseService.deleteCourse(courseName);
+        return ResponseEntity.ok(new HttpMessage("HttpStatusCode OK"));
+
+    }
+
 }

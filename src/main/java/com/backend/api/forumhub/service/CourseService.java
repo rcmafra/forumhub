@@ -28,6 +28,14 @@ public class CourseService {
         return List.of(new CourseResponse(this.courseRepository.findAll()));
     }
 
+    public void deleteCourse(String courseName){
+        Course course = this.getCourseByName(courseName);
+        this.courseRepository.delete(course);
+    }
+
+    private Course getCourseByName(String courseName){
+        return this.courseRepository.findCourseByName(courseName).orElseThrow();
+    }
 
     public Course getCourseById(Long id) throws Exception {
         return this.courseRepository.findById(id).orElseThrow(() -> new Exception("Course not found"));
