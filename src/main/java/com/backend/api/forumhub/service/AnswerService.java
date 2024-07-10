@@ -2,6 +2,8 @@ package com.backend.api.forumhub.service;
 
 import com.backend.api.forumhub.domain.*;
 import com.backend.api.forumhub.dto.request.AnswerTopicDTO;
+import com.backend.api.forumhub.dto.request.NewAnswer;
+import com.backend.api.forumhub.dto.response.AnswerDTO;
 import com.backend.api.forumhub.repository.AnswerRepository;
 import com.backend.api.forumhub.validator.AuthorizationValidate;
 import org.springframework.stereotype.Service;
@@ -47,6 +49,21 @@ public class AnswerService {
         this.topicService.saveTopic(topic);
         this.saveAnswer(answer);
 
+    }
+
+    public AnswerDTO updateAnswer(Long topic_id, Long answer_id, Long user_id, NewAnswer newAnswer) throws Exception {
+        this.topicService.getTopicById(topic_id);
+        Answer answer = this.getAnswerById(answer_id);
+        User user = this.userService.getUserById(user_id);
+
+        if(!user.getId().equals(answer.getAuthor().getId())){
+            throw new RuntimeException("This answer not belonging to this user");
+        }
+
+        answer.setSolution(newAnswer.solution());
+        this.answerRepository.save(answer);
+
+        return new AnswerDTO(answer);
     }
 
     public void deleteAnswer(Long topic_id, Long answer_id, Long user_id) throws Exception {

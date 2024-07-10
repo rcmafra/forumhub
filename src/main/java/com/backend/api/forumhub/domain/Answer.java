@@ -34,7 +34,7 @@ public class Answer {
     private boolean betterAnswer;
     @Column
     private LocalDateTime createdAt;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumns(value = @JoinColumn(name = "user_id"), foreignKey = @ForeignKey(name = "user_id"))
     private User author;
 

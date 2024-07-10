@@ -1,6 +1,8 @@
 package com.backend.api.forumhub.controller;
 
 import com.backend.api.forumhub.dto.request.AnswerTopicDTO;
+import com.backend.api.forumhub.dto.request.NewAnswer;
+import com.backend.api.forumhub.dto.response.AnswerDTO;
 import com.backend.api.forumhub.dto.response.HttpMessage;
 import com.backend.api.forumhub.service.AnswerService;
 import jakarta.validation.Valid;
@@ -47,5 +49,13 @@ public class AnswerController {
         return new ResponseEntity<>(new HttpMessage("HttpStatusCode OK"), HttpStatus.OK);
     }
 
+    @PutMapping("/{topic_id}/answers/{answer_id}/")
+    private ResponseEntity<AnswerDTO> updateAnswer(@PathVariable Long topic_id, @PathVariable Long answer_id,
+                                                     @AuthenticationPrincipal Jwt jwt, @RequestBody NewAnswer newAnswer) throws Exception {
+
+        Long user_id = Long.parseLong(jwt.getClaim("user_id"));
+        AnswerDTO answerDTO = this.answerService.updateAnswer(topic_id, answer_id, user_id, newAnswer);
+        return ResponseEntity.ok(answerDTO);
+    }
 
 }
