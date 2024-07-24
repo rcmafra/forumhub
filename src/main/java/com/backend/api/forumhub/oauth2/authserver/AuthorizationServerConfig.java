@@ -73,12 +73,12 @@ public class AuthorizationServerConfig {
                 .redirectUri("https://oauth.pstmn.io/v1/callback")
                 .redirectUri("https://oidcdebugger.com/debug")
                 .scopes((scp) -> scp.addAll(Set.of(
-                        "user:write", "user:read", "user:delete",
-                        "course:write", "course:read", "course:delete",
-                        "topic:write", "topic:read", "topic:delete",
-                        "answer:write", "answer:read", "answer:delete")
+                        "myuser:read", "myuser:delete", "myuser:edit", "user:readAll",
+                        "topic:delete", "topic:edit",
+                        "course:create", "courses:read", "course:delete", "course:edit",
+                        "answer:delete", "answer:edit")
                 ))
-                .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
+                .clientSettings(ClientSettings.builder().requireAuthorizationConsent(false).build())
                 .tokenSettings(TokenSettings.builder()
                         .accessTokenTimeToLive(Duration.ofMinutes(15))
                         .authorizationCodeTimeToLive(Duration.ofMinutes(30))
