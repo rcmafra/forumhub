@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
@@ -44,6 +45,8 @@ public class UserController {
     @PreAuthorize("hasAnyRole('MOD', 'ADM') or hasAuthority('SCOPE_myuser:read')")
     @GetMapping("/info-user")
     public ResponseEntity<UserResponse> getInfoUser(@RequestParam(required = false) Long user_id, @AuthenticationPrincipal Jwt jwt) {
+
+        Assert.notNull(jwt, "Bearer token can't be empty");
 
         String claimUserRole = jwt.getClaim("authority").toString().substring(5);
         Long claimUserId = Long.parseLong(jwt.getClaim("user_id"));
@@ -77,6 +80,8 @@ public class UserController {
     public ResponseEntity<UserResponse> updateUser(@RequestParam(required = false) Long user_id, @Valid @RequestBody UpdateUser updateUser,
                                                    @AuthenticationPrincipal Jwt jwt) {
 
+        Assert.notNull(jwt, "Bearer token can't be empty");
+
         String claimUserRole = jwt.getClaim("authority").toString().substring(5);
         Long claimUserId = Long.parseLong(jwt.getClaim("user_id"));
 
@@ -97,6 +102,8 @@ public class UserController {
     @PreAuthorize("hasRole('ADM') or hasAuthority('SCOPE_myuser:delete')")
     @DeleteMapping("/delete")
     public ResponseEntity<HttpMessage> deleteUser(@RequestParam(required = false) Long user_id, @AuthenticationPrincipal Jwt jwt) {
+
+        Assert.notNull(jwt, "Bearer token can't be empty");
 
         String claimUserRole = jwt.getClaim("authority").toString().substring(5);
         Long claimUserId = Long.parseLong(jwt.getClaim("user_id"));
