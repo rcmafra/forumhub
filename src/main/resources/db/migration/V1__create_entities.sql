@@ -37,7 +37,7 @@ CREATE TABLE hub.topic (
 CREATE TABLE hub.answer (
     answer_id NUMBER(19) GENERATED AS IDENTITY,
     solution VARCHAR2(255) NOT NULL,
-    better_answer NUMBER(1,0) DEFAULT 0 CHECK (better_answer in (0,1)),
+    best_answer NUMBER(1,0) DEFAULT 0 CHECK (better_answer in (0,1)),
     created_at TIMESTAMP(6) WITH LOCAL TIME ZONE,
     topic_id NUMBER(19),
     user_id NUMBER(19),

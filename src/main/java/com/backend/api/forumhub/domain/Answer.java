@@ -31,7 +31,7 @@ public class Answer {
     @NotBlank(message = "Solution cannot be left blank")
     private String solution;
     @Column
-    private boolean betterAnswer;
+    private boolean bestAnswer;
     @Column
     private LocalDateTime createdAt;
     @ManyToOne(fetch = FetchType.EAGER)

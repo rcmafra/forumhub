@@ -40,7 +40,7 @@ public class AnswerController {
                                                          @AuthenticationPrincipal Jwt jwt) throws Exception {
 
         Long user_id = Long.parseLong(jwt.getClaim("user_id"));
-        this.answerService.markBetterAnswer(topic_id, answer_id, user_id);
+        this.answerService.markBestAnswer(topic_id, answer_id, user_id);
 
         return new ResponseEntity<>(new HttpMessage("HttpStatusCode OK"), HttpStatus.OK);
     }
