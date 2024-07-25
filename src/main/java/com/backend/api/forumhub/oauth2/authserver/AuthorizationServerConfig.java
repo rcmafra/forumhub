@@ -75,7 +75,7 @@ public class AuthorizationServerConfig {
                 .scopes((scp) -> scp.addAll(Set.of(
                         "myuser:read", "myuser:delete", "myuser:edit", "user:readAll",
                         "topic:delete", "topic:edit",
-                        "course:create", "courses:read", "course:delete", "course:edit",
+                        "course:create", "course:delete", "course:edit",
                         "answer:delete", "answer:edit")
                 ))
                 .clientSettings(ClientSettings.builder().requireAuthorizationConsent(false).build())
