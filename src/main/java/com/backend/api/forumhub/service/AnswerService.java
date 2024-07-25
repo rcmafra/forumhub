@@ -47,7 +47,7 @@ public class AnswerService {
         List<Answer> answersOfTheTopic = this.answerRepository.getAnswerByTopic(topic)
                 .orElse(Collections.emptyList());
 
-        boolean hasBetterAnswer = answersOfTheTopic.stream().anyMatch(Answer::isBetterAnswer);
+        boolean hasBetterAnswer = answersOfTheTopic.stream().anyMatch(Answer::isBestAnswer);
 
         if (!topic.getAuthor().getId().equals(user_id)) {
             throw new Exception("This topic not belonging to this author");
@@ -59,7 +59,7 @@ public class AnswerService {
             Answer answer = getAnswerById(answer_id);
 
             topic.setStatus(Status.SOLVED);
-            answer.setBetterAnswer(true);
+            answer.setBestAnswer(true);
 
             this.topicService.saveTopic(topic);
             this.saveAnswer(answer);
