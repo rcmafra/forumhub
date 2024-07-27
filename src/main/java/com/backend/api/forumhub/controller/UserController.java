@@ -1,8 +1,9 @@
 package com.backend.api.forumhub.controller;
 
+import com.backend.api.forumhub.domain.Profile;
 import com.backend.api.forumhub.dto.request.CreateUserDTO;
-import com.backend.api.forumhub.dto.response.HttpMessage;
 import com.backend.api.forumhub.dto.request.UpdateUser;
+import com.backend.api.forumhub.dto.response.HttpMessage;
 import com.backend.api.forumhub.dto.response.UserResponse;
 import com.backend.api.forumhub.service.UserService;
 import jakarta.validation.Valid;
@@ -14,7 +15,13 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api-forum/v1/forumhub/users")
@@ -22,43 +29,96 @@ public class UserController {
 
     private final UserService userService;
 
-    private UserController(UserService userService){
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 
-    @PostMapping("/create/")
-    private ResponseEntity<HttpMessage> createUser(@Valid @RequestBody CreateUserDTO createUserDTO){
+    @PreAuthorize("permitAll")
+    @PostMapping("/create")
+    public ResponseEntity<HttpMessage> createUser(@Valid @RequestBody CreateUserDTO createUserDTO) {
 
         this.userService.createUser(createUserDTO);
         return new ResponseEntity<>(new HttpMessage("HttpStatusCode OK"), HttpStatus.CREATED);
     }
 
-    @GetMapping("/{user_id}/")
-    private ResponseEntity<UserResponse> getInfoUser(@PathVariable Long user_id) {
 
-        UserResponse userResponse = new UserResponse(this.userService.getInfoUser(user_id));
-        return ResponseEntity.ok(userResponse);
+    @PreAuthorize("hasAnyRole('MOD', 'ADM') or hasAuthority('SCOPE_myuser:read')")
+    @GetMapping("/info-user")
+    public ResponseEntity<UserResponse> getInfoUser(@RequestParam(required = false) Long user_id, @AuthenticationPrincipal Jwt jwt) {
+
+        Assert.notNull(jwt, "Bearer token can't be empty");
+
+        String claimUserRole = jwt.getClaim("authority").toString().substring(5);
+        Long claimUserId = Long.parseLong(jwt.getClaim("user_id"));
+
+        boolean isADM = claimUserRole.equals(Profile.ProfileName.ADM.name());
+        boolean isMOD = claimUserRole.equals(Profile.ProfileName.MOD.name());
+        boolean isBASIC = claimUserRole.equals(Profile.ProfileName.BASIC.name());
+
+        if (isADM || isMOD) {
+            return ResponseEntity.ok(new UserResponse(this.userService.getInfoUser(Objects.requireNonNullElse(user_id, claimUserId))));
+        } else if (isBASIC && Objects.isNull(user_id)) {
+            return ResponseEntity.ok(new UserResponse(this.userService.getInfoUser(claimUserId)));
+        } else {
+            throw new RuntimeException("A solicitação não corresponde ao esperado");
+        }
     }
 
-    @GetMapping("/")
-    private PagedModel<EntityModel<UserResponse>> getAllUser(@PageableDefault Pageable pageable,
-                                                             PagedResourcesAssembler<UserResponse> assembler){
+
+    @PreAuthorize("hasAnyRole('MOD','ADM') and hasAuthority('SCOPE_user:readAll')")
+    @GetMapping
+    public PagedModel<EntityModel<UserResponse>> getAllUser(@PageableDefault Pageable pageable,
+                                                            PagedResourcesAssembler<UserResponse> assembler) {
 
         Page<UserResponse> userResponse = userService.getAllUser(pageable);
         return assembler.toModel(userResponse);
     }
 
-    @PutMapping("/update_info/{user_id}/")
-    private ResponseEntity<UserResponse> updateUser(@PathVariable Long user_id, @Valid @RequestBody UpdateUser updateUser) {
 
-        UserResponse userResponse = this.userService.updateUser(user_id, updateUser);
-        return ResponseEntity.ok(userResponse);
+    @PreAuthorize("hasRole('ADM') or hasAuthority('SCOPE_myuser:edit')")
+    @PutMapping("/update")
+    public ResponseEntity<UserResponse> updateUser(@RequestParam(required = false) Long user_id, @Valid @RequestBody UpdateUser updateUser,
+                                                   @AuthenticationPrincipal Jwt jwt) {
+
+        Assert.notNull(jwt, "Bearer token can't be empty");
+
+        String claimUserRole = jwt.getClaim("authority").toString().substring(5);
+        Long claimUserId = Long.parseLong(jwt.getClaim("user_id"));
+
+        String myUserEditScope = jwt.getClaimAsStringList("scope").stream()
+                .filter(s -> s.equals("myuser:edit")).findFirst().orElse("");
+
+
+        if (myUserEditScope.equals("myuser:edit") && Objects.isNull(user_id)) {
+            return ResponseEntity.ok(this.userService.updateUser(claimUserId, claimUserRole, updateUser));
+        } else if (claimUserRole.equals(Profile.ProfileName.ADM.name()) && Objects.nonNull(user_id)) {
+            return ResponseEntity.ok(this.userService.updateUser(user_id, claimUserRole, updateUser));
+        } else {
+            throw new RuntimeException("A solicitação não corresponde ao esperado");
+        }
     }
 
-    @DeleteMapping("/delete/{user_id}/")
-    private ResponseEntity<HttpMessage> deleteUser(@PathVariable Long user_id){
 
-        this.userService.deleteUser(user_id);
+    @PreAuthorize("hasRole('ADM') or hasAuthority('SCOPE_myuser:delete')")
+    @DeleteMapping("/delete")
+    public ResponseEntity<HttpMessage> deleteUser(@RequestParam(required = false) Long user_id, @AuthenticationPrincipal Jwt jwt) {
+
+        Assert.notNull(jwt, "Bearer token can't be empty");
+
+        String claimUserRole = jwt.getClaim("authority").toString().substring(5);
+        Long claimUserId = Long.parseLong(jwt.getClaim("user_id"));
+
+        String myUserDeleteScope = jwt.getClaimAsStringList("scope").stream()
+                .filter(s -> s.equals("myuser:delete")).findFirst().orElse("");
+
+        if (myUserDeleteScope.equals("myuser:delete") && Objects.isNull(user_id)) {
+            this.userService.deleteUser(claimUserId);
+        } else if (claimUserRole.equals(Profile.ProfileName.ADM.name()) && Objects.nonNull(user_id)) {
+            this.userService.deleteUser(user_id);
+        } else {
+            throw new RuntimeException("A solicitação não corresponde ao esperado");
+        }
+
         return ResponseEntity.ok(new HttpMessage("HttpStatusCode OK"));
     }
 

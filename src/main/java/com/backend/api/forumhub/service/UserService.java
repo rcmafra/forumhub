@@ -1,16 +1,23 @@
 package com.backend.api.forumhub.service;
 
+import com.backend.api.forumhub.domain.Answer;
 import com.backend.api.forumhub.domain.Profile;
+import com.backend.api.forumhub.domain.Topic;
 import com.backend.api.forumhub.domain.User;
 import com.backend.api.forumhub.dto.request.CreateUserDTO;
 import com.backend.api.forumhub.dto.request.UpdateUser;
 import com.backend.api.forumhub.dto.response.UserResponse;
+import com.backend.api.forumhub.repository.AnswerRepository;
 import com.backend.api.forumhub.repository.ProfileRepository;
+import com.backend.api.forumhub.repository.TopicRepository;
 import com.backend.api.forumhub.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -21,11 +28,18 @@ public class UserService {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    private final TopicRepository topicRepository;
 
-    public UserService(UserRepository userRepository, ProfileRepository profileRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    private final AnswerRepository answerRepository;
+
+
+    public UserService(UserRepository userRepository, ProfileRepository profileRepository, BCryptPasswordEncoder bCryptPasswordEncoder,
+                       TopicRepository topicRepository, AnswerRepository answerRepository) {
         this.userRepository = userRepository;
         this.profileRepository = profileRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.topicRepository = topicRepository;
+        this.answerRepository = answerRepository;
     }
 
 
@@ -47,21 +61,28 @@ public class UserService {
         return this.userRepository.findAll(pageable).map(UserResponse::new);
     }
 
-    public UserResponse updateUser(Long user_id, UpdateUser updateUser) {
+    public UserResponse updateUser(Long user_id, String claimUserRole, UpdateUser updateUser) {
         User user = this.getUserById(user_id);
         Profile profile = this.getProfileByName(updateUser.user().getProfile().getProfileName());
 
         user.setName(updateUser.user().getName());
         user.setEmail(updateUser.user().getEmail());
-        user.setProfile(profile);
+
+        if(claimUserRole.equals(Profile.ProfileName.ADM.name())){
+            user.setProfile(profile);
+        }
 
         userRepository.save(user);
         return new UserResponse(user);
     }
 
-    /*todo estabaelecer condicação para deleção de usuários*/
     public void deleteUser(Long user_id){
         User user = this.getUserById(user_id);
+        List<Topic> topics = this.topicRepository.getTopicByAuthor(user).orElse(Collections.emptyList());
+        List<Answer> answers = this.answerRepository.getAnswerByAuthor(user).orElse(Collections.emptyList());
+
+        this.topicRepository.deleteAll(topics);
+        this.answerRepository.deleteAll(answers);
         this.userRepository.delete(user);
     }
 

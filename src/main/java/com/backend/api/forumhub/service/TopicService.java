@@ -1,7 +1,6 @@
 package com.backend.api.forumhub.service;
 
 import com.backend.api.forumhub.domain.Course;
-import com.backend.api.forumhub.domain.Profile;
 import com.backend.api.forumhub.domain.Topic;
 import com.backend.api.forumhub.domain.User;
 import com.backend.api.forumhub.dto.request.CreateTopicDTO;

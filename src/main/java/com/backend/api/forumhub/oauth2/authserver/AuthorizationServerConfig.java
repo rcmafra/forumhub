@@ -7,10 +7,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
@@ -25,8 +23,6 @@ import org.springframework.security.oauth2.server.authorization.settings.ClientS
 import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
 import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
-import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
 import java.time.Duration;
@@ -35,7 +31,6 @@ import java.util.UUID;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
 public class AuthorizationServerConfig {
 
 
@@ -49,27 +44,6 @@ public class AuthorizationServerConfig {
         return http.formLogin(Customizer.withDefaults()).build();
     }
 
-    @Bean
-    @Order(2)
-    public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests((authorize) -> authorize
-                        .anyRequest().permitAll())
-                .csrf(AbstractHttpConfigurer::disable);
-        http.oauth2ResourceServer((resourceServer) -> resourceServer.jwt(jwtConfigurer ->
-                jwtConfigurer.jwtAuthenticationConverter(jwtAuthenticationConverter())));
-        return http.formLogin(Customizer.withDefaults()).build();
-    }
-
-    @Bean
-    public JwtAuthenticationConverter jwtAuthenticationConverter(){
-        JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-        jwtGrantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
-
-        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
-        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
-        return jwtAuthenticationConverter;
-    }
-
 
     @Bean
     public OAuth2TokenCustomizer<JwtEncodingContext> tokenCustomizer(UserRepository userRepository) {
@@ -81,7 +55,7 @@ public class AuthorizationServerConfig {
             context.getClaims().claim("sub", email);
             context.getClaims().claim("user_id", user.getId().toString());
             context.getClaims().claim("name", user.getName());
-            context.getClaims().claim("authorities", user.getProfile().getProfileName());
+            context.getClaims().claim("authority", "ROLE_" + user.getProfile().getProfileName());
         });
     }
 
@@ -98,12 +72,13 @@ public class AuthorizationServerConfig {
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
                 .redirectUri("https://oauth.pstmn.io/v1/callback")
                 .redirectUri("https://oidcdebugger.com/debug")
-                .scopes((scp) -> scp.addAll(Set.of("user:write", "user:read", "user:delete",
-                                                    "course:write", "course:read", "course:delete",
-                                                    "topic:write", "topic:read", "topic:delete",
-                                                    "answer:write", "answer:read", "answer:delete")
+                .scopes((scp) -> scp.addAll(Set.of(
+                        "myuser:read", "myuser:delete", "myuser:edit", "user:readAll",
+                        "topic:delete", "topic:edit",
+                        "course:create", "course:delete", "course:edit",
+                        "answer:delete", "answer:edit")
                 ))
-                .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
+                .clientSettings(ClientSettings.builder().requireAuthorizationConsent(false).build())
                 .tokenSettings(TokenSettings.builder()
                         .accessTokenTimeToLive(Duration.ofMinutes(15))
                         .authorizationCodeTimeToLive(Duration.ofMinutes(30))

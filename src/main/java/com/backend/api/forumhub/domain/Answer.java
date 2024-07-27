@@ -7,9 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @Entity
 @Table(schema = "hub")
@@ -31,10 +31,10 @@ public class Answer {
     @NotBlank(message = "Solution cannot be left blank")
     private String solution;
     @Column
-    private boolean betterAnswer;
+    private boolean bestAnswer;
     @Column
     private LocalDateTime createdAt;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumns(value = @JoinColumn(name = "user_id"), foreignKey = @ForeignKey(name = "user_id"))
     private User author;
 
