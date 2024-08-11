@@ -1,0 +1,65 @@
+#Database connection configuration
+spring:
+  datasource:
+    url: jdbc:oracle:thin:@//localhost:1521/ORCLPDB1
+    username: ${ORACLEDB.USERNAME}
+    password: ${ORACLEDB.PASSWORD}
+    driver:
+      class: oracle.jdbc.driver.OracleDriver
+
+#Show formated SQL statements
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+#Flyway configuration
+  flyway:
+    default-schema: HUB
+    baseline-on-migrate: true
+    enabled: true
+
+#Override duplicated beans encountered in the repositories
+  main:
+    allow-bean-definition-overriding: true
+
+#Authorization server configuration
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://127.0.0.1:8082
+
+#Client User API registration
+      client:
+        registration:
+           forumhub-user:
+             provider: auth-server
+             client-id: hub-user
+             client-secret: user123456
+             client-authentication-method: client_secret_basic
+             authorization-grant-type: client_credentials
+             client-name: forumhub-user
+             scope: myuser:read
+        provider:
+          auth-server:
+              issuer-uri: http://127.0.0.1:8082
+
+#Topic API port
+server:
+   port: 8080
+
+#User client URL
+forumhub:
+    client:
+      user:
+        schema: http
+        host: 127.0.0.1
+        port: 8081
+
+logging:
+  level:
+    org:
+      springframework:
+        security: trace

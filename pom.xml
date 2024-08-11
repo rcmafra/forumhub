@@ -8,11 +8,11 @@
 		<version>3.3.0-SNAPSHOT</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.backend.api</groupId>
-	<artifactId>forumhub</artifactId>
+	<groupId>com.raul.forumhub.topic</groupId>
+	<artifactId>topic</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>forumhub</name>
-	<description>Forum of the questions and answers</description>
+	<description>Topic of the questions and answers</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
@@ -62,7 +62,15 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-oauth2-authorization-server</artifactId>
+			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-client</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webflux</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
