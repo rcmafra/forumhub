@@ -10,13 +10,9 @@
   <component name="MavenProjectsManager">
     <option name="originalFiles">
       <list>
-        <option value="$PROJECT_DIR$/pom.xml" />
-        <option value="$PROJECT_DIR$/../user/pom.xml" />
-        <option value="$PROJECT_DIR$/../authorization-server/pom.xml" />
-        <option value="$PROJECT_DIR$/../topic/pom.xml" />
         <option value="$PROJECT_DIR$/authorization-server/pom.xml" />
-        <option value="$PROJECT_DIR$/user/pom.xml" />
         <option value="$PROJECT_DIR$/topic/pom.xml" />
+        <option value="$PROJECT_DIR$/user/pom.xml" />
       </list>
     </option>
   </component>

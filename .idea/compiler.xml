@@ -7,20 +7,16 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="topic" />
+        <module name="forumhub" />
         <module name="authorization-server" />
         <module name="user" />
-        <module name="topic" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="forumhub" target="17" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="ForumHub" options="-parameters" />
       <module name="authorization-server" options="-parameters" />
-      <module name="forumhub" options="-parameters" />
       <module name="topic" options="-parameters" />
       <module name="user" options="-parameters" />
     </option>

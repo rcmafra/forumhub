@@ -7,9 +7,10 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="topic" />
+        <module name="forumhub" />
         <module name="user" />
         <module name="authorization-server" />
-        <module name="forumhub" />
       </profile>
     </annotationProcessing>
   </component>
@@ -18,6 +19,7 @@
       <module name="ForumHub" options="-parameters" />
       <module name="authorization-server" options="-parameters" />
       <module name="forumhub" options="-parameters" />
+      <module name="topic" options="-parameters" />
       <module name="user" options="-parameters" />
     </option>
   </component>
