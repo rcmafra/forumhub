@@ -152,11 +152,11 @@
       <recent name="com.backend.challenge.ForumHub.dto.request" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Projects\forumhub\topic" />
+      <recent name="C:\Projects\forumhub\user" />
+      <recent name="C:\Projects\forumhub\authorization-server" />
       <recent name="C:\Projects\user\src\main\resources" />
       <recent name="C:\Projects\user\src\test" />
-      <recent name="C:\Projects\authorizationserver\src\main\resources" />
-      <recent name="C:\Projects\ForumHub" />
-      <recent name="C:\Projects\ForumHub\src\main\resources" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Projects\user\src" />
@@ -929,10 +929,14 @@
     {
       "branch": "develop",
       "currentBranchFilter": true
+    },
+    {
+      "branch": "main",
+      "currentBranchFilter": true
     }
   ],
   "lastFilter": {
-    "branch": "develop",
+    "branch": "main",
     "currentBranchFilter": true
   }
 }]]></component>
