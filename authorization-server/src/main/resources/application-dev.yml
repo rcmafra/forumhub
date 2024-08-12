@@ -1,0 +1,38 @@
+#Database connection configuration
+spring:
+  datasource:
+    url: jdbc:oracle:thin:@//localhost:1521/ORCLPDB1
+    username: ${ORACLEDB.USERNAME}
+    password: ${ORACLEDB.PASSWORD}
+    driver:
+      class: oracle.jdbc.driver.OracleDriver
+
+#Show formated SQL statements
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    generate-ddl: true
+
+
+#Override duplicated beans encountered in the repositories
+  main:
+    allow-bean-definition-overriding: true
+
+#Authorization server configuration
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://127.0.0.1:8082
+
+#Auth-Server port
+server:
+   port: 8082
+
+logging:
+  level:
+    org:
+      springframework:
+        security: trace
