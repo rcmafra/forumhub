@@ -5,6 +5,7 @@ import com.raul.forumhub.auth.server.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,7 +15,11 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
-import org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository;
+import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationConsentService;
+import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationService;
+import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationConsentService;
+import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
+import org.springframework.security.oauth2.server.authorization.client.JdbcRegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
@@ -126,23 +131,22 @@ public class AuthorizationServerConfig {
                         .reuseRefreshTokens(false).build())
                 .build();
 
-        return new InMemoryRegisteredClientRepository(topicApiClient, userApiClient);
+        return new JdbcRegisteredClientRepository(jdbcTemplate);
     }
 
 
+    @Bean
+    public OAuth2AuthorizationService auth2AuthorizationService(JdbcOperations jdbcOperations,
+                                                                RegisteredClientRepository clientRepository) {
+        return new JdbcOAuth2AuthorizationService(jdbcOperations, clientRepository);
+    }
 
-//    @Bean
-//    public OAuth2AuthorizationService auth2AuthorizationService(JdbcOperations jdbcOperations,
-//                                                                RegisteredClientRepository clientRepository){
-//        return new JdbcOAuth2AuthorizationService(jdbcOperations, clientRepository);
-//    }
-//
-//
-//    @Bean
-//    public OAuth2AuthorizationConsentService auth2AuthorizationConsentService(JdbcOperations jdbcOperations,
-//                                                                              RegisteredClientRepository clientRepository){
-//        return new JdbcOAuth2AuthorizationConsentService(jdbcOperations, clientRepository);
-//    }
+
+    @Bean
+    public OAuth2AuthorizationConsentService auth2AuthorizationConsentService(JdbcOperations jdbcOperations,
+                                                                              RegisteredClientRepository clientRepository) {
+        return new JdbcOAuth2AuthorizationConsentService(jdbcOperations, clientRepository);
+    }
 
 
     @Bean
