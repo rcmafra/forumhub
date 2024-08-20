@@ -27,8 +27,8 @@ public class Answer {
     @JoinColumns(value = @JoinColumn(name = "topic_id"), foreignKey = @ForeignKey(name = "topic_id"))
     @JsonIgnore
     private Topic topic;
-    @Column
-    @NotBlank(message = "Solution cannot be left blank")
+    @NotBlank(message = "solução do tópico não pode ficar em branco")
+    @Column(nullable = false)
     private String solution;
     @Column
     private boolean bestAnswer;

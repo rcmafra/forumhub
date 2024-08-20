@@ -23,11 +23,11 @@ public class Topic {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "topic_id")
     private Long id;
+    @NotBlank(message = "título não pode ficar em branco")
     @Column(length = 200)
-    @NotBlank(message = "Title is mandatory")
     private String title;
+    @NotBlank(message = "mensagem não pode ficar em branco")
     @Column
-    @NotBlank(message = "Message is mandatory")
     private String message;
     @Column
     private LocalDateTime createdAt;

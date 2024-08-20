@@ -1,6 +1,7 @@
 package com.raul.forumhub.topic.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,7 @@ public class Course {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "course_id")
     private Long id;
+    @NotBlank(message = "nome do curso não pode ficar em branco")
     @Column(nullable = false, unique = true)
     private String name;
     @Column(name = "category", nullable = false, length = 50)
