@@ -4,13 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bde2c04d-06da-44ad-9010-f6df11e2d528" name="Changes" comment="Criado exceção de negócio">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/topic/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/exception/handler/ExceptionHandler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/target/classes/com/backend/api/topic/exception/handler/ExceptionHandler.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/target/classes/com/raul/forumhub/topic/domain/Course$Category.class" beforeDir="false" afterPath="$PROJECT_DIR$/topic/target/classes/com/raul/forumhub/topic/domain/Course$Category.class" afterDir="false" />
-    </list>
+    <list default="true" id="bde2c04d-06da-44ad-9010-f6df11e2d528" name="Changes" comment="Deleted bytecodes" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -338,8 +332,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/topic" />
     </ignored-roots>
-    <MESSAGE value="refactor: Ajustado os scopes claim" />
-    <MESSAGE value="refactor: Ajustado os mapeamentos para públicos" />
     <MESSAGE value="feature: Ajustado o mapeamento das requisições para usuários específicos" />
     <MESSAGE value="refactor: Adicionado validação caso o bearer token vier nulo" />
     <MESSAGE value="refactor: Adicionado parse para o email sempre para lowercase ao efetuar o login" />
@@ -363,7 +355,9 @@
     <MESSAGE value="Criado exception handler para lidar com exceções internas" />
     <MESSAGE value="Criado record para formatar as mensagens de exceções" />
     <MESSAGE value="Criado exceção de negócio" />
-    <option name="LAST_COMMIT_MESSAGE" value="Criado exceção de negócio" />
+    <MESSAGE value="Push bytecodes" />
+    <MESSAGE value="Deleted bytecodes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Deleted bytecodes" />
   </component>
   <component name="WfRunsListSearchHistory">{
   &quot;history&quot;: [
