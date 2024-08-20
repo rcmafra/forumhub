@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bde2c04d-06da-44ad-9010-f6df11e2d528" name="Changes" comment="Deleted bytecodes" />
+    <list default="true" id="bde2c04d-06da-44ad-9010-f6df11e2d528" name="Changes" comment="Config IDE" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -344,7 +344,6 @@
     <MESSAGE value="refactor: Removido parâmetros não utilizados" />
     <MESSAGE value="feature: Ajustado incremento do ID dos usuários" />
     <MESSAGE value="refactor: Separado a aplicação em três aplicações: topic, user e authorization server" />
-    <MESSAGE value="Config IDE" />
     <MESSAGE value="config IDE" />
     <MESSAGE value="Anotação default adicionada pelo lombok" />
     <MESSAGE value="Alterado a versão do Spring Boot para a versão 3.3.2" />
@@ -357,7 +356,8 @@
     <MESSAGE value="Criado exceção de negócio" />
     <MESSAGE value="Push bytecodes" />
     <MESSAGE value="Deleted bytecodes" />
-    <option name="LAST_COMMIT_MESSAGE" value="Deleted bytecodes" />
+    <MESSAGE value="Config IDE" />
+    <option name="LAST_COMMIT_MESSAGE" value="Config IDE" />
   </component>
   <component name="WfRunsListSearchHistory">{
   &quot;history&quot;: [
