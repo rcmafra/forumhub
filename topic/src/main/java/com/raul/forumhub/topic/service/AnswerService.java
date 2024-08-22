@@ -2,12 +2,14 @@ package com.raul.forumhub.topic.service;
 
 import com.raul.forumhub.topic.client.UserClientRequest;
 import com.raul.forumhub.topic.domain.Answer;
+import com.raul.forumhub.topic.domain.Author;
 import com.raul.forumhub.topic.domain.Status;
 import com.raul.forumhub.topic.domain.Topic;
-import com.raul.forumhub.topic.domain.Author;
 import com.raul.forumhub.topic.dto.request.AnswerTopicDTO;
 import com.raul.forumhub.topic.dto.request.AnswerUpdateDTO;
 import com.raul.forumhub.topic.dto.response.GetAnswerDTO;
+import com.raul.forumhub.topic.exception.AnswerServiceException;
+import com.raul.forumhub.topic.exception.InstanceNotFoundException;
 import com.raul.forumhub.topic.repository.AnswerRepository;
 import com.raul.forumhub.topic.validator.AuthorizationValidate;
 import org.springframework.stereotype.Service;
@@ -30,7 +32,7 @@ public class AnswerService {
         this.userClientRequest = userClientRequest;
     }
 
-    public void answerTopic(Long topic_id, Long user_id, AnswerTopicDTO answerTopicDTO) throws Exception {
+    public void answerTopic(Long topic_id, Long user_id, AnswerTopicDTO answerTopicDTO) {
         Topic topic = topicService.getTopicById(topic_id);
         Author author = userClientRequest.getUserById(user_id);
 
@@ -42,7 +44,7 @@ public class AnswerService {
     }
 
 
-    public void markBestAnswer(Long topic_id, Long answer_id, Long user_id) throws Exception {
+    public void markBestAnswer(Long topic_id, Long answer_id, Long user_id) {
         Topic topic = topicService.getTopicById(topic_id);
 
         List<Answer> answersOfTheTopic = this.answerRepository.getAnswerByTopic(topic)
@@ -50,11 +52,10 @@ public class AnswerService {
 
         boolean hasBestAnswer = answersOfTheTopic.stream().anyMatch(Answer::isBestAnswer);
 
-        if (!topic.getAuthor().getId().equals(user_id)) {
-            throw new Exception("This topic not belonging to this author");
-        }
-        else if(hasBestAnswer){
-            throw new RuntimeException("Already exists a best answer for this topic");
+        this.topicService.validateTopicOwner(topic.getAuthor().getId(), user_id);
+
+        if(hasBestAnswer){
+            throw new AnswerServiceException("Já existe uma melhor resposta para este tópico");
         }
         else {
             Answer answer = getAnswerById(answer_id);
@@ -68,13 +69,13 @@ public class AnswerService {
 
     }
 
-    public GetAnswerDTO updateAnswer(Long topic_id, Long answer_id, Long user_id, AnswerUpdateDTO answerUpdateDTO) throws Exception {
+    public GetAnswerDTO updateAnswer(Long topic_id, Long answer_id, Long user_id, AnswerUpdateDTO answerUpdateDTO) {
         this.topicService.getTopicById(topic_id);
         Answer answer = this.getAnswerById(answer_id);
         Author author = this.userClientRequest.getUserById(user_id);
 
         if(!author.getId().equals(answer.getAuthor().getId())){
-            throw new RuntimeException("This answer not belonging to this user");
+            throw new AnswerServiceException("A resposta fornecida não pertence a esse autor");
         }
 
         answer.setSolution(answerUpdateDTO.solution());
@@ -83,12 +84,12 @@ public class AnswerService {
         return new GetAnswerDTO(answer);
     }
 
-    public void deleteAnswer(Long topic_id, Long answer_id, Long user_id) throws Exception {
+    public void deleteAnswer(Long topic_id, Long answer_id, Long user_id) {
         Answer answer = this.getAnswerById(answer_id);
         Author author = this.userClientRequest.getUserById(user_id);
 
         if(!answer.getTopic().getId().equals(topic_id)){
-            throw new RuntimeException("This answer not belonging to the topic");
+            throw new AnswerServiceException("A resposta fornecida não pertence a esse tópico");
         }
 
         AuthorizationValidate.AuthValidator(answer.getAuthor().getId(), author.getId(),
@@ -99,8 +100,8 @@ public class AnswerService {
     }
 
 
-    public Answer getAnswerById(Long id) throws Exception {
-        return this.answerRepository.findById(id).orElseThrow(() -> new Exception("Answer not found"));
+    public Answer getAnswerById(Long id) {
+        return this.answerRepository.findById(id).orElseThrow(() -> new InstanceNotFoundException("A resposta informada não existe"));
     }
 
     public void saveAnswer(Answer answer) {

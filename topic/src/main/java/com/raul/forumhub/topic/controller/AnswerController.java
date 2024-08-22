@@ -25,7 +25,7 @@ public class AnswerController {
     @PreAuthorize("authenticated")
     @PostMapping("/{topic_id}/answer")
     public ResponseEntity<HttpMessageDefault> answerTopic(@PathVariable Long topic_id, @Valid @RequestBody AnswerTopicDTO answerTopicDTO,
-                                                          @AuthenticationPrincipal Jwt jwt) throws Exception {
+                                                          @AuthenticationPrincipal Jwt jwt){
 
         Long user_id = Long.parseLong(jwt.getClaim("user_id"));
         answerService.answerTopic(topic_id, user_id, answerTopicDTO);
@@ -36,7 +36,7 @@ public class AnswerController {
     @PreAuthorize("authenticated")
     @PostMapping("/{topic_id}/answers/{answer_id}")
     public ResponseEntity<HttpMessageDefault> markBetterAnswer(@PathVariable Long topic_id, @PathVariable Long answer_id,
-                                                         @AuthenticationPrincipal Jwt jwt) throws Exception {
+                                                         @AuthenticationPrincipal Jwt jwt){
 
         Long user_id = Long.parseLong(jwt.getClaim("user_id"));
         this.answerService.markBestAnswer(topic_id, answer_id, user_id);
@@ -47,7 +47,7 @@ public class AnswerController {
     @PreAuthorize("authenticated and hasAuthority('SCOPE_answer:delete')")
     @DeleteMapping("/{topic_id}/answers/{answer_id}")
     public ResponseEntity<HttpMessageDefault> deleteAnswer(@PathVariable Long topic_id, @PathVariable Long answer_id,
-                                                     @AuthenticationPrincipal Jwt jwt) throws Exception {
+                                                     @AuthenticationPrincipal Jwt jwt){
 
         Long user_id = Long.parseLong(jwt.getClaim("user_id"));
         this.answerService.deleteAnswer(topic_id, answer_id, user_id);
@@ -58,7 +58,7 @@ public class AnswerController {
     @PreAuthorize("authenticated and hasAuthority('SCOPE_answer:edit')")
     @PutMapping("/{topic_id}/answers/{answer_id}")
     public ResponseEntity<GetAnswerDTO> updateAnswer(@PathVariable Long topic_id, @PathVariable Long answer_id,
-                                                     @AuthenticationPrincipal Jwt jwt, @RequestBody AnswerUpdateDTO answerUpdateDTO) throws Exception {
+                                                     @AuthenticationPrincipal Jwt jwt, @RequestBody AnswerUpdateDTO answerUpdateDTO){
 
         Long user_id = Long.parseLong(jwt.getClaim("user_id"));
         GetAnswerDTO getAnswerDTO = this.answerService.updateAnswer(topic_id, answer_id, user_id, answerUpdateDTO);
