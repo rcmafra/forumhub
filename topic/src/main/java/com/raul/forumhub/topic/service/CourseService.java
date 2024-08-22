@@ -5,6 +5,7 @@ import com.raul.forumhub.topic.dto.request.CourseCreateDTO;
 import com.raul.forumhub.topic.dto.request.CourseUpdateDTO;
 import com.raul.forumhub.topic.dto.response.GetCourseCollection;
 import com.raul.forumhub.topic.dto.response.GetCourseDTO;
+import com.raul.forumhub.topic.exception.InstanceNotFoundException;
 import com.raul.forumhub.topic.repository.CourseRepository;
 import org.springframework.stereotype.Service;
 
@@ -45,11 +46,11 @@ public class CourseService {
     }
 
     private Course getCourseByName(String courseName){
-        return this.courseRepository.findCourseByName(courseName).orElseThrow();
+        return this.courseRepository.findCourseByName(courseName).orElseThrow(() -> new InstanceNotFoundException("O curso informado não existe"));
     }
 
-    public Course getCourseById(Long id) throws Exception {
-        return this.courseRepository.findById(id).orElseThrow(() -> new Exception("GetCourseDTO not found"));
+    public Course getCourseById(Long id) {
+        return this.courseRepository.findById(id).orElseThrow(() -> new InstanceNotFoundException("O curso informado não existe"));
     }
 
 
