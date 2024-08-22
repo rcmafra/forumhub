@@ -32,7 +32,7 @@ public class TopicController {
     @PreAuthorize("authenticated")
     @PostMapping("/create")
     public ResponseEntity<HttpMessageDefault> createTopic(@Valid @RequestBody TopicCreateDTO topicCreateDTO,
-                                                          @AuthenticationPrincipal Jwt jwt) throws Exception {
+                                                          @AuthenticationPrincipal Jwt jwt){
 
         Long user_id = Long.parseLong(jwt.getClaim("user_id"));
         this.topicService.createTopic(topicCreateDTO, user_id);
@@ -52,7 +52,7 @@ public class TopicController {
 
     @PreAuthorize("permitAll")
     @GetMapping("/{topic_id}")
-    public ResponseEntity<GetTopicDTO> getTopic(@PathVariable Long topic_id) throws Exception {
+    public ResponseEntity<GetTopicDTO> getTopic(@PathVariable Long topic_id){
 
         return ResponseEntity.ok(new GetTopicDTO(topicService.getTopicById(topic_id)));
     }
@@ -60,7 +60,7 @@ public class TopicController {
     @PreAuthorize("authenticated and hasAuthority('SCOPE_topic:edit')")
     @PutMapping("/{topic_id}")
     public ResponseEntity<HttpMessageDefault> updateTopic(@PathVariable Long topic_id,  @Valid @RequestBody TopicUpdateDTO topicUpdateDTO,
-                                                    @AuthenticationPrincipal Jwt jwt) throws Exception {
+                                                    @AuthenticationPrincipal Jwt jwt){
 
         Long user_id = Long.parseLong(jwt.getClaim("user_id"));
         this.topicService.updateTopic(topic_id, user_id, topicUpdateDTO);
@@ -70,7 +70,7 @@ public class TopicController {
 
     @PreAuthorize("authenticated and hasAuthority('SCOPE_topic:delete')")
     @DeleteMapping("/delete/{topic_id}")
-    public ResponseEntity<HttpMessageDefault> deleteTopic(@PathVariable Long topic_id, @AuthenticationPrincipal Jwt jwt) throws Exception {
+    public ResponseEntity<HttpMessageDefault> deleteTopic(@PathVariable Long topic_id, @AuthenticationPrincipal Jwt jwt){
 
         Long user_id = Long.parseLong(jwt.getClaim("user_id"));
         topicService.deleteTopic(topic_id, user_id);
