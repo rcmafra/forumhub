@@ -25,15 +25,15 @@ public class User {
     @Column(name = "user_id")
     private Long id;
     @Column
-    @NotBlank(message = "Name is mandatory")
+    @NotBlank(message = "Nome é obrigatório")
     private String name;
     @Column(unique = true)
-    @Email(message = "Email format invalid")
-    @NotBlank(message = "Email is mandatory")
+    @Email(message = "Formato do email inválido")
+    @NotBlank(message = "Email é obrigatório")
     private String email;
     @Column
-    @NotBlank(message = "Password is mandatory")
     @JsonIgnore
+    @NotBlank(message = "Senha é obrigatória")
     private String password;
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     @JoinColumns(@JoinColumn(name = "profile_id", foreignKey = @ForeignKey(name = "profile_id")))

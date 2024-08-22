@@ -21,7 +21,7 @@ public class Course {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "course_id")
     private Long id;
-    @NotBlank(message = "nome do curso não pode ficar em branco")
+    @NotBlank(message = "O curso é obrigatório")
     @Column(nullable = false, unique = true)
     private String name;
     @Column(name = "category", nullable = false, length = 50)

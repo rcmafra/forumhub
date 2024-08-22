@@ -23,10 +23,10 @@ public class Topic {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "topic_id")
     private Long id;
-    @NotBlank(message = "título não pode ficar em branco")
+    @NotBlank(message = "O título é obrigatório")
     @Column(length = 200)
     private String title;
-    @NotBlank(message = "mensagem não pode ficar em branco")
+    @NotBlank(message = "A mensagem é obrigatória")
     @Column
     private String message;
     @Column
