@@ -5,10 +5,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class TopicServiceException extends AbstractServiceException {
+public class InstanceNotFoundException extends AbstractServiceException {
 
-    public TopicServiceException(String detailMessage){
+    public InstanceNotFoundException(String detailMessage) {
         super(detailMessage);
     }
-
 }

@@ -5,10 +5,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class TopicServiceException extends AbstractServiceException {
+public class AnswerServiceException extends AbstractServiceException {
 
-    public TopicServiceException(String detailMessage){
+    public AnswerServiceException(String detailMessage) {
         super(detailMessage);
     }
-
 }
