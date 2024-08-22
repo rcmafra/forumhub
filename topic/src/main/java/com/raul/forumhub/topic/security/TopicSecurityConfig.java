@@ -57,19 +57,4 @@ public class TopicSecurityConfig {
         return converter;
     }
 
-
-//    @Bean
-//    public OAuth2AuthorizationRequestResolver auth2AuthorizationRequest(ClientRegistrationRepository clientRegistrationRepository,
-//                                                                        String authorizationRequestBaseUri){
-//        return new DefaultOAuth2AuthorizationRequestResolver(clientRegistrationRepository, authorizationRequestBaseUri);
-//    }
-//
-//
-//
-//    @Bean
-//    public OAuth2AuthorizedClientProvider auth2AuthorizedClientProvider(OAuth2AuthorizationContext context){
-//        return new AuthorizationCodeOAuth2AuthorizedClientProvider();
-//    }
-
-
 }
