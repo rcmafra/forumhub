@@ -4,28 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bde2c04d-06da-44ad-9010-f6df11e2d528" name="Changes" comment="Config IDE">
+    <list default="true" id="bde2c04d-06da-44ad-9010-f6df11e2d528" name="Changes" comment="Remoção de classes não utilizadas">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/authorization-server/src/main/java/com/raul/forumhub/auth/server/security/config/JWKGenerate.java" beforeDir="false" afterPath="$PROJECT_DIR$/authorization-server/src/main/java/com/raul/forumhub/auth/server/security/config/JWKGenerate.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/TopicApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/TopicApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/authorization-server/src/main/resources/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/authorization-server/src/main/resources/application-dev.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/client/UserClientRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/client/UserClientRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/controller/AnswerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/controller/AnswerController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/controller/TopicController.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/controller/TopicController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/domain/Answer.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/domain/Answer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/domain/Course.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/domain/Course.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/domain/Topic.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/domain/Topic.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/exception/TopicServiceException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/exception/handler/ExceptionResponseHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/exception/handler/ExceptionResponseHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/security/TopicSecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/security/TopicSecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/service/AnswerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/service/AnswerService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/service/CourseService.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/service/CourseService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/service/TopicService.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/service/TopicService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/validator/AuthorizationValidate.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/validator/AuthorizationValidate.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/test/java/com/backend/api/forumhub/controller/AnswerControllerTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/test/java/com/backend/api/forumhub/controller/TopicControllerTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/test/java/com/backend/api/forumhub/forumhubApplicationTests.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/domain/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/domain/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/topic/src/main/resources/db/migration/V1__create_entities.sql" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/resources/db/migration/V1__create_entities.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/user/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/controller/UserController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/service/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user/src/main/resources/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/user/src/main/resources/application-dev.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -156,8 +145,8 @@
     "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
     "Application.Application-auth-server-dev.executor": "Run",
     "Application.Application-dev.executor": "Run",
-    "Application.Application-topic-dev.executor": "Debug",
-    "Application.Application-user-dev.executor": "Debug",
+    "Application.Application-topic-dev.executor": "Run",
+    "Application.Application-user-dev.executor": "Run",
     "Application.Application.executor": "Run",
     "Application.ForumHubApplication.executor": "Run",
     "Application.app.executor": "Run",
@@ -173,7 +162,7 @@
     "git-widget-placeholder": "develop",
     "kotlin-language-version-configured": "true",
     "last_directory_selection": "C:/Projects/authorizationserver/src/main/java",
-    "last_opened_file_path": "C:/Projects/forumhub/user/src/main/java/com/raul/forumhub/user",
+    "last_opened_file_path": "C:/Projects/forumhub/user/src/main/resources",
     "project.structure.last.edited": "Facets",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.508046",
@@ -187,11 +176,11 @@
       <recent name="com.backend.challenge.ForumHub.dto.request" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Projects\forumhub\user\src\main\resources" />
       <recent name="C:\Projects\forumhub\user\src\main\java\com\raul\forumhub\user" />
       <recent name="C:\Projects\forumhub\topic" />
       <recent name="C:\Projects\forumhub\user" />
       <recent name="C:\Projects\forumhub\authorization-server" />
-      <recent name="C:\Projects\user\src\main\resources" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Projects\user\src" />
@@ -220,7 +209,7 @@
       <recent name="com.raul.forumhub.user.respository" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Application-user-dev">
+  <component name="RunManager" selected="Application.Application-topic-dev">
     <configuration name="Application-auth-server-dev" type="Application" factoryName="Application" singleton="false">
       <option name="ALTERNATIVE_JRE_PATH" value="$PROJECT_DIR$/../../Program Files/Java/jdk-17" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -357,17 +346,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/topic" />
     </ignored-roots>
-    <MESSAGE value="feature: Ajustado o mapeamento das requisições para usuários específicos" />
-    <MESSAGE value="refactor: Adicionado validação caso o bearer token vier nulo" />
-    <MESSAGE value="refactor: Adicionado parse para o email sempre para lowercase ao efetuar o login" />
-    <MESSAGE value="feature: Ajustado a solicitação dos mapeamentos para usuários específicos" />
-    <MESSAGE value="refactor: Remoção de um scope não utilizado" />
-    <MESSAGE value="feature: Alterado regra para definir somente uma resposta como melhor" />
-    <MESSAGE value="refactor: Alterado as credentials do banco de dados para placeholder" />
-    <MESSAGE value="refactor: Substituído a provedor de persistência de JPA para JDBC para se adequar melhor ao oracle database" />
-    <MESSAGE value="refactor: Removida a anotação não utilizada" />
-    <MESSAGE value="refactor: Removido parâmetros não utilizados" />
-    <MESSAGE value="feature: Ajustado incremento do ID dos usuários" />
     <MESSAGE value="refactor: Separado a aplicação em três aplicações: topic, user e authorization server" />
     <MESSAGE value="config IDE" />
     <MESSAGE value="Anotação default adicionada pelo lombok" />
@@ -382,7 +360,18 @@
     <MESSAGE value="Push bytecodes" />
     <MESSAGE value="Deleted bytecodes" />
     <MESSAGE value="Config IDE" />
-    <option name="LAST_COMMIT_MESSAGE" value="Config IDE" />
+    <MESSAGE value="Alterado a mensagem de validação de atributos" />
+    <MESSAGE value="Correção das exceções pertinentes a classe de resposta" />
+    <MESSAGE value="Correção das exceções pertinentes a classe de tópico" />
+    <MESSAGE value="Correção das exceções pertinentes a classe de curso" />
+    <MESSAGE value="Correção de exceção na classe de validação de autorização" />
+    <MESSAGE value="Criação de exceções para as regras de negócio" />
+    <MESSAGE value="Criação de record para reposta de exceções" />
+    <MESSAGE value="Criação de handler para lidar com as respostas de exceções" />
+    <MESSAGE value="Remoção de imports não utilizados" />
+    <MESSAGE value="Remoção de métodos comentados" />
+    <MESSAGE value="Remoção de classes não utilizadas" />
+    <option name="LAST_COMMIT_MESSAGE" value="Remoção de classes não utilizadas" />
   </component>
   <component name="WfRunsListSearchHistory"><![CDATA[{
   "history": [
@@ -1028,6 +1017,22 @@
     },
     {
       "branch": "main",
+      "currentBranchFilter": true
+    },
+    {
+      "branch": "develop",
+      "currentBranchFilter": true
+    },
+    {
+      "branch": "develop",
+      "currentBranchFilter": true
+    },
+    {
+      "branch": "develop",
+      "currentBranchFilter": true
+    },
+    {
+      "branch": "develop",
       "currentBranchFilter": true
     },
     {
