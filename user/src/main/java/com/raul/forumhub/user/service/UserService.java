@@ -5,6 +5,7 @@ import com.raul.forumhub.user.domain.User;
 import com.raul.forumhub.user.dto.request.UserCreateDTO;
 import com.raul.forumhub.user.dto.request.UserUpdateDTO;
 import com.raul.forumhub.user.dto.response.UserDetailedInfo;
+import com.raul.forumhub.user.exception.InstanceNotFoundException;
 import com.raul.forumhub.user.respository.ProfileRepository;
 import com.raul.forumhub.user.respository.UserRepository;
 import org.springframework.data.domain.Page;
@@ -61,18 +62,13 @@ public class UserService {
         return new UserDetailedInfo(user);
     }
 
-//    public void deleteUser(Long user_id){
-//        User user = this.getUserById(user_id);
-//        List<Topic> topics = this.topicRepository.getTopicByAuthor(user).orElse(Collections.emptyList());
-//        List<Answer> answers = this.answerRepository.getAnswerByAuthor(user).orElse(Collections.emptyList());
-//
-//        this.topicRepository.deleteAll(topics);
-//        this.answerRepository.deleteAll(answers);
-//        this.userRepository.delete(user);
-//    }
+    public void deleteUser(Long user_id){
+        User user = this.getUserById(user_id);
+        this.userRepository.delete(user);
+    }
 
-    public User getUserById(Long user_id) {
-        return this.userRepository.findById(user_id).orElseThrow(() -> new RuntimeException("User not found"));
+    private User getUserById(Long user_id) {
+        return this.userRepository.findById(user_id).orElseThrow(() -> new InstanceNotFoundException("Usuário não encontrado"));
     }
 
 

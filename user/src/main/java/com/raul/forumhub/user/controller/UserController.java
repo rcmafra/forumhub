@@ -106,28 +106,28 @@ public class UserController {
     }
 
 
-//    @PreAuthorize("hasRole('ADM') or hasAuthority('SCOPE_myuser:delete')")
-//    @DeleteMapping("/delete")
-//    public ResponseEntity<HttpMessageDefault> deleteUser(@RequestParam(required = false) Long user_id, @AuthenticationPrincipal Jwt jwt) {
-//
-//        Assert.notNull(jwt, "Bearer token can't be empty");
-//
-//        String claimUserRole = jwt.getClaim("authority").toString().substring(5);
-//        Long claimUserId = Long.parseLong(jwt.getClaim("user_id"));
-//
-//        String myUserDeleteScope = jwt.getClaimAsStringList("scope").stream()
-//                .filter(s -> s.equals("myuser:delete")).findFirst().orElse("");
-//
-//        if (myUserDeleteScope.equals("myuser:delete") && Objects.isNull(user_id)) {
-//            this.userService.deleteUser(claimUserId);
-//        } else if (claimUserRole.equals(Profile.ProfileName.ADM.name()) && Objects.nonNull(user_id)) {
-//            this.userService.deleteUser(user_id);
-//        } else {
-//            throw new RuntimeException("A solicitação não corresponde ao esperado");
-//        }
-//
-//        return ResponseEntity.ok(new HttpMessageDefault("HttpStatusCode OK"));
-//    }
+    @PreAuthorize("hasRole('ADM') or hasAuthority('SCOPE_myuser:delete')")
+    @DeleteMapping("/delete")
+    public ResponseEntity<HttpMessageDefault> deleteUser(@RequestParam(required = false) Long user_id, @AuthenticationPrincipal Jwt jwt) {
+
+        Assert.notNull(jwt, "Bearer token can't be empty");
+
+        String claimUserRole = jwt.getClaim("authority").toString().substring(5);
+        Long claimUserId = Long.parseLong(jwt.getClaim("user_id"));
+
+        String myUserDeleteScope = jwt.getClaimAsStringList("scope").stream()
+                .filter(s -> s.equals("myuser:delete")).findFirst().orElse("");
+
+        if (myUserDeleteScope.equals("myuser:delete") && Objects.isNull(user_id)) {
+            this.userService.deleteUser(claimUserId);
+        } else if (claimUserRole.equals(Profile.ProfileName.ADM.name()) && Objects.nonNull(user_id)) {
+            this.userService.deleteUser(user_id);
+        } else {
+            throw new RuntimeException("A solicitação não corresponde ao esperado");
+        }
+
+        return ResponseEntity.ok(new HttpMessageDefault("HttpStatusCode OK"));
+    }
 
 
 }

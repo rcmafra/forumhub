@@ -4,17 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bde2c04d-06da-44ad-9010-f6df11e2d528" name="Changes" comment="Remoção de classes não utilizadas">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/authorization-server/src/main/resources/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/authorization-server/src/main/resources/application-dev.yml" afterDir="false" />
+    <list default="true" id="bde2c04d-06da-44ad-9010-f6df11e2d528" name="Changes" comment="Distribuido o versionamento das entidades no flyway entre o serviço de usuário e tópico">
       <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/client/UserClientRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/client/UserClientRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/controller/TopicController.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/controller/TopicController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/resources/db/migration/V1__create_entities.sql" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/resources/db/migration/V1__create_entities.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/user/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/controller/UserController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/service/UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user/src/main/resources/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/user/src/main/resources/application-dev.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -346,8 +339,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/topic" />
     </ignored-roots>
-    <MESSAGE value="refactor: Separado a aplicação em três aplicações: topic, user e authorization server" />
-    <MESSAGE value="config IDE" />
     <MESSAGE value="Anotação default adicionada pelo lombok" />
     <MESSAGE value="Alterado a versão do Spring Boot para a versão 3.3.2" />
     <MESSAGE value="Implementação do Spring Session para gerenciamento e persistencia da sessão do usuário na base de dados" />
@@ -371,7 +362,9 @@
     <MESSAGE value="Remoção de imports não utilizados" />
     <MESSAGE value="Remoção de métodos comentados" />
     <MESSAGE value="Remoção de classes não utilizadas" />
-    <option name="LAST_COMMIT_MESSAGE" value="Remoção de classes não utilizadas" />
+    <MESSAGE value="Remoção de propriedade não utilizada" />
+    <MESSAGE value="Distribuido o versionamento das entidades no flyway entre o serviço de usuário e tópico" />
+    <option name="LAST_COMMIT_MESSAGE" value="Distribuido o versionamento das entidades no flyway entre o serviço de usuário e tópico" />
   </component>
   <component name="WfRunsListSearchHistory"><![CDATA[{
   "history": [
