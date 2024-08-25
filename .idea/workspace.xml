@@ -4,10 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bde2c04d-06da-44ad-9010-f6df11e2d528" name="Changes" comment="Distribuido o versionamento das entidades no flyway entre o serviço de usuário e tópico">
+    <list default="true" id="bde2c04d-06da-44ad-9010-f6df11e2d528" name="Changes" comment="Substituido a remoção dos tópicos e das respostas do serviço de usuário por trigger na base de dados">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/client/UserClientRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/client/UserClientRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/service/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/domain/Author.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/domain/Author.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/domain/Profile.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/domain/Profile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/domain/Topic.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/domain/Topic.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/service/TopicService.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/service/TopicService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,6 +57,7 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="jar://$PROJECT_DIR$/../../Program Files/Java/jdk-17/lib/src.zip!/java.base/java/security/KeyPairGenerator.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$PROJECT_DIR$/../../Program Files/Java/jdk-17/lib/src.zip!/java.base/sun/security/jca/GetInstance.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-annotations/2.17.2/jackson-annotations-2.17.2-sources.jar!/com/fasterxml/jackson/annotation/JsonIgnore.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/com/nimbusds/nimbus-jose-jwt/9.39.1/nimbus-jose-jwt-9.39.1-sources.jar!/com/nimbusds/jose/jwk/JWK.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/com/nimbusds/nimbus-jose-jwt/9.39.1/nimbus-jose-jwt-9.39.1-sources.jar!/com/nimbusds/jose/jwk/JWKSet.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/com/nimbusds/nimbus-jose-jwt/9.39.1/nimbus-jose-jwt-9.39.1-sources.jar!/com/nimbusds/jose/jwk/source/ImmutableJWKSet.java" root0="SKIP_INSPECTION" />
@@ -67,6 +71,8 @@
     <setting file="jar://$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.34/lombok-1.18.34-sources.jar!/lombok/Generated.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/boot/spring-boot/3.3.0-SNAPSHOT/spring-boot-3.3.0-20240523.121145-488-sources.jar!/org/springframework/boot/context/properties/ConfigurationProperties.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/data/spring-data-commons/3.3.0-SNAPSHOT/spring-data-commons-3.3.0-20240510.192003-269-sources.jar!/org/springframework/data/domain/Pageable.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/data/spring-data-commons/3.3.2/spring-data-commons-3.3.2-sources.jar!/org/springframework/data/domain/Page.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/data/spring-data-commons/3.3.2/spring-data-commons-3.3.2-sources.jar!/org/springframework/data/domain/PageImpl.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/data/spring-data-jpa/3.3.0/spring-data-jpa-3.3.0-sources.jar!/org/springframework/data/jpa/repository/Query.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/data/spring-data-relational/3.3.0/spring-data-relational-3.3.0-sources.jar!/org/springframework/data/relational/core/mapping/Table.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-config/6.3.0/spring-security-config-6.3.0-sources.jar!/org/springframework/security/config/annotation/web/AbstractRequestMatcherRegistry.java" root0="SKIP_INSPECTION" />
@@ -339,7 +345,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/topic" />
     </ignored-roots>
-    <MESSAGE value="Anotação default adicionada pelo lombok" />
     <MESSAGE value="Alterado a versão do Spring Boot para a versão 3.3.2" />
     <MESSAGE value="Implementação do Spring Session para gerenciamento e persistencia da sessão do usuário na base de dados" />
     <MESSAGE value="feature: Substituido o armazenamento do usuário autorizado de armazenamento em memória para armazenamento na base de dados com JDBC" />
@@ -364,7 +369,8 @@
     <MESSAGE value="Remoção de classes não utilizadas" />
     <MESSAGE value="Remoção de propriedade não utilizada" />
     <MESSAGE value="Distribuido o versionamento das entidades no flyway entre o serviço de usuário e tópico" />
-    <option name="LAST_COMMIT_MESSAGE" value="Distribuido o versionamento das entidades no flyway entre o serviço de usuário e tópico" />
+    <MESSAGE value="Substituido a remoção dos tópicos e das respostas do serviço de usuário por trigger na base de dados" />
+    <option name="LAST_COMMIT_MESSAGE" value="Substituido a remoção dos tópicos e das respostas do serviço de usuário por trigger na base de dados" />
   </component>
   <component name="WfRunsListSearchHistory"><![CDATA[{
   "history": [

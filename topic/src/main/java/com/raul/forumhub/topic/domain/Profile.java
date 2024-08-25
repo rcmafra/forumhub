@@ -25,6 +25,10 @@ public class Profile {
     @Column(name = "profile")
     private ProfileName profileName;
 
+    public Profile(ProfileName profileName){
+        this.profileName = profileName;
+    }
+
 
     public enum ProfileName {
 
