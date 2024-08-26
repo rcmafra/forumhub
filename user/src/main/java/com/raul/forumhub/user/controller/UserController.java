@@ -6,6 +6,7 @@ import com.raul.forumhub.user.dto.request.UserUpdateDTO;
 import com.raul.forumhub.user.dto.response.HttpMessageDefault;
 import com.raul.forumhub.user.dto.response.UserDetailedInfo;
 import com.raul.forumhub.user.dto.response.UserSummaryInfo;
+import com.raul.forumhub.user.exception.MalFormatedParamUserException;
 import com.raul.forumhub.user.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -19,7 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
@@ -47,8 +47,6 @@ public class UserController {
     @GetMapping("/detailed-info")
     public ResponseEntity<UserDetailedInfo> getDetailedInfoUser(@RequestParam(required = false) Long user_id, @AuthenticationPrincipal Jwt jwt) {
 
-        Assert.notNull(jwt, "Bearer token can't be empty");
-
         String claimUserRole = jwt.getClaim("authority").toString().substring(5);
         Long claimUserId = Long.parseLong(jwt.getClaim("user_id"));
 
@@ -61,7 +59,7 @@ public class UserController {
         } else if (isBASIC && Objects.isNull(user_id)) {
             return ResponseEntity.ok(new UserDetailedInfo(this.userService.getInfoUser(claimUserId)));
         } else {
-            throw new RuntimeException("A solicitação não corresponde ao esperado");
+            throw new MalFormatedParamUserException("Parâmetros fornecidos não esperado");
         }
     }
 
@@ -87,8 +85,6 @@ public class UserController {
     public ResponseEntity<UserDetailedInfo> updateUser(@RequestParam(required = false) Long user_id, @Valid @RequestBody UserUpdateDTO userUpdateDTO,
                                                        @AuthenticationPrincipal Jwt jwt) {
 
-        Assert.notNull(jwt, "Bearer token can't be empty");
-
         String claimUserRole = jwt.getClaim("authority").toString().substring(5);
         Long claimUserId = Long.parseLong(jwt.getClaim("user_id"));
 
@@ -101,7 +97,7 @@ public class UserController {
         } else if (claimUserRole.equals(Profile.ProfileName.ADM.name()) && Objects.nonNull(user_id)) {
             return ResponseEntity.ok(this.userService.updateUser(user_id, claimUserRole, userUpdateDTO));
         } else {
-            throw new RuntimeException("A solicitação não corresponde ao esperado");
+            throw new MalFormatedParamUserException("Parâmetros fornecidos não esperado");
         }
     }
 
@@ -109,8 +105,6 @@ public class UserController {
     @PreAuthorize("hasRole('ADM') or hasAuthority('SCOPE_myuser:delete')")
     @DeleteMapping("/delete")
     public ResponseEntity<HttpMessageDefault> deleteUser(@RequestParam(required = false) Long user_id, @AuthenticationPrincipal Jwt jwt) {
-
-        Assert.notNull(jwt, "Bearer token can't be empty");
 
         String claimUserRole = jwt.getClaim("authority").toString().substring(5);
         Long claimUserId = Long.parseLong(jwt.getClaim("user_id"));
@@ -123,7 +117,7 @@ public class UserController {
         } else if (claimUserRole.equals(Profile.ProfileName.ADM.name()) && Objects.nonNull(user_id)) {
             this.userService.deleteUser(user_id);
         } else {
-            throw new RuntimeException("A solicitação não corresponde ao esperado");
+            throw new MalFormatedParamUserException("Parâmetros fornecidos não esperado");
         }
 
         return ResponseEntity.ok(new HttpMessageDefault("HttpStatusCode OK"));
