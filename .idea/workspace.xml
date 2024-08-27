@@ -4,13 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bde2c04d-06da-44ad-9010-f6df11e2d528" name="Changes" comment="Substituido a remoção dos tópicos e das respostas do serviço de usuário por trigger na base de dados">
+    <list default="true" id="bde2c04d-06da-44ad-9010-f6df11e2d528" name="Changes" comment="Substituido as exceções do UserController por exceção personalizada">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/authorization-server/src/main/java/com/raul/forumhub/auth/server/domain/UserEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/authorization-server/src/main/java/com/raul/forumhub/auth/server/domain/UserEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/authorization-server/src/main/java/com/raul/forumhub/auth/server/security/config/AuthorizationServerConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/authorization-server/src/main/java/com/raul/forumhub/auth/server/security/config/AuthorizationServerConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/client/UserClientRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/client/UserClientRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/domain/Author.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/domain/Author.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/domain/Profile.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/domain/Profile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/domain/Topic.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/domain/Topic.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/service/TopicService.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/service/TopicService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/domain/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/domain/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/dto/request/UserCreateDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/dto/request/UserCreateDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/dto/response/UserSummaryInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/dto/response/UserSummaryInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/exception/handler/ExceptionResponseHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/exception/handler/ExceptionResponseHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/service/UserService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,6 +58,9 @@
     &quot;accountId&quot;: &quot;fb224bce-08fc-4b9d-b4b0-10bf0d7425b7&quot;
   }
 }</component>
+  <component name="HierarchyBrowserManager">
+    <option name="SCOPE" value="All" />
+  </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="jar://$PROJECT_DIR$/../../Program Files/Java/jdk-17/lib/src.zip!/java.base/java/security/KeyPairGenerator.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$PROJECT_DIR$/../../Program Files/Java/jdk-17/lib/src.zip!/java.base/sun/security/jca/GetInstance.java" root0="SKIP_INSPECTION" />
@@ -84,6 +91,9 @@
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-core/6.3.0/spring-security-core-6.3.0-sources.jar!/org/springframework/security/authentication/AuthenticationManager.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-core/6.3.0/spring-security-core-6.3.0-sources.jar!/org/springframework/security/authentication/ProviderManager.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-core/6.3.0/spring-security-core-6.3.0-sources.jar!/org/springframework/security/converter/RsaKeyConverters.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-core/6.3.1/spring-security-core-6.3.1-sources.jar!/org/springframework/security/core/GrantedAuthority.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-core/6.3.1/spring-security-core-6.3.1-sources.jar!/org/springframework/security/core/userdetails/User.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-core/6.3.1/spring-security-core-6.3.1-sources.jar!/org/springframework/security/core/userdetails/UserDetails.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-core/6.3.1/spring-security-core-6.3.1.jar!/org/springframework/security/jackson2/SecurityJackson2Modules.class" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-crypto/6.3.0/spring-security-crypto-6.3.0-sources.jar!/org/springframework/security/crypto/bcrypt/BCryptPasswordEncoder.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-oauth2-authorization-server/1.3.0/spring-security-oauth2-authorization-server-1.3.0-sources.jar!/org/springframework/security/oauth2/server/authorization/client/JdbcRegisteredClientRepository.java" root0="SKIP_INSPECTION" />
@@ -97,6 +107,7 @@
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-oauth2-authorization-server/1.3.2-SNAPSHOT/spring-security-oauth2-authorization-server-1.3.2-20240802.191310-39-sources.jar!/org/springframework/security/oauth2/server/authorization/JdbcOAuth2AuthorizationConsentService.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-oauth2-client/6.3.0/spring-security-oauth2-client-6.3.0-sources.jar!/org/springframework/security/oauth2/client/web/reactive/function/client/ServletOAuth2AuthorizedClientExchangeFilterFunction.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-oauth2-core/6.3.0/spring-security-oauth2-core-6.3.0-sources.jar!/org/springframework/security/oauth2/core/ClaimAccessor.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-oauth2-core/6.3.1/spring-security-oauth2-core-6.3.1-sources.jar!/org/springframework/security/oauth2/core/user/OAuth2UserAuthority.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-oauth2-jose/6.3.0/spring-security-oauth2-jose-6.3.0-sources.jar!/org/springframework/security/oauth2/jwt/JwtClaimAccessor.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-oauth2-jose/6.3.0/spring-security-oauth2-jose-6.3.0-sources.jar!/org/springframework/security/oauth2/jwt/JwtClaimsSet.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-oauth2-jose/6.3.0/spring-security-oauth2-jose-6.3.0-sources.jar!/org/springframework/security/oauth2/jwt/JwtDecoder.java" root0="SKIP_INSPECTION" />
@@ -139,36 +150,36 @@
     <option name="showScratchesAndConsoles" value="false" />
     <option name="sortKey" value="BY_TIME_DESCENDING" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
-    "Application.Application-auth-server-dev.executor": "Run",
-    "Application.Application-dev.executor": "Run",
-    "Application.Application-topic-dev.executor": "Run",
-    "Application.Application-user-dev.executor": "Run",
-    "Application.Application.executor": "Run",
-    "Application.ForumHubApplication.executor": "Run",
-    "Application.app.executor": "Run",
-    "Downloaded.Files.Path.Enabled": "false",
-    "JUnit.AnswerControllerTest.executor": "Run",
-    "JUnit.AnswerControllerTest.shouldAnswerTheTopicWithSuccessfully.executor": "Run",
-    "Repository.Attach.Annotations": "false",
-    "Repository.Attach.JavaDocs": "false",
-    "Repository.Attach.Sources": "false",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
-    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
-    "git-widget-placeholder": "develop",
-    "kotlin-language-version-configured": "true",
-    "last_directory_selection": "C:/Projects/authorizationserver/src/main/java",
-    "last_opened_file_path": "C:/Projects/forumhub/user/src/main/resources",
-    "project.structure.last.edited": "Facets",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.508046",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "editor.preferences.gutterIcons"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
+    &quot;Application.Application-auth-server-dev.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Application-dev.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Application-topic-dev.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Application-user-dev.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Application.executor&quot;: &quot;Run&quot;,
+    &quot;Application.ForumHubApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Application.app.executor&quot;: &quot;Run&quot;,
+    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
+    &quot;JUnit.AnswerControllerTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnswerControllerTest.shouldAnswerTheTopicWithSuccessfully.executor&quot;: &quot;Run&quot;,
+    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary&quot;: &quot;JUnit5&quot;,
+    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5&quot;: &quot;&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;develop&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_directory_selection&quot;: &quot;C:/Projects/authorizationserver/src/main/java&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Projects/forumhub/user/src/main/resources&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Facets&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.508046&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.gutterIcons&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="com.backend.challenge.ForumHub.service" />
@@ -208,7 +219,7 @@
       <recent name="com.raul.forumhub.user.respository" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Application-topic-dev">
+  <component name="RunManager" selected="Application.Application-user-dev">
     <configuration name="Application-auth-server-dev" type="Application" factoryName="Application" singleton="false">
       <option name="ALTERNATIVE_JRE_PATH" value="$PROJECT_DIR$/../../Program Files/Java/jdk-17" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -345,8 +356,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/topic" />
     </ignored-roots>
-    <MESSAGE value="Alterado a versão do Spring Boot para a versão 3.3.2" />
-    <MESSAGE value="Implementação do Spring Session para gerenciamento e persistencia da sessão do usuário na base de dados" />
     <MESSAGE value="feature: Substituido o armazenamento do usuário autorizado de armazenamento em memória para armazenamento na base de dados com JDBC" />
     <MESSAGE value="Removação /target/" />
     <MESSAGE value="Traduzido a mensagem de violação de constraint" />
@@ -370,7 +379,9 @@
     <MESSAGE value="Remoção de propriedade não utilizada" />
     <MESSAGE value="Distribuido o versionamento das entidades no flyway entre o serviço de usuário e tópico" />
     <MESSAGE value="Substituido a remoção dos tópicos e das respostas do serviço de usuário por trigger na base de dados" />
-    <option name="LAST_COMMIT_MESSAGE" value="Substituido a remoção dos tópicos e das respostas do serviço de usuário por trigger na base de dados" />
+    <MESSAGE value="Definido o autor dos tópicos e das respostas para &quot;desconhecido&quot; quando ele vier nulo" />
+    <MESSAGE value="Substituido as exceções do UserController por exceção personalizada" />
+    <option name="LAST_COMMIT_MESSAGE" value="Substituido as exceções do UserController por exceção personalizada" />
   </component>
   <component name="WfRunsListSearchHistory"><![CDATA[{
   "history": [
@@ -1016,6 +1027,14 @@
     },
     {
       "branch": "main",
+      "currentBranchFilter": true
+    },
+    {
+      "branch": "develop",
+      "currentBranchFilter": true
+    },
+    {
+      "branch": "develop",
       "currentBranchFilter": true
     },
     {

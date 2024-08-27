@@ -30,11 +30,11 @@ public class UserService {
 
 
     public void createUser(UserCreateDTO userCreateDTO) {
-        Profile basic = this.getProfileByName(Profile.ProfileName.BASIC);
+        Profile profile = this.getProfileByName(Profile.ProfileName.BASIC);
         User user = new User(userCreateDTO);
 
+        user.setProfile(profile);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setProfile(basic);
 
         this.userRepository.save(user);
     }
@@ -51,7 +51,9 @@ public class UserService {
         User user = this.getUserById(user_id);
         Profile profile = this.getProfileByName(userUpdateDTO.user().getProfile().getProfileName());
 
-        user.setName(userUpdateDTO.user().getName());
+        user.setFirstName(userUpdateDTO.user().getFirstName());
+        user.setLastName(userUpdateDTO.user().getLastName());
+        user.setUsername(userUpdateDTO.user().getUsername());
         user.setEmail(userUpdateDTO.user().getEmail());
 
         if(claimUserRole.equals(Profile.ProfileName.ADM.name())){

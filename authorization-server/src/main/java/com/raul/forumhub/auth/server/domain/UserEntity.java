@@ -21,7 +21,6 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long id;
-    private String name;
     private String email;
     @JsonIgnore
     private String password;
