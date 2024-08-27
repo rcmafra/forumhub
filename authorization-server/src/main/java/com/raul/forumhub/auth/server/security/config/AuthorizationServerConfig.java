@@ -70,13 +70,12 @@ public class AuthorizationServerConfig {
     public OAuth2TokenCustomizer<JwtEncodingContext> tokenCustomizer(UserRepository userRepository) {
         return (context -> {
             Authentication authentication = context.getPrincipal();
-            if(authentication.getPrincipal() instanceof User){
+            if (authentication.getPrincipal() instanceof User) {
                 final String email = authentication.getName();
                 final UserEntity user = userRepository.findByEmail(email).orElseThrow();
 
                 context.getClaims().claim("sub", email);
                 context.getClaims().claim("user_id", user.getId().toString());
-                context.getClaims().claim("name", user.getName());
                 context.getClaims().claim("authority", "ROLE_" + user.getProfile().getProfileName());
             }
         });
@@ -101,7 +100,7 @@ public class AuthorizationServerConfig {
                         "course:create", "course:delete", "course:edit",
                         "answer:delete", "answer:edit")
                 ))
-                .clientSettings(ClientSettings.builder().requireAuthorizationConsent(false).build())
+                .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
                 .tokenSettings(TokenSettings.builder()
                         .accessTokenTimeToLive(Duration.ofMinutes(15))
                         .authorizationCodeTimeToLive(Duration.ofMinutes(30))
@@ -121,9 +120,9 @@ public class AuthorizationServerConfig {
                 .redirectUri("https://oauth.pstmn.io/v1/callback")
                 .redirectUri("https://oidcdebugger.com/debug")
                 .scopes((scp) -> scp.addAll(Set.of(
-                        "myuser:read", "myuser:delete", "myuser:edit", "user:readAll", "user:read")
+                        "myuser:read", "user:readAll", "myuser:delete", "myuser:edit")
                 ))
-                .clientSettings(ClientSettings.builder().requireAuthorizationConsent(false).build())
+                .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
                 .tokenSettings(TokenSettings.builder()
                         .accessTokenTimeToLive(Duration.ofMinutes(15))
                         .authorizationCodeTimeToLive(Duration.ofMinutes(30))
