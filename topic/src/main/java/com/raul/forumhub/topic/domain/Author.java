@@ -20,16 +20,15 @@ public class Author {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    @JsonIgnore
     private Long id;
-    private String name;
+    private String username;
     private String email;
     @ManyToOne
     @JoinColumns(@JoinColumn(name = "profile_id", foreignKey = @ForeignKey(name = "profile_id")))
     private Profile profile;
 
-    public Author(String name, String email, Profile profile){
-        this.name = name;
+    public Author(String username, String email, Profile profile){
+        this.username = username;
         this.email = email;
         this.profile = profile;
     }
