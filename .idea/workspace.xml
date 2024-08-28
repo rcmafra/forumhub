@@ -4,16 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bde2c04d-06da-44ad-9010-f6df11e2d528" name="Changes" comment="Substituido as exceções do UserController por exceção personalizada">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="bde2c04d-06da-44ad-9010-f6df11e2d528" name="Changes" comment="Empty commit">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/authorization-server/src/main/java/com/raul/forumhub/auth/server/domain/UserEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/authorization-server/src/main/java/com/raul/forumhub/auth/server/domain/UserEntity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/authorization-server/src/main/java/com/raul/forumhub/auth/server/security/config/AuthorizationServerConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/authorization-server/src/main/java/com/raul/forumhub/auth/server/security/config/AuthorizationServerConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/client/UserClientRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/client/UserClientRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/domain/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/domain/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/dto/request/UserCreateDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/dto/request/UserCreateDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/dto/response/UserSummaryInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/dto/response/UserSummaryInfo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/exception/handler/ExceptionResponseHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/exception/handler/ExceptionResponseHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/controller/AnswerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/controller/AnswerController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/controller/CourseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/controller/CourseController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/controller/TopicController.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/controller/TopicController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/service/UserService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -150,36 +146,36 @@
     <option name="showScratchesAndConsoles" value="false" />
     <option name="sortKey" value="BY_TIME_DESCENDING" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
-    &quot;Application.Application-auth-server-dev.executor&quot;: &quot;Run&quot;,
-    &quot;Application.Application-dev.executor&quot;: &quot;Run&quot;,
-    &quot;Application.Application-topic-dev.executor&quot;: &quot;Run&quot;,
-    &quot;Application.Application-user-dev.executor&quot;: &quot;Run&quot;,
-    &quot;Application.Application.executor&quot;: &quot;Run&quot;,
-    &quot;Application.ForumHubApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Application.app.executor&quot;: &quot;Run&quot;,
-    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
-    &quot;JUnit.AnswerControllerTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AnswerControllerTest.shouldAnswerTheTopicWithSuccessfully.executor&quot;: &quot;Run&quot;,
-    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary&quot;: &quot;JUnit5&quot;,
-    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5&quot;: &quot;&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;develop&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_directory_selection&quot;: &quot;C:/Projects/authorizationserver/src/main/java&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Projects/forumhub/user/src/main/resources&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Facets&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.508046&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.gutterIcons&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
+    "Application.Application-auth-server-dev.executor": "Run",
+    "Application.Application-dev.executor": "Run",
+    "Application.Application-topic-dev.executor": "Debug",
+    "Application.Application-user-dev.executor": "Run",
+    "Application.Application.executor": "Run",
+    "Application.ForumHubApplication.executor": "Run",
+    "Application.app.executor": "Run",
+    "Downloaded.Files.Path.Enabled": "false",
+    "JUnit.AnswerControllerTest.executor": "Run",
+    "JUnit.AnswerControllerTest.shouldAnswerTheTopicWithSuccessfully.executor": "Run",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "false",
+    "Repository.Attach.Sources": "false",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
+    "git-widget-placeholder": "develop",
+    "kotlin-language-version-configured": "true",
+    "last_directory_selection": "C:/Projects/authorizationserver/src/main/java",
+    "last_opened_file_path": "C:/Projects/forumhub/user/src/main/resources",
+    "project.structure.last.edited": "Facets",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.508046",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "editor.preferences.gutterIcons"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="com.backend.challenge.ForumHub.service" />
@@ -219,7 +215,7 @@
       <recent name="com.raul.forumhub.user.respository" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Application-user-dev">
+  <component name="RunManager" selected="Application.Application-auth-server-dev">
     <configuration name="Application-auth-server-dev" type="Application" factoryName="Application" singleton="false">
       <option name="ALTERNATIVE_JRE_PATH" value="$PROJECT_DIR$/../../Program Files/Java/jdk-17" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -356,11 +352,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/topic" />
     </ignored-roots>
-    <MESSAGE value="feature: Substituido o armazenamento do usuário autorizado de armazenamento em memória para armazenamento na base de dados com JDBC" />
-    <MESSAGE value="Removação /target/" />
-    <MESSAGE value="Traduzido a mensagem de violação de constraint" />
-    <MESSAGE value="Criado exception handler para lidar com exceções internas" />
-    <MESSAGE value="Criado record para formatar as mensagens de exceções" />
     <MESSAGE value="Criado exceção de negócio" />
     <MESSAGE value="Push bytecodes" />
     <MESSAGE value="Deleted bytecodes" />
@@ -381,7 +372,12 @@
     <MESSAGE value="Substituido a remoção dos tópicos e das respostas do serviço de usuário por trigger na base de dados" />
     <MESSAGE value="Definido o autor dos tópicos e das respostas para &quot;desconhecido&quot; quando ele vier nulo" />
     <MESSAGE value="Substituido as exceções do UserController por exceção personalizada" />
-    <option name="LAST_COMMIT_MESSAGE" value="Substituido as exceções do UserController por exceção personalizada" />
+    <MESSAGE value="Alterado o consentimento para true" />
+    <MESSAGE value="Adicionado outras propriedades na entidade de usuário e ajustado as demais classes com a nova alteração" />
+    <MESSAGE value="Removido a anotação JsonIgnore do id do usuário devido a erro de instância transitória na persistência" />
+    <MESSAGE value="Ajustado recurso de edição de usuários quando um ADM não estiver com o scope myuser:edit" />
+    <MESSAGE value="Empty commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="Empty commit" />
   </component>
   <component name="WfRunsListSearchHistory"><![CDATA[{
   "history": [

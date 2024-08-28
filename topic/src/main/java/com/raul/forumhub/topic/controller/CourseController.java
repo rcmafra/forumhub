@@ -41,8 +41,8 @@ public class CourseController {
     }
 
     @PreAuthorize("hasRole('ADM') and hasAuthority('SCOPE_course:delete')")
-    @DeleteMapping("/delete/{courseName}")
-    public ResponseEntity<HttpMessageDefault> deleteCourse(@PathVariable String courseName){
+    @DeleteMapping("/delete")
+    public ResponseEntity<HttpMessageDefault> deleteCourse(@RequestParam String courseName){
         this.courseService.deleteCourse(courseName);
 
         return ResponseEntity.ok(new HttpMessageDefault("HttpStatusCode OK"));
@@ -50,8 +50,8 @@ public class CourseController {
     }
 
     @PreAuthorize("hasRole('ADM') and hasAuthority('SCOPE_course:edit')")
-    @PutMapping("/{courseName}")
-    public  ResponseEntity<GetCourseDTO> updateNameCourse(@PathVariable String courseName, @RequestBody CourseUpdateDTO courseUpdateDTO){
+    @PutMapping
+    public  ResponseEntity<GetCourseDTO> updateNameCourse(@RequestParam String courseName, @RequestBody CourseUpdateDTO courseUpdateDTO){
         GetCourseDTO getCourseDTO = this.courseService.updateNameCourse(courseName, courseUpdateDTO);
 
         return ResponseEntity.ok(getCourseDTO);

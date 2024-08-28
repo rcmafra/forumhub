@@ -41,7 +41,7 @@ public class TopicController {
     }
 
     @PreAuthorize("permitAll")
-    @GetMapping
+    @GetMapping("/listAll")
     public PagedModel<EntityModel<GetTopicDTO>> topicsList(@PageableDefault Pageable pageable,
                                                            PagedResourcesAssembler<GetTopicDTO> assembler) {
 
@@ -51,15 +51,15 @@ public class TopicController {
     }
 
     @PreAuthorize("permitAll")
-    @GetMapping("/{topic_id}")
-    public ResponseEntity<GetTopicDTO> getTopic(@PathVariable Long topic_id){
+    @GetMapping
+    public ResponseEntity<GetTopicDTO> getTopic(@RequestParam Long topic_id){
 
         return ResponseEntity.ok(new GetTopicDTO(topicService.getTopicById(topic_id)));
     }
 
     @PreAuthorize("authenticated and hasAuthority('SCOPE_topic:edit')")
-    @PutMapping("/{topic_id}")
-    public ResponseEntity<HttpMessageDefault> updateTopic(@PathVariable Long topic_id,  @Valid @RequestBody TopicUpdateDTO topicUpdateDTO,
+    @PutMapping
+    public ResponseEntity<HttpMessageDefault> updateTopic(@RequestParam Long topic_id,  @Valid @RequestBody TopicUpdateDTO topicUpdateDTO,
                                                     @AuthenticationPrincipal Jwt jwt){
 
         Long user_id = Long.parseLong(jwt.getClaim("user_id"));
@@ -69,8 +69,8 @@ public class TopicController {
     }
 
     @PreAuthorize("authenticated and hasAuthority('SCOPE_topic:delete')")
-    @DeleteMapping("/delete/{topic_id}")
-    public ResponseEntity<HttpMessageDefault> deleteTopic(@PathVariable Long topic_id, @AuthenticationPrincipal Jwt jwt){
+    @DeleteMapping("/delete")
+    public ResponseEntity<HttpMessageDefault> deleteTopic(@RequestParam Long topic_id, @AuthenticationPrincipal Jwt jwt){
 
         Long user_id = Long.parseLong(jwt.getClaim("user_id"));
         topicService.deleteTopic(topic_id, user_id);
