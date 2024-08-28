@@ -28,7 +28,7 @@ public class Topic {
     private String title;
     @NotBlank(message = "A mensagem é obrigatória")
     @Column
-    private String message;
+    private String question;
     @Column
     private LocalDateTime createdAt;
     @Column(name = "status", length = 10, nullable = false)
@@ -45,7 +45,7 @@ public class Topic {
 
     public Topic(String title, String message, Author author, Course course){
         this.title = title;
-        this.message = message;
+        this.question = message;
         this.createdAt = LocalDateTime.now();
         this.author = author;
         this.course = course;
@@ -54,7 +54,7 @@ public class Topic {
 
     public Topic(String title, String message, Status status){
         this.title = title;
-        this.message = message;
+        this.question = message;
         this.status = status;
     }
 

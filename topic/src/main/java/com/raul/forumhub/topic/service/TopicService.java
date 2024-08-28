@@ -37,7 +37,7 @@ public class TopicService {
         Author author = userClientRequest.getUserById(user_id);
         Course course = courseService.getCourseById(topicCreateDTO.course_id());
 
-        Topic topic = new Topic(topicCreateDTO.title(), topicCreateDTO.message(), author, course);
+        Topic topic = new Topic(topicCreateDTO.title(), topicCreateDTO.question(), author, course);
         this.saveTopic(topic);
     }
 
@@ -87,7 +87,7 @@ public class TopicService {
                 author.getProfile().getProfileName());
 
         topic.setTitle(update.topic().getTitle());
-        topic.setMessage(update.topic().getMessage());
+        topic.setQuestion(update.topic().getQuestion());
         topic.setStatus(update.topic().getStatus());
         topic.setCourse(course);
 

@@ -9,7 +9,7 @@ public record GetTopicDTO(Long id, String title, String message, LocalDateTime c
                           Course course, Set<Answer> answer) {
 
     public GetTopicDTO(Topic topic) {
-        this(topic.getId(), topic.getTitle(), topic.getMessage(), topic.getCreatedAt(), topic.getStatus(),
+        this(topic.getId(), topic.getTitle(), topic.getQuestion(), topic.getCreatedAt(), topic.getStatus(),
                 topic.getAuthor(), topic.getCourse(), topic.getAnswers());
     }
 }

@@ -4,12 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bde2c04d-06da-44ad-9010-f6df11e2d528" name="Changes" comment="Empty commit">
+    <list default="true" id="bde2c04d-06da-44ad-9010-f6df11e2d528" name="Changes" comment="Substituido path variable de alguns recursos por query param">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/client/UserClientRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/client/UserClientRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/controller/AnswerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/controller/AnswerController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/controller/CourseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/controller/CourseController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/controller/TopicController.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/controller/TopicController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/domain/Topic.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/domain/Topic.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/dto/request/TopicCreateDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/dto/request/TopicCreateDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/dto/response/GetTopicDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/dto/response/GetTopicDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/service/TopicService.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/service/TopicService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/service/UserService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -151,7 +152,7 @@
     "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
     "Application.Application-auth-server-dev.executor": "Run",
     "Application.Application-dev.executor": "Run",
-    "Application.Application-topic-dev.executor": "Debug",
+    "Application.Application-topic-dev.executor": "Run",
     "Application.Application-user-dev.executor": "Run",
     "Application.Application.executor": "Run",
     "Application.ForumHubApplication.executor": "Run",
@@ -215,7 +216,7 @@
       <recent name="com.raul.forumhub.user.respository" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Application-auth-server-dev">
+  <component name="RunManager" selected="Application.Application-topic-dev">
     <configuration name="Application-auth-server-dev" type="Application" factoryName="Application" singleton="false">
       <option name="ALTERNATIVE_JRE_PATH" value="$PROJECT_DIR$/../../Program Files/Java/jdk-17" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -352,7 +353,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/topic" />
     </ignored-roots>
-    <MESSAGE value="Criado exceção de negócio" />
     <MESSAGE value="Push bytecodes" />
     <MESSAGE value="Deleted bytecodes" />
     <MESSAGE value="Config IDE" />
@@ -377,7 +377,8 @@
     <MESSAGE value="Removido a anotação JsonIgnore do id do usuário devido a erro de instância transitória na persistência" />
     <MESSAGE value="Ajustado recurso de edição de usuários quando um ADM não estiver com o scope myuser:edit" />
     <MESSAGE value="Empty commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="Empty commit" />
+    <MESSAGE value="Substituido path variable de alguns recursos por query param" />
+    <option name="LAST_COMMIT_MESSAGE" value="Substituido path variable de alguns recursos por query param" />
   </component>
   <component name="WfRunsListSearchHistory"><![CDATA[{
   "history": [
@@ -1023,6 +1024,10 @@
     },
     {
       "branch": "main",
+      "currentBranchFilter": true
+    },
+    {
+      "branch": "develop",
       "currentBranchFilter": true
     },
     {
