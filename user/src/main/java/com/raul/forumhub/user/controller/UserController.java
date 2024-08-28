@@ -88,7 +88,8 @@ public class UserController {
         String claimUserRole = jwt.getClaim("authority").toString().substring(5);
         Long claimUserId = Long.parseLong(jwt.getClaim("user_id"));
 
-        String myUserEditScope = jwt.getClaimAsStringList("scope").stream()
+        String myUserEditScope = Objects.isNull(jwt.getClaim("scope")) ? "" :
+                jwt.getClaimAsStringList("scope").stream()
                 .filter(s -> s.equals("myuser:edit")).findFirst().orElse("");
 
 
