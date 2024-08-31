@@ -5,6 +5,7 @@ import com.raul.forumhub.topic.dto.request.CourseCreateDTO;
 import com.raul.forumhub.topic.dto.request.CourseUpdateDTO;
 import com.raul.forumhub.topic.dto.response.GetCourseCollection;
 import com.raul.forumhub.topic.dto.response.GetCourseDTO;
+import com.raul.forumhub.topic.security.IsAuthenticated;
 import com.raul.forumhub.topic.service.CourseService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -32,7 +33,7 @@ public class CourseController {
         return new ResponseEntity<>(new HttpMessageDefault("HttpStatusCode OK"), HttpStatus.CREATED);
     }
 
-    @PreAuthorize("authenticated")
+    @IsAuthenticated
     @GetMapping
     public ResponseEntity<List<GetCourseCollection>> getAllCourse(){
         List<GetCourseCollection> getCourseCollection = this.courseService.getAllCourse();

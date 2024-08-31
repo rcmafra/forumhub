@@ -7,6 +7,7 @@ import com.raul.forumhub.user.dto.response.HttpMessageDefault;
 import com.raul.forumhub.user.dto.response.UserDetailedInfo;
 import com.raul.forumhub.user.dto.response.UserSummaryInfo;
 import com.raul.forumhub.user.exception.MalFormatedParamUserException;
+import com.raul.forumhub.user.security.IsAuthenticated;
 import com.raul.forumhub.user.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -34,7 +35,6 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PreAuthorize("permitAll")
     @PostMapping("/create")
     public ResponseEntity<HttpMessageDefault> createUser(@Valid @RequestBody UserCreateDTO userCreateDTO) {
 
@@ -63,7 +63,7 @@ public class UserController {
         }
     }
 
-    @PreAuthorize("authenticated")
+    @IsAuthenticated
     @GetMapping("/summary-info")
     public ResponseEntity<UserSummaryInfo> getSummaryInfoUser(@RequestParam Long user_id) {
        return ResponseEntity.ok(new UserSummaryInfo(this.userService.getInfoUser(user_id)));

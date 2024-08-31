@@ -4,6 +4,7 @@ import com.raul.forumhub.topic.dto.request.TopicCreateDTO;
 import com.raul.forumhub.topic.dto.request.TopicUpdateDTO;
 import com.raul.forumhub.topic.dto.response.GetTopicDTO;
 import com.raul.forumhub.topic.dto.response.HttpMessageDefault;
+import com.raul.forumhub.topic.security.IsAuthenticated;
 import com.raul.forumhub.topic.service.TopicService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -29,7 +30,7 @@ public class TopicController {
         this.topicService = topicService;
     }
 
-    @PreAuthorize("authenticated")
+    @IsAuthenticated
     @PostMapping("/create")
     public ResponseEntity<HttpMessageDefault> createTopic(@Valid @RequestBody TopicCreateDTO topicCreateDTO,
                                                           @AuthenticationPrincipal Jwt jwt){
@@ -40,7 +41,6 @@ public class TopicController {
         return new ResponseEntity<>(new HttpMessageDefault("HttpStatusCode OK"), HttpStatus.CREATED);
     }
 
-    @PreAuthorize("permitAll")
     @GetMapping("/listAll")
     public PagedModel<EntityModel<GetTopicDTO>> topicsList(@PageableDefault Pageable pageable,
                                                            PagedResourcesAssembler<GetTopicDTO> assembler) {
@@ -50,14 +50,13 @@ public class TopicController {
         return assembler.toModel(topicsListDTOS);
     }
 
-    @PreAuthorize("permitAll")
     @GetMapping
     public ResponseEntity<GetTopicDTO> getTopic(@RequestParam Long topic_id){
 
         return ResponseEntity.ok(new GetTopicDTO(topicService.getTopicById(topic_id)));
     }
 
-    @PreAuthorize("authenticated and hasAuthority('SCOPE_topic:edit')")
+    @PreAuthorize("hasAuthority('SCOPE_topic:edit')")
     @PutMapping
     public ResponseEntity<HttpMessageDefault> updateTopic(@RequestParam Long topic_id,  @Valid @RequestBody TopicUpdateDTO topicUpdateDTO,
                                                     @AuthenticationPrincipal Jwt jwt){
@@ -68,7 +67,7 @@ public class TopicController {
         return ResponseEntity.ok(new HttpMessageDefault("HttpStatusCode OK"));
     }
 
-    @PreAuthorize("authenticated and hasAuthority('SCOPE_topic:delete')")
+    @PreAuthorize("hasAuthority('SCOPE_topic:delete')")
     @DeleteMapping("/delete")
     public ResponseEntity<HttpMessageDefault> deleteTopic(@RequestParam Long topic_id, @AuthenticationPrincipal Jwt jwt){
 

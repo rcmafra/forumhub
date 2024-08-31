@@ -4,6 +4,7 @@ import com.raul.forumhub.topic.dto.request.AnswerTopicDTO;
 import com.raul.forumhub.topic.dto.request.AnswerUpdateDTO;
 import com.raul.forumhub.topic.dto.response.GetAnswerDTO;
 import com.raul.forumhub.topic.dto.response.HttpMessageDefault;
+import com.raul.forumhub.topic.security.IsAuthenticated;
 import com.raul.forumhub.topic.service.AnswerService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ public class AnswerController {
         this.answerService = answerService;
     }
 
-    @PreAuthorize("authenticated")
+    @IsAuthenticated
     @PostMapping("/{topic_id}/answer")
     public ResponseEntity<HttpMessageDefault> answerTopic(@PathVariable Long topic_id, @Valid @RequestBody AnswerTopicDTO answerTopicDTO,
                                                           @AuthenticationPrincipal Jwt jwt){
@@ -33,7 +34,7 @@ public class AnswerController {
         return ResponseEntity.ok(new HttpMessageDefault("HttpStatusCode OK"));
     }
 
-    @PreAuthorize("authenticated")
+    @IsAuthenticated
     @PostMapping("/{topic_id}/markBestAnswer")
     public ResponseEntity<HttpMessageDefault> markBestAnswer(@PathVariable Long topic_id, @RequestParam Long answer_id,
                                                          @AuthenticationPrincipal Jwt jwt){
@@ -44,7 +45,7 @@ public class AnswerController {
         return ResponseEntity.ok(new HttpMessageDefault("HttpStatusCode OK"));
     }
 
-    @PreAuthorize("authenticated and hasAuthority('SCOPE_answer:delete')")
+    @PreAuthorize("hasAuthority('SCOPE_answer:delete')")
     @DeleteMapping("/{topic_id}/answers")
     public ResponseEntity<HttpMessageDefault> deleteAnswer(@PathVariable Long topic_id, @RequestParam Long answer_id,
                                                      @AuthenticationPrincipal Jwt jwt){
@@ -55,7 +56,7 @@ public class AnswerController {
         return ResponseEntity.ok(new HttpMessageDefault("HttpStatusCode OK"));
     }
 
-    @PreAuthorize("authenticated and hasAuthority('SCOPE_answer:edit')")
+    @PreAuthorize("hasAuthority('SCOPE_answer:edit')")
     @PutMapping("/{topic_id}/answers")
     public ResponseEntity<GetAnswerDTO> updateAnswer(@PathVariable Long topic_id, @RequestParam Long answer_id,
                                                      @AuthenticationPrincipal Jwt jwt, @RequestBody AnswerUpdateDTO answerUpdateDTO){

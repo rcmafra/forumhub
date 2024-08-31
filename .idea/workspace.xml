@@ -4,13 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bde2c04d-06da-44ad-9010-f6df11e2d528" name="Changes" comment="Substituido path variable de alguns recursos por query param">
+    <list default="true" id="bde2c04d-06da-44ad-9010-f6df11e2d528" name="Changes" comment="Substituido a propriedade &quot;message&quot; da entidade tópico por &quot;question&quot;">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/client/UserClientRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/client/UserClientRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/domain/Topic.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/domain/Topic.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/dto/request/TopicCreateDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/dto/request/TopicCreateDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/dto/response/GetTopicDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/dto/response/GetTopicDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/service/TopicService.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/service/TopicService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/controller/AnswerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/controller/AnswerController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/controller/CourseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/controller/CourseController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/controller/TopicController.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/controller/TopicController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/controller/UserController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/service/UserService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -26,6 +26,7 @@
         <option value="Interface" />
         <option value="Record" />
         <option value="Class" />
+        <option value="AnnotationType" />
       </list>
     </option>
   </component>
@@ -147,36 +148,36 @@
     <option name="showScratchesAndConsoles" value="false" />
     <option name="sortKey" value="BY_TIME_DESCENDING" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
-    "Application.Application-auth-server-dev.executor": "Run",
-    "Application.Application-dev.executor": "Run",
-    "Application.Application-topic-dev.executor": "Run",
-    "Application.Application-user-dev.executor": "Run",
-    "Application.Application.executor": "Run",
-    "Application.ForumHubApplication.executor": "Run",
-    "Application.app.executor": "Run",
-    "Downloaded.Files.Path.Enabled": "false",
-    "JUnit.AnswerControllerTest.executor": "Run",
-    "JUnit.AnswerControllerTest.shouldAnswerTheTopicWithSuccessfully.executor": "Run",
-    "Repository.Attach.Annotations": "false",
-    "Repository.Attach.JavaDocs": "false",
-    "Repository.Attach.Sources": "false",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
-    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
-    "git-widget-placeholder": "develop",
-    "kotlin-language-version-configured": "true",
-    "last_directory_selection": "C:/Projects/authorizationserver/src/main/java",
-    "last_opened_file_path": "C:/Projects/forumhub/user/src/main/resources",
-    "project.structure.last.edited": "Facets",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.508046",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "editor.preferences.gutterIcons"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
+    &quot;Application.Application-auth-server-dev.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Application-dev.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Application-topic-dev.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Application-user-dev.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Application.executor&quot;: &quot;Run&quot;,
+    &quot;Application.ForumHubApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Application.app.executor&quot;: &quot;Run&quot;,
+    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
+    &quot;JUnit.AnswerControllerTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnswerControllerTest.shouldAnswerTheTopicWithSuccessfully.executor&quot;: &quot;Run&quot;,
+    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary&quot;: &quot;JUnit5&quot;,
+    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5&quot;: &quot;&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;develop&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_directory_selection&quot;: &quot;C:/Projects/authorizationserver/src/main/java&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Projects/forumhub/user/src/main/resources&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Facets&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.508046&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.gutterIcons&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="com.backend.challenge.ForumHub.service" />
@@ -353,7 +354,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/topic" />
     </ignored-roots>
-    <MESSAGE value="Push bytecodes" />
     <MESSAGE value="Deleted bytecodes" />
     <MESSAGE value="Config IDE" />
     <MESSAGE value="Alterado a mensagem de validação de atributos" />
@@ -378,7 +378,8 @@
     <MESSAGE value="Ajustado recurso de edição de usuários quando um ADM não estiver com o scope myuser:edit" />
     <MESSAGE value="Empty commit" />
     <MESSAGE value="Substituido path variable de alguns recursos por query param" />
-    <option name="LAST_COMMIT_MESSAGE" value="Substituido path variable de alguns recursos por query param" />
+    <MESSAGE value="Substituido a propriedade &quot;message&quot; da entidade tópico por &quot;question&quot;" />
+    <option name="LAST_COMMIT_MESSAGE" value="Substituido a propriedade &quot;message&quot; da entidade tópico por &quot;question&quot;" />
   </component>
   <component name="WfRunsListSearchHistory"><![CDATA[{
   "history": [
@@ -1024,6 +1025,18 @@
     },
     {
       "branch": "main",
+      "currentBranchFilter": true
+    },
+    {
+      "branch": "develop",
+      "currentBranchFilter": true
+    },
+    {
+      "branch": "develop",
+      "currentBranchFilter": true
+    },
+    {
+      "branch": "develop",
       "currentBranchFilter": true
     },
     {
