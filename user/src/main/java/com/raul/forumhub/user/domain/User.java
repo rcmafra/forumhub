@@ -10,12 +10,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.relational.core.mapping.Table;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
-import java.util.Collection;
-import java.util.List;
 
 
 @Entity(name = "users")
@@ -24,7 +18,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class User implements UserDetails {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -67,34 +61,19 @@ public class User implements UserDetails {
         this.isEnabled = true;
     }
 
-    @JsonIgnore
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(profile.getProfileName().name()));
-    }
-
-    @Override
-    public String getUsername() {
-        return username;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
+    public boolean getIsAccountNonExpired() {
         return isAccountNonExpired;
     }
 
-    @Override
-    public boolean isAccountNonLocked() {
+    public boolean getIsAccountNonLocked() {
         return isAccountNonLocked;
     }
 
-    @Override
-    public boolean isCredentialsNonExpired() {
+    public boolean getIsCredentialsNonExpired() {
         return isCredentialsNonExpired;
     }
 
-    @Override
-    public boolean isEnabled() {
+    public boolean getIsEnabled() {
         return isEnabled;
     }
 }
