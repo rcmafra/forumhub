@@ -27,5 +27,25 @@ public class UserEntity {
     @ManyToOne
     @JoinColumns(@JoinColumn(name = "profile_id", foreignKey = @ForeignKey(name = "profile_id")))
     private Profile profile;
+    private boolean isAccountNonExpired;
+    private boolean isAccountNonLocked;
+    private boolean isCredentialsNonExpired;
+    private boolean isEnabled;
+
+    public boolean getIsAccountNonExpired() {
+        return isAccountNonExpired;
+    }
+
+    public boolean getIsAccountNonLocked() {
+        return isAccountNonLocked;
+    }
+
+    public boolean getIsCredentialsNonExpired() {
+        return isCredentialsNonExpired;
+    }
+
+    public boolean getIsEnabled() {
+        return isEnabled;
+    }
 
 }
