@@ -58,6 +58,10 @@ public class UserService {
 
         if(claimUserRole.equals(Profile.ProfileName.ADM.name())){
             user.setProfile(profile);
+            user.setAccountNonExpired(userUpdateDTO.user().getIsAccountNonExpired());
+            user.setAccountNonLocked(userUpdateDTO.user().getIsAccountNonLocked());
+            user.setCredentialsNonExpired(userUpdateDTO.user().getIsCredentialsNonExpired());
+            user.setEnabled(userUpdateDTO.user().getIsEnabled());
         }
 
         userRepository.save(user);
