@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
@@ -72,7 +73,8 @@ public class AuthorizationServerConfig {
             Authentication authentication = context.getPrincipal();
             if (authentication.getPrincipal() instanceof User) {
                 final String email = authentication.getName();
-                final UserEntity user = userRepository.findByEmail(email).orElseThrow();
+                final UserEntity user = userRepository.findByEmail(email)
+                        .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
 
                 context.getClaims().claim("sub", email);
                 context.getClaims().claim("user_id", user.getId().toString());

@@ -3,6 +3,7 @@ package com.raul.forumhub.auth.server.security.userdetails;
 import com.raul.forumhub.auth.server.domain.UserEntity;
 import com.raul.forumhub.auth.server.repository.UserRepository;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,12 +21,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        final UserEntity userEntity = this.userRepository.findByEmail(email.toLowerCase()).orElseThrow();
+    public UserDetails loadUserByUsername(String email) {
+        final UserEntity userEntity = this.userRepository.findByEmail(email.toLowerCase())
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
 
-        return new org.springframework.security.core.userdetails.User(
-                userEntity.getEmail(), userEntity.getPassword(), Collections.singleton(
-                        new SimpleGrantedAuthority(userEntity.getProfile().getProfileName().name()))
-        );
+        return new User(userEntity.getEmail(), userEntity.getPassword(), userEntity.getIsEnabled(),
+                userEntity.getIsAccountNonExpired(), userEntity.getIsCredentialsNonExpired(), userEntity.getIsAccountNonLocked(),
+                Collections.singleton(new SimpleGrantedAuthority(userEntity.getProfile().getProfileName().name())));
+
     }
+
+
 }
