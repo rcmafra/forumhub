@@ -1,13 +1,16 @@
 package com.raul.forumhub.topic.client;
 
 import com.raul.forumhub.topic.domain.Author;
-import org.springframework.http.MediaType;
+import com.raul.forumhub.topic.exception.RestClientException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 import reactor.util.Logger;
 import reactor.util.Loggers;
+
+import java.time.Duration;
+import java.util.concurrent.TimeoutException;
 
 @Component
 public class UserClientRequest {
@@ -30,12 +33,14 @@ public class UserClientRequest {
                         .path("/api-forum/v1/forumhub/users/summary-info")
                         .queryParam("user_id", id)
                         .build())
-                .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToMono(Author.class)
+                .timeout(Duration.ofMillis(1000))
+                .onErrorResume(TimeoutException.class, ex ->
+                        Mono.error(() -> new TimeoutException("Nenhuma resposta obtida dentro do tempo estimado")))
                 .onErrorResume(WebClientResponseException.class, ex ->
-                        ex.getStatusCode().value() == 404 ? Mono.empty() : Mono.error(ex))
-                .map(user -> new Author(user.getId(), user.getName(), user.getEmail(), user.getProfile()))
+                        Mono.error(new RestClientException(ex.getStatusCode(), ex.getResponseBodyAsString())))
+                .map(user -> new Author(user.getId(), user.getUsername(), user.getEmail(), user.getProfile()))
                 .log(logger)
                 .block();
 
