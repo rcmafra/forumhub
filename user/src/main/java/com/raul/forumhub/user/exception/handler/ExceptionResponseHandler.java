@@ -65,4 +65,11 @@ public class ExceptionResponseHandler {
         return new ResponseEntity<>(entity, headers(), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(Exception.class)
+    private ResponseEntity<ExceptionEntity> notExpectedExceptionResolver(Exception ex, HttpServletRequest request) {
+        ExceptionEntity entity = new ExceptionEntity(LocalDateTime.now(), HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "Erro interno", ex.getCause().toString(), request.getRequestURI());
+        return new ResponseEntity<>(entity, headers(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
 }

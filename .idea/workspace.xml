@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AnalysisUIOptions">
+    <option name="ANALYZE_TEST_SOURCES" value="false" />
+  </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bde2c04d-06da-44ad-9010-f6df11e2d528" name="Changes" comment="Substituido a propriedade &quot;message&quot; da entidade tópico por &quot;question&quot;">
+    <list default="true" id="bde2c04d-06da-44ad-9010-f6df11e2d528" name="Changes" comment="Adicionado edição de atributos da conta de usuário somente para ADM">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/client/UserClientRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/client/UserClientRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/controller/AnswerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/controller/AnswerController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/controller/CourseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/controller/CourseController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/controller/TopicController.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/controller/TopicController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/service/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/exception/handler/ExceptionResponseHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/exception/handler/ExceptionResponseHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/exception/handler/ExceptionResponseHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/exception/handler/ExceptionResponseHandler.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,8 +26,8 @@
         <option value="JUnit5 Test Class" />
         <option value="Interface" />
         <option value="Record" />
-        <option value="Class" />
         <option value="AnnotationType" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -118,6 +119,7 @@
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-tx/6.1.11/spring-tx-6.1.11-sources.jar!/org/springframework/dao/DataIntegrityViolationException.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-web/6.1.11/spring-web-6.1.11-sources.jar!/org/springframework/http/HttpStatus.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-web/6.1.11/spring-web-6.1.11-sources.jar!/org/springframework/http/ResponseEntity.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-web/6.1.11/spring-web-6.1.11-sources.jar!/org/springframework/web/bind/annotation/RequestBody.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-web/6.1.11/spring-web-6.1.11-sources.jar!/org/springframework/web/bind/annotation/RestControllerAdvice.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-web/6.1.8/spring-web-6.1.8-sources.jar!/org/springframework/web/filter/OncePerRequestFilter.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-webflux/6.1.11/spring-webflux-6.1.11-sources.jar!/org/springframework/web/reactive/function/client/WebClient.java" root0="SKIP_INSPECTION" />
@@ -153,8 +155,8 @@
     &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
     &quot;Application.Application-auth-server-dev.executor&quot;: &quot;Run&quot;,
     &quot;Application.Application-dev.executor&quot;: &quot;Run&quot;,
-    &quot;Application.Application-topic-dev.executor&quot;: &quot;Run&quot;,
-    &quot;Application.Application-user-dev.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Application-topic-dev.executor&quot;: &quot;Debug&quot;,
+    &quot;Application.Application-user-dev.executor&quot;: &quot;Debug&quot;,
     &quot;Application.Application.executor&quot;: &quot;Run&quot;,
     &quot;Application.ForumHubApplication.executor&quot;: &quot;Run&quot;,
     &quot;Application.app.executor&quot;: &quot;Run&quot;,
@@ -170,12 +172,12 @@
     &quot;git-widget-placeholder&quot;: &quot;develop&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_directory_selection&quot;: &quot;C:/Projects/authorizationserver/src/main/java&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Projects/forumhub/user/src/main/resources&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Projects/forumhub/authorization-server/src/main/java/com/raul/forumhub/auth/server&quot;,
     &quot;project.structure.last.edited&quot;: &quot;Facets&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.508046&quot;,
     &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.gutterIcons&quot;
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.obiscr.chatgpt.settings.GPT3-3.5-Turbo&quot;
   }
 }</component>
   <component name="RecentsManager">
@@ -184,11 +186,11 @@
       <recent name="com.backend.challenge.ForumHub.dto.request" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Projects\forumhub\authorization-server\src\main\java\com\raul\forumhub\auth\server" />
       <recent name="C:\Projects\forumhub\user\src\main\resources" />
       <recent name="C:\Projects\forumhub\user\src\main\java\com\raul\forumhub\user" />
       <recent name="C:\Projects\forumhub\topic" />
       <recent name="C:\Projects\forumhub\user" />
-      <recent name="C:\Projects\forumhub\authorization-server" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Projects\user\src" />
@@ -201,11 +203,11 @@
       <recent name="" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="com.raul.forumhub.auth.server.exception" />
       <recent name="com.raul.forumhub.topic.exception" />
       <recent name="com.raul.forumhub.user.dto.request" />
       <recent name="com.raul.forumhub.topic.client" />
       <recent name="com.raul.forumhub.user.controller" />
-      <recent name="com.raul.forumhub.user" />
     </key>
     <key name="CreateTestDialog.RecentsKey">
       <recent name="com.backend.challenge.ForumHub.controller" />
@@ -218,7 +220,7 @@
     </key>
   </component>
   <component name="RunManager" selected="Application.Application-topic-dev">
-    <configuration name="Application-auth-server-dev" type="Application" factoryName="Application" singleton="false">
+    <configuration name="Application-auth-server-dev" type="Application" factoryName="Application" singleton="true">
       <option name="ALTERNATIVE_JRE_PATH" value="$PROJECT_DIR$/../../Program Files/Java/jdk-17" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="com.raul.forumhub.auth.server.AuthorizationserverApplication" />
@@ -354,12 +356,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/topic" />
     </ignored-roots>
-    <MESSAGE value="Deleted bytecodes" />
-    <MESSAGE value="Config IDE" />
-    <MESSAGE value="Alterado a mensagem de validação de atributos" />
-    <MESSAGE value="Correção das exceções pertinentes a classe de resposta" />
-    <MESSAGE value="Correção das exceções pertinentes a classe de tópico" />
-    <MESSAGE value="Correção das exceções pertinentes a classe de curso" />
     <MESSAGE value="Correção de exceção na classe de validação de autorização" />
     <MESSAGE value="Criação de exceções para as regras de negócio" />
     <MESSAGE value="Criação de record para reposta de exceções" />
@@ -379,7 +375,13 @@
     <MESSAGE value="Empty commit" />
     <MESSAGE value="Substituido path variable de alguns recursos por query param" />
     <MESSAGE value="Substituido a propriedade &quot;message&quot; da entidade tópico por &quot;question&quot;" />
-    <option name="LAST_COMMIT_MESSAGE" value="Substituido a propriedade &quot;message&quot; da entidade tópico por &quot;question&quot;" />
+    <MESSAGE value="Criado anotação @IsAuthenticated para abstração da validação de usuários autenticados" />
+    <MESSAGE value="Marcação de métodos com a anotação @IsAuthenticated e remoção de parâmetros desnecessários" />
+    <MESSAGE value="Adicionado exceção quando usuário não for encontrado" />
+    <MESSAGE value="Removido implementação de UserDetails" />
+    <MESSAGE value="Adicionado propriedades referente a atributos da conta de usuário" />
+    <MESSAGE value="Adicionado edição de atributos da conta de usuário somente para ADM" />
+    <option name="LAST_COMMIT_MESSAGE" value="Adicionado edição de atributos da conta de usuário somente para ADM" />
   </component>
   <component name="WfRunsListSearchHistory"><![CDATA[{
   "history": [
@@ -1078,6 +1080,38 @@
     {
       "branch": "develop",
       "currentBranchFilter": true
+    },
+    {
+      "branch": "develop",
+      "currentBranchFilter": true
+    },
+    {
+      "branch": "develop",
+      "currentBranchFilter": true
+    },
+    {
+      "branch": "develop",
+      "currentBranchFilter": true
+    },
+    {
+      "branch": "develop",
+      "currentBranchFilter": true
+    },
+    {
+      "branch": "develop",
+      "currentBranchFilter": true
+    },
+    {
+      "branch": "develop",
+      "currentBranchFilter": true
+    },
+    {
+      "branch": "develop",
+      "currentBranchFilter": true
+    },
+    {
+      "branch": "develop",
+      "currentBranchFilter": true
     }
   ],
   "lastFilter": {
@@ -1088,7 +1122,7 @@
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" type="java-method">
+        <line-breakpoint type="java-method">
           <url>file://$PROJECT_DIR$/src/main/java/com/backend/api/forumhub/service/CourseService.java</url>
           <line>40</line>
           <properties class="com.backend.api.forumhub.service.CourseService">
@@ -1096,6 +1130,15 @@
             <option name="WATCH_EXIT" value="false" />
           </properties>
           <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/controller/UserController.java</url>
+          <line>67</line>
+          <properties class="com.raul.forumhub.user.controller.UserController" method="getSummaryInfoUser">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="28" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
