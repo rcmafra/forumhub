@@ -7,11 +7,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bde2c04d-06da-44ad-9010-f6df11e2d528" name="Changes" comment="Classe global para captura de exceções">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/topic/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/controller/TopicController.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/controller/TopicController.java" afterDir="false" />
-    </list>
+    <list default="true" id="bde2c04d-06da-44ad-9010-f6df11e2d528" name="Changes" comment="Ajustado nome do projeto topico" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -354,7 +350,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/topic" />
     </ignored-roots>
-    <MESSAGE value="Criação de handler para lidar com as respostas de exceções" />
     <MESSAGE value="Remoção de imports não utilizados" />
     <MESSAGE value="Remoção de métodos comentados" />
     <MESSAGE value="Remoção de classes não utilizadas" />
@@ -379,7 +374,8 @@
     <MESSAGE value="Exceção para lidar com a comunicação entre o tópico e o serviço de usuário" />
     <MESSAGE value="Configuração de timeout e manipulação de exceções" />
     <MESSAGE value="Classe global para captura de exceções" />
-    <option name="LAST_COMMIT_MESSAGE" value="Classe global para captura de exceções" />
+    <MESSAGE value="Ajustado nome do projeto topico" />
+    <option name="LAST_COMMIT_MESSAGE" value="Ajustado nome do projeto topico" />
   </component>
   <component name="WfRunsListSearchHistory"><![CDATA[{
   "history": [
