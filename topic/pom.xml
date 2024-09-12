@@ -11,7 +11,7 @@
 	<groupId>com.raul.forumhub.topic</groupId>
 	<artifactId>topic</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>forumhub</name>
+	<name>topic</name>
 	<description>Topic of the questions and answers</description>
 	<properties>
 		<java.version>17</java.version>
