@@ -5,7 +5,7 @@ import com.raul.forumhub.topic.domain.*;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-public record GetTopicDTO(Long id, String title, String message, LocalDateTime createdAt, Status status, Author author,
+public record GetTopicDTO(Long id, String title, String question, LocalDateTime createdAt, Status status, Author author,
                           Course course, Set<Answer> answer) {
 
     public GetTopicDTO(Topic topic) {
