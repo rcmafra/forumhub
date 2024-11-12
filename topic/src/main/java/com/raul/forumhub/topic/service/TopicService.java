@@ -1,7 +1,9 @@
 package com.raul.forumhub.topic.service;
 
 import com.raul.forumhub.topic.client.UserClientRequest;
-import com.raul.forumhub.topic.domain.*;
+import com.raul.forumhub.topic.domain.Author;
+import com.raul.forumhub.topic.domain.Course;
+import com.raul.forumhub.topic.domain.Topic;
 import com.raul.forumhub.topic.dto.request.TopicCreateDTO;
 import com.raul.forumhub.topic.dto.request.TopicUpdateDTO;
 import com.raul.forumhub.topic.dto.response.GetTopicDTO;
@@ -15,7 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class TopicService {
@@ -43,38 +44,15 @@ public class TopicService {
 
     public Page<GetTopicDTO> topicList(Pageable pageable) {
         Page<Topic> topicPage = this.topicRepository.findAll(pageable);
-
-        List<GetTopicDTO> topicDTOList = topicPage.stream().map(v1 -> {
-            if (Objects.isNull(v1.getAuthor())) {
-                this.devocateUnknownAuthorTopic(v1);
-            }
-            v1.getAnswers().forEach(v2 -> {
-                if (Objects.isNull(v2.getAuthor())) {
-                    this.devocateUnknownAuthorAnswer(v2);
-                }
-            });
-
-            return new GetTopicDTO(v1);
-        }).toList();
+        List<GetTopicDTO> topicDTOList = topicPage.map(GetTopicDTO::new).toList();
 
         return new PageImpl<>(topicDTOList, pageable, topicPage.getTotalElements());
     }
 
 
     public Topic getTopicById(Long topic_id) {
-        Topic topic = topicRepository.findById(topic_id).orElseThrow(() ->
+        return topicRepository.findById(topic_id).orElseThrow(() ->
                 new InstanceNotFoundException("O tópico informado não existe"));
-
-        if (Objects.isNull(topic.getAuthor())) {
-            this.devocateUnknownAuthorTopic(topic);
-        }
-        topic.getAnswers().forEach(v1 -> {
-            if(Objects.isNull(v1.getAuthor())){
-                this.devocateUnknownAuthorAnswer(v1);
-            }
-        });
-
-        return topic;
     }
 
 
@@ -83,8 +61,13 @@ public class TopicService {
         Course course = this.courseService.getCourseById(update.course_id());
         Author author = this.userClientRequest.getUserById(user_id);
 
-        AuthorizationValidate.AuthValidator(topic.getAuthor().getId(), author.getId(),
-                author.getProfile().getProfileName());
+        AuthorizationValidate.AuthValidator(topic.getAuthor().getId(), author);
+
+        if (topic.getAuthor().getUsername().equals("Desconhecido") &&
+                topic.getAuthor().getEmail().equals("desconhecido@email.com")) {
+            throw new TopicServiceException("O tópico pertence a um autor inexistente, " +
+                    "ele não pode ser editado");
+        }
 
         topic.setTitle(update.topic().getTitle());
         topic.setQuestion(update.topic().getQuestion());
@@ -100,8 +83,7 @@ public class TopicService {
         Topic topic = this.getTopicById(topic_id);
         Author author = this.userClientRequest.getUserById(user_id);
 
-        AuthorizationValidate.AuthValidator(topic.getAuthor().getId(), author.getId(),
-                author.getProfile().getProfileName());
+        AuthorizationValidate.AuthValidator(topic.getAuthor().getId(), author);
 
         this.topicRepository.delete(topic);
     }
@@ -116,13 +98,5 @@ public class TopicService {
         }
     }
 
-    private void devocateUnknownAuthorTopic(Topic topic) {
-        topic.setAuthor(new Author("Desconhecido", "Desconhecido",
-                new Profile(Profile.ProfileName.BASIC)));
-    }
 
-    private void devocateUnknownAuthorAnswer(Answer answer) {
-        answer.setAuthor(new Author("Desconhecido", "Desconhecido",
-                new Profile(Profile.ProfileName.BASIC)));
-    }
 }

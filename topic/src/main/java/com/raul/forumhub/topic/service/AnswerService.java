@@ -54,10 +54,9 @@ public class AnswerService {
 
         this.topicService.validateTopicOwner(topic.getAuthor().getId(), user_id);
 
-        if(hasBestAnswer){
+        if (hasBestAnswer) {
             throw new AnswerServiceException("Já existe uma melhor resposta para este tópico");
-        }
-        else {
+        } else {
             Answer answer = getAnswerById(answer_id);
 
             topic.setStatus(Status.SOLVED);
@@ -74,8 +73,12 @@ public class AnswerService {
         Answer answer = this.getAnswerById(answer_id);
         Author author = this.userClientRequest.getUserById(user_id);
 
-        if(!author.getId().equals(answer.getAuthor().getId())){
-            throw new AnswerServiceException("A resposta fornecida não pertence a esse autor");
+        AuthorizationValidate.AuthValidator(answer.getAuthor().getId(), author);
+
+        if (answer.getAuthor().getUsername().equals("Desconhecido") &&
+                answer.getAuthor().getEmail().equals("desconhecido@email.com")) {
+            throw new AnswerServiceException("O tópico pertence a um autor inexistente, " +
+                    "ele não pode ser editado");
         }
 
         answer.setSolution(answerUpdateDTO.solution());
@@ -88,12 +91,11 @@ public class AnswerService {
         Answer answer = this.getAnswerById(answer_id);
         Author author = this.userClientRequest.getUserById(user_id);
 
-        if(!answer.getTopic().getId().equals(topic_id)){
+        if (!answer.getTopic().getId().equals(topic_id)) {
             throw new AnswerServiceException("A resposta fornecida não pertence a esse tópico");
         }
 
-        AuthorizationValidate.AuthValidator(answer.getAuthor().getId(), author.getId(),
-                author.getProfile().getProfileName());
+        AuthorizationValidate.AuthValidator(answer.getAuthor().getId(), author);
 
         this.answerRepository.delete(answer);
 
