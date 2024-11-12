@@ -102,7 +102,8 @@ public class AuthorizationServerConfig {
                         "course:create", "course:delete", "course:edit",
                         "answer:delete", "answer:edit")
                 ))
-                .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
+                .clientSettings(ClientSettings.builder()
+                        .requireAuthorizationConsent(false).build())
                 .tokenSettings(TokenSettings.builder()
                         .accessTokenTimeToLive(Duration.ofMinutes(15))
                         .authorizationCodeTimeToLive(Duration.ofMinutes(30))
@@ -124,7 +125,8 @@ public class AuthorizationServerConfig {
                 .scopes((scp) -> scp.addAll(Set.of(
                         "myuser:read", "user:readAll", "myuser:delete", "myuser:edit")
                 ))
-                .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
+                .clientSettings(ClientSettings.builder()
+                        .requireAuthorizationConsent(false).build())
                 .tokenSettings(TokenSettings.builder()
                         .accessTokenTimeToLive(Duration.ofMinutes(15))
                         .authorizationCodeTimeToLive(Duration.ofMinutes(30))
