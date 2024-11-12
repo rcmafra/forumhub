@@ -11,7 +11,7 @@ import com.raul.forumhub.topic.dto.response.GetAnswerDTO;
 import com.raul.forumhub.topic.exception.AnswerServiceException;
 import com.raul.forumhub.topic.exception.InstanceNotFoundException;
 import com.raul.forumhub.topic.repository.AnswerRepository;
-import com.raul.forumhub.topic.validator.AuthorizationValidate;
+import com.raul.forumhub.topic.utility.AuthorizationValidate;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -73,7 +73,7 @@ public class AnswerService {
         Answer answer = this.getAnswerById(answer_id);
         Author author = this.userClientRequest.getUserById(user_id);
 
-        AuthorizationValidate.AuthValidator(answer.getAuthor().getId(), author);
+        AuthorizationValidate.permissionValidator(answer.getAuthor().getId(), author);
 
         if (answer.getAuthor().getUsername().equals("Desconhecido") &&
                 answer.getAuthor().getEmail().equals("desconhecido@email.com")) {
@@ -95,7 +95,7 @@ public class AnswerService {
             throw new AnswerServiceException("A resposta fornecida não pertence a esse tópico");
         }
 
-        AuthorizationValidate.AuthValidator(answer.getAuthor().getId(), author);
+        AuthorizationValidate.permissionValidator(answer.getAuthor().getId(), author);
 
         this.answerRepository.delete(answer);
 

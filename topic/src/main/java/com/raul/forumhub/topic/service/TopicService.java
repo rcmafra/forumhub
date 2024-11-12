@@ -10,7 +10,7 @@ import com.raul.forumhub.topic.dto.response.GetTopicDTO;
 import com.raul.forumhub.topic.exception.InstanceNotFoundException;
 import com.raul.forumhub.topic.exception.TopicServiceException;
 import com.raul.forumhub.topic.repository.TopicRepository;
-import com.raul.forumhub.topic.validator.AuthorizationValidate;
+import com.raul.forumhub.topic.utility.AuthorizationValidate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -61,7 +61,7 @@ public class TopicService {
         Course course = this.courseService.getCourseById(update.course_id());
         Author author = this.userClientRequest.getUserById(user_id);
 
-        AuthorizationValidate.AuthValidator(topic.getAuthor().getId(), author);
+        AuthorizationValidate.permissionValidator(topic.getAuthor().getId(), author);
 
         if (topic.getAuthor().getUsername().equals("Desconhecido") &&
                 topic.getAuthor().getEmail().equals("desconhecido@email.com")) {
@@ -83,7 +83,7 @@ public class TopicService {
         Topic topic = this.getTopicById(topic_id);
         Author author = this.userClientRequest.getUserById(user_id);
 
-        AuthorizationValidate.AuthValidator(topic.getAuthor().getId(), author);
+        AuthorizationValidate.permissionValidator(topic.getAuthor().getId(), author);
 
         this.topicRepository.delete(topic);
     }
