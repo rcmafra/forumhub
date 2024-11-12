@@ -37,12 +37,11 @@ public class CourseService {
     }
 
     public GetCourseDTO updateNameCourse(String courseName, CourseUpdateDTO courseUpdateDTO){
-        Course course1 = this.getCourseByName(courseName);
-        course1.setName(courseUpdateDTO.name());
+        Course course = this.getCourseByName(courseName);
+        course.setName(courseUpdateDTO.name());
 
-        this.courseRepository.save(course1);
-
-        return new GetCourseDTO(course1);
+        this.courseRepository.save(course);
+        return new GetCourseDTO(course);
     }
 
     private Course getCourseByName(String courseName){
