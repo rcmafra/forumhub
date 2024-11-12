@@ -1,14 +1,13 @@
 package com.raul.forumhub.topic.exception;
 
 import lombok.Getter;
-import lombok.Setter;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.web.reactive.function.client.WebClientException;
 
 @Getter
-@Setter
-public class RestClientException extends RuntimeException {
+public class RestClientException extends WebClientException {
 
-    private HttpStatusCode httpStatusCode;
+    private final HttpStatusCode httpStatusCode;
 
     public RestClientException(HttpStatusCode httpStatusCode, String detailMessage){
         super(detailMessage);
