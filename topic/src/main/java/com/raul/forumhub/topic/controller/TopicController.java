@@ -7,7 +7,6 @@ import com.raul.forumhub.topic.dto.response.HttpMessageDefault;
 import com.raul.forumhub.topic.security.IsAuthenticated;
 import com.raul.forumhub.topic.service.TopicService;
 import jakarta.validation.Valid;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -45,9 +44,7 @@ public class TopicController {
     public PagedModel<EntityModel<GetTopicDTO>> topicsList(@PageableDefault Pageable pageable,
                                                            PagedResourcesAssembler<GetTopicDTO> assembler) {
 
-        Page<GetTopicDTO> topicsListDTOS = topicService.topicList(pageable);
-
-        return assembler.toModel(topicsListDTOS);
+        return assembler.toModel(topicService.topicList(pageable));
     }
 
     @GetMapping
