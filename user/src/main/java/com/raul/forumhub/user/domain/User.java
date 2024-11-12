@@ -25,21 +25,21 @@ public class User {
     @Column(name = "user_id")
     private Long id;
     @Column
-    @NotBlank(message = "Primeiro nome é obrigatório")
+    @NotBlank(message = "O primeiro nome não pode ser vazio")
     private String firstName;
     @Column
-    @NotBlank(message = "Último nome é obrigatório")
+    @NotBlank(message = "O ultimo nome não pode ser vazio")
     private String lastName;
     @Column
-    @NotBlank(message = "Username é obrigatório")
+    @NotBlank(message = "O username não pode ser vazio")
     private String username;
     @Column(unique = true)
     @Email(message = "Formato do email inválido")
-    @NotBlank(message = "Email é obrigatório")
+    @NotBlank(message = "O email não pode ser vazio")
     private String email;
     @Column
     @JsonIgnore
-    @NotBlank(message = "Senha é obrigatória")
+    @NotBlank(message = "A senha não pode ser vazia")
     private String password;
     private boolean isAccountNonExpired;
     private boolean isAccountNonLocked;
@@ -75,6 +75,23 @@ public class User {
 
     public boolean getIsEnabled() {
         return isEnabled;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", isAccountNonExpired=" + isAccountNonExpired +
+                ", isAccountNonLocked=" + isAccountNonLocked +
+                ", isCredentialsNonExpired=" + isCredentialsNonExpired +
+                ", isEnabled=" + isEnabled +
+                ", profile=" + profile +
+                '}';
     }
 }
 

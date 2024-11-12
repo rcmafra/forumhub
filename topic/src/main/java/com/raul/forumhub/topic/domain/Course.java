@@ -21,7 +21,7 @@ public class Course {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "course_id")
     private Long id;
-    @NotBlank(message = "O curso é obrigatório")
+    @NotBlank(message = "O nome do curso não pode ser vazio")
     @Column(nullable = false, unique = true)
     private String name;
     @Column(name = "category", nullable = false, length = 50)
@@ -31,6 +31,15 @@ public class Course {
     public Course(String name, Category category){
         this.name = name;
         this.category = category;
+    }
+
+    @Override
+    public String toString() {
+        return "Course{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", category=" + category +
+                '}';
     }
 
     public enum Category {

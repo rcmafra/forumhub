@@ -27,7 +27,7 @@ public class Answer {
     @JoinColumns(value = @JoinColumn(name = "topic_id"), foreignKey = @ForeignKey(name = "topic_id"))
     @JsonIgnore
     private Topic topic;
-    @NotBlank(message = "A solução é obrigatória")
+    @NotBlank(message = "A solução não pode ser vazia")
     @Column(nullable = false)
     private String solution;
     @Column
@@ -38,9 +38,28 @@ public class Answer {
     @JoinColumns(value = @JoinColumn(name = "user_id"), foreignKey = @ForeignKey(name = "user_id"))
     private Author author;
 
+    public Answer(Long id, String solution, boolean bestAnswer, LocalDateTime createdAt, Author author){
+        this.id = id;
+        this.solution = solution;
+        this.bestAnswer = bestAnswer;
+        this.createdAt = createdAt;
+        this.author = author;
+    }
+
     public Answer(String solution){
         this.solution = solution;
         this.createdAt = LocalDateTime.now();
     }
 
+    @Override
+    public String toString() {
+        return "Answer{" +
+                "id=" + id +
+                ", topic=" + topic +
+                ", solution='" + solution + '\'' +
+                ", bestAnswer=" + bestAnswer +
+                ", createdAt=" + createdAt +
+                ", author=" + author +
+                '}';
+    }
 }

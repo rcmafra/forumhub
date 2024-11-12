@@ -36,4 +36,12 @@ public class Profile {
         MOD,
         BASIC
     }
+
+    @Override
+    public String toString() {
+        return "Profile{" +
+                "id=" + id +
+                ", profileName=" + profileName +
+                '}';
+    }
 }
