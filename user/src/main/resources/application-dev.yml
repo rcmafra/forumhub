@@ -14,16 +14,6 @@ spring:
       hibernate:
         format_sql: true
 
-#Flyway configuration
-  flyway:
-    default-schema: HUB
-    baseline-on-migrate: true
-    enabled: true
-
-#Override duplicated beans encountered in the repositories
-  main:
-    allow-bean-definition-overriding: true
-
 #Authorization server configuration
   security:
     oauth2:
