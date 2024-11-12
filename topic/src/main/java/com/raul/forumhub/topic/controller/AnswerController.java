@@ -45,17 +45,6 @@ public class AnswerController {
         return ResponseEntity.ok(new HttpMessageDefault("HttpStatusCode OK"));
     }
 
-    @PreAuthorize("hasAuthority('SCOPE_answer:delete')")
-    @DeleteMapping("/{topic_id}/answers")
-    public ResponseEntity<HttpMessageDefault> deleteAnswer(@PathVariable Long topic_id, @RequestParam Long answer_id,
-                                                     @AuthenticationPrincipal Jwt jwt){
-
-        Long user_id = Long.parseLong(jwt.getClaim("user_id"));
-        this.answerService.deleteAnswer(topic_id, answer_id, user_id);
-
-        return ResponseEntity.ok(new HttpMessageDefault("HttpStatusCode OK"));
-    }
-
     @PreAuthorize("hasAuthority('SCOPE_answer:edit')")
     @PutMapping("/{topic_id}/answers")
     public ResponseEntity<GetAnswerDTO> updateAnswer(@PathVariable Long topic_id, @RequestParam Long answer_id,
@@ -65,6 +54,17 @@ public class AnswerController {
         GetAnswerDTO getAnswerDTO = this.answerService.updateAnswer(topic_id, answer_id, user_id, answerUpdateDTO);
 
         return ResponseEntity.ok(getAnswerDTO);
+    }
+
+    @PreAuthorize("hasAuthority('SCOPE_answer:delete')")
+    @DeleteMapping("/{topic_id}/answers/delete")
+    public ResponseEntity<HttpMessageDefault> deleteAnswer(@PathVariable Long topic_id, @RequestParam Long answer_id,
+                                                           @AuthenticationPrincipal Jwt jwt){
+
+        Long user_id = Long.parseLong(jwt.getClaim("user_id"));
+        this.answerService.deleteAnswer(topic_id, answer_id, user_id);
+
+        return ResponseEntity.ok(new HttpMessageDefault("HttpStatusCode OK"));
     }
 
 }

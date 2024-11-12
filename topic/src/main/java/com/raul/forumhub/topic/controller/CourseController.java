@@ -42,16 +42,6 @@ public class CourseController {
         return new ResponseEntity<>(getCourseCollection, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('ADM') and hasAuthority('SCOPE_course:delete')")
-    @DeleteMapping("/delete")
-    public ResponseEntity<HttpMessageDefault> deleteCourse(@RequestParam String courseName){
-        Assert.hasText(courseName, "O nome do curso não pode ser vazio");
-
-        this.courseService.deleteCourse(courseName);
-        return ResponseEntity.ok(new HttpMessageDefault("HttpStatusCode OK"));
-
-    }
-
     @PreAuthorize("hasRole('ADM') and hasAuthority('SCOPE_course:edit')")
     @PutMapping
     public  ResponseEntity<GetCourseDTO> updateNameCourse(@RequestParam String courseName,
@@ -60,6 +50,16 @@ public class CourseController {
 
         GetCourseDTO getCourseDTO = this.courseService.updateNameCourse(courseName, courseUpdateDTO);
         return ResponseEntity.ok(getCourseDTO);
+    }
+
+    @PreAuthorize("hasRole('ADM') and hasAuthority('SCOPE_course:delete')")
+    @DeleteMapping("/delete")
+    public ResponseEntity<HttpMessageDefault> deleteCourse(@RequestParam String courseName){
+        Assert.hasText(courseName, "O nome do curso não pode ser vazio");
+
+        this.courseService.deleteCourse(courseName);
+        return ResponseEntity.ok(new HttpMessageDefault("HttpStatusCode OK"));
+
     }
 
 
