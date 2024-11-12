@@ -1,16 +1,17 @@
 package com.raul.forumhub.topic.controller;
 
-import com.raul.forumhub.topic.dto.response.HttpMessageDefault;
 import com.raul.forumhub.topic.dto.request.CourseCreateDTO;
 import com.raul.forumhub.topic.dto.request.CourseUpdateDTO;
 import com.raul.forumhub.topic.dto.response.GetCourseCollection;
 import com.raul.forumhub.topic.dto.response.GetCourseDTO;
+import com.raul.forumhub.topic.dto.response.HttpMessageDefault;
 import com.raul.forumhub.topic.security.IsAuthenticated;
 import com.raul.forumhub.topic.service.CourseService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,7 +35,7 @@ public class CourseController {
     }
 
     @IsAuthenticated
-    @GetMapping
+    @GetMapping("/listAll")
     public ResponseEntity<List<GetCourseCollection>> getAllCourse(){
         List<GetCourseCollection> getCourseCollection = this.courseService.getAllCourse();
 
@@ -44,17 +45,20 @@ public class CourseController {
     @PreAuthorize("hasRole('ADM') and hasAuthority('SCOPE_course:delete')")
     @DeleteMapping("/delete")
     public ResponseEntity<HttpMessageDefault> deleteCourse(@RequestParam String courseName){
-        this.courseService.deleteCourse(courseName);
+        Assert.hasText(courseName, "O nome do curso não pode ser vazio");
 
+        this.courseService.deleteCourse(courseName);
         return ResponseEntity.ok(new HttpMessageDefault("HttpStatusCode OK"));
 
     }
 
     @PreAuthorize("hasRole('ADM') and hasAuthority('SCOPE_course:edit')")
     @PutMapping
-    public  ResponseEntity<GetCourseDTO> updateNameCourse(@RequestParam String courseName, @RequestBody CourseUpdateDTO courseUpdateDTO){
-        GetCourseDTO getCourseDTO = this.courseService.updateNameCourse(courseName, courseUpdateDTO);
+    public  ResponseEntity<GetCourseDTO> updateNameCourse(@RequestParam String courseName,
+                                                          @RequestBody CourseUpdateDTO courseUpdateDTO){
+        Assert.hasText(courseName, "O nome do curso não pode ser vazio");
 
+        GetCourseDTO getCourseDTO = this.courseService.updateNameCourse(courseName, courseUpdateDTO);
         return ResponseEntity.ok(getCourseDTO);
     }
 
