@@ -7,20 +7,22 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bde2c04d-06da-44ad-9010-f6df11e2d528" name="Changes" comment="Ajustes nos manipuladores de exceções">
+    <list default="true" id="bde2c04d-06da-44ad-9010-f6df11e2d528" name="Changes" comment="Corrigido a criação de múltiplos beans para os repositories, dispensando a necessidade da propriedade spring.main.allow-bean-definition-overriding: true">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/topic/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/client/UserClientRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/client/UserClientRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/resources/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/resources/application-dev.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/resources/db/migration/V1__create_entities.sql" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/resources/db/migration/V1__create_entities.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/controller/UserController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/exception/handler/ExceptionResponseHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/exception/handler/ExceptionResponseHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/service/UserService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="CompilerWorkspaceConfiguration">
+    <option name="MAKE_PROJECT_ON_SAVE" value="true" />
+  </component>
+  <component name="ExportTestResults" outputFolder="$PROJECT_DIR$" userTempatePath="" />
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
@@ -30,6 +32,7 @@
         <option value="Record" />
         <option value="AnnotationType" />
         <option value="Class" />
+        <option value="package-info" />
       </list>
     </option>
   </component>
@@ -65,23 +68,47 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="jar://$PROJECT_DIR$/../../Program Files/Java/jdk-17/lib/src.zip!/java.base/java/security/KeyPairGenerator.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$PROJECT_DIR$/../../Program Files/Java/jdk-17/lib/src.zip!/java.base/sun/security/jca/GetInstance.java" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/topic/src/test/java/com/raul/forumhub/topic/client/UserClientRequestTest.java" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/topic/src/test/java/com/raul/forumhub/topic/controller/TopicControllerTest.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/topic/src/test/java/com/raul/forumhub/topic/integration/TopicControllerIT.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-annotations/2.17.2/jackson-annotations-2.17.2-sources.jar!/com/fasterxml/jackson/annotation/JsonFormat.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-annotations/2.17.2/jackson-annotations-2.17.2-sources.jar!/com/fasterxml/jackson/annotation/JsonIgnore.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-databind/2.17.2/jackson-databind-2.17.2-sources.jar!/com/fasterxml/jackson/databind/JsonSerializer.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/com/nimbusds/nimbus-jose-jwt/9.39.1/nimbus-jose-jwt-9.39.1-sources.jar!/com/nimbusds/jose/jwk/JWK.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/com/nimbusds/nimbus-jose-jwt/9.39.1/nimbus-jose-jwt-9.39.1-sources.jar!/com/nimbusds/jose/jwk/JWKSet.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/com/nimbusds/nimbus-jose-jwt/9.39.1/nimbus-jose-jwt-9.39.1-sources.jar!/com/nimbusds/jose/jwk/source/ImmutableJWKSet.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/com/nimbusds/nimbus-jose-jwt/9.39.1/nimbus-jose-jwt-9.39.1-sources.jar!/com/nimbusds/jose/jwk/source/JWKSource.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/io/netty/netty-transport/4.1.111.Final/netty-transport-4.1.111.Final-sources.jar!/io/netty/channel/AbstractChannel.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/io/projectreactor/reactor-core/3.6.6/reactor-core-3.6.6-sources.jar!/reactor/core/publisher/Mono.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/io/projectreactor/reactor-core/3.6.8/reactor-core-3.6.8-sources.jar!/reactor/core/publisher/Mono.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/apache/commons/commons-lang3/3.14.0/commons-lang3-3.14.0-sources.jar!/org/apache/commons/lang3/reflect/FieldUtils.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/apache/tomcat/embed/tomcat-embed-core/10.1.24/tomcat-embed-core-10.1.24-sources.jar!/jakarta/servlet/http/HttpServletRequest.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/apache/tomcat/embed/tomcat-embed-core/10.1.26/tomcat-embed-core-10.1.26-sources.jar!/jakarta/servlet/http/HttpServletRequest.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/aspectj/aspectjweaver/1.9.22.1/aspectjweaver-1.9.22.1-sources.jar!/org/aspectj/lang/annotation/Before.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/assertj/assertj-core/3.25.3/assertj-core-3.25.3-sources.jar!/org/assertj/core/api/AbstractIterableAssert.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/hibernate/orm/hibernate-core/6.5.2.Final/hibernate-core-6.5.2.Final-sources.jar!/org/hibernate/Session.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/junit/jupiter/junit-jupiter-api/5.10.3/junit-jupiter-api-5.10.3-sources.jar!/org/junit/jupiter/api/extension/ExtendWith.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/mockito/mockito-core/5.11.0/mockito-core-5.11.0-sources.jar!/org/mockito/BDDMockito.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/mockito/mockito-core/5.11.0/mockito-core-5.11.0-sources.jar!/org/mockito/Mockito.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/mockito/mockito-junit-jupiter/5.11.0/mockito-junit-jupiter-5.11.0.jar!/org/mockito/junit/jupiter/MockitoExtension.class" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.32/lombok-1.18.32-sources.jar!/lombok/AllArgsConstructor.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.34/lombok-1.18.34-sources.jar!/lombok/Generated.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/slf4j/slf4j-api/2.0.13/slf4j-api-2.0.13-sources.jar!/org/slf4j/Logger.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/slf4j/slf4j-api/2.0.13/slf4j-api-2.0.13-sources.jar!/org/slf4j/Marker.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/boot/spring-boot-test-autoconfigure/3.3.2/spring-boot-test-autoconfigure-3.3.2-sources.jar!/org/springframework/boot/test/autoconfigure/orm/jpa/DataJpaTest.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/boot/spring-boot-test/3.3.2/spring-boot-test-3.3.2-sources.jar!/org/springframework/boot/test/context/TestConfiguration.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/boot/spring-boot-test/3.3.2/spring-boot-test-3.3.2-sources.jar!/org/springframework/boot/test/web/client/TestRestTemplate.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/boot/spring-boot/3.3.0-SNAPSHOT/spring-boot-3.3.0-20240523.121145-488-sources.jar!/org/springframework/boot/context/properties/ConfigurationProperties.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/boot/spring-boot/3.3.2/spring-boot-3.3.2-sources.jar!/org/springframework/boot/SpringBootConfiguration.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/data/spring-data-commons/3.3.0-SNAPSHOT/spring-data-commons-3.3.0-20240510.192003-269-sources.jar!/org/springframework/data/domain/Pageable.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/data/spring-data-commons/3.3.2/spring-data-commons-3.3.2-sources.jar!/org/springframework/data/domain/Chunk.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/data/spring-data-commons/3.3.2/spring-data-commons-3.3.2-sources.jar!/org/springframework/data/domain/Page.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/data/spring-data-commons/3.3.2/spring-data-commons-3.3.2-sources.jar!/org/springframework/data/domain/PageImpl.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/data/spring-data-commons/3.3.2/spring-data-commons-3.3.2-sources.jar!/org/springframework/data/domain/PageRequest.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/data/spring-data-commons/3.3.2/spring-data-commons-3.3.2-sources.jar!/org/springframework/data/domain/Pageable.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/data/spring-data-commons/3.3.2/spring-data-commons-3.3.2-sources.jar!/org/springframework/data/domain/Sort.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/data/spring-data-jpa/3.3.0/spring-data-jpa-3.3.0-sources.jar!/org/springframework/data/jpa/repository/Query.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/data/spring-data-jpa/3.3.2/spring-data-jpa-3.3.2-sources.jar!/org/springframework/data/jpa/repository/JpaRepository.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/data/spring-data-relational/3.3.0/spring-data-relational-3.3.0-sources.jar!/org/springframework/data/relational/core/mapping/Table.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-config/6.3.0/spring-security-config-6.3.0-sources.jar!/org/springframework/security/config/annotation/web/AbstractRequestMatcherRegistry.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-config/6.3.0/spring-security-config-6.3.0-sources.jar!/org/springframework/security/config/annotation/web/HttpSecurityBuilder.java" root0="SKIP_INSPECTION" />
@@ -107,25 +134,51 @@
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-oauth2-authorization-server/1.3.1/spring-security-oauth2-authorization-server-1.3.1.jar!/org/springframework/security/oauth2/server/authorization/oauth2-authorization-schema.sql" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-oauth2-authorization-server/1.3.2-SNAPSHOT/spring-security-oauth2-authorization-server-1.3.2-20240802.191310-39-sources.jar!/org/springframework/security/oauth2/server/authorization/JdbcOAuth2AuthorizationConsentService.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-oauth2-client/6.3.0/spring-security-oauth2-client-6.3.0-sources.jar!/org/springframework/security/oauth2/client/web/reactive/function/client/ServletOAuth2AuthorizedClientExchangeFilterFunction.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-oauth2-client/6.3.1/spring-security-oauth2-client-6.3.1-sources.jar!/org/springframework/security/oauth2/client/OAuth2AuthorizedClientManager.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-oauth2-client/6.3.1/spring-security-oauth2-client-6.3.1-sources.jar!/org/springframework/security/oauth2/client/authentication/OAuth2LoginAuthenticationToken.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-oauth2-client/6.3.1/spring-security-oauth2-client-6.3.1-sources.jar!/org/springframework/security/oauth2/client/web/reactive/function/client/ServerOAuth2AuthorizedClientExchangeFilterFunction.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-oauth2-client/6.3.1/spring-security-oauth2-client-6.3.1-sources.jar!/org/springframework/security/oauth2/client/web/reactive/function/client/ServletOAuth2AuthorizedClientExchangeFilterFunction.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-oauth2-core/6.3.0/spring-security-oauth2-core-6.3.0-sources.jar!/org/springframework/security/oauth2/core/ClaimAccessor.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-oauth2-core/6.3.1/spring-security-oauth2-core-6.3.1-sources.jar!/org/springframework/security/oauth2/core/OAuth2AccessToken.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-oauth2-core/6.3.1/spring-security-oauth2-core-6.3.1-sources.jar!/org/springframework/security/oauth2/core/endpoint/OAuth2AuthorizationExchange.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-oauth2-core/6.3.1/spring-security-oauth2-core-6.3.1-sources.jar!/org/springframework/security/oauth2/core/endpoint/OAuth2AuthorizationResponse.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-oauth2-core/6.3.1/spring-security-oauth2-core-6.3.1-sources.jar!/org/springframework/security/oauth2/core/user/OAuth2UserAuthority.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-oauth2-jose/6.3.0/spring-security-oauth2-jose-6.3.0-sources.jar!/org/springframework/security/oauth2/jwt/JwtClaimAccessor.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-oauth2-jose/6.3.0/spring-security-oauth2-jose-6.3.0-sources.jar!/org/springframework/security/oauth2/jwt/JwtClaimsSet.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-oauth2-jose/6.3.0/spring-security-oauth2-jose-6.3.0-sources.jar!/org/springframework/security/oauth2/jwt/JwtDecoder.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-oauth2-jose/6.3.0/spring-security-oauth2-jose-6.3.0-sources.jar!/org/springframework/security/oauth2/jwt/JwtEncoder.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-oauth2-jose/6.3.1/spring-security-oauth2-jose-6.3.1-sources.jar!/org/springframework/security/oauth2/jwt/Jwt.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-oauth2-resource-server/6.3.0/spring-security-oauth2-resource-server-6.3.0-sources.jar!/org/springframework/security/oauth2/server/resource/authentication/JwtAuthenticationConverter.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-test/6.3.1/spring-security-test-6.3.1-sources.jar!/org/springframework/security/test/context/support/WithMockUser.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-test/6.3.1/spring-security-test-6.3.1-sources.jar!/org/springframework/security/test/web/reactive/server/SecurityMockServerConfigurers.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-test/6.3.1/spring-security-test-6.3.1-sources.jar!/org/springframework/security/test/web/servlet/request/SecurityMockMvcRequestPostProcessors.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-web/6.3.0/spring-security-web-6.3.0.jar!/org/springframework/security/web/AuthenticationEntryPoint.class" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-web/6.3.1/spring-security-web-6.3.1-sources.jar!/org/springframework/security/web/servletapi/SecurityContextHolderAwareRequestFilter.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-aop/6.1.11/spring-aop-6.1.11-sources.jar!/org/springframework/aop/support/AopUtils.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-beans/6.1.11/spring-beans-6.1.11-sources.jar!/org/springframework/beans/factory/annotation/Qualifier.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-context/6.1.11/spring-context-6.1.11-sources.jar!/org/springframework/context/annotation/ImportRuntimeHints.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-core/6.1.11/spring-core-6.1.11-sources.jar!/org/springframework/core/ParameterizedTypeReference.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-jcl/6.1.8/spring-jcl-6.1.8-sources.jar!/org/apache/commons/logging/Log.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-jdbc/6.1.11/spring-jdbc-6.1.11-sources.jar!/org/springframework/jdbc/support/lob/LobCreator.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-orm/6.1.11/spring-orm-6.1.11-sources.jar!/org/springframework/orm/jpa/JpaSystemException.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-test/6.1.11/spring-test-6.1.11-sources.jar!/org/springframework/test/web/reactive/server/DefaultWebTestClient.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-test/6.1.11/spring-test-6.1.11-sources.jar!/org/springframework/test/web/reactive/server/DefaultWebTestClientBuilder.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-test/6.1.11/spring-test-6.1.11-sources.jar!/org/springframework/test/web/reactive/server/MockServerConfigurer.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-test/6.1.11/spring-test-6.1.11-sources.jar!/org/springframework/test/web/reactive/server/WebTestClient.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-test/6.1.11/spring-test-6.1.11-sources.jar!/org/springframework/test/web/reactive/server/WebTestClientConfigurer.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-test/6.1.11/spring-test-6.1.11-sources.jar!/org/springframework/test/web/servlet/setup/StandaloneMockMvcBuilder.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-tx/6.1.11/spring-tx-6.1.11-sources.jar!/org/springframework/dao/DataIntegrityViolationException.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-web/6.1.11/spring-web-6.1.11-sources.jar!/org/springframework/http/HttpStatus.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-web/6.1.11/spring-web-6.1.11-sources.jar!/org/springframework/http/ResponseEntity.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-web/6.1.11/spring-web-6.1.11-sources.jar!/org/springframework/web/bind/annotation/RequestBody.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-web/6.1.11/spring-web-6.1.11-sources.jar!/org/springframework/web/bind/annotation/RestControllerAdvice.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-web/6.1.8/spring-web-6.1.8-sources.jar!/org/springframework/web/filter/OncePerRequestFilter.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-webflux/6.1.11/spring-webflux-6.1.11-sources.jar!/org/springframework/web/reactive/function/client/DefaultWebClient.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-webflux/6.1.11/spring-webflux-6.1.11-sources.jar!/org/springframework/web/reactive/function/client/ExchangeFilterFunction.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-webflux/6.1.11/spring-webflux-6.1.11-sources.jar!/org/springframework/web/reactive/function/client/WebClient.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-webflux/6.1.11/spring-webflux-6.1.11-sources.jar!/org/springframework/web/reactive/function/client/WebClientRequestException.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-webflux/6.1.8/spring-webflux-6.1.8-sources.jar!/org/springframework/web/reactive/function/client/WebClient.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-webmvc/6.1.11/spring-webmvc-6.1.11-sources.jar!/org/springframework/web/servlet/LocaleResolver.java" root0="SKIP_INSPECTION" />
   </component>
   <component name="JvmLoggingSettingsStorage">
     <option name="loggerId" value="Lombok Slf4j" />
@@ -138,7 +191,7 @@
     </option>
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="ProjectErrors" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 2
@@ -160,14 +213,17 @@
     "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
     "Application.Application-auth-server-dev.executor": "Run",
     "Application.Application-dev.executor": "Run",
-    "Application.Application-topic-dev.executor": "Debug",
-    "Application.Application-user-dev.executor": "Debug",
+    "Application.Application-topic-dev.executor": "Run",
+    "Application.Application-user-dev.executor": "Run",
     "Application.Application.executor": "Run",
     "Application.ForumHubApplication.executor": "Run",
     "Application.app.executor": "Run",
     "Downloaded.Files.Path.Enabled": "false",
     "JUnit.AnswerControllerTest.executor": "Run",
     "JUnit.AnswerControllerTest.shouldAnswerTheTopicWithSuccessfully.executor": "Run",
+    "JUnit.TopicControllerIT.executor": "Run",
+    "JUnit.integration in topic.executor": "Run",
+    "RESOURCE_BUNDLE_EXPRESSION_USED": "",
     "Repository.Attach.Annotations": "false",
     "Repository.Attach.JavaDocs": "false",
     "Repository.Attach.Sources": "false",
@@ -182,7 +238,7 @@
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.508046",
     "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "Debugger_Data_Views_Java"
+    "settings.editor.selected.configurable": "project.propCompiler"
   },
   "keyToStringList": {
     "GitStage.ChangesTree.GroupingKeys": [
@@ -231,7 +287,7 @@
       <recent name="com.raul.forumhub.user.respository" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Application-auth-server-dev">
+  <component name="RunManager" selected="JUnit.integration in topic">
     <configuration name="Application-auth-server-dev" type="Application" factoryName="Application" singleton="true">
       <option name="ALTERNATIVE_JRE_PATH" value="$PROJECT_DIR$/../../Program Files/Java/jdk-17" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -266,7 +322,6 @@
       </method>
     </configuration>
     <configuration name="AnswerControllerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="ForumHub" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.backend.challenge.ForumHub.controller.*" />
@@ -275,6 +330,7 @@
       </extension>
       <option name="PACKAGE_NAME" value="com.backend.challenge.ForumHub.controller" />
       <option name="MAIN_CLASS_NAME" value="com.backend.challenge.ForumHub.controller.AnswerControllerTest" />
+      <option name="METHOD_NAME" value="" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -292,6 +348,33 @@
       <option name="MAIN_CLASS_NAME" value="com.backend.challenge.ForumHub.controller.AnswerControllerTest" />
       <option name="METHOD_NAME" value="shouldAnswerTheTopicWithSuccessfully" />
       <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TopicControllerIT" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="topic" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.raul.forumhub.topic.integration.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.raul.forumhub.topic.integration" />
+      <option name="MAIN_CLASS_NAME" value="com.raul.forumhub.topic.integration.TopicControllerIT" />
+      <option name="METHOD_NAME" value="" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="integration in topic" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="topic" />
+      <option name="MAIN_CLASS_NAME" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="TEST_OBJECT" value="directory" />
+      <option name="VM_PARAMETERS" />
+      <dir value="$PROJECT_DIR$/topic/src/test/java/com/raul/forumhub/topic/integration" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -319,13 +402,15 @@
       <item itemvalue="Application.Application-auth-server-dev" />
       <item itemvalue="Application.Application-topic-dev" />
       <item itemvalue="Application.Application-user-dev" />
+      <item itemvalue="JUnit.TopicControllerIT" />
+      <item itemvalue="JUnit.integration in topic" />
       <item itemvalue="JUnit.AnswerControllerTest" />
       <item itemvalue="JUnit.AnswerControllerTest.shouldAnswerTheTopicWithSuccessfully" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.AnswerControllerTest.shouldAnswerTheTopicWithSuccessfully" />
-        <item itemvalue="JUnit.AnswerControllerTest" />
+        <item itemvalue="JUnit.integration in topic" />
+        <item itemvalue="JUnit.TopicControllerIT" />
         <item itemvalue="JUnit.AnswerControllerTest.shouldAnswerTheTopicWithSuccessfully" />
         <item itemvalue="JUnit.AnswerControllerTest" />
         <item itemvalue="JUnit.AnswerControllerTest.shouldAnswerTheTopicWithSuccessfully" />
@@ -368,9 +453,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/topic" />
     </ignored-roots>
-    <MESSAGE value="Substituido path variable de alguns recursos por query param" />
-    <MESSAGE value="Substituido a propriedade &quot;message&quot; da entidade tópico por &quot;question&quot;" />
-    <MESSAGE value="Criado anotação @IsAuthenticated para abstração da validação de usuários autenticados" />
     <MESSAGE value="Marcação de métodos com a anotação @IsAuthenticated e remoção de parâmetros desnecessários" />
     <MESSAGE value="Adicionado exceção quando usuário não for encontrado" />
     <MESSAGE value="Removido implementação de UserDetails" />
@@ -393,753 +475,760 @@
     <MESSAGE value="Substituido o nome da propriedade de message para question" />
     <MESSAGE value="Removido o consentimento para os clients topic e user" />
     <MESSAGE value="Ajustes nos manipuladores de exceções" />
-    <option name="LAST_COMMIT_MESSAGE" value="Ajustes nos manipuladores de exceções" />
+    <MESSAGE value="Ajustes no versionamento das entidades no flyway" />
+    <MESSAGE value="Adicionado dependência do h2database e jetbrains annotation para análise de código" />
+    <MESSAGE value="Corrigido a criação de múltiplos beans para os repositories, dispensando a necessidade da propriedade spring.main.allow-bean-definition-overriding: true" />
+    <option name="LAST_COMMIT_MESSAGE" value="Corrigido a criação de múltiplos beans para os repositories, dispensando a necessidade da propriedade spring.main.allow-bean-definition-overriding: true" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
   </component>
-  <component name="WfRunsListSearchHistory">{
-  &quot;history&quot;: [
+  <component name="WfRunsListSearchHistory"><![CDATA[{
+  "history": [
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;develop&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "develop",
+      "currentBranchFilter": true
+    },
+    {
+      "branch": "develop",
+      "currentBranchFilter": true
     }
   ],
-  &quot;lastFilter&quot;: {
-    &quot;branch&quot;: &quot;develop&quot;,
-    &quot;currentBranchFilter&quot;: true
+  "lastFilter": {
+    "branch": "develop",
+    "currentBranchFilter": true
   }
-}</component>
+}]]></component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
@@ -1154,5 +1243,10 @@
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+    <watches-manager>
+      <configuration name="Application">
+        <watch expression="ex.getResponseBodyAsString()" />
+      </configuration>
+    </watches-manager>
   </component>
 </project>
