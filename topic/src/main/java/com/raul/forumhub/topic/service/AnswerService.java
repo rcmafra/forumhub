@@ -46,13 +46,13 @@ public class AnswerService {
 
     public void markBestAnswer(Long topic_id, Long answer_id, Long user_id) {
         Topic topic = topicService.getTopicById(topic_id);
+        Author author = userClientRequest.getUserById(user_id);
+
+        this.topicService.validateTopicOwner(topic.getAuthor().getId(), author.getId());
 
         List<Answer> answersOfTheTopic = this.answerRepository.getAnswerByTopic(topic)
                 .orElse(Collections.emptyList());
-
         boolean hasBestAnswer = answersOfTheTopic.stream().anyMatch(Answer::isBestAnswer);
-
-        this.topicService.validateTopicOwner(topic.getAuthor().getId(), user_id);
 
         if (hasBestAnswer) {
             throw new AnswerServiceException("Já existe uma melhor resposta para este tópico");
