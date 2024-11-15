@@ -7,7 +7,6 @@ import com.raul.forumhub.topic.dto.request.CourseCreateDTO;
 import com.raul.forumhub.topic.dto.request.CourseUpdateDTO;
 import com.raul.forumhub.topic.repository.CourseRepository;
 import com.raul.forumhub.topic.utility.TestsHelper;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -30,7 +29,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc(printOnlyOnFailure = false)
 @ActiveProfiles(value = "test")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@Slf4j
+@TestClassOrder(ClassOrderer.ClassName.class)
+@Order(3)
 public class CourseControllerIT {
 
     @Autowired

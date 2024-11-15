@@ -16,14 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.test.annotation.IfProfileValue;
-import org.springframework.test.annotation.ProfileValueSourceConfiguration;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -39,6 +36,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc(printOnlyOnFailure = false)
 @ActiveProfiles(value = "test")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@TestClassOrder(ClassOrderer.ClassName.class)
+@Order(2)
 public class TopicControllerIT {
 
     @Autowired
@@ -117,9 +116,79 @@ public class TopicControllerIT {
 
     }
 
-    //In a request perfom by a client, this scenario returns 400 bad request due
-    // to the different type of exception thrown
     @Order(2)
+    @DisplayName("Should fail with status code 400 if title property is sent empty when create topic")
+    @Test
+    void shouldFailIfTitlePropertyIsEmptyWhenCreateTopic() throws Exception {
+        final TopicCreateDTO topicCreateDTO = new TopicCreateDTO("",
+                "Como utilizar o Feign Client para integração do serviço x?",
+                1L);
+
+
+        BDDMockito.given(this.userClientRequest.getUserById(1L))
+                .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
+
+        this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/create")
+                        .with(jwt().jwt(jwt))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .content(new ObjectMapper()
+                                .writeValueAsString(topicCreateDTO)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.detail", is("O título não pode ser vazio")));
+
+        Topic topic = this.topicRepository.findById(1L).orElseThrow();
+
+        Assertions.assertAll(
+                () -> assertEquals("Dúvida na utilização do Feign Client", topic.getTitle()),
+                () -> assertEquals("Como utilizar o Feign Client para integração do serviço x?", topic.getQuestion()),
+                () -> assertEquals(3, this.profileRepository.findAll().size()),
+                () -> assertEquals(4, this.authorRepository.findAll().size()),
+                () -> assertEquals(3, this.courseRepository.findAll().size()),
+                () -> assertEquals(5, this.answerRepository.findAll().size()),
+                () -> assertEquals(3, this.topicRepository.findAll().size())
+        );
+
+    }
+
+    @Order(3)
+    @DisplayName("Should fail with status code 400 if question property is sent empty when create topic")
+    @Test
+    void shouldFailIfQuestionPropertyIsEmptyWhenCreateTopic() throws Exception {
+        final TopicCreateDTO topicCreateDTO = new TopicCreateDTO("Dúvida na utilização do Feign Client",
+                "",
+                1L);
+
+        BDDMockito.given(this.userClientRequest.getUserById(1L))
+                .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
+
+        this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/create")
+                        .with(jwt().jwt(jwt))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .content(new ObjectMapper()
+                                .writeValueAsString(topicCreateDTO)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.detail", is("A pergunta não pode ser vazia")));
+
+        Topic topic = this.topicRepository.findById(1L).orElseThrow();
+
+        Assertions.assertAll(
+                () -> assertEquals("Dúvida na utilização do Feign Client", topic.getTitle()),
+                () -> assertEquals("Como utilizar o Feign Client para integração do serviço x?", topic.getQuestion()),
+                () -> assertEquals(3, this.profileRepository.findAll().size()),
+                () -> assertEquals(4, this.authorRepository.findAll().size()),
+                () -> assertEquals(3, this.courseRepository.findAll().size()),
+                () -> assertEquals(5, this.answerRepository.findAll().size()),
+                () -> assertEquals(3, this.topicRepository.findAll().size())
+        );
+
+    }
+
+    /*In a request perform by a client, this scenario returns 400 bad request due
+    to the different type of exception thrown. This is because in production
+    is oracle database is used, but in tests h2 database is used.*/
+    @Order(4)
     @DisplayName("Should fail with status code 500 when create topic if the title " +
             "property is greater than 150 chars")
     @Test
@@ -152,7 +221,7 @@ public class TopicControllerIT {
 
     }
 
-    @Order(4)
+    @Order(5)
     @DisplayName("Should fail with status code 404 when create topic if the course not exists")
     @Test
     void shouldFailToCreateTopicIfCourseNotExists() throws Exception {
@@ -182,7 +251,7 @@ public class TopicControllerIT {
     }
 
 
-    @Order(4)
+    @Order(6)
     @DisplayName("Should fail with status code 404 when create topic if the user service " +
             "return 404 not found status code")
     @Test
@@ -213,7 +282,7 @@ public class TopicControllerIT {
 
     }
 
-    @Order(5)
+    @Order(7)
     @DisplayName("Should create topic with success if user is authenticated and " +
             "previous premisses are adequate")
     @Test
@@ -247,7 +316,7 @@ public class TopicControllerIT {
     }
 
 
-    @Order(6)
+    @Order(8)
     @DisplayName("Should fail with status code 404 when request the specified topic if not exists")
     @Test
     void shouldFailToRequestTheSpecifiedTopicIfNotExists() throws Exception {
@@ -261,14 +330,14 @@ public class TopicControllerIT {
                 () -> assertEquals(3, this.profileRepository.findAll().size()),
                 () -> assertEquals(4, this.authorRepository.findAll().size()),
                 () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.answerRepository.findAll().size()),
+                () -> assertEquals(5, this.answerRepository.findAll().size()),
                 () -> assertEquals(4, this.topicRepository.findAll().size())
         );
 
 
     }
 
-    @Order(7)
+    @Order(9)
     @DisplayName("Should return all topics unsorted with successful")
     @Test
     void shouldReturnAllTopicsUnsortedWithSuccessful() throws Exception {
@@ -285,14 +354,14 @@ public class TopicControllerIT {
                 () -> assertEquals(3, this.profileRepository.findAll().size()),
                 () -> assertEquals(4, this.authorRepository.findAll().size()),
                 () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.answerRepository.findAll().size()),
+                () -> assertEquals(5, this.answerRepository.findAll().size()),
                 () -> assertEquals(4, this.topicRepository.findAll().size())
         );
 
 
     }
 
-    @Order(8)
+    @Order(10)
     @DisplayName("Should return all topics sorted descendants by created date with successful")
     @Test
     void shouldReturnAllTopicsSortedDescendantByCreateDateWithSuccessful() throws Exception {
@@ -314,14 +383,14 @@ public class TopicControllerIT {
                 () -> assertEquals(3, this.profileRepository.findAll().size()),
                 () -> assertEquals(4, this.authorRepository.findAll().size()),
                 () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.answerRepository.findAll().size()),
+                () -> assertEquals(5, this.answerRepository.findAll().size()),
                 () -> assertEquals(4, this.topicRepository.findAll().size())
         );
 
 
     }
 
-    @Order(9)
+    @Order(11)
     @DisplayName("Should return only two topics sorted in ascendant by status with successful")
     @Test
     void shouldReturnTwoTopicsSortedAscendantByStatusWithSuccessful() throws Exception {
@@ -331,7 +400,7 @@ public class TopicControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$..getTopicDTOList[0].[?(@.id == 2)]").exists())
+                .andExpect(jsonPath("$..getTopicDTOList[0].[?(@.id == 3)]").exists())
                 .andExpect(jsonPath("$..getTopicDTOList[0].[?(@.status == \"SOLVED\")]").exists())
                 .andExpect(jsonPath("$..getTopicDTOList[1].[?(@.id == 5)]").exists())
                 .andExpect(jsonPath("$..getTopicDTOList[1].[?(@.status == \"UNSOLVED\")]").exists())
@@ -345,7 +414,7 @@ public class TopicControllerIT {
                 () -> assertEquals(3, this.profileRepository.findAll().size()),
                 () -> assertEquals(4, this.authorRepository.findAll().size()),
                 () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.answerRepository.findAll().size()),
+                () -> assertEquals(5, this.answerRepository.findAll().size()),
                 () -> assertEquals(4, this.topicRepository.findAll().size())
         );
 
@@ -353,7 +422,7 @@ public class TopicControllerIT {
     }
 
 
-    @Order(10)
+    @Order(12)
     @DisplayName("Should return all topics sorted ascendants by title with successful")
     @Test
     void shouldReturnAllTopicsSortedAscendantByTitleWithSuccessful() throws Exception {
@@ -376,14 +445,14 @@ public class TopicControllerIT {
                 () -> assertEquals(3, this.profileRepository.findAll().size()),
                 () -> assertEquals(4, this.authorRepository.findAll().size()),
                 () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.answerRepository.findAll().size()),
+                () -> assertEquals(5, this.answerRepository.findAll().size()),
                 () -> assertEquals(4, this.topicRepository.findAll().size())
         );
 
 
     }
 
-    @Order(11)
+    @Order(13)
     @DisplayName("Should fail with status code 400 when attempt get topic if topic_id property " +
             "of query param is sent empty")
     @Test
@@ -398,14 +467,14 @@ public class TopicControllerIT {
                 () -> assertEquals(3, this.profileRepository.findAll().size()),
                 () -> assertEquals(4, this.authorRepository.findAll().size()),
                 () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.answerRepository.findAll().size()),
+                () -> assertEquals(5, this.answerRepository.findAll().size()),
                 () -> assertEquals(4, this.topicRepository.findAll().size())
         );
 
     }
 
 
-    @Order(12)
+    @Order(14)
     @DisplayName("Should return the specified topic with successful if exists")
     @Test
     void shouldReturnTheSpecifiedTopicWithSuccessful() throws Exception {
@@ -421,14 +490,14 @@ public class TopicControllerIT {
                 () -> assertEquals(3, this.profileRepository.findAll().size()),
                 () -> assertEquals(4, this.authorRepository.findAll().size()),
                 () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.answerRepository.findAll().size()),
+                () -> assertEquals(5, this.answerRepository.findAll().size()),
                 () -> assertEquals(4, this.topicRepository.findAll().size())
         );
 
 
     }
 
-    @Order(13)
+    @Order(15)
     @DisplayName("Should fail with status code 403 if user authenticated hasn't authority 'topic:edit'" +
             "when edit topic")
     @Test
@@ -459,13 +528,13 @@ public class TopicControllerIT {
                 () -> assertEquals(3, this.profileRepository.findAll().size()),
                 () -> assertEquals(4, this.authorRepository.findAll().size()),
                 () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.answerRepository.findAll().size()),
+                () -> assertEquals(5, this.answerRepository.findAll().size()),
                 () -> assertEquals(4, this.topicRepository.findAll().size())
         );
 
     }
 
-    @Order(14)
+    @Order(16)
     @DisplayName("Should fail with status code 400 if title property is sent empty when edit topic")
     @Test
     void shouldFailIfTitlePropertyIsEmptyWhenEditTopic() throws Exception {
@@ -497,13 +566,13 @@ public class TopicControllerIT {
                 () -> assertEquals(3, this.profileRepository.findAll().size()),
                 () -> assertEquals(4, this.authorRepository.findAll().size()),
                 () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.answerRepository.findAll().size()),
+                () -> assertEquals(5, this.answerRepository.findAll().size()),
                 () -> assertEquals(4, this.topicRepository.findAll().size())
         );
 
     }
 
-    @Order(15)
+    @Order(17)
     @DisplayName("Should fail with status code 400 if question property is sent empty when edit topic")
     @Test
     void shouldFailIfQuestionPropertyIsEmptyWhenEditTopic() throws Exception {
@@ -535,13 +604,13 @@ public class TopicControllerIT {
                 () -> assertEquals(3, this.profileRepository.findAll().size()),
                 () -> assertEquals(4, this.authorRepository.findAll().size()),
                 () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.answerRepository.findAll().size()),
+                () -> assertEquals(5, this.answerRepository.findAll().size()),
                 () -> assertEquals(4, this.topicRepository.findAll().size())
         );
 
     }
 
-    @Order(16)
+    @Order(18)
     @DisplayName("Should fail with status code 400 when attempt update topic if topic_id property " +
             "of query param is sent empty")
     @Test
@@ -569,13 +638,13 @@ public class TopicControllerIT {
                 () -> assertEquals(3, this.profileRepository.findAll().size()),
                 () -> assertEquals(4, this.authorRepository.findAll().size()),
                 () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.answerRepository.findAll().size()),
+                () -> assertEquals(5, this.answerRepository.findAll().size()),
                 () -> assertEquals(4, this.topicRepository.findAll().size())
         );
 
     }
 
-    @Order(17)
+    @Order(19)
     @DisplayName("Should fail with status code 404 when update topic if the course not exists")
     @Test
     void shouldFailToEditTopicIfCourseNotExists() throws Exception {
@@ -606,7 +675,7 @@ public class TopicControllerIT {
                 () -> assertEquals(3, this.profileRepository.findAll().size()),
                 () -> assertEquals(4, this.authorRepository.findAll().size()),
                 () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.answerRepository.findAll().size()),
+                () -> assertEquals(5, this.answerRepository.findAll().size()),
                 () -> assertEquals(4, this.topicRepository.findAll().size())
         );
 
@@ -614,7 +683,7 @@ public class TopicControllerIT {
     }
 
 
-    @Order(18)
+    @Order(20)
     @DisplayName("Should fail with status code 404 when edit topic if the user service return " +
             "404 not found status code")
     @Test
@@ -646,14 +715,14 @@ public class TopicControllerIT {
                 () -> assertEquals(3, this.profileRepository.findAll().size()),
                 () -> assertEquals(4, this.authorRepository.findAll().size()),
                 () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.answerRepository.findAll().size()),
+                () -> assertEquals(5, this.answerRepository.findAll().size()),
                 () -> assertEquals(4, this.topicRepository.findAll().size())
         );
 
     }
 
 
-    @Order(19)
+    @Order(21)
     @DisplayName("Should fail with status code 418 if basic user attempt edit topic of other author")
     @Test
     void shouldFailIfBasicUserAttemptEditTopicOfOtherAuthor() throws Exception {
@@ -685,13 +754,13 @@ public class TopicControllerIT {
                 () -> assertEquals(3, this.profileRepository.findAll().size()),
                 () -> assertEquals(4, this.authorRepository.findAll().size()),
                 () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.answerRepository.findAll().size()),
+                () -> assertEquals(5, this.answerRepository.findAll().size()),
                 () -> assertEquals(4, this.topicRepository.findAll().size())
         );
 
     }
 
-    @Order(20)
+    @Order(22)
     @DisplayName("Should fail with status code 422 when attempt edit a topic of unknown author")
     @Test
     void shouldFailWhenAttemptEditTopicOfUnknownAuthor() throws Exception {
@@ -726,14 +795,14 @@ public class TopicControllerIT {
                 () -> assertEquals(3, this.profileRepository.findAll().size()),
                 () -> assertEquals(4, this.authorRepository.findAll().size()),
                 () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.answerRepository.findAll().size()),
+                () -> assertEquals(5, this.answerRepository.findAll().size()),
                 () -> assertEquals(4, this.topicRepository.findAll().size())
         );
 
 
     }
 
-    @Order(21)
+    @Order(23)
     @DisplayName("Topic author should be able edit specified topic if authenticated, " +
             "has authority 'topic:edit' and previous premisses are adequate")
     @Test
@@ -767,13 +836,13 @@ public class TopicControllerIT {
                 () -> assertEquals(3, this.profileRepository.findAll().size()),
                 () -> assertEquals(4, this.authorRepository.findAll().size()),
                 () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.answerRepository.findAll().size()),
+                () -> assertEquals(5, this.answerRepository.findAll().size()),
                 () -> assertEquals(4, this.topicRepository.findAll().size())
         );
 
     }
 
-    @Order(22)
+    @Order(24)
     @DisplayName("User ADM should be able edit topic of other author if authenticated, " +
             "has authority 'topic:edit' and previous premisses are adequate")
     @Test
@@ -807,13 +876,13 @@ public class TopicControllerIT {
                 () -> assertEquals(3, this.profileRepository.findAll().size()),
                 () -> assertEquals(4, this.authorRepository.findAll().size()),
                 () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.answerRepository.findAll().size()),
+                () -> assertEquals(5, this.answerRepository.findAll().size()),
                 () -> assertEquals(4, this.topicRepository.findAll().size())
         );
 
     }
 
-    @Order(23)
+    @Order(25)
     @DisplayName("User MOD should be able edit topic of other author if authenticated, " +
             "has authority 'topic:edit' and previous premisses are adequate")
     @Test
@@ -847,14 +916,14 @@ public class TopicControllerIT {
                 () -> assertEquals(3, this.profileRepository.findAll().size()),
                 () -> assertEquals(4, this.authorRepository.findAll().size()),
                 () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.answerRepository.findAll().size()),
+                () -> assertEquals(5, this.answerRepository.findAll().size()),
                 () -> assertEquals(4, this.topicRepository.findAll().size())
         );
 
     }
 
 
-    @Order(24)
+    @Order(26)
     @DisplayName("Should fail with status code 403 if user authenticated hasn't authority 'topic:delete'" +
             " when delete topic")
     @Test
@@ -873,21 +942,21 @@ public class TopicControllerIT {
                 () -> assertEquals(3, this.profileRepository.findAll().size()),
                 () -> assertEquals(4, this.authorRepository.findAll().size()),
                 () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.answerRepository.findAll().size()),
+                () -> assertEquals(5, this.answerRepository.findAll().size()),
                 () -> assertEquals(4, this.topicRepository.findAll().size())
         );
 
     }
 
-    @Order(25)
+    @Order(27)
     @DisplayName("Should fail with status code 400 when attempt delete topic if topic_id property " +
             "of query param is sent empty")
     @Test
     void shouldFailIfTopicIdPropertyOfQueryParamIsEmptyWhenDeleteTopic() throws Exception {
-     BDDMockito.given(this.userClientRequest.getUserById(1L))
+        BDDMockito.given(this.userClientRequest.getUserById(1L))
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/topics")
+        this.mockMvc.perform(delete("/api-forum/v1/forumhub/topics")
                         .queryParam("topic_id", "")
                         .with(jwt().jwt(jwt)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:delete")))
@@ -899,13 +968,13 @@ public class TopicControllerIT {
                 () -> assertEquals(3, this.profileRepository.findAll().size()),
                 () -> assertEquals(4, this.authorRepository.findAll().size()),
                 () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.answerRepository.findAll().size()),
+                () -> assertEquals(5, this.answerRepository.findAll().size()),
                 () -> assertEquals(4, this.topicRepository.findAll().size())
         );
 
     }
 
-    @Order(26)
+    @Order(28)
     @DisplayName("Should fail with status code 404 when delete topic if the user service " +
             "return 404 not found status code")
     @Test
@@ -925,13 +994,13 @@ public class TopicControllerIT {
                 () -> assertEquals(3, this.profileRepository.findAll().size()),
                 () -> assertEquals(4, this.authorRepository.findAll().size()),
                 () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.answerRepository.findAll().size()),
+                () -> assertEquals(5, this.answerRepository.findAll().size()),
                 () -> assertEquals(4, this.topicRepository.findAll().size())
         );
 
     }
 
-    @Order(27)
+    @Order(29)
     @DisplayName("Should fail with status code 418 if basic user attempt delete topic of other author")
     @Test
     void shouldFailIfBasicUserAttemptDeleteTopicOfOtherAuthor() throws Exception {
@@ -951,13 +1020,13 @@ public class TopicControllerIT {
                 () -> assertEquals(3, this.profileRepository.findAll().size()),
                 () -> assertEquals(4, this.authorRepository.findAll().size()),
                 () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.answerRepository.findAll().size()),
+                () -> assertEquals(5, this.answerRepository.findAll().size()),
                 () -> assertEquals(4, this.topicRepository.findAll().size())
         );
 
     }
 
-    @Order(28)
+    @Order(30)
     @DisplayName("Topic author should be able delete specified topic if authenticated, " +
             "has authority 'topic:delete' and previous premisses are adequate")
     @Test
@@ -984,7 +1053,7 @@ public class TopicControllerIT {
 
     }
 
-    @Order(29)
+    @Order(31)
     @DisplayName("User ADM should be able delete topic of other author if authenticated, " +
             "has authority 'topic:delete' and previous premisses are adequate")
     @Test
@@ -1011,7 +1080,7 @@ public class TopicControllerIT {
 
     }
 
-    @Order(30)
+    @Order(32)
     @DisplayName("User MOD should be able delete topic of other author if authenticated, " +
             "has authority 'topic:delete' and previous premisses are adequate")
     @Test
