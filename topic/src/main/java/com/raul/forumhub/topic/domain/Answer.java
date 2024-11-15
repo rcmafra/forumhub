@@ -37,14 +37,6 @@ public class Answer {
     @JoinColumns(value = @JoinColumn(name = "user_id"), foreignKey = @ForeignKey(name = "user_id"))
     private Author author;
 
-    public Answer(Long id, String solution, boolean bestAnswer, LocalDateTime createdAt, Author author){
-        this.id = id;
-        this.solution = solution;
-        this.bestAnswer = bestAnswer;
-        this.createdAt = createdAt;
-        this.author = author;
-    }
-
     public Answer(String solution){
         this.solution = solution;
         this.createdAt = LocalDateTime.now();
