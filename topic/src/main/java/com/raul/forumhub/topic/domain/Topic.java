@@ -2,10 +2,7 @@ package com.raul.forumhub.topic.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -16,6 +13,7 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class Topic {
 
     @Id
@@ -66,19 +64,5 @@ public class Topic {
         this.title = title;
         this.question = question;
         this.status = status;
-    }
-
-    @Override
-    public String toString() {
-        return "Topic{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", question='" + question + '\'' +
-                ", createdAt=" + createdAt +
-                ", status=" + status +
-                ", author=" + author +
-                ", course=" + course +
-                ", answers=" + answers +
-                '}';
     }
 }

@@ -2,10 +2,7 @@ package com.raul.forumhub.topic.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity(name = "users")
 @Table(schema = "hub", name = "users")
@@ -13,6 +10,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class Author {
 
     @Id
@@ -33,15 +31,5 @@ public class Author {
         this.username = username;
         this.email = email;
         this.profile = profile;
-    }
-
-    @Override
-    public String toString() {
-        return "Author{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", email='" + email + '\'' +
-                ", profile=" + profile +
-                '}';
     }
 }

@@ -3,10 +3,7 @@ package com.raul.forumhub.topic.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -16,6 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class Answer {
 
     @Id
@@ -25,6 +23,7 @@ public class Answer {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns(value = @JoinColumn(name = "topic_id"), foreignKey = @ForeignKey(name = "topic_id"))
     @JsonIgnore
+    @ToString.Exclude
     private Topic topic;
     @NotBlank(message = "A solução não pode ser vazia")
     @Column(nullable = false)
@@ -40,17 +39,5 @@ public class Answer {
     public Answer(String solution){
         this.solution = solution;
         this.createdAt = LocalDateTime.now();
-    }
-
-    @Override
-    public String toString() {
-        return "Answer{" +
-                "id=" + id +
-                ", topic=" + topic +
-                ", solution='" + solution + '\'' +
-                ", bestAnswer=" + bestAnswer +
-                ", createdAt=" + createdAt +
-                ", author=" + author +
-                '}';
     }
 }
