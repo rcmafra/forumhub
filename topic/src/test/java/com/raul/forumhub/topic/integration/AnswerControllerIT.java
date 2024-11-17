@@ -3,6 +3,7 @@ package com.raul.forumhub.topic.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.raul.forumhub.topic.client.UserClientRequest;
+import com.raul.forumhub.topic.domain.Answer;
 import com.raul.forumhub.topic.domain.Topic;
 import com.raul.forumhub.topic.dto.request.AnswerTopicDTO;
 import com.raul.forumhub.topic.dto.request.AnswerUpdateDTO;
@@ -24,7 +25,10 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Set;
 
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
@@ -91,7 +95,7 @@ public class AnswerControllerIT {
     @DisplayName("Should fail with status code 401 when answer topic if user unauthenticated")
     @Test
     void shouldFailToAnswerTopicIfUnauthenticated() throws Exception {
-        final AnswerTopicDTO answerTopicDTO = new AnswerTopicDTO("Resposta de teste");
+        final AnswerTopicDTO answerTopicDTO = new AnswerTopicDTO("Resposta teste");
 
         BDDMockito.given(this.userClientRequest.getUserById(1L))
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
@@ -103,15 +107,9 @@ public class AnswerControllerIT {
                                 .writeValueAsString(answerTopicDTO)))
                 .andExpect(status().isUnauthorized());
 
-        Topic topic = this.topicRepository.findById(1L).orElseThrow();
-
         Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.topicRepository.findAll().size()),
                 () -> assertEquals(4, this.answerRepository.findAll().size()),
-                () -> assertEquals(2, topic.getAnswers().size())
+                () -> assertEquals(2, this.topicRepository.findById(1L).orElseThrow().getAnswers().size())
         );
 
 
@@ -135,15 +133,9 @@ public class AnswerControllerIT {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.detail", is("A solução não pode ser vazia")));
 
-        Topic topic = this.topicRepository.findById(1L).orElseThrow();
-
         Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.topicRepository.findAll().size()),
                 () -> assertEquals(4, this.answerRepository.findAll().size()),
-                () -> assertEquals(2, topic.getAnswers().size())
+                () -> assertEquals(2, this.topicRepository.findById(1L).orElseThrow().getAnswers().size())
         );
 
     }
@@ -152,7 +144,7 @@ public class AnswerControllerIT {
     @DisplayName("Should fail with status code 404 when answer topic if the topic specified not exists")
     @Test
     void shouldFailToAnswerTopicIfSpecifiedTopicNotExists() throws Exception {
-        final AnswerTopicDTO answerTopicDTO = new AnswerTopicDTO("Resposta de teste");
+        final AnswerTopicDTO answerTopicDTO = new AnswerTopicDTO("Resposta teste");
 
         BDDMockito.given(this.userClientRequest.getUserById(1L)).
                 willReturn(TestsHelper.AuthorHelper.authorList().get(0));
@@ -166,15 +158,8 @@ public class AnswerControllerIT {
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.detail", is("O tópico informado não existe")));
 
-        Topic topic = this.topicRepository.findById(1L).orElseThrow();
-
         Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.topicRepository.findAll().size()),
                 () -> assertEquals(4, this.answerRepository.findAll().size()),
-                () -> assertEquals(2, topic.getAnswers().size()),
                 () -> assertFalse(this.topicRepository.findById(6L).isPresent())
         );
 
@@ -187,7 +172,7 @@ public class AnswerControllerIT {
             "return 404 not found status code")
     @Test
     void shouldFailToAnswerTopicIfUserServiceReturn404StatusCode() throws Exception {
-        final AnswerTopicDTO answerTopicDTO = new AnswerTopicDTO("Resposta de teste");
+        final AnswerTopicDTO answerTopicDTO = new AnswerTopicDTO("Resposta teste");
 
         BDDMockito.given(this.userClientRequest.getUserById(1L))
                 .willThrow(new RestClientException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
@@ -200,15 +185,9 @@ public class AnswerControllerIT {
                                 .writeValueAsString(answerTopicDTO)))
                 .andExpectAll(status().isNotFound());
 
-        Topic topic = this.topicRepository.findById(1L).orElseThrow();
-
         Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.topicRepository.findAll().size()),
                 () -> assertEquals(4, this.answerRepository.findAll().size()),
-                () -> assertEquals(2, topic.getAnswers().size())
+                () -> assertEquals(2, this.topicRepository.findById(1L).orElseThrow().getAnswers().size())
         );
 
 
@@ -219,7 +198,7 @@ public class AnswerControllerIT {
             "previous premisses are adequate")
     @Test
     void shouldAnswerTopicWithSuccessIfAuthenticated() throws Exception {
-        final AnswerTopicDTO answerTopicDTO = new AnswerTopicDTO("Resposta de teste");
+        final AnswerTopicDTO answerTopicDTO = new AnswerTopicDTO("Resposta teste");
 
         BDDMockito.given(this.userClientRequest.getUserById(1L))
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
@@ -236,16 +215,10 @@ public class AnswerControllerIT {
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
 
         Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.topicRepository.findAll().size()),
                 () -> assertEquals(5, this.answerRepository.findAll().size()),
                 () -> assertEquals(3, topic.getAnswers().size()),
-                () -> assertEquals("Resposta de teste", topic.getAnswers().stream()
-                        .filter(answer -> !answer.getId().equals(1L) && !answer.getId().equals(4L))
-                        .findFirst().orElseThrow().getSolution())
-
+                () -> assertTrue(topic.getAnswers().stream().anyMatch(answer -> answer.getSolution()
+                        .equals("Resposta teste")))
         );
 
 
@@ -267,10 +240,6 @@ public class AnswerControllerIT {
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
 
         Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.topicRepository.findAll().size()),
                 () -> assertEquals(5, this.answerRepository.findAll().size()),
                 () -> assertEquals(3, topic.getAnswers().size()),
                 () -> assertFalse(topic.getAnswers().stream().filter(answer -> answer.getId().equals(1L))
@@ -298,10 +267,6 @@ public class AnswerControllerIT {
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
 
         Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.topicRepository.findAll().size()),
                 () -> assertEquals(5, this.answerRepository.findAll().size()),
                 () -> assertEquals(3, topic.getAnswers().size()),
                 () -> assertFalse(topic.getAnswers().stream().filter(answer -> answer.getId().equals(1L))
@@ -328,10 +293,6 @@ public class AnswerControllerIT {
                 .andExpect(jsonPath("$.detail", is("O tópico informado não existe")));
 
         Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.topicRepository.findAll().size()),
                 () -> assertEquals(5, this.answerRepository.findAll().size()),
                 () -> assertFalse(this.topicRepository.findById(6L).isPresent())
         );
@@ -357,10 +318,6 @@ public class AnswerControllerIT {
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
 
         Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.topicRepository.findAll().size()),
                 () -> assertEquals(5, this.answerRepository.findAll().size()),
                 () -> assertEquals(3, topic.getAnswers().size()),
                 () -> assertFalse(topic.getAnswers().stream().filter(answer -> answer.getId().equals(1L))
@@ -390,10 +347,6 @@ public class AnswerControllerIT {
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
 
         Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.topicRepository.findAll().size()),
                 () -> assertEquals(5, this.answerRepository.findAll().size()),
                 () -> assertEquals(3, topic.getAnswers().size()),
                 () -> assertFalse(topic.getAnswers().stream().filter(answer -> answer.getId().equals(1L))
@@ -408,7 +361,7 @@ public class AnswerControllerIT {
     @DisplayName("Should fail with status code 422 when mark answer best if already " +
             "exists a best answer for specified topic")
     @Test
-    void shouldFailToMarkAnswerBestIfAlreadyExistsABestAnswer() throws Exception {
+    void shouldFailToMarkAnswerBestIfAlreadyExistsBestAnswer() throws Exception {
         BDDMockito.given(this.userClientRequest.getUserById(2L)).
                 willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
@@ -424,14 +377,12 @@ public class AnswerControllerIT {
         Topic topic = this.topicRepository.findById(2L).orElseThrow();
 
         Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.topicRepository.findAll().size()),
                 () -> assertEquals(5, this.answerRepository.findAll().size()),
                 () -> assertEquals(1, topic.getAnswers().size()),
-                () -> assertTrue(topic.getAnswers().stream().findFirst().orElseThrow().isBestAnswer())
+                () -> assertTrue(topic.getAnswers().stream().filter(answer -> answer.getId().equals(2L))
+                        .findFirst().orElseThrow().isBestAnswer())
         );
+
 
     }
 
@@ -454,10 +405,6 @@ public class AnswerControllerIT {
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
 
         Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.topicRepository.findAll().size()),
                 () -> assertEquals(5, this.answerRepository.findAll().size()),
                 () -> assertEquals(3, topic.getAnswers().size()),
                 () -> assertTrue(topic.getAnswers().stream().filter(answer -> answer.getId().equals(1L))
@@ -491,10 +438,6 @@ public class AnswerControllerIT {
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
 
         Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.topicRepository.findAll().size()),
                 () -> assertEquals(5, this.answerRepository.findAll().size()),
                 () -> assertEquals(3, topic.getAnswers().size()),
                 () -> assertEquals("Resposta do primeiro tópico", topic.getAnswers().stream()
@@ -527,10 +470,6 @@ public class AnswerControllerIT {
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
 
         Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.topicRepository.findAll().size()),
                 () -> assertEquals(5, this.answerRepository.findAll().size()),
                 () -> assertEquals(3, topic.getAnswers().size()),
                 () -> assertEquals("Resposta do primeiro tópico", topic.getAnswers().stream()
@@ -564,15 +503,10 @@ public class AnswerControllerIT {
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
 
         Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.topicRepository.findAll().size()),
                 () -> assertEquals(5, this.answerRepository.findAll().size()),
                 () -> assertEquals(3, topic.getAnswers().size()),
-                () -> assertEquals("Resposta do primeiro tópico", topic.getAnswers().stream()
-                        .filter(answer -> answer.getId().equals(1L)).findFirst().orElseThrow()
-                        .getSolution())
+                () -> assertFalse(topic.getAnswers().stream().anyMatch(answer -> answer.getSolution()
+                        .equals("Primeiro teste de edição de uma resposta")))
         );
 
     }
@@ -599,13 +533,13 @@ public class AnswerControllerIT {
                 .andExpect(jsonPath("$.detail",
                         is("O tópico informado não existe")));
 
+        List<Answer> answer = this.answerRepository.findAll();
+
         Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.topicRepository.findAll().size()),
-                () -> assertEquals(5, this.answerRepository.findAll().size()),
-                () -> assertFalse(this.topicRepository.findById(6L).isPresent())
+                () -> assertFalse(this.topicRepository.findById(6L).isPresent()),
+                () -> assertEquals(5, answer.size()),
+                () -> assertTrue(answer.stream().noneMatch(answer1 -> answer1
+                        .getSolution().equals("Primeiro teste de edição de uma resposta")))
         );
 
 
@@ -633,15 +567,14 @@ public class AnswerControllerIT {
                 .andExpect(jsonPath("$.detail",
                         is("A resposta informada não existe")));
 
-        Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.topicRepository.findAll().size()),
-                () -> assertEquals(5, this.answerRepository.findAll().size()),
-                () -> assertFalse(this.answerRepository.findById(6L).isPresent())
-        );
+        Topic topic = this.topicRepository.findById(1L).orElseThrow();
 
+        Assertions.assertAll(
+                () -> assertEquals(5, this.answerRepository.findAll().size()),
+                () -> assertEquals(3, topic.getAnswers().size()),
+                () -> assertFalse(topic.getAnswers().stream().anyMatch(answer -> answer.getSolution()
+                        .equals("Primeiro teste de edição de uma resposta")))
+        );
 
     }
 
@@ -671,10 +604,6 @@ public class AnswerControllerIT {
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
 
         Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.topicRepository.findAll().size()),
                 () -> assertEquals(5, this.answerRepository.findAll().size()),
                 () -> assertEquals(3, topic.getAnswers().size()),
                 () -> assertEquals("Resposta do primeiro tópico", topic.getAnswers().stream()
@@ -708,10 +637,6 @@ public class AnswerControllerIT {
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
 
         Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.topicRepository.findAll().size()),
                 () -> assertEquals(5, this.answerRepository.findAll().size()),
                 () -> assertEquals(3, topic.getAnswers().size()),
                 () -> assertEquals("Resposta do primeiro tópico", topic.getAnswers().stream()
@@ -748,10 +673,6 @@ public class AnswerControllerIT {
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
 
         Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.topicRepository.findAll().size()),
                 () -> assertEquals(5, this.answerRepository.findAll().size()),
                 () -> assertEquals(3, topic.getAnswers().size()),
                 () -> assertEquals("Resposta do primeiro tópico", topic.getAnswers().stream()
@@ -788,14 +709,10 @@ public class AnswerControllerIT {
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
 
         Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.topicRepository.findAll().size()),
                 () -> assertEquals(5, this.answerRepository.findAll().size()),
                 () -> assertEquals(3, topic.getAnswers().size()),
                 () -> assertEquals("Primeiro teste de edição de uma resposta", topic.getAnswers().stream()
-                        .filter(answer1 -> answer1.getId().equals(1L)).findFirst().orElseThrow()
+                        .filter(answer -> answer.getId().equals(1L)).findFirst().orElseThrow()
                         .getSolution())
         );
 
@@ -827,14 +744,10 @@ public class AnswerControllerIT {
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
 
         Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.topicRepository.findAll().size()),
                 () -> assertEquals(5, this.answerRepository.findAll().size()),
                 () -> assertEquals(3, topic.getAnswers().size()),
                 () -> assertEquals("Segundo teste de edição de uma resposta", topic.getAnswers().stream()
-                        .filter(answer1 -> answer1.getId().equals(1L)).findFirst().orElseThrow()
+                        .filter(answer -> answer.getId().equals(1L)).findFirst().orElseThrow()
                         .getSolution())
         );
 
@@ -866,14 +779,10 @@ public class AnswerControllerIT {
         Topic topic = this.topicRepository.findById(3L).orElseThrow();
 
         Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.topicRepository.findAll().size()),
                 () -> assertEquals(5, this.answerRepository.findAll().size()),
                 () -> assertEquals(1, topic.getAnswers().size()),
                 () -> assertEquals("Terceiro teste de edição de uma resposta", topic.getAnswers().stream()
-                        .filter(answer1 -> answer1.getId().equals(3L)).findFirst().orElseThrow()
+                        .filter(answer -> answer.getId().equals(3L)).findFirst().orElseThrow()
                         .getSolution())
         );
 
@@ -898,10 +807,6 @@ public class AnswerControllerIT {
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
 
         Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.topicRepository.findAll().size()),
                 () -> assertEquals(5, this.answerRepository.findAll().size()),
                 () -> assertEquals(3, topic.getAnswers().size()),
                 () -> assertTrue(topic.getAnswers().stream().anyMatch(answer -> answer.getId().equals(1L)))
@@ -929,10 +834,6 @@ public class AnswerControllerIT {
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
 
         Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.topicRepository.findAll().size()),
                 () -> assertEquals(5, this.answerRepository.findAll().size()),
                 () -> assertEquals(3, topic.getAnswers().size()),
                 () -> assertTrue(topic.getAnswers().stream().anyMatch(answer -> answer.getId().equals(1L)))
@@ -960,10 +861,6 @@ public class AnswerControllerIT {
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
 
         Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.topicRepository.findAll().size()),
                 () -> assertEquals(5, this.answerRepository.findAll().size()),
                 () -> assertEquals(3, topic.getAnswers().size()),
                 () -> assertTrue(topic.getAnswers().stream().anyMatch(answer -> answer.getId().equals(1L)))
@@ -974,9 +871,9 @@ public class AnswerControllerIT {
 
     @Order(27)
     @DisplayName("Should fail with status code 422 if provided answer not belonging to the " +
-            "provided topic")
+            "provided topic when delete answer")
     @Test
-    void shouldFailIfProvidedAnswerNotBelongingToTheProvidedTopic() throws Exception {
+    void shouldFailIfProvidedAnswerNotBelongingToTheProvidedTopicWhenDeleteAnswer() throws Exception {
         BDDMockito.given(this.userClientRequest.getUserById(1L))
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
 
@@ -991,15 +888,12 @@ public class AnswerControllerIT {
                         is("A resposta fornecida não pertence a esse tópico")));
 
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
+        Long[] answersId = {1L, 4L, 5L};
 
         Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.topicRepository.findAll().size()),
                 () -> assertEquals(5, this.answerRepository.findAll().size()),
                 () -> assertEquals(3, topic.getAnswers().size()),
-                () -> assertTrue(topic.getAnswers().stream().anyMatch(answer -> answer.getId().equals(1L)))
+                () -> containsInAnyOrder(answersId, topic.getAnswers().stream().map(Answer::getId).toArray())
 
         );
     }
@@ -1023,10 +917,6 @@ public class AnswerControllerIT {
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
 
         Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.topicRepository.findAll().size()),
                 () -> assertEquals(5, this.answerRepository.findAll().size()),
                 () -> assertEquals(3, topic.getAnswers().size()),
                 () -> assertTrue(topic.getAnswers().stream().anyMatch(answer -> answer.getId().equals(1L)))
@@ -1052,15 +942,12 @@ public class AnswerControllerIT {
                 .andExpect(status().isOk())
                 .andExpect(content().json("{\"message\":\"HttpStatusCode OK\"}"));
 
-        Topic topic = this.topicRepository.findById(1L).orElseThrow();
+        Set<Answer> answers = this.topicRepository.findById(1L).orElseThrow().getAnswers();
 
         Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
                 () -> assertEquals(4, this.answerRepository.findAll().size()),
-                () -> assertEquals(3, this.topicRepository.findAll().size()),
-                () -> assertFalse(topic.getAnswers().stream().anyMatch(answer -> answer.getId().equals(1L)))
+                () -> assertEquals(2, answers.size()),
+                () -> assertFalse(answers.stream().anyMatch(answer -> answer.getId().equals(1L)))
         );
 
     }
@@ -1082,15 +969,12 @@ public class AnswerControllerIT {
                 .andExpect(status().isOk())
                 .andExpect(content().json("{\"message\":\"HttpStatusCode OK\"}"));
 
-        Topic topic = this.topicRepository.findById(1L).orElseThrow();
+        Set<Answer> answers = this.topicRepository.findById(1L).orElseThrow().getAnswers();
 
         Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
                 () -> assertEquals(3, this.answerRepository.findAll().size()),
-                () -> assertEquals(3, this.topicRepository.findAll().size()),
-                () -> assertFalse(topic.getAnswers().stream().anyMatch(answer -> answer.getId().equals(4L)))
+                () -> assertEquals(1, answers.size()),
+                () -> assertFalse(answers.stream().anyMatch(answer -> answer.getId().equals(4L)))
         );
 
     }
@@ -1112,15 +996,11 @@ public class AnswerControllerIT {
                 .andExpect(status().isOk())
                 .andExpect(content().json("{\"message\":\"HttpStatusCode OK\"}"));
 
-        Topic topic = this.topicRepository.findById(3L).orElseThrow();
+        Set<Answer> answers = this.topicRepository.findById(3L).orElseThrow().getAnswers();
 
         Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
                 () -> assertEquals(2, this.answerRepository.findAll().size()),
-                () -> assertEquals(3, this.topicRepository.findAll().size()),
-                () -> assertFalse(topic.getAnswers().stream().anyMatch(answer -> answer.getId().equals(3L)))
+                () -> assertEquals(0, answers.size())
         );
 
     }

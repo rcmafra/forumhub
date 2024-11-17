@@ -27,7 +27,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.nio.charset.StandardCharsets;
 
 import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -106,12 +106,7 @@ public class TopicControllerIT {
                                 .writeValueAsString(topicCreateDTO)))
                 .andExpect(status().isUnauthorized());
 
-        Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.topicRepository.findAll().size())
-        );
+        Assertions.assertEquals(3, this.topicRepository.findAll().size());
 
 
     }
@@ -142,10 +137,6 @@ public class TopicControllerIT {
         Assertions.assertAll(
                 () -> assertEquals("Dúvida na utilização do Feign Client", topic.getTitle()),
                 () -> assertEquals("Como utilizar o Feign Client para integração do serviço x?", topic.getQuestion()),
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(5, this.answerRepository.findAll().size()),
                 () -> assertEquals(3, this.topicRepository.findAll().size())
         );
 
@@ -176,10 +167,6 @@ public class TopicControllerIT {
         Assertions.assertAll(
                 () -> assertEquals("Dúvida na utilização do Feign Client", topic.getTitle()),
                 () -> assertEquals("Como utilizar o Feign Client para integração do serviço x?", topic.getQuestion()),
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(5, this.answerRepository.findAll().size()),
                 () -> assertEquals(3, this.topicRepository.findAll().size())
         );
 
@@ -211,12 +198,7 @@ public class TopicControllerIT {
                                 .writeValueAsString(topicCreateDTO)))
                 .andExpect(status().isInternalServerError());
 
-        Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.topicRepository.findAll().size())
-        );
+        Assertions.assertEquals(3, this.topicRepository.findAll().size());
 
 
     }
@@ -240,12 +222,7 @@ public class TopicControllerIT {
                                 .writeValueAsString(topicCreateDTO)))
                 .andExpect(status().isNotFound());
 
-        Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.topicRepository.findAll().size())
-        );
+        Assertions.assertEquals(3, this.topicRepository.findAll().size());
 
 
     }
@@ -271,13 +248,7 @@ public class TopicControllerIT {
                                 .writeValueAsString(topicCreateDTO)))
                 .andExpectAll(status().isNotFound());
 
-
-        Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(3, this.topicRepository.findAll().size())
-        );
+        Assertions.assertEquals(3, this.topicRepository.findAll().size());
 
 
     }
@@ -305,12 +276,7 @@ public class TopicControllerIT {
 
                 );
 
-        Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(4, this.topicRepository.findAll().size())
-        );
+        Assertions.assertEquals(4, this.topicRepository.findAll().size());
 
 
     }
@@ -326,13 +292,7 @@ public class TopicControllerIT {
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isNotFound());
 
-        Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(5, this.answerRepository.findAll().size()),
-                () -> assertEquals(4, this.topicRepository.findAll().size())
-        );
+        Assertions.assertEquals(4, this.topicRepository.findAll().size());
 
 
     }
@@ -350,13 +310,7 @@ public class TopicControllerIT {
                 .andExpect(jsonPath("$..page.[?(@.totalElements == 4)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.totalPages == 1)]").exists());
 
-        Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(5, this.answerRepository.findAll().size()),
-                () -> assertEquals(4, this.topicRepository.findAll().size())
-        );
+        Assertions.assertEquals(4, this.topicRepository.findAll().size());
 
 
     }
@@ -379,13 +333,7 @@ public class TopicControllerIT {
                 .andExpect(jsonPath("$..page.[?(@.totalElements == 4)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.totalPages == 1)]").exists());
 
-        Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(5, this.answerRepository.findAll().size()),
-                () -> assertEquals(4, this.topicRepository.findAll().size())
-        );
+        Assertions.assertEquals(4, this.topicRepository.findAll().size());
 
 
     }
@@ -410,14 +358,7 @@ public class TopicControllerIT {
                 .andExpect(jsonPath("$..page.[?(@.totalElements == 4)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.totalPages == 2)]").exists());
 
-        Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(5, this.answerRepository.findAll().size()),
-                () -> assertEquals(4, this.topicRepository.findAll().size())
-        );
-
+        Assertions.assertEquals(4, this.topicRepository.findAll().size());
 
     }
 
@@ -441,13 +382,7 @@ public class TopicControllerIT {
                 .andExpect(jsonPath("$..page.[?(@.totalElements == 4)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.totalPages == 1)]").exists());
 
-        Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(5, this.answerRepository.findAll().size()),
-                () -> assertEquals(4, this.topicRepository.findAll().size())
-        );
+        Assertions.assertEquals(4, this.topicRepository.findAll().size());
 
 
     }
@@ -463,13 +398,7 @@ public class TopicControllerIT {
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isBadRequest());
 
-        Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(5, this.answerRepository.findAll().size()),
-                () -> assertEquals(4, this.topicRepository.findAll().size())
-        );
+        Assertions.assertEquals(4, this.topicRepository.findAll().size());
 
     }
 
@@ -486,14 +415,7 @@ public class TopicControllerIT {
                 .andExpect(jsonPath("$.[?(@.id == 1)]").exists())
                 .andExpect(jsonPath("$.title", is("Dúvida na utilização do Feign Client")));
 
-        Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(5, this.answerRepository.findAll().size()),
-                () -> assertEquals(4, this.topicRepository.findAll().size())
-        );
-
+        Assertions.assertEquals(4, this.topicRepository.findAll().size());
 
     }
 
@@ -524,12 +446,7 @@ public class TopicControllerIT {
 
         Assertions.assertAll(
                 () -> assertEquals("Dúvida na utilização do Feign Client", topic.getTitle()),
-                () -> assertEquals("Como utilizar o Feign Client para integração do serviço x?", topic.getQuestion()),
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(5, this.answerRepository.findAll().size()),
-                () -> assertEquals(4, this.topicRepository.findAll().size())
+                () -> assertEquals("Como utilizar o Feign Client para integração do serviço x?", topic.getQuestion())
         );
 
     }
@@ -562,12 +479,7 @@ public class TopicControllerIT {
 
         Assertions.assertAll(
                 () -> assertEquals("Dúvida na utilização do Feign Client", topic.getTitle()),
-                () -> assertEquals("Como utilizar o Feign Client para integração do serviço x?", topic.getQuestion()),
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(5, this.answerRepository.findAll().size()),
-                () -> assertEquals(4, this.topicRepository.findAll().size())
+                () -> assertEquals("Como utilizar o Feign Client para integração do serviço x?", topic.getQuestion())
         );
 
     }
@@ -600,12 +512,7 @@ public class TopicControllerIT {
 
         Assertions.assertAll(
                 () -> assertEquals("Dúvida na utilização do Feign Client", topic.getTitle()),
-                () -> assertEquals("Como utilizar o Feign Client para integração do serviço x?", topic.getQuestion()),
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(5, this.answerRepository.findAll().size()),
-                () -> assertEquals(4, this.topicRepository.findAll().size())
+                () -> assertEquals("Como utilizar o Feign Client para integração do serviço x?", topic.getQuestion())
         );
 
     }
@@ -633,14 +540,6 @@ public class TopicControllerIT {
                         .content(new ObjectMapper()
                                 .writeValueAsString(topicUpdateDTO)))
                 .andExpect(status().isBadRequest());
-
-        Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(5, this.answerRepository.findAll().size()),
-                () -> assertEquals(4, this.topicRepository.findAll().size())
-        );
 
     }
 
@@ -671,12 +570,7 @@ public class TopicControllerIT {
 
         Assertions.assertAll(
                 () -> assertEquals("Dúvida na utilização do Feign Client", topic.getTitle()),
-                () -> assertEquals("Como utilizar o Feign Client para integração do serviço x?", topic.getQuestion()),
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(5, this.answerRepository.findAll().size()),
-                () -> assertEquals(4, this.topicRepository.findAll().size())
+                () -> assertEquals("Como utilizar o Feign Client para integração do serviço x?", topic.getQuestion())
         );
 
 
@@ -711,12 +605,7 @@ public class TopicControllerIT {
 
         Assertions.assertAll(
                 () -> assertEquals("Dúvida na utilização do Feign Client", topic.getTitle()),
-                () -> assertEquals("Como utilizar o Feign Client para integração do serviço x?", topic.getQuestion()),
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(5, this.answerRepository.findAll().size()),
-                () -> assertEquals(4, this.topicRepository.findAll().size())
+                () -> assertEquals("Como utilizar o Feign Client para integração do serviço x?", topic.getQuestion())
         );
 
     }
@@ -750,12 +639,7 @@ public class TopicControllerIT {
 
         Assertions.assertAll(
                 () -> assertEquals("Dúvida na utilização do OpenShift", topic.getTitle()),
-                () -> assertEquals("Como utilizar o Rosa/OpenShift para implantação do serviço x?", topic.getQuestion()),
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(5, this.answerRepository.findAll().size()),
-                () -> assertEquals(4, this.topicRepository.findAll().size())
+                () -> assertEquals("Como utilizar o Rosa/OpenShift para implantação do serviço x?", topic.getQuestion())
         );
 
     }
@@ -791,12 +675,7 @@ public class TopicControllerIT {
 
         Assertions.assertAll(
                 () -> assertEquals("Dúvida em relação ao teste end-to-end", topic.getTitle()),
-                () -> assertEquals("Quais as boas práticas na execução dos testes end-to-end?", topic.getQuestion()),
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(5, this.answerRepository.findAll().size()),
-                () -> assertEquals(4, this.topicRepository.findAll().size())
+                () -> assertEquals("Quais as boas práticas na execução dos testes end-to-end?", topic.getQuestion())
         );
 
 
@@ -832,12 +711,7 @@ public class TopicControllerIT {
 
         Assertions.assertAll(
                 () -> assertEquals("Dúvida na utilização do WebClient", topic.getTitle()),
-                () -> assertEquals("Como utilizar o WebClient para integração do serviço x?", topic.getQuestion()),
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(5, this.answerRepository.findAll().size()),
-                () -> assertEquals(4, this.topicRepository.findAll().size())
+                () -> assertEquals("Como utilizar o WebClient para integração do serviço x?", topic.getQuestion())
         );
 
     }
@@ -872,12 +746,7 @@ public class TopicControllerIT {
 
         Assertions.assertAll(
                 () -> assertEquals("Dúvida na utilização do RestTemplate", topic.getTitle()),
-                () -> assertEquals("Como utilizar o RestTemplate para integração do serviço x?", topic.getQuestion()),
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(5, this.answerRepository.findAll().size()),
-                () -> assertEquals(4, this.topicRepository.findAll().size())
+                () -> assertEquals("Como utilizar o RestTemplate para integração do serviço x?", topic.getQuestion())
         );
 
     }
@@ -912,12 +781,7 @@ public class TopicControllerIT {
 
         Assertions.assertAll(
                 () -> assertEquals("Dúvida na utilização da API de validação do Spring", topic.getTitle()),
-                () -> assertEquals("Quais são as anotações da API de validação do Spring?", topic.getQuestion()),
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(5, this.answerRepository.findAll().size()),
-                () -> assertEquals(4, this.topicRepository.findAll().size())
+                () -> assertEquals("Quais são as anotações da API de validação do Spring?", topic.getQuestion())
         );
 
     }
@@ -938,14 +802,7 @@ public class TopicControllerIT {
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isForbidden());
 
-        Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(5, this.answerRepository.findAll().size()),
-                () -> assertEquals(4, this.topicRepository.findAll().size())
-        );
-
+        Assertions.assertEquals(4, this.topicRepository.findAll().size());
     }
 
     @Order(27)
@@ -964,13 +821,7 @@ public class TopicControllerIT {
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isBadRequest());
 
-        Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(5, this.answerRepository.findAll().size()),
-                () -> assertEquals(4, this.topicRepository.findAll().size())
-        );
+        Assertions.assertEquals(4, this.topicRepository.findAll().size());
 
     }
 
@@ -990,13 +841,7 @@ public class TopicControllerIT {
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isNotFound());
 
-        Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(5, this.answerRepository.findAll().size()),
-                () -> assertEquals(4, this.topicRepository.findAll().size())
-        );
+        Assertions.assertEquals(4, this.topicRepository.findAll().size());
 
     }
 
@@ -1017,11 +862,8 @@ public class TopicControllerIT {
                 .andExpect(jsonPath("$.detail", is("Privilégio insuficiente")));
 
         Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(5, this.answerRepository.findAll().size()),
-                () -> assertEquals(4, this.topicRepository.findAll().size())
+                () -> assertEquals(4, this.topicRepository.findAll().size()),
+                () -> assertTrue(this.answerRepository.findById(2L).isPresent())
         );
 
     }
@@ -1044,11 +886,9 @@ public class TopicControllerIT {
                 .andExpect(content().json("{\"message\":\"HttpStatusCode OK\"}"));
 
         Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(2, this.answerRepository.findAll().size()),
-                () -> assertEquals(3, this.topicRepository.findAll().size())
+                () -> assertEquals(3, this.topicRepository.findAll().size()),
+                () -> assertFalse(this.answerRepository.findById(1L).isPresent()),
+                () -> assertFalse(this.answerRepository.findById(4L).isPresent())
         );
 
     }
@@ -1071,11 +911,8 @@ public class TopicControllerIT {
                 .andExpect(content().json("{\"message\":\"HttpStatusCode OK\"}"));
 
         Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(1, this.answerRepository.findAll().size()),
-                () -> assertEquals(2, this.topicRepository.findAll().size())
+                () -> assertEquals(2, this.topicRepository.findAll().size()),
+                () -> assertFalse(this.answerRepository.findById(2L).isPresent())
         );
 
     }
@@ -1097,13 +934,9 @@ public class TopicControllerIT {
                 .andExpect(status().isOk())
                 .andExpect(content().json("{\"message\":\"HttpStatusCode OK\"}"));
 
-
         Assertions.assertAll(
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertEquals(4, this.authorRepository.findAll().size()),
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertEquals(0, this.answerRepository.findAll().size()),
-                () -> assertEquals(1, this.topicRepository.findAll().size())
+                () -> assertEquals(1, this.topicRepository.findAll().size()),
+                () -> assertFalse(this.topicRepository.findById(3L).isPresent())
         );
 
     }

@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.nio.charset.StandardCharsets;
 
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -68,7 +69,7 @@ public class CourseControllerIT {
                                 .writeValueAsString(courseCreateDTO)))
                 .andExpectAll(status().isUnauthorized());
 
-        Assertions.assertEquals(3, this.courseRepository.findAll().size());
+        assertEquals(3, this.courseRepository.findAll().size());
 
     }
 
@@ -88,7 +89,7 @@ public class CourseControllerIT {
                                 .writeValueAsString(courseCreateDTO)))
                 .andExpectAll(status().isForbidden());
 
-        Assertions.assertEquals(3, this.courseRepository.findAll().size());
+        assertEquals(3, this.courseRepository.findAll().size());
 
     }
 
@@ -109,7 +110,7 @@ public class CourseControllerIT {
                                 .writeValueAsString(courseCreateDTO)))
                 .andExpectAll(status().isForbidden());
 
-        Assertions.assertEquals(3, this.courseRepository.findAll().size());
+        assertEquals(3, this.courseRepository.findAll().size());
 
     }
 
@@ -131,7 +132,7 @@ public class CourseControllerIT {
                 .andExpectAll(status().isBadRequest())
                 .andExpect(jsonPath("$.detail", is("O nome do curso não pode ser vazio")));
 
-        Assertions.assertEquals(3, this.courseRepository.findAll().size());
+        assertEquals(3, this.courseRepository.findAll().size());
 
     }
 
@@ -154,7 +155,7 @@ public class CourseControllerIT {
                 .andExpectAll(status().isConflict())
                 .andExpect(jsonPath("$.detail", is("Payload conflitante")));
 
-        Assertions.assertEquals(3, this.courseRepository.findAll().size());
+        assertEquals(3, this.courseRepository.findAll().size());
 
     }
 
@@ -177,7 +178,7 @@ public class CourseControllerIT {
                 .andExpect(status().isCreated())
                 .andExpect(content().string("{\"message\":\"HttpStatusCode OK\"}"));
 
-        Assertions.assertEquals(4, this.courseRepository.findAll().size());
+        assertEquals(4, this.courseRepository.findAll().size());
 
 
     }
@@ -190,6 +191,8 @@ public class CourseControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isUnauthorized());
+
+        assertEquals(4, this.courseRepository.findAll().size());
 
     }
 
@@ -204,6 +207,8 @@ public class CourseControllerIT {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$..course.length()", is(4)));
 
+        assertEquals(4, this.courseRepository.findAll().size());
+
     }
 
 
@@ -211,7 +216,7 @@ public class CourseControllerIT {
     @DisplayName("Should fail with status code 401 when edit course if unauthenticated")
     @Test
     void shouldFailToEditCourseIfUnauthenticated() throws Exception {
-        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API REST escalável");
+        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API Rest escalável");
 
         this.mockMvc.perform(put("/api-forum/v1/forumhub/courses")
                         .queryParam("courseName", "Criação de uma API Rest")
@@ -221,9 +226,8 @@ public class CourseControllerIT {
                                 .writeValueAsString(courseUpdateDTO)))
                 .andExpect(status().isUnauthorized());
 
-        Course course = this.courseRepository.findById(1L).orElseThrow();
-
-        Assertions.assertEquals("Criação de uma API Rest", course.getName());
+        assertFalse(this.courseRepository.findCourseByName(
+                "Como criar uma API Rest escalável").isPresent());
 
     }
 
@@ -232,7 +236,7 @@ public class CourseControllerIT {
             "hasn't authority course:edit")
     @Test
     void shouldFailToEditCourseIfUserIsADMButHasNotSuitableAuthority() throws Exception {
-        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API REST escalável");
+        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API Rest escalável");
 
         this.mockMvc.perform(put("/api-forum/v1/forumhub/courses")
                         .queryParam("courseName", "Criação de uma API Rest")
@@ -243,9 +247,8 @@ public class CourseControllerIT {
                                 .writeValueAsString(courseUpdateDTO)))
                 .andExpect(status().isForbidden());
 
-        Course course = this.courseRepository.findById(1L).orElseThrow();
-
-        Assertions.assertEquals("Criação de uma API Rest", course.getName());
+        assertFalse(this.courseRepository.findCourseByName(
+                "Como criar uma API Rest escalável").isPresent());
 
     }
 
@@ -254,7 +257,7 @@ public class CourseControllerIT {
             " course:edit, but isn't ADM")
     @Test
     void shouldFailToEditCourseIfUserHasSuitableAuthorityButNotIsADM() throws Exception {
-        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API REST escalável");
+        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API Rest escalável");
 
         this.mockMvc.perform(put("/api-forum/v1/forumhub/courses")
                         .queryParam("courseName", "Criação de uma API Rest")
@@ -265,10 +268,8 @@ public class CourseControllerIT {
                                 .writeValueAsString(courseUpdateDTO)))
                 .andExpect(status().isForbidden());
 
-        Course course = this.courseRepository.findById(1L).orElseThrow();
-
-        Assertions.assertEquals("Criação de uma API Rest", course.getName());
-
+        assertFalse(this.courseRepository.findCourseByName(
+                "Como criar uma API Rest escalável").isPresent());
     }
 
     @Order(12)
@@ -290,10 +291,8 @@ public class CourseControllerIT {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.detail", is("O nome do curso não pode ser vazio")));
 
-        Course course = this.courseRepository.findById(1L).orElseThrow();
-
-        Assertions.assertEquals("Criação de uma API Rest", course.getName());
-
+        assertFalse(this.courseRepository.findCourseByName(
+                "").isPresent());
     }
 
     @Order(13)
@@ -301,7 +300,7 @@ public class CourseControllerIT {
             "of query param is sent empty")
     @Test
     void shouldFailIfCourseNamePropertyOfQueryParamIsEmptyWhenEditCourse() throws Exception {
-        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API REST escalável");
+        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API Rest escalável");
 
         this.mockMvc.perform(put("/api-forum/v1/forumhub/courses")
                         .queryParam("courseName", "")
@@ -315,13 +314,16 @@ public class CourseControllerIT {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.detail", is("O nome do curso não pode ser vazio")));
 
+        assertFalse(this.courseRepository.findCourseByName(
+                "Como criar uma API Rest escalável").isPresent());
+
     }
 
     @Order(14)
     @DisplayName("Should fail to edit course if desired course not exists")
     @Test
     void shouldFailToEditCourseIfDesiredCourseNotExists() throws Exception {
-        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API REST escalável");
+        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API Rest escalável");
 
         this.mockMvc.perform(put("/api-forum/v1/forumhub/courses")
                         .queryParam("courseName", "Lidando com load balancer na AWS")
@@ -335,6 +337,9 @@ public class CourseControllerIT {
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.detail", is("O curso informado não existe")));
 
+        assertFalse(this.courseRepository.findCourseByName(
+                "Como criar uma API Rest escalável").isPresent());
+
     }
 
     @Order(15)
@@ -342,7 +347,7 @@ public class CourseControllerIT {
             "has authority course:edit and previous premisses are adequate")
     @Test
     void shouldEditCourseWithSuccessIfAuthenticatedAndHasSuitableAuthority() throws Exception {
-        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API REST escalável");
+        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API Rest escalável");
 
         this.mockMvc.perform(put("/api-forum/v1/forumhub/courses")
                         .queryParam("courseName", "Criação de uma API Rest")
@@ -354,13 +359,14 @@ public class CourseControllerIT {
                         .content(new ObjectMapper()
                                 .writeValueAsString(courseUpdateDTO)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.course.name", is("Como criar uma API REST escalável")));
+                .andExpect(jsonPath("$.course.name", is("Como criar uma API Rest escalável")));
 
-        Course course = this.courseRepository.findById(1L).orElseThrow();
-
-        Assertions.assertEquals("Como criar uma API REST escalável", course.getName());
-
-
+        Assertions.assertAll(
+                () -> assertTrue(this.courseRepository.findCourseByName(
+                        "Como criar uma API Rest escalável").isPresent()),
+                () -> assertFalse(this.courseRepository.findCourseByName(
+                        "Criação de uma API Rest").isPresent())
+        );
     }
 
     @Order(16)
@@ -373,7 +379,7 @@ public class CourseControllerIT {
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isUnauthorized());
 
-        Assertions.assertEquals(4, this.courseRepository.findAll().size());
+        assertEquals(4, this.courseRepository.findAll().size());
 
     }
 
@@ -389,7 +395,7 @@ public class CourseControllerIT {
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isForbidden());
 
-        Assertions.assertEquals(4, this.courseRepository.findAll().size());
+        assertEquals(4, this.courseRepository.findAll().size());
 
     }
 
@@ -405,7 +411,7 @@ public class CourseControllerIT {
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isForbidden());
 
-        Assertions.assertEquals(4, this.courseRepository.findAll().size());
+        assertEquals(4, this.courseRepository.findAll().size());
 
     }
 
@@ -424,6 +430,9 @@ public class CourseControllerIT {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.detail", is("O nome do curso não pode ser vazio")));
 
+        assertEquals(4, this.courseRepository.findAll().size());
+
+
     }
 
 
@@ -441,7 +450,11 @@ public class CourseControllerIT {
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.detail", is("O curso informado não existe")));
 
-        Assertions.assertEquals(4, this.courseRepository.findAll().size());
+        Assertions.assertAll(
+                () -> assertEquals(4, this.courseRepository.findAll().size()),
+                () -> assertFalse(this.courseRepository.findCourseByName(
+                        "Lidando com load balancer na AWS").isPresent())
+        );
 
     }
 
@@ -460,7 +473,7 @@ public class CourseControllerIT {
                 .andExpect(status().isOk())
                 .andExpect(content().string("{\"message\":\"HttpStatusCode OK\"}"));
 
-        Assertions.assertEquals(3, this.courseRepository.findAll().size());
+        assertEquals(3, this.courseRepository.findAll().size());
 
     }
 
