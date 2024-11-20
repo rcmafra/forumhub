@@ -29,7 +29,7 @@ public class AnswerController {
                                                           @AuthenticationPrincipal Jwt jwt){
 
         Long user_id = Long.parseLong(jwt.getClaim("user_id"));
-        answerService.answerTopic(topic_id, user_id, answerTopicDTO);
+        this.answerService.answerTopic(topic_id, user_id, answerTopicDTO);
 
         return ResponseEntity.ok(new HttpMessageDefault("HttpStatusCode OK"));
     }
