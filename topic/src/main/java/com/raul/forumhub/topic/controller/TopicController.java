@@ -55,13 +55,13 @@ public class TopicController {
 
     @PreAuthorize("hasAuthority('SCOPE_topic:edit')")
     @PutMapping
-    public ResponseEntity<HttpMessageDefault> updateTopic(@RequestParam Long topic_id,  @Valid @RequestBody TopicUpdateDTO topicUpdateDTO,
+    public ResponseEntity<GetTopicDTO> updateTopic(@RequestParam Long topic_id,  @Valid @RequestBody TopicUpdateDTO topicUpdateDTO,
                                                     @AuthenticationPrincipal Jwt jwt){
 
         Long user_id = Long.parseLong(jwt.getClaim("user_id"));
-        this.topicService.updateTopic(topic_id, user_id, topicUpdateDTO);
+        GetTopicDTO getTopicDTO = this.topicService.updateTopic(topic_id, user_id, topicUpdateDTO);
 
-        return ResponseEntity.ok(new HttpMessageDefault("HttpStatusCode OK"));
+        return ResponseEntity.ok(getTopicDTO);
     }
 
     @PreAuthorize("hasAuthority('SCOPE_topic:delete')")
