@@ -39,3 +39,9 @@ spring:
         provider:
           auth-server:
             issuer-uri: http://127.0.0.1:8082
+
+logging:
+  level:
+    org:
+      springframework:
+        security: trace
