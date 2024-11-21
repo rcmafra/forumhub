@@ -5,12 +5,13 @@ import com.raul.forumhub.topic.domain.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public final class TestsHelper {
 
     public static final class TopicHelper {
         public static List<Topic> topicList() {
-            List<Topic> topicList = new ArrayList<>();
+            final List<Topic> topicList = new ArrayList<>();
             topicList.add(new Topic(
                     1L,
                     "Dúvida na utilização do Feign Client",
@@ -41,12 +42,30 @@ public final class TestsHelper {
             return topicList;
         }
 
+        public static List<Topic> topicListWithAnswers() {
+            final Topic topic1 = TestsHelper.TopicHelper.topicList().get(0);
+            topic1.setAnswers(Set.of(
+                    TestsHelper.AnswerHelper.answerList().get(0),
+                    TestsHelper.AnswerHelper.answerList().get(3)));
+            final Topic topic2 = TestsHelper.TopicHelper.topicList().get(1);
+            topic2.setAnswers(Set.of(TestsHelper.AnswerHelper.answerList().get(1)));
+            final Topic topic3 = TestsHelper.TopicHelper.topicList().get(2);
+            topic3.setAnswers(Set.of(TestsHelper.AnswerHelper.answerList().get(2)));
+
+            final List<Topic> topicList = new ArrayList<>();
+            topicList.add(topic1);
+            topicList.add(topic2);
+            topicList.add(topic3);
+
+            return topicList;
+        }
+
 
     }
 
     public static final class AnswerHelper {
         public static List<Answer> answerList() {
-            List<Answer> answerList = new ArrayList<>();
+            final List<Answer> answerList = new ArrayList<>();
             answerList.add(new Answer(1L, TopicHelper.topicList().get(0), "Resposta do primeiro tópico",
                     false, LocalDateTime.now(), AuthorHelper.authorList().get(1)));
             answerList.add(new Answer(2L, TopicHelper.topicList().get(1), "Resposta do segundo tópico",
@@ -63,7 +82,7 @@ public final class TestsHelper {
 
     public static final class CourseHelper {
         public static List<Course> courseList() {
-            List<Course> courseList = new ArrayList<>();
+            final List<Course> courseList = new ArrayList<>();
             courseList.add(new Course(1L, "Criação de uma API Rest", Course.Category.JAVA));
             courseList.add(new Course(2L, "Gerenciamento de contêiners", Course.Category.COMPUTATION));
             courseList.add(new Course(3L, "Lidando com testes", Course.Category.QA));
@@ -74,7 +93,7 @@ public final class TestsHelper {
 
     public static final class AuthorHelper {
         public static List<Author> authorList() {
-            List<Author> authorList = new ArrayList<>();
+            final List<Author> authorList = new ArrayList<>();
             authorList.add(new Author(1L, "Jose", "jose@email.com", ProfileHelper.profileList().get(0)));
             authorList.add(new Author(2L, "Maria", "maria@email.com", ProfileHelper.profileList().get(1)));
             authorList.add(new Author(3L, "Joao", "joao@email.com", ProfileHelper.profileList().get(2)));
@@ -87,7 +106,7 @@ public final class TestsHelper {
 
     public static final class ProfileHelper {
         public static List<Profile> profileList() {
-            List<Profile> profileList = new ArrayList<>();
+            final List<Profile> profileList = new ArrayList<>();
             profileList.add(new Profile(1L, Profile.ProfileName.BASIC));
             profileList.add(new Profile(2L, Profile.ProfileName.MOD));
             profileList.add(new Profile(3L, Profile.ProfileName.ADM));
