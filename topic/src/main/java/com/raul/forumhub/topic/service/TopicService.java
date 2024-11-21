@@ -12,11 +12,8 @@ import com.raul.forumhub.topic.exception.TopicServiceException;
 import com.raul.forumhub.topic.repository.TopicRepository;
 import com.raul.forumhub.topic.utility.AuthorizationValidate;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class TopicService {
@@ -43,10 +40,7 @@ public class TopicService {
     }
 
     public Page<GetTopicDTO> topicList(Pageable pageable) {
-        Page<Topic> topicPage = this.topicRepository.findAll(pageable);
-        List<GetTopicDTO> topicDTOList = topicPage.map(GetTopicDTO::new).toList();
-
-        return new PageImpl<>(topicDTOList, pageable, topicPage.getTotalElements());
+        return this.topicRepository.findAll(pageable).map(GetTopicDTO::new);
     }
 
 
@@ -56,7 +50,7 @@ public class TopicService {
     }
 
 
-    public void updateTopic(Long topic_id, Long user_id, TopicUpdateDTO update) {
+    public GetTopicDTO updateTopic(Long topic_id, Long user_id, TopicUpdateDTO update) {
         Topic topic = this.getTopicById(topic_id);
         Course course = this.courseService.getCourseById(update.course_id());
         Author author = this.userClientRequest.getUserById(user_id);
@@ -75,6 +69,7 @@ public class TopicService {
         topic.setCourse(course);
 
         this.saveTopic(topic);
+        return new GetTopicDTO(topic);
 
     }
 
