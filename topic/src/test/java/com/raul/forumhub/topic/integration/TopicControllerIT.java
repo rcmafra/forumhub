@@ -27,7 +27,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.nio.charset.StandardCharsets;
 
 import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -96,9 +96,6 @@ public class TopicControllerIT {
                 "Como utilizar o Feign Client para integração do serviço x?",
                 1L);
 
-        BDDMockito.given(this.userClientRequest.getUserById(1L)).
-                willReturn(TestsHelper.AuthorHelper.authorList().get(0));
-
         this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -108,6 +105,7 @@ public class TopicControllerIT {
 
         Assertions.assertEquals(3, this.topicRepository.findAll().size());
 
+        BDDMockito.verifyNoInteractions(this.userClientRequest);
 
     }
 
@@ -133,6 +131,9 @@ public class TopicControllerIT {
 
         Assertions.assertEquals(3, this.topicRepository.findAll().size());
 
+        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
+
     }
 
     @Order(3)
@@ -157,6 +158,8 @@ public class TopicControllerIT {
 
         Assertions.assertEquals(3, this.topicRepository.findAll().size());
 
+        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
 
@@ -186,6 +189,8 @@ public class TopicControllerIT {
 
         Assertions.assertEquals(3, this.topicRepository.findAll().size());
 
+        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
 
@@ -210,6 +215,8 @@ public class TopicControllerIT {
 
         Assertions.assertEquals(3, this.topicRepository.findAll().size());
 
+        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
 
@@ -236,6 +243,8 @@ public class TopicControllerIT {
 
         Assertions.assertEquals(3, this.topicRepository.findAll().size());
 
+        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
 
@@ -264,6 +273,8 @@ public class TopicControllerIT {
 
         Assertions.assertEquals(4, this.topicRepository.findAll().size());
 
+        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
 
@@ -385,6 +396,8 @@ public class TopicControllerIT {
 
         Assertions.assertEquals(4, this.topicRepository.findAll().size());
 
+        BDDMockito.verifyNoInteractions(this.userClientRequest);
+
 
     }
 
@@ -416,9 +429,6 @@ public class TopicControllerIT {
                         Status.UNSOLVED), 1L
         );
 
-        BDDMockito.given(this.userClientRequest.getUserById(1L))
-                .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
-
         this.mockMvc.perform(put("/api-forum/v1/forumhub/topics")
                         .queryParam("topic_id", "1")
                         .with(jwt().jwt(jwt))
@@ -434,6 +444,8 @@ public class TopicControllerIT {
                 () -> assertEquals("Dúvida na utilização do Feign Client", topic.getTitle()),
                 () -> assertEquals("Como utilizar o Feign Client para integração do serviço x?", topic.getQuestion())
         );
+
+        BDDMockito.verifyNoInteractions(this.userClientRequest);
 
     }
 
@@ -468,6 +480,9 @@ public class TopicControllerIT {
                 () -> assertEquals("Como utilizar o Feign Client para integração do serviço x?", topic.getQuestion())
         );
 
+        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
+
     }
 
     @Order(17)
@@ -501,6 +516,9 @@ public class TopicControllerIT {
                 () -> assertEquals("Como utilizar o Feign Client para integração do serviço x?", topic.getQuestion())
         );
 
+        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
+
     }
 
     @Order(18)
@@ -514,9 +532,6 @@ public class TopicControllerIT {
                         Status.UNSOLVED), 1L
         );
 
-        BDDMockito.given(this.userClientRequest.getUserById(1L))
-                .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
-
         this.mockMvc.perform(put("/api-forum/v1/forumhub/topics")
                         .queryParam("topic_id", "")
                         .with(jwt().jwt(jwt)
@@ -526,6 +541,9 @@ public class TopicControllerIT {
                         .content(new ObjectMapper()
                                 .writeValueAsString(topicUpdateDTO)))
                 .andExpect(status().isBadRequest());
+
+        BDDMockito.verifyNoInteractions(this.userClientRequest);
+
 
     }
 
@@ -538,9 +556,6 @@ public class TopicControllerIT {
                         "Como posso integrar minha API com o Elasticsearch para monitoração?",
                         Status.UNSOLVED), 4L
         );
-
-        BDDMockito.given(this.userClientRequest.getUserById(1L))
-                .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
 
         this.mockMvc.perform(put("/api-forum/v1/forumhub/topics")
                         .queryParam("topic_id", "1")
@@ -559,6 +574,7 @@ public class TopicControllerIT {
                 () -> assertEquals("Como utilizar o Feign Client para integração do serviço x?", topic.getQuestion())
         );
 
+        BDDMockito.verifyNoInteractions(this.userClientRequest);
 
     }
 
@@ -594,6 +610,9 @@ public class TopicControllerIT {
                 () -> assertEquals("Como utilizar o Feign Client para integração do serviço x?", topic.getQuestion())
         );
 
+        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
+
     }
 
 
@@ -627,6 +646,9 @@ public class TopicControllerIT {
                 () -> assertEquals("Dúvida na utilização do OpenShift", topic.getTitle()),
                 () -> assertEquals("Como utilizar o Rosa/OpenShift para implantação do serviço x?", topic.getQuestion())
         );
+
+        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
 
@@ -664,6 +686,8 @@ public class TopicControllerIT {
                 () -> assertEquals("Quais as boas práticas na execução dos testes end-to-end?", topic.getQuestion())
         );
 
+        BDDMockito.verify(this.userClientRequest).getUserById(3L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
 
@@ -702,6 +726,9 @@ public class TopicControllerIT {
                 () -> assertEquals("Como utilizar o WebClient para integração do serviço x?", topic.getQuestion())
         );
 
+        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
+
     }
 
     @Order(24)
@@ -738,6 +765,9 @@ public class TopicControllerIT {
                 () -> assertEquals("Dúvida na utilização do RestTemplate", topic.getTitle()),
                 () -> assertEquals("Como utilizar o RestTemplate para integração do serviço x?", topic.getQuestion())
         );
+
+        BDDMockito.verify(this.userClientRequest).getUserById(3L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
 
@@ -777,6 +807,9 @@ public class TopicControllerIT {
                 () -> assertEquals("Quais são as anotações da API de validação do Spring?", topic.getQuestion())
         );
 
+        BDDMockito.verify(this.userClientRequest).getUserById(2L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
+
     }
 
 
@@ -785,9 +818,6 @@ public class TopicControllerIT {
             " when delete topic")
     @Test
     void shouldFailIfUserHasNotSuitableAuthorityWhenDeleteTopic() throws Exception {
-        BDDMockito.given(this.userClientRequest.getUserById(1L))
-                .willReturn((TestsHelper.AuthorHelper.authorList().get(0)));
-
         this.mockMvc.perform(delete("/api-forum/v1/forumhub/topics/delete")
                         .queryParam("topic_id", "1")
                         .with(jwt().jwt(jwt))
@@ -796,6 +826,9 @@ public class TopicControllerIT {
                 .andExpect(status().isForbidden());
 
         Assertions.assertEquals(4, this.topicRepository.findAll().size());
+
+        BDDMockito.verifyNoInteractions(this.userClientRequest);
+
     }
 
     @Order(27)
@@ -803,9 +836,6 @@ public class TopicControllerIT {
             "of query param is sent empty")
     @Test
     void shouldFailIfTopicIdPropertyOfQueryParamIsEmptyWhenDeleteTopic() throws Exception {
-        BDDMockito.given(this.userClientRequest.getUserById(1L))
-                .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
-
         this.mockMvc.perform(delete("/api-forum/v1/forumhub/topics")
                         .queryParam("topic_id", "")
                         .with(jwt().jwt(jwt)
@@ -815,6 +845,8 @@ public class TopicControllerIT {
                 .andExpect(status().isBadRequest());
 
         Assertions.assertEquals(4, this.topicRepository.findAll().size());
+
+        BDDMockito.verifyNoInteractions(this.userClientRequest);
 
     }
 
@@ -834,11 +866,10 @@ public class TopicControllerIT {
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isNotFound());
 
-        Assertions.assertAll(
-                () -> assertEquals(4, this.topicRepository.findAll().size()),
-                () -> assertTrue(this.answerRepository.findById(6L).isPresent()),
-                () -> assertTrue(this.answerRepository.findById(8L).isPresent())
-        );
+        Assertions.assertEquals(4, this.topicRepository.findAll().size());
+
+        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
 
@@ -858,10 +889,10 @@ public class TopicControllerIT {
                 .andExpect(status().isIAmATeapot())
                 .andExpect(jsonPath("$.detail", is("Privilégio insuficiente")));
 
-        Assertions.assertAll(
-                () -> assertEquals(4, this.topicRepository.findAll().size()),
-                () -> assertTrue(this.answerRepository.findById(2L).isPresent())
-        );
+        Assertions.assertEquals(4, this.topicRepository.findAll().size());
+
+        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
 
@@ -882,12 +913,10 @@ public class TopicControllerIT {
                 .andExpect(status().isOk())
                 .andExpect(content().json("{\"message\":\"HttpStatusCode OK\"}"));
 
-        Assertions.assertAll(
-                () -> assertEquals(3, this.topicRepository.findAll().size()),
-                () -> assertFalse(this.topicRepository.findById(1L).isPresent()),
-                () -> assertFalse(this.answerRepository.findById(6L).isPresent()),
-                () -> assertFalse(this.answerRepository.findById(8L).isPresent())
-        );
+        Assertions.assertEquals(3, this.topicRepository.findAll().size());
+
+        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
 
@@ -908,11 +937,10 @@ public class TopicControllerIT {
                 .andExpect(status().isOk())
                 .andExpect(content().json("{\"message\":\"HttpStatusCode OK\"}"));
 
-        Assertions.assertAll(
-                () -> assertEquals(2, this.topicRepository.findAll().size()),
-                () -> assertFalse(this.topicRepository.findById(2L).isPresent()),
-                () -> assertFalse(this.answerRepository.findById(2L).isPresent())
-        );
+        Assertions.assertEquals(2, this.topicRepository.findAll().size());
+
+        BDDMockito.verify(this.userClientRequest).getUserById(3L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
 
@@ -933,11 +961,10 @@ public class TopicControllerIT {
                 .andExpect(status().isOk())
                 .andExpect(content().json("{\"message\":\"HttpStatusCode OK\"}"));
 
-        Assertions.assertAll(
-                () -> assertEquals(1, this.topicRepository.findAll().size()),
-                () -> assertFalse(this.topicRepository.findById(3L).isPresent()),
-                () -> assertFalse(this.answerRepository.findById(7L).isPresent())
-        );
+        Assertions.assertEquals(1, this.topicRepository.findAll().size());
+
+        BDDMockito.verify(this.userClientRequest).getUserById(2L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
 

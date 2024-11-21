@@ -97,9 +97,6 @@ public class AnswerControllerIT {
     void shouldFailToAnswerTopicIfUnauthenticated() throws Exception {
         final AnswerTopicDTO answerTopicDTO = new AnswerTopicDTO("Resposta teste");
 
-        BDDMockito.given(this.userClientRequest.getUserById(1L))
-                .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
-
         this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/1/answer")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -112,6 +109,7 @@ public class AnswerControllerIT {
                 () -> assertEquals(2, this.topicRepository.findById(1L).orElseThrow().getAnswers().size())
         );
 
+        BDDMockito.verifyNoInteractions(this.userClientRequest);
 
     }
 
@@ -138,6 +136,9 @@ public class AnswerControllerIT {
                 () -> assertEquals(2, this.topicRepository.findById(1L).orElseThrow().getAnswers().size())
         );
 
+        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
+
     }
 
     @Order(3)
@@ -145,9 +146,6 @@ public class AnswerControllerIT {
     @Test
     void shouldFailToAnswerTopicIfSpecifiedTopicNotExists() throws Exception {
         final AnswerTopicDTO answerTopicDTO = new AnswerTopicDTO("Resposta teste");
-
-        BDDMockito.given(this.userClientRequest.getUserById(1L)).
-                willReturn(TestsHelper.AuthorHelper.authorList().get(0));
 
         this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/6/answer")
                         .with(jwt().jwt(jwt))
@@ -163,6 +161,7 @@ public class AnswerControllerIT {
                 () -> assertFalse(this.topicRepository.findById(6L).isPresent())
         );
 
+        BDDMockito.verifyNoInteractions(this.userClientRequest);
 
     }
 
@@ -189,6 +188,9 @@ public class AnswerControllerIT {
                 () -> assertEquals(4, this.answerRepository.findAll().size()),
                 () -> assertEquals(2, this.topicRepository.findById(1L).orElseThrow().getAnswers().size())
         );
+
+        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
 
     }
@@ -221,6 +223,8 @@ public class AnswerControllerIT {
                         .equals("Resposta teste")))
         );
 
+        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
 
@@ -228,9 +232,6 @@ public class AnswerControllerIT {
     @DisplayName("Should fail with status code 401 when mark answer best if user unauthenticated")
     @Test
     void shouldFailToMarkAnswerBestIfUnauthenticated() throws Exception {
-        BDDMockito.given(this.userClientRequest.getUserById(1L)).
-                willReturn(TestsHelper.AuthorHelper.authorList().get(0));
-
         this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/1/markBestAnswer")
                         .queryParam("answer_id", "1")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -246,6 +247,7 @@ public class AnswerControllerIT {
                         .findFirst().orElseThrow().isBestAnswer())
         );
 
+        BDDMockito.verifyNoInteractions(this.userClientRequest);
 
     }
 
@@ -254,9 +256,6 @@ public class AnswerControllerIT {
             "answer_id property of query param is sent empty")
     @Test
     void shouldFailIfAnswerIdPropertyOfQueryParamIsEmptyWhenMarkAnswerBest() throws Exception {
-        BDDMockito.given(this.userClientRequest.getUserById(1L)).
-                willReturn(TestsHelper.AuthorHelper.authorList().get(0));
-
         this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/1/markBestAnswer")
                         .queryParam("answer_id", "")
                         .with(jwt().jwt(jwt))
@@ -273,6 +272,7 @@ public class AnswerControllerIT {
                         .findFirst().orElseThrow().isBestAnswer())
         );
 
+        BDDMockito.verifyNoInteractions(this.userClientRequest);
 
     }
 
@@ -281,9 +281,6 @@ public class AnswerControllerIT {
             "topic specified not exists")
     @Test
     void shouldFailToMarkAnswerBestIfSpecifiedTopicNotExists() throws Exception {
-        BDDMockito.given(this.userClientRequest.getUserById(1L)).
-                willReturn(TestsHelper.AuthorHelper.authorList().get(0));
-
         this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/6/markBestAnswer")
                         .queryParam("answer_id", "1")
                         .with(jwt().jwt(jwt))
@@ -297,6 +294,7 @@ public class AnswerControllerIT {
                 () -> assertFalse(this.topicRepository.findById(6L).isPresent())
         );
 
+        BDDMockito.verifyNoInteractions(this.userClientRequest);
 
     }
 
@@ -323,6 +321,9 @@ public class AnswerControllerIT {
                 () -> assertFalse(topic.getAnswers().stream().filter(answer -> answer.getId().equals(1L))
                         .findFirst().orElseThrow().isBestAnswer())
         );
+
+        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
 
@@ -353,6 +354,8 @@ public class AnswerControllerIT {
                         .findFirst().orElseThrow().isBestAnswer())
         );
 
+        BDDMockito.verify(this.userClientRequest).getUserById(2L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
 
@@ -383,6 +386,8 @@ public class AnswerControllerIT {
                         .findFirst().orElseThrow().isBestAnswer())
         );
 
+        BDDMockito.verify(this.userClientRequest).getUserById(2L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
 
@@ -411,6 +416,8 @@ public class AnswerControllerIT {
                         .findFirst().orElseThrow().isBestAnswer())
         );
 
+        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
 
@@ -422,9 +429,6 @@ public class AnswerControllerIT {
     void shouldFailIfUserHasNotSuitableAuthorityWhenEditAnswer() throws Exception {
         final AnswerUpdateDTO answerUpdateDTO =
                 new AnswerUpdateDTO("Primeiro teste de edição de uma resposta");
-
-        BDDMockito.given(this.userClientRequest.getUserById(1L))
-                .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
 
         this.mockMvc.perform(put("/api-forum/v1/forumhub/topics/1/answers")
                         .queryParam("answer_id", "1")
@@ -444,6 +448,8 @@ public class AnswerControllerIT {
                         .filter(answer -> answer.getId().equals(1L)).findFirst().orElseThrow()
                         .getSolution())
         );
+
+        BDDMockito.verifyNoInteractions(this.userClientRequest);
 
     }
 
@@ -477,6 +483,9 @@ public class AnswerControllerIT {
                         .getSolution())
         );
 
+        BDDMockito.verify(this.userClientRequest).getUserById(2L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
+
     }
 
     @Order(15)
@@ -486,9 +495,6 @@ public class AnswerControllerIT {
     void shouldFailIfAnswerIdPropertyOfQueryParamIsEmptyWhenUpdateAnswer() throws Exception {
         final AnswerUpdateDTO answerUpdateDTO =
                 new AnswerUpdateDTO("Primeiro teste de edição de uma resposta");
-
-        BDDMockito.given(this.userClientRequest.getUserById(2L))
-                .willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
         this.mockMvc.perform(put("/api-forum/v1/forumhub/topics/1/answers")
                         .queryParam("answer_id", "")
@@ -509,6 +515,8 @@ public class AnswerControllerIT {
                         .equals("Primeiro teste de edição de uma resposta")))
         );
 
+        BDDMockito.verifyNoInteractions(this.userClientRequest);
+
     }
 
     @Order(16)
@@ -517,9 +525,6 @@ public class AnswerControllerIT {
     void shouldFailToEditAnswerIfTopicNotExists() throws Exception {
         final AnswerUpdateDTO answerUpdateDTO =
                 new AnswerUpdateDTO("Primeiro teste de edição de uma resposta");
-
-        BDDMockito.given(this.userClientRequest.getUserById(2L))
-                .willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
         this.mockMvc.perform(put("/api-forum/v1/forumhub/topics/6/answers")
                         .queryParam("answer_id", "1")
@@ -542,6 +547,7 @@ public class AnswerControllerIT {
                         .getSolution().equals("Primeiro teste de edição de uma resposta")))
         );
 
+        BDDMockito.verifyNoInteractions(this.userClientRequest);
 
     }
 
@@ -551,9 +557,6 @@ public class AnswerControllerIT {
     void shouldFailToEditAnswerIfAnswerNotExists() throws Exception {
         final AnswerUpdateDTO answerUpdateDTO =
                 new AnswerUpdateDTO("Primeiro teste de edição de uma resposta");
-
-        BDDMockito.given(this.userClientRequest.getUserById(2L))
-                .willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
         this.mockMvc.perform(put("/api-forum/v1/forumhub/topics/1/answers")
                         .queryParam("answer_id", "6")
@@ -575,6 +578,8 @@ public class AnswerControllerIT {
                 () -> assertFalse(topic.getAnswers().stream().anyMatch(answer -> answer.getSolution()
                         .equals("Primeiro teste de edição de uma resposta")))
         );
+
+        BDDMockito.verifyNoInteractions(this.userClientRequest);
 
     }
 
@@ -611,6 +616,9 @@ public class AnswerControllerIT {
                         .getSolution())
         );
 
+        BDDMockito.verify(this.userClientRequest).getUserById(2L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
+
     }
 
     @Order(19)
@@ -643,6 +651,9 @@ public class AnswerControllerIT {
                         .filter(answer -> answer.getId().equals(1L)).findFirst().orElseThrow()
                         .getSolution())
         );
+
+        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
 
@@ -680,6 +691,9 @@ public class AnswerControllerIT {
                         .getSolution())
         );
 
+        BDDMockito.verify(this.userClientRequest).getUserById(3L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
+
     }
 
     @Order(21)
@@ -716,6 +730,9 @@ public class AnswerControllerIT {
                         .getSolution())
         );
 
+        BDDMockito.verify(this.userClientRequest).getUserById(2L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
+
     }
 
     @Order(22)
@@ -750,6 +767,9 @@ public class AnswerControllerIT {
                         .filter(answer -> answer.getId().equals(1L)).findFirst().orElseThrow()
                         .getSolution())
         );
+
+        BDDMockito.verify(this.userClientRequest).getUserById(3L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
 
@@ -786,6 +806,9 @@ public class AnswerControllerIT {
                         .getSolution())
         );
 
+        BDDMockito.verify(this.userClientRequest).getUserById(2L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
+
     }
 
 
@@ -794,9 +817,6 @@ public class AnswerControllerIT {
             " when delete answer")
     @Test
     void shouldFailIfUserHasNotSuitableAuthorityWhenDeleteAnswer() throws Exception {
-        BDDMockito.given(this.userClientRequest.getUserById(1L))
-                .willReturn((TestsHelper.AuthorHelper.authorList().get(0)));
-
         this.mockMvc.perform(delete("/api-forum/v1/forumhub/topics/1/answers/delete")
                         .queryParam("answer_id", "1")
                         .with(jwt().jwt(jwt))
@@ -813,6 +833,8 @@ public class AnswerControllerIT {
 
         );
 
+        BDDMockito.verifyNoInteractions(this.userClientRequest);
+
     }
 
     @Order(25)
@@ -820,9 +842,6 @@ public class AnswerControllerIT {
             "of query param is sent empty")
     @Test
     void shouldFailIfAnswerIdPropertyOfQueryParamIsEmptyWhenDeleteAnswer() throws Exception {
-        BDDMockito.given(this.userClientRequest.getUserById(1L))
-                .willReturn((TestsHelper.AuthorHelper.authorList().get(0)));
-
         this.mockMvc.perform(delete("/api-forum/v1/forumhub/topics/1/answers/delete")
                         .queryParam("answer_id", "")
                         .with(jwt().jwt(jwt)
@@ -839,6 +858,8 @@ public class AnswerControllerIT {
                 () -> assertTrue(topic.getAnswers().stream().anyMatch(answer -> answer.getId().equals(1L)))
 
         );
+
+        BDDMockito.verifyNoInteractions(this.userClientRequest);
 
     }
 
@@ -866,6 +887,9 @@ public class AnswerControllerIT {
                 () -> assertTrue(topic.getAnswers().stream().anyMatch(answer -> answer.getId().equals(1L)))
 
         );
+
+        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
 
@@ -896,6 +920,9 @@ public class AnswerControllerIT {
                 () -> containsInAnyOrder(answersId, topic.getAnswers().stream().map(Answer::getId).toArray())
 
         );
+
+        BDDMockito.verify(this.userClientRequest).getUserById(2L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
     }
 
     @Order(28)
@@ -922,6 +949,9 @@ public class AnswerControllerIT {
                 () -> assertTrue(topic.getAnswers().stream().anyMatch(answer -> answer.getId().equals(1L)))
 
         );
+
+        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
 
@@ -950,6 +980,9 @@ public class AnswerControllerIT {
                 () -> assertFalse(answers.stream().anyMatch(answer -> answer.getId().equals(1L)))
         );
 
+        BDDMockito.verify(this.userClientRequest).getUserById(2L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
+
     }
 
     @Order(30)
@@ -977,6 +1010,9 @@ public class AnswerControllerIT {
                 () -> assertFalse(answers.stream().anyMatch(answer -> answer.getId().equals(4L)))
         );
 
+        BDDMockito.verify(this.userClientRequest).getUserById(3L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
+
     }
 
     @Order(31)
@@ -1002,6 +1038,9 @@ public class AnswerControllerIT {
                 () -> assertEquals(2, this.answerRepository.findAll().size()),
                 () -> assertEquals(0, answers.size())
         );
+
+        BDDMockito.verify(this.userClientRequest).getUserById(2L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
 
