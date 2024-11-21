@@ -119,7 +119,6 @@ public class TopicControllerIT {
                 "Como utilizar o Feign Client para integração do serviço x?",
                 1L);
 
-
         BDDMockito.given(this.userClientRequest.getUserById(1L))
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
 
@@ -132,13 +131,7 @@ public class TopicControllerIT {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.detail", is("O título não pode ser vazio")));
 
-        Topic topic = this.topicRepository.findById(1L).orElseThrow();
-
-        Assertions.assertAll(
-                () -> assertEquals("Dúvida na utilização do Feign Client", topic.getTitle()),
-                () -> assertEquals("Como utilizar o Feign Client para integração do serviço x?", topic.getQuestion()),
-                () -> assertEquals(3, this.topicRepository.findAll().size())
-        );
+        Assertions.assertEquals(3, this.topicRepository.findAll().size());
 
     }
 
@@ -162,21 +155,13 @@ public class TopicControllerIT {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.detail", is("A pergunta não pode ser vazia")));
 
-        Topic topic = this.topicRepository.findById(1L).orElseThrow();
+        Assertions.assertEquals(3, this.topicRepository.findAll().size());
 
-        Assertions.assertAll(
-                () -> assertEquals("Dúvida na utilização do Feign Client", topic.getTitle()),
-                () -> assertEquals("Como utilizar o Feign Client para integração do serviço x?", topic.getQuestion()),
-                () -> assertEquals(3, this.topicRepository.findAll().size())
-        );
 
     }
 
-    /*In a request perform by a client, this scenario returns 400 bad request due
-    to the different type of exception thrown. This is because in production
-    is oracle database is used, but in tests h2 database is used.*/
     @Order(4)
-    @DisplayName("Should fail with status code 500 when create topic if the title " +
+    @DisplayName("Should fail with status code 400 when create topic if the title " +
             "property is greater than 150 chars")
     @Test
     void shouldFailToCreateTopicIfTitlePropertyExceedsLimit() throws Exception {
@@ -196,7 +181,8 @@ public class TopicControllerIT {
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
                                 .writeValueAsString(topicCreateDTO)))
-                .andExpect(status().isInternalServerError());
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.detail", is("Payload com valor muito grande")));
 
         Assertions.assertEquals(3, this.topicRepository.findAll().size());
 
@@ -283,21 +269,6 @@ public class TopicControllerIT {
 
 
     @Order(8)
-    @DisplayName("Should fail with status code 404 when request the specified topic if not exists")
-    @Test
-    void shouldFailToRequestTheSpecifiedTopicIfNotExists() throws Exception {
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/topics")
-                        .queryParam("topic_id", "7")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .characterEncoding(StandardCharsets.UTF_8))
-                .andExpect(status().isNotFound());
-
-        Assertions.assertEquals(4, this.topicRepository.findAll().size());
-
-
-    }
-
-    @Order(9)
     @DisplayName("Should return all topics unsorted with successful")
     @Test
     void shouldReturnAllTopicsUnsortedWithSuccessful() throws Exception {
@@ -315,7 +286,7 @@ public class TopicControllerIT {
 
     }
 
-    @Order(10)
+    @Order(9)
     @DisplayName("Should return all topics sorted descendants by created date with successful")
     @Test
     void shouldReturnAllTopicsSortedDescendantByCreateDateWithSuccessful() throws Exception {
@@ -338,7 +309,7 @@ public class TopicControllerIT {
 
     }
 
-    @Order(11)
+    @Order(10)
     @DisplayName("Should return only two topics sorted in ascendant by status with successful")
     @Test
     void shouldReturnTwoTopicsSortedAscendantByStatusWithSuccessful() throws Exception {
@@ -363,7 +334,7 @@ public class TopicControllerIT {
     }
 
 
-    @Order(12)
+    @Order(11)
     @DisplayName("Should return all topics sorted ascendants by title with successful")
     @Test
     void shouldReturnAllTopicsSortedAscendantByTitleWithSuccessful() throws Exception {
@@ -387,7 +358,7 @@ public class TopicControllerIT {
 
     }
 
-    @Order(13)
+    @Order(12)
     @DisplayName("Should fail with status code 400 when attempt get topic if topic_id property " +
             "of query param is sent empty")
     @Test
@@ -399,6 +370,21 @@ public class TopicControllerIT {
                 .andExpect(status().isBadRequest());
 
         Assertions.assertEquals(4, this.topicRepository.findAll().size());
+
+    }
+
+    @Order(13)
+    @DisplayName("Should fail with status code 404 when request the specified topic if not exists")
+    @Test
+    void shouldFailToRequestTheSpecifiedTopicIfNotExists() throws Exception {
+        this.mockMvc.perform(get("/api-forum/v1/forumhub/topics")
+                        .queryParam("topic_id", "7")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isNotFound());
+
+        Assertions.assertEquals(4, this.topicRepository.findAll().size());
+
 
     }
 
@@ -654,12 +640,12 @@ public class TopicControllerIT {
                         Status.SOLVED), 1L
         );
 
-        BDDMockito.given(this.userClientRequest.getUserById(1L))
+        BDDMockito.given(this.userClientRequest.getUserById(3L))
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(2));
 
         this.mockMvc.perform(put("/api-forum/v1/forumhub/topics")
                         .queryParam("topic_id", "3")
-                        .with(jwt().jwt(jwt)
+                        .with(jwt().jwt(jwt -> jwt.claim("user_id", "3"))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:edit")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -704,7 +690,9 @@ public class TopicControllerIT {
                         .content(new ObjectMapper()
                                 .writeValueAsString(topicUpdateDTO)))
                 .andExpect(status().isOk())
-                .andExpect(content().json("{\"message\":\"HttpStatusCode OK\"}"));
+                .andExpect(jsonPath("$.title", is("Dúvida na utilização do WebClient")))
+                .andExpect(jsonPath("$.question", is("Como utilizar o WebClient para " +
+                        "integração do serviço x?")));
 
 
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
@@ -739,7 +727,9 @@ public class TopicControllerIT {
                         .content(new ObjectMapper()
                                 .writeValueAsString(topicUpdateDTO)))
                 .andExpect(status().isOk())
-                .andExpect(content().json("{\"message\":\"HttpStatusCode OK\"}"));
+                .andExpect(jsonPath("$.title", is("Dúvida na utilização do RestTemplate")))
+                .andExpect(jsonPath("$.question", is("Como utilizar o RestTemplate para " +
+                        "integração do serviço x?")));
 
 
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
@@ -774,7 +764,10 @@ public class TopicControllerIT {
                         .content(new ObjectMapper()
                                 .writeValueAsString(topicUpdateDTO)))
                 .andExpect(status().isOk())
-                .andExpect(content().json("{\"message\":\"HttpStatusCode OK\"}"));
+                .andExpect(jsonPath("$.title", is("Dúvida na utilização da API de " +
+                        "validação do Spring")))
+                .andExpect(jsonPath("$.question", is("Quais são as anotações da API de " +
+                        "validação do Spring?")));
 
 
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
@@ -841,7 +834,11 @@ public class TopicControllerIT {
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isNotFound());
 
-        Assertions.assertEquals(4, this.topicRepository.findAll().size());
+        Assertions.assertAll(
+                () -> assertEquals(4, this.topicRepository.findAll().size()),
+                () -> assertTrue(this.answerRepository.findById(6L).isPresent()),
+                () -> assertTrue(this.answerRepository.findById(8L).isPresent())
+        );
 
     }
 
@@ -887,8 +884,9 @@ public class TopicControllerIT {
 
         Assertions.assertAll(
                 () -> assertEquals(3, this.topicRepository.findAll().size()),
-                () -> assertFalse(this.answerRepository.findById(1L).isPresent()),
-                () -> assertFalse(this.answerRepository.findById(4L).isPresent())
+                () -> assertFalse(this.topicRepository.findById(1L).isPresent()),
+                () -> assertFalse(this.answerRepository.findById(6L).isPresent()),
+                () -> assertFalse(this.answerRepository.findById(8L).isPresent())
         );
 
     }
@@ -912,6 +910,7 @@ public class TopicControllerIT {
 
         Assertions.assertAll(
                 () -> assertEquals(2, this.topicRepository.findAll().size()),
+                () -> assertFalse(this.topicRepository.findById(2L).isPresent()),
                 () -> assertFalse(this.answerRepository.findById(2L).isPresent())
         );
 
@@ -936,7 +935,8 @@ public class TopicControllerIT {
 
         Assertions.assertAll(
                 () -> assertEquals(1, this.topicRepository.findAll().size()),
-                () -> assertFalse(this.topicRepository.findById(3L).isPresent())
+                () -> assertFalse(this.topicRepository.findById(3L).isPresent()),
+                () -> assertFalse(this.answerRepository.findById(7L).isPresent())
         );
 
     }
