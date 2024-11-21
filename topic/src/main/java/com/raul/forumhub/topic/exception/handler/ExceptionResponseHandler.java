@@ -8,6 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
+import org.hibernate.exception.DataException;
 import org.hibernate.exception.GenericJDBCException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpHeaders;
@@ -59,11 +60,11 @@ public class ExceptionResponseHandler {
                 new ResponseEntity<>(new ExceptionEntity(LocalDateTime.now(), HttpStatus.CONFLICT.value(),
                         "Solicitação não processada", "Payload conflitante", request.getRequestURI()),
                         headers(), HttpStatus.CONFLICT) :
-                ex.getCause() instanceof GenericJDBCException ?
+                (ex.getCause() instanceof DataException && ((DataException) ex.getCause()).getErrorCode() == 22001) ||
+                        (ex.getCause() instanceof GenericJDBCException && ((GenericJDBCException) ex.getCause()).getErrorCode() == 12899) ?
                         new ResponseEntity<>(new ExceptionEntity(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(),
                                 "Solicitação não processada", "Payload com valor muito grande", request.getRequestURI()),
                                 headers(), HttpStatus.BAD_REQUEST) : this.notExpectedExceptionResolver(ex, request);
-
     }
 
     @ExceptionHandler({HttpMessageNotReadableException.class, IllegalArgumentException.class,
