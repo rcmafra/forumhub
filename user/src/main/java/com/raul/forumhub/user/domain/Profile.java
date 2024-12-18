@@ -1,6 +1,5 @@
 package com.raul.forumhub.user.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,18 +17,12 @@ public class Profile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "profile_id")
-    @JsonIgnore
     private Long id;
     @Column(name = "profile", length = 50, nullable = false, unique = true)
     @Enumerated(EnumType.STRING)
     private ProfileName profileName;
 
-    public Profile(ProfileName profileName) {
-        this.profileName = profileName;
-    }
-
     public enum ProfileName {
-
         ADM,
         MOD,
         BASIC
