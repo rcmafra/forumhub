@@ -43,7 +43,7 @@ public class UserService {
         return this.getUserById(user_id);
     }
 
-    public Page<UserDetailedInfo> getAllUser(Pageable pageable){
+    public Page<UserDetailedInfo> usersList(Pageable pageable){
         return this.userRepository.findAll(pageable).map(UserDetailedInfo::new);
     }
 

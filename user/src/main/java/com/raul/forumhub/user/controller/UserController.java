@@ -10,7 +10,6 @@ import com.raul.forumhub.user.exception.MalFormatedParamUserException;
 import com.raul.forumhub.user.security.IsAuthenticated;
 import com.raul.forumhub.user.service.UserService;
 import jakarta.validation.Valid;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -66,17 +65,16 @@ public class UserController {
     @IsAuthenticated
     @GetMapping("/summary-info")
     public ResponseEntity<UserSummaryInfo> getSummaryInfoUser(@RequestParam Long user_id) {
-       return ResponseEntity.ok(new UserSummaryInfo(this.userService.getInfoUser(user_id)));
+        return ResponseEntity.ok(new UserSummaryInfo(this.userService.getInfoUser(user_id)));
     }
 
 
     @PreAuthorize("hasAnyRole('MOD','ADM') and hasAuthority('SCOPE_user:readAll')")
-    @GetMapping
-    public PagedModel<EntityModel<UserDetailedInfo>> getAllUser(@PageableDefault Pageable pageable,
-                                                                PagedResourcesAssembler<UserDetailedInfo> assembler) {
+    @GetMapping("/listAll")
+    public PagedModel<EntityModel<UserDetailedInfo>> usersList(@PageableDefault Pageable pageable,
+                                                               PagedResourcesAssembler<UserDetailedInfo> assembler) {
 
-        Page<UserDetailedInfo> userResponse = userService.getAllUser(pageable);
-        return assembler.toModel(userResponse);
+        return assembler.toModel(userService.usersList(pageable));
     }
 
 
@@ -90,7 +88,7 @@ public class UserController {
 
         String myUserEditScope = Objects.isNull(jwt.getClaim("scope")) ? "" :
                 jwt.getClaimAsStringList("scope").stream()
-                .filter(s -> s.equals("myuser:edit")).findFirst().orElse("");
+                        .filter(s -> s.equals("myuser:edit")).findFirst().orElse("");
 
 
         if (myUserEditScope.equals("myuser:edit") && Objects.isNull(user_id)) {
@@ -109,7 +107,6 @@ public class UserController {
 
         String claimUserRole = jwt.getClaim("authority").toString().substring(5);
         Long claimUserId = Long.parseLong(jwt.getClaim("user_id"));
-
         String myUserDeleteScope = jwt.getClaimAsStringList("scope").stream()
                 .filter(s -> s.equals("myuser:delete")).findFirst().orElse("");
 
