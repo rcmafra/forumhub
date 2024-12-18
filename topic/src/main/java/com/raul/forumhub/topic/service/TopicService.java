@@ -10,7 +10,7 @@ import com.raul.forumhub.topic.dto.response.GetTopicDTO;
 import com.raul.forumhub.topic.exception.InstanceNotFoundException;
 import com.raul.forumhub.topic.exception.TopicServiceException;
 import com.raul.forumhub.topic.repository.TopicRepository;
-import com.raul.forumhub.topic.utility.AuthorizationValidate;
+import com.raul.forumhub.topic.util.PermissionUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -55,7 +55,7 @@ public class TopicService {
         Course course = this.courseService.getCourseById(update.course_id());
         Author author = this.userClientRequest.getUserById(user_id);
 
-        AuthorizationValidate.permissionValidator(topic.getAuthor().getId(), author);
+        PermissionUtils.privilegeValidator(topic.getAuthor().getId(), author);
 
         if (topic.getAuthor().getUsername().equals("Desconhecido") &&
                 topic.getAuthor().getEmail().equals("desconhecido@email.com")) {
@@ -63,9 +63,9 @@ public class TopicService {
                     "ele não pode ser editado");
         }
 
-        topic.setTitle(update.topic().getTitle());
-        topic.setQuestion(update.topic().getQuestion());
-        topic.setStatus(update.topic().getStatus());
+        topic.setTitle(update.title());
+        topic.setQuestion(update.question());
+        topic.setStatus(update.status());
         topic.setCourse(course);
 
         this.saveTopic(topic);
@@ -78,19 +78,13 @@ public class TopicService {
         Topic topic = this.getTopicById(topic_id);
         Author author = this.userClientRequest.getUserById(user_id);
 
-        AuthorizationValidate.permissionValidator(topic.getAuthor().getId(), author);
+        PermissionUtils.privilegeValidator(topic.getAuthor().getId(), author);
 
         this.topicRepository.delete(topic);
     }
 
     public void saveTopic(Topic topic) {
         this.topicRepository.save(topic);
-    }
-
-    public void validateTopicOwner(Long author_id, Long user_id) {
-        if (!author_id.equals(user_id)) {
-            throw new TopicServiceException("O tópico fornecido não pertence a esse autor");
-        }
     }
 
 
