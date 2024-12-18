@@ -1,4 +1,4 @@
-package com.raul.forumhub.topic.integration;
+package com.raul.forumhub.topic.integration.controller;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,7 +9,7 @@ import com.raul.forumhub.topic.dto.request.AnswerTopicDTO;
 import com.raul.forumhub.topic.dto.request.AnswerUpdateDTO;
 import com.raul.forumhub.topic.exception.RestClientException;
 import com.raul.forumhub.topic.repository.*;
-import com.raul.forumhub.topic.utility.TestsHelper;
+import com.raul.forumhub.topic.util.TestsHelper;
 import org.junit.jupiter.api.*;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -359,8 +359,38 @@ public class AnswerControllerIT {
 
     }
 
-
     @Order(11)
+    @DisplayName("Should fail with status code 422 when mark answer best if " +
+            "yet not exists a answer for specified topic")
+    @Test
+    void shouldFailToMarkAnswerBestIfYetNotExistsAnswer() throws Exception {
+        BDDMockito.given(this.userClientRequest.getUserById(1L)).
+                willReturn(TestsHelper.AuthorHelper.authorList().get(0));
+
+        this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/4/markBestAnswer")
+                        .queryParam("answer_id", "1")
+                        .with(jwt().jwt(jwt))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.detail",
+                        is("Ainda não existe respostas para esse tópico")));
+
+
+        Topic topic = this.topicRepository.findById(4L).orElseThrow();
+
+        Assertions.assertAll(
+                () -> assertEquals(5, this.answerRepository.findAll().size()),
+                () -> assertEquals(0, topic.getAnswers().size())
+        );
+
+        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
+
+    }
+
+
+    @Order(12)
     @DisplayName("Should fail with status code 422 when mark answer best if already " +
             "exists a best answer for specified topic")
     @Test
@@ -375,7 +405,7 @@ public class AnswerControllerIT {
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.detail",
-                        is("Já existe uma melhor resposta para este tópico")));
+                        is("Este tópico já possui a resposta [ID: 2] como melhor resposta")));
 
         Topic topic = this.topicRepository.findById(2L).orElseThrow();
 
@@ -391,7 +421,7 @@ public class AnswerControllerIT {
 
     }
 
-    @Order(12)
+    @Order(13)
     @DisplayName("Should mark answer best with success if user is authenticated and " +
             "previous premisses are adequate")
     @Test
@@ -422,7 +452,7 @@ public class AnswerControllerIT {
     }
 
 
-    @Order(13)
+    @Order(14)
     @DisplayName("Should fail with status code 403 if user authenticated hasn't authority 'answer:edit'" +
             "when edit answer")
     @Test
@@ -453,7 +483,7 @@ public class AnswerControllerIT {
 
     }
 
-    @Order(14)
+    @Order(15)
     @DisplayName("Should fail with status code 400 if solution property is sent empty when edit answer")
     @Test
     void shouldFailIfSolutionPropertyIsEmptyWhenEditAnswer() throws Exception {
@@ -488,7 +518,7 @@ public class AnswerControllerIT {
 
     }
 
-    @Order(15)
+    @Order(16)
     @DisplayName("Should fail with status code 400 when attempt update answer if answer_id property " +
             "of query param is sent empty")
     @Test
@@ -519,7 +549,7 @@ public class AnswerControllerIT {
 
     }
 
-    @Order(16)
+    @Order(17)
     @DisplayName("Should fail with status code 404 when update answer if topic not exists")
     @Test
     void shouldFailToEditAnswerIfTopicNotExists() throws Exception {
@@ -551,7 +581,7 @@ public class AnswerControllerIT {
 
     }
 
-    @Order(17)
+    @Order(18)
     @DisplayName("Should fail with status code 404 when update answer if answer not exists")
     @Test
     void shouldFailToEditAnswerIfAnswerNotExists() throws Exception {
@@ -584,7 +614,7 @@ public class AnswerControllerIT {
     }
 
 
-    @Order(18)
+    @Order(19)
     @DisplayName("Should fail with status code 404 when edit answer if the user service return " +
             "404 not found status code")
     @Test
@@ -621,7 +651,7 @@ public class AnswerControllerIT {
 
     }
 
-    @Order(19)
+    @Order(20)
     @DisplayName("Should fail with status code 418 if basic user attempt edit answer of other author")
     @Test
     void shouldFailIfBasicUserAttemptEditAnswerOfOtherAuthor() throws Exception {
@@ -657,7 +687,7 @@ public class AnswerControllerIT {
 
     }
 
-    @Order(20)
+    @Order(21)
     @DisplayName("Should fail with status code 422 when attempt edit a answer of unknown author")
     @Test
     void shouldFailWhenAttemptEditAnswerOfUnknownAuthor() throws Exception {
@@ -696,7 +726,7 @@ public class AnswerControllerIT {
 
     }
 
-    @Order(21)
+    @Order(22)
     @DisplayName("Answer author should be able edit specified answer if authenticated, " +
             "has authority 'answer:edit' and previous premisses are adequate")
     @Test
@@ -735,7 +765,7 @@ public class AnswerControllerIT {
 
     }
 
-    @Order(22)
+    @Order(23)
     @DisplayName("User ADM should be able edit answer of other author if authenticated, " +
             "has authority 'answer:edit' and previous premisses are adequate")
     @Test
@@ -773,7 +803,7 @@ public class AnswerControllerIT {
 
     }
 
-    @Order(23)
+    @Order(24)
     @DisplayName("User MOD should be able edit answer of other author if authenticated, " +
             "has authority 'answer:edit' and previous premisses are adequate")
     @Test
@@ -812,7 +842,7 @@ public class AnswerControllerIT {
     }
 
 
-    @Order(24)
+    @Order(25)
     @DisplayName("Should fail with status code 403 if user authenticated hasn't authority 'answer:delete'" +
             " when delete answer")
     @Test
@@ -837,7 +867,7 @@ public class AnswerControllerIT {
 
     }
 
-    @Order(25)
+    @Order(26)
     @DisplayName("Should fail with status code 400 when attempt delete answer if answer_id property " +
             "of query param is sent empty")
     @Test
@@ -863,7 +893,7 @@ public class AnswerControllerIT {
 
     }
 
-    @Order(26)
+    @Order(27)
     @DisplayName("Should fail with status code 404 when delete answer if the user service " +
             "return 404 not found status code")
     @Test
@@ -893,7 +923,7 @@ public class AnswerControllerIT {
 
     }
 
-    @Order(27)
+    @Order(28)
     @DisplayName("Should fail with status code 422 if provided answer not belonging to the " +
             "provided topic when delete answer")
     @Test
@@ -925,7 +955,7 @@ public class AnswerControllerIT {
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
     }
 
-    @Order(28)
+    @Order(29)
     @DisplayName("Should fail with status code 418 if basic user attempt delete answer of other author")
     @Test
     void shouldFailIfBasicUserAttemptDeleteAnswerOfOtherAuthor() throws Exception {
@@ -955,7 +985,7 @@ public class AnswerControllerIT {
 
     }
 
-    @Order(29)
+    @Order(30)
     @DisplayName("Answer author should be able delete specified answer if authenticated, " +
             "has authority 'answer:delete' and previous premisses are adequate")
     @Test
@@ -985,7 +1015,7 @@ public class AnswerControllerIT {
 
     }
 
-    @Order(30)
+    @Order(31)
     @DisplayName("User ADM should be able delete topic of other author if authenticated, " +
             "has authority 'topic:delete' and previous premisses are adequate")
     @Test
@@ -1015,7 +1045,7 @@ public class AnswerControllerIT {
 
     }
 
-    @Order(31)
+    @Order(32)
     @DisplayName("User MOD should be able delete topic of other author if authenticated, " +
             "has authority 'topic:delete' and previous premisses are adequate")
     @Test
