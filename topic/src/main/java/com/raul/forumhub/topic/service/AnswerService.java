@@ -11,11 +11,12 @@ import com.raul.forumhub.topic.dto.response.GetAnswerDTO;
 import com.raul.forumhub.topic.exception.AnswerServiceException;
 import com.raul.forumhub.topic.exception.InstanceNotFoundException;
 import com.raul.forumhub.topic.repository.AnswerRepository;
-import com.raul.forumhub.topic.utility.AuthorizationValidate;
+import com.raul.forumhub.topic.util.PermissionUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class AnswerService {
@@ -48,23 +49,35 @@ public class AnswerService {
         Topic topic = topicService.getTopicById(topic_id);
         Author author = userClientRequest.getUserById(user_id);
 
-        this.topicService.validateTopicOwner(topic.getAuthor().getId(), author.getId());
+        PermissionUtils.validateTopicOwner(topic.getAuthor().getId(), author.getId());
 
-        List<Answer> answersOfTheTopic = this.answerRepository.getAnswerByTopic(topic)
-                .orElse(Collections.emptyList());
-        boolean hasBestAnswer = answersOfTheTopic.stream().anyMatch(Answer::isBestAnswer);
+        Set<Answer> answersOfTheTopic = topic.getAnswers()
+                .stream().filter(Objects::nonNull).collect(Collectors.collectingAndThen(
+                        Collectors.toSet(),
+                        answers -> {
+                            if (answers.isEmpty()) {
+                                throw new AnswerServiceException("Ainda não existe respostas para esse tópico");
+                            }
+                            return answers;
+                        }
+                ));
 
-        if (hasBestAnswer) {
-            throw new AnswerServiceException("Já existe uma melhor resposta para este tópico");
-        } else {
-            Answer answer = getAnswerById(answer_id);
+        Answer alreadyHasBestAnswers = answersOfTheTopic.stream().filter(Answer::isBestAnswer)
+                .findFirst().orElse(null);
 
-            topic.setStatus(Status.SOLVED);
-            answer.setBestAnswer(true);
+        if (alreadyHasBestAnswers != null)
+            throw new AnswerServiceException("Este tópico já possui a resposta [ID: "
+                    .concat(alreadyHasBestAnswers.getId().toString())
+                    .concat("] como melhor resposta"));
 
-            this.topicService.saveTopic(topic);
-            this.saveAnswer(answer);
-        }
+        Answer answer = this.getAnswerById(answer_id);
+
+        topic.setStatus(Status.SOLVED);
+        answer.setBestAnswer(true);
+
+        this.topicService.saveTopic(topic);
+        this.saveAnswer(answer);
+
 
     }
 
@@ -73,7 +86,7 @@ public class AnswerService {
         Answer answer = this.getAnswerById(answer_id);
         Author author = this.userClientRequest.getUserById(user_id);
 
-        AuthorizationValidate.permissionValidator(answer.getAuthor().getId(), author);
+        PermissionUtils.privilegeValidator(answer.getAuthor().getId(), author);
 
         if (answer.getAuthor().getUsername().equals("Desconhecido") &&
                 answer.getAuthor().getEmail().equals("desconhecido@email.com")) {
@@ -95,7 +108,7 @@ public class AnswerService {
             throw new AnswerServiceException("A resposta fornecida não pertence a esse tópico");
         }
 
-        AuthorizationValidate.permissionValidator(answer.getAuthor().getId(), author);
+        PermissionUtils.privilegeValidator(answer.getAuthor().getId(), author);
 
         this.answerRepository.delete(answer);
 
