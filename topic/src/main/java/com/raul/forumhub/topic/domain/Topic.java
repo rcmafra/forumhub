@@ -14,6 +14,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@Builder
 public class Topic {
 
     @Id
@@ -40,29 +41,12 @@ public class Topic {
     @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Answer> answers;
 
-    public Topic(String title, String question, Author author, Course course){
+    public Topic(String title, String question, Author author, Course course) {
         this.title = title;
         this.question = question;
         this.createdAt = LocalDateTime.now();
         this.author = author;
         this.course = course;
         this.status = Status.UNSOLVED;
-    }
-
-    public Topic(Long id, String title, String question, LocalDateTime createdAt, Status status,
-                 Author author, Course course){
-        this.id = id;
-        this.title = title;
-        this.question = question;
-        this.createdAt = createdAt;
-        this.status = status;
-        this.author = author;
-        this.course = course;
-    }
-
-    public Topic(String title, String question, Status status){
-        this.title = title;
-        this.question = question;
-        this.status = status;
     }
 }
