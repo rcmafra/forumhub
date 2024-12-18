@@ -9,7 +9,7 @@ import com.raul.forumhub.topic.dto.response.GetCourseDTO;
 import com.raul.forumhub.topic.exception.handler.ExceptionResponseHandler;
 import com.raul.forumhub.topic.security.TopicSecurityConfig;
 import com.raul.forumhub.topic.service.CourseService;
-import com.raul.forumhub.topic.utility.TestsHelper;
+import com.raul.forumhub.topic.util.TestsHelper;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;

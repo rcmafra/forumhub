@@ -9,8 +9,7 @@ import com.raul.forumhub.topic.dto.response.GetTopicDTO;
 import com.raul.forumhub.topic.exception.handler.ExceptionResponseHandler;
 import com.raul.forumhub.topic.security.TopicSecurityConfig;
 import com.raul.forumhub.topic.service.TopicService;
-import com.raul.forumhub.topic.utility.TestsHelper;
-import lombok.extern.slf4j.Slf4j;
+import com.raul.forumhub.topic.util.TestsHelper;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
@@ -19,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.*;
-import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
@@ -29,7 +27,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 
@@ -300,9 +297,9 @@ class TopicControllerTest {
     @Test
     void shouldFailIfUserHasNotSuitableAuthorityWhenEditTopic() throws Exception {
         final TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO(
-                new Topic("Dúvida quanto a utilização do Elasticsearch",
-                        "Como posso integrar minha API com o Elasticsearch para monitoração?",
-                        Status.UNSOLVED), 1L
+                "Dúvida quanto a utilização do Elasticsearch",
+                "Como posso integrar minha API com o Elasticsearch para monitoração?",
+                Status.UNSOLVED, 1L
         );
 
         this.mockMvc.perform(put("/api-forum/v1/forumhub/topics")
@@ -324,9 +321,9 @@ class TopicControllerTest {
     @Test
     void shouldFailIfTopicIdPropertyOfQueryParamIsEmptyWhenUpdateTopic() throws Exception {
         TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO(
-                new Topic("Dúvida quanto a utilização do Elasticsearch",
-                        "Como posso integrar minha API com o Elasticsearch para monitoração?",
-                        Status.UNSOLVED), 1L
+                "Dúvida quanto a utilização do Elasticsearch",
+                "Como posso integrar minha API com o Elasticsearch para monitoração?",
+                Status.UNSOLVED, 1L
         );
 
         this.mockMvc.perform(put("/api-forum/v1/forumhub/topics")
@@ -348,20 +345,17 @@ class TopicControllerTest {
     @DisplayName("Should edit topic with success if user authenticated has authority 'topic:edit'")
     @Test
     void shouldEditTopicWithSuccessIfUserHasSuitableAuthority() throws Exception {
-        final TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO(
-                new Topic("Dúvida na utilização do WebClient",
-                        "Como utilizar o WebClient para integração do serviço x?",
-                        Status.UNSOLVED), 1L
+        final TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO("Dúvida na utilização do WebClient",
+                "Como utilizar o WebClient para integração do serviço x?",
+                Status.UNSOLVED, 1L
         );
 
-        Topic topic = TestsHelper.TopicHelper.topicListWithAnswers().get(0);
+        Topic topic = TestsHelper.TopicHelper.topicList().get(0);
         topic.setTitle("Dúvida na utilização do WebClient");
         topic.setQuestion("Como utilizar o WebClient para integração do serviço x?");
 
-        GetTopicDTO getTopicDTO = new GetTopicDTO(topic);
-
         BDDMockito.given(this.topicService.updateTopic(1L, 1L, topicUpdateDTO))
-                .willReturn(getTopicDTO);
+                .willReturn(new GetTopicDTO(topic));
 
         this.mockMvc.perform(put("/api-forum/v1/forumhub/topics")
                         .queryParam("topic_id", "1")

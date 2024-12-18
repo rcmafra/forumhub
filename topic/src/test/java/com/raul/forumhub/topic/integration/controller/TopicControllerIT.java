@@ -1,4 +1,4 @@
-package com.raul.forumhub.topic.integration;
+package com.raul.forumhub.topic.integration.controller;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,7 +9,7 @@ import com.raul.forumhub.topic.dto.request.TopicCreateDTO;
 import com.raul.forumhub.topic.dto.request.TopicUpdateDTO;
 import com.raul.forumhub.topic.exception.RestClientException;
 import com.raul.forumhub.topic.repository.*;
-import com.raul.forumhub.topic.utility.TestsHelper;
+import com.raul.forumhub.topic.util.TestsHelper;
 import org.junit.jupiter.api.*;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,7 +103,7 @@ public class TopicControllerIT {
                                 .writeValueAsString(topicCreateDTO)))
                 .andExpect(status().isUnauthorized());
 
-        Assertions.assertEquals(3, this.topicRepository.findAll().size());
+        Assertions.assertEquals(4, this.topicRepository.findAll().size());
 
         BDDMockito.verifyNoInteractions(this.userClientRequest);
 
@@ -129,7 +129,7 @@ public class TopicControllerIT {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.detail", is("O título não pode ser vazio")));
 
-        Assertions.assertEquals(3, this.topicRepository.findAll().size());
+        Assertions.assertEquals(4, this.topicRepository.findAll().size());
 
         BDDMockito.verify(this.userClientRequest).getUserById(1L);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
@@ -156,7 +156,7 @@ public class TopicControllerIT {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.detail", is("A pergunta não pode ser vazia")));
 
-        Assertions.assertEquals(3, this.topicRepository.findAll().size());
+        Assertions.assertEquals(4, this.topicRepository.findAll().size());
 
         BDDMockito.verify(this.userClientRequest).getUserById(1L);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
@@ -187,7 +187,7 @@ public class TopicControllerIT {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.detail", is("Payload com valor muito grande")));
 
-        Assertions.assertEquals(3, this.topicRepository.findAll().size());
+        Assertions.assertEquals(4, this.topicRepository.findAll().size());
 
         BDDMockito.verify(this.userClientRequest).getUserById(1L);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
@@ -213,7 +213,7 @@ public class TopicControllerIT {
                                 .writeValueAsString(topicCreateDTO)))
                 .andExpect(status().isNotFound());
 
-        Assertions.assertEquals(3, this.topicRepository.findAll().size());
+        Assertions.assertEquals(4, this.topicRepository.findAll().size());
 
         BDDMockito.verify(this.userClientRequest).getUserById(1L);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
@@ -241,7 +241,7 @@ public class TopicControllerIT {
                                 .writeValueAsString(topicCreateDTO)))
                 .andExpectAll(status().isNotFound());
 
-        Assertions.assertEquals(3, this.topicRepository.findAll().size());
+        Assertions.assertEquals(4, this.topicRepository.findAll().size());
 
         BDDMockito.verify(this.userClientRequest).getUserById(1L);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
@@ -271,7 +271,7 @@ public class TopicControllerIT {
 
                 );
 
-        Assertions.assertEquals(4, this.topicRepository.findAll().size());
+        Assertions.assertEquals(5, this.topicRepository.findAll().size());
 
         BDDMockito.verify(this.userClientRequest).getUserById(1L);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
@@ -287,12 +287,12 @@ public class TopicControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$..getTopicDTOList.length()", is(4)))
+                .andExpect(jsonPath("$..getTopicDTOList.length()", is(5)))
                 .andExpect(jsonPath("$..page.[?(@.size == 10)]").exists())
-                .andExpect(jsonPath("$..page.[?(@.totalElements == 4)]").exists())
+                .andExpect(jsonPath("$..page.[?(@.totalElements == 5)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.totalPages == 1)]").exists());
 
-        Assertions.assertEquals(4, this.topicRepository.findAll().size());
+        Assertions.assertEquals(5, this.topicRepository.findAll().size());
 
 
     }
@@ -306,16 +306,17 @@ public class TopicControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$..getTopicDTOList[0].[?(@.id == 5)]").exists())
+                .andExpect(jsonPath("$..getTopicDTOList[0].[?(@.id == 6)]").exists())
                 .andExpect(jsonPath("$..getTopicDTOList[1].[?(@.id == 3)]").exists())
                 .andExpect(jsonPath("$..getTopicDTOList[2].[?(@.id == 1)]").exists())
                 .andExpect(jsonPath("$..getTopicDTOList[3].[?(@.id == 2)]").exists())
-                .andExpect(jsonPath("$..getTopicDTOList.length()", is(4)))
+                .andExpect(jsonPath("$..getTopicDTOList[4].[?(@.id == 4)]").exists())
+                .andExpect(jsonPath("$..getTopicDTOList.length()", is(5)))
                 .andExpect(jsonPath("$..page.[?(@.size == 10)]").exists())
-                .andExpect(jsonPath("$..page.[?(@.totalElements == 4)]").exists())
+                .andExpect(jsonPath("$..page.[?(@.totalElements == 5)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.totalPages == 1)]").exists());
 
-        Assertions.assertEquals(4, this.topicRepository.findAll().size());
+        Assertions.assertEquals(5, this.topicRepository.findAll().size());
 
 
     }
@@ -330,17 +331,15 @@ public class TopicControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$..getTopicDTOList[0].[?(@.id == 3)]").exists())
                 .andExpect(jsonPath("$..getTopicDTOList[0].[?(@.status == \"SOLVED\")]").exists())
-                .andExpect(jsonPath("$..getTopicDTOList[1].[?(@.id == 5)]").exists())
                 .andExpect(jsonPath("$..getTopicDTOList[1].[?(@.status == \"UNSOLVED\")]").exists())
                 .andExpect(jsonPath("$..page.[?(@.number == 0)]").exists())
                 .andExpect(jsonPath("$..getTopicDTOList.length()", is(2)))
                 .andExpect(jsonPath("$..page.[?(@.size == 2)]").exists())
-                .andExpect(jsonPath("$..page.[?(@.totalElements == 4)]").exists())
-                .andExpect(jsonPath("$..page.[?(@.totalPages == 2)]").exists());
+                .andExpect(jsonPath("$..page.[?(@.totalElements == 5)]").exists())
+                .andExpect(jsonPath("$..page.[?(@.totalPages == 3)]").exists());
 
-        Assertions.assertEquals(4, this.topicRepository.findAll().size());
+        Assertions.assertEquals(5, this.topicRepository.findAll().size());
 
     }
 
@@ -356,15 +355,16 @@ public class TopicControllerIT {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$..getTopicDTOList[0].[?(@.id == 3)]").exists())
                 .andExpect(jsonPath("$..getTopicDTOList[1].[?(@.id == 1)]").exists())
-                .andExpect(jsonPath("$..getTopicDTOList[2].[?(@.id == 5)]").exists())
+                .andExpect(jsonPath("$..getTopicDTOList[2].[?(@.id == 6)]").exists())
                 .andExpect(jsonPath("$..getTopicDTOList[3].[?(@.id == 2)]").exists())
+                .andExpect(jsonPath("$..getTopicDTOList[4].[?(@.id == 4)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.number == 0)]").exists())
-                .andExpect(jsonPath("$..getTopicDTOList.length()", is(4)))
+                .andExpect(jsonPath("$..getTopicDTOList.length()", is(5)))
                 .andExpect(jsonPath("$..page.[?(@.size == 10)]").exists())
-                .andExpect(jsonPath("$..page.[?(@.totalElements == 4)]").exists())
+                .andExpect(jsonPath("$..page.[?(@.totalElements == 5)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.totalPages == 1)]").exists());
 
-        Assertions.assertEquals(4, this.topicRepository.findAll().size());
+        Assertions.assertEquals(5, this.topicRepository.findAll().size());
 
 
     }
@@ -380,7 +380,7 @@ public class TopicControllerIT {
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isBadRequest());
 
-        Assertions.assertEquals(4, this.topicRepository.findAll().size());
+        Assertions.assertEquals(5, this.topicRepository.findAll().size());
 
     }
 
@@ -394,7 +394,7 @@ public class TopicControllerIT {
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isNotFound());
 
-        Assertions.assertEquals(4, this.topicRepository.findAll().size());
+        Assertions.assertEquals(5, this.topicRepository.findAll().size());
 
         BDDMockito.verifyNoInteractions(this.userClientRequest);
 
@@ -414,7 +414,7 @@ public class TopicControllerIT {
                 .andExpect(jsonPath("$.[?(@.id == 1)]").exists())
                 .andExpect(jsonPath("$.title", is("Dúvida na utilização do Feign Client")));
 
-        Assertions.assertEquals(4, this.topicRepository.findAll().size());
+        Assertions.assertEquals(5, this.topicRepository.findAll().size());
 
     }
 
@@ -424,9 +424,9 @@ public class TopicControllerIT {
     @Test
     void shouldFailIfUserHasNotSuitableAuthorityWhenEditTopic() throws Exception {
         final TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO(
-                new Topic("Dúvida quanto a utilização do Elasticsearch",
-                        "Como posso integrar minha API com o Elasticsearch para monitoração?",
-                        Status.UNSOLVED), 1L
+                "Dúvida quanto a utilização do Elasticsearch",
+                "Como posso integrar minha API com o Elasticsearch para monitoração?",
+                Status.UNSOLVED, 1L
         );
 
         this.mockMvc.perform(put("/api-forum/v1/forumhub/topics")
@@ -454,9 +454,9 @@ public class TopicControllerIT {
     @Test
     void shouldFailIfTitlePropertyIsEmptyWhenEditTopic() throws Exception {
         final TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO(
-                new Topic("",
-                        "Como posso integrar minha API com o Elasticsearch para monitoração?",
-                        Status.UNSOLVED), 1L
+                "",
+                "Como posso integrar minha API com o Elasticsearch para monitoração?",
+                Status.UNSOLVED, 1L
         );
 
         BDDMockito.given(this.userClientRequest.getUserById(1L))
@@ -490,9 +490,9 @@ public class TopicControllerIT {
     @Test
     void shouldFailIfQuestionPropertyIsEmptyWhenEditTopic() throws Exception {
         TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO(
-                new Topic("Dúvida quanto a utilização do Elasticsearch",
-                        "",
-                        Status.UNSOLVED), 1L
+                "Dúvida quanto a utilização do Elasticsearch",
+                "",
+                Status.UNSOLVED, 1L
         );
 
         BDDMockito.given(this.userClientRequest.getUserById(1L))
@@ -527,9 +527,9 @@ public class TopicControllerIT {
     @Test
     void shouldFailIfTopicIdPropertyOfQueryParamIsEmptyWhenUpdateTopic() throws Exception {
         TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO(
-                new Topic("Dúvida quanto a utilização do Elasticsearch",
-                        "Como posso integrar minha API com o Elasticsearch para monitoração?",
-                        Status.UNSOLVED), 1L
+                "Dúvida quanto a utilização do Elasticsearch",
+                "Como posso integrar minha API com o Elasticsearch para monitoração?",
+                Status.UNSOLVED, 1L
         );
 
         this.mockMvc.perform(put("/api-forum/v1/forumhub/topics")
@@ -552,9 +552,9 @@ public class TopicControllerIT {
     @Test
     void shouldFailToEditTopicIfCourseNotExists() throws Exception {
         final TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO(
-                new Topic("Dúvida quanto a utilização do Elasticsearch",
-                        "Como posso integrar minha API com o Elasticsearch para monitoração?",
-                        Status.UNSOLVED), 4L
+                "Dúvida quanto a utilização do Elasticsearch",
+                "Como posso integrar minha API com o Elasticsearch para monitoração?",
+                Status.UNSOLVED, 4L
         );
 
         this.mockMvc.perform(put("/api-forum/v1/forumhub/topics")
@@ -585,9 +585,9 @@ public class TopicControllerIT {
     @Test
     void shouldFailToEditTopicIfUserServiceReturn404StatusCode() throws Exception {
         final TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO(
-                new Topic("Dúvida quanto a utilização do Elasticsearch",
-                        "Como posso integrar minha API com o Elasticsearch para monitoração?",
-                        Status.UNSOLVED), 1L
+                "Dúvida quanto a utilização do Elasticsearch",
+                "Como posso integrar minha API com o Elasticsearch para monitoração?",
+                Status.UNSOLVED, 1L
         );
 
         BDDMockito.given(this.userClientRequest.getUserById(1L))
@@ -621,9 +621,9 @@ public class TopicControllerIT {
     @Test
     void shouldFailIfBasicUserAttemptEditTopicOfOtherAuthor() throws Exception {
         final TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO(
-                new Topic("Dúvida quanto a utilização do Elasticsearch",
-                        "Como posso integrar minha API com o Elasticsearch para monitoração?",
-                        Status.UNSOLVED), 1L
+                "Dúvida quanto a utilização do Elasticsearch",
+                "Como posso integrar minha API com o Elasticsearch para monitoração?",
+                Status.UNSOLVED, 1L
         );
 
         BDDMockito.given(this.userClientRequest.getUserById(1L))
@@ -657,9 +657,9 @@ public class TopicControllerIT {
     @Test
     void shouldFailWhenAttemptEditTopicOfUnknownAuthor() throws Exception {
         final TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO(
-                new Topic("Dúvida quanto a utilização do Elasticsearch",
-                        "Como posso integrar minha API com o Elasticsearch para monitoração?",
-                        Status.SOLVED), 1L
+                "Dúvida quanto a utilização do Elasticsearch",
+                "Como posso integrar minha API com o Elasticsearch para monitoração?",
+                Status.SOLVED, 1L
         );
 
         BDDMockito.given(this.userClientRequest.getUserById(3L))
@@ -697,9 +697,9 @@ public class TopicControllerIT {
     @Test
     void topicAuthorShouldEditSpecifiedTopicWithSuccessIfHasSuitableAuthority() throws Exception {
         final TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO(
-                new Topic("Dúvida na utilização do WebClient",
-                        "Como utilizar o WebClient para integração do serviço x?",
-                        Status.UNSOLVED), 1L
+                "Dúvida na utilização do WebClient",
+                "Como utilizar o WebClient para integração do serviço x?",
+                Status.UNSOLVED, 1L
         );
 
         BDDMockito.given(this.userClientRequest.getUserById(1L))
@@ -737,9 +737,9 @@ public class TopicControllerIT {
     @Test
     void userADMShouldEditTopicOfOtherAuthorWithSuccessIfHasSuitableAuthority() throws Exception {
         final TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO(
-                new Topic("Dúvida na utilização do RestTemplate",
-                        "Como utilizar o RestTemplate para integração do serviço x?",
-                        Status.UNSOLVED), 1L
+                "Dúvida na utilização do RestTemplate",
+                "Como utilizar o RestTemplate para integração do serviço x?",
+                Status.UNSOLVED, 1L
         );
 
         BDDMockito.given(this.userClientRequest.getUserById(3L))
@@ -777,9 +777,9 @@ public class TopicControllerIT {
     @Test
     void userMODShouldEditTopicOfOtherAuthorWithSuccessIfHasSuitableAuthority() throws Exception {
         final TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO(
-                new Topic("Dúvida na utilização da API de validação do Spring",
-                        "Quais são as anotações da API de validação do Spring?",
-                        Status.UNSOLVED), 1L
+                "Dúvida na utilização da API de validação do Spring",
+                "Quais são as anotações da API de validação do Spring?",
+                Status.UNSOLVED, 1L
         );
 
         BDDMockito.given(this.userClientRequest.getUserById(2L))
@@ -825,7 +825,7 @@ public class TopicControllerIT {
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isForbidden());
 
-        Assertions.assertEquals(4, this.topicRepository.findAll().size());
+        Assertions.assertEquals(5, this.topicRepository.findAll().size());
 
         BDDMockito.verifyNoInteractions(this.userClientRequest);
 
@@ -844,7 +844,7 @@ public class TopicControllerIT {
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isBadRequest());
 
-        Assertions.assertEquals(4, this.topicRepository.findAll().size());
+        Assertions.assertEquals(5, this.topicRepository.findAll().size());
 
         BDDMockito.verifyNoInteractions(this.userClientRequest);
 
@@ -866,7 +866,7 @@ public class TopicControllerIT {
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isNotFound());
 
-        Assertions.assertEquals(4, this.topicRepository.findAll().size());
+        Assertions.assertEquals(5, this.topicRepository.findAll().size());
 
         BDDMockito.verify(this.userClientRequest).getUserById(1L);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
@@ -889,7 +889,7 @@ public class TopicControllerIT {
                 .andExpect(status().isIAmATeapot())
                 .andExpect(jsonPath("$.detail", is("Privilégio insuficiente")));
 
-        Assertions.assertEquals(4, this.topicRepository.findAll().size());
+        Assertions.assertEquals(5, this.topicRepository.findAll().size());
 
         BDDMockito.verify(this.userClientRequest).getUserById(1L);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
@@ -913,7 +913,7 @@ public class TopicControllerIT {
                 .andExpect(status().isOk())
                 .andExpect(content().json("{\"message\":\"HttpStatusCode OK\"}"));
 
-        Assertions.assertEquals(3, this.topicRepository.findAll().size());
+        Assertions.assertEquals(4, this.topicRepository.findAll().size());
 
         BDDMockito.verify(this.userClientRequest).getUserById(1L);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
@@ -937,7 +937,7 @@ public class TopicControllerIT {
                 .andExpect(status().isOk())
                 .andExpect(content().json("{\"message\":\"HttpStatusCode OK\"}"));
 
-        Assertions.assertEquals(2, this.topicRepository.findAll().size());
+        Assertions.assertEquals(3, this.topicRepository.findAll().size());
 
         BDDMockito.verify(this.userClientRequest).getUserById(3L);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
@@ -961,7 +961,7 @@ public class TopicControllerIT {
                 .andExpect(status().isOk())
                 .andExpect(content().json("{\"message\":\"HttpStatusCode OK\"}"));
 
-        Assertions.assertEquals(1, this.topicRepository.findAll().size());
+        Assertions.assertEquals(2, this.topicRepository.findAll().size());
 
         BDDMockito.verify(this.userClientRequest).getUserById(2L);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);

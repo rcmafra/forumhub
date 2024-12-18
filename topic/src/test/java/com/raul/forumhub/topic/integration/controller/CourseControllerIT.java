@@ -1,4 +1,4 @@
-package com.raul.forumhub.topic.integration;
+package com.raul.forumhub.topic.integration.controller;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -6,7 +6,7 @@ import com.raul.forumhub.topic.domain.Course;
 import com.raul.forumhub.topic.dto.request.CourseCreateDTO;
 import com.raul.forumhub.topic.dto.request.CourseUpdateDTO;
 import com.raul.forumhub.topic.repository.CourseRepository;
-import com.raul.forumhub.topic.utility.TestsHelper;
+import com.raul.forumhub.topic.util.TestsHelper;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;

@@ -8,7 +8,7 @@ import com.raul.forumhub.topic.dto.response.GetAnswerDTO;
 import com.raul.forumhub.topic.exception.handler.ExceptionResponseHandler;
 import com.raul.forumhub.topic.security.TopicSecurityConfig;
 import com.raul.forumhub.topic.service.AnswerService;
-import com.raul.forumhub.topic.utility.TestsHelper;
+import com.raul.forumhub.topic.util.TestsHelper;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
