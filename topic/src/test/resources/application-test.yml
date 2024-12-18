@@ -7,25 +7,25 @@ spring:
     driver:
       class: org.h2.Driver
 
-  #Show formated SQL statements
+#Show formated SQL statements
   jpa:
     show-sql: true
     properties:
       hibernate:
         format_sql: true
 
-  #Flyway configuration
+#Flyway configuration
   flyway:
     enabled: false
 
-  #Authorization server configuration
+#Authorization server configuration
   security:
     oauth2:
       resourceserver:
         jwt:
           issuer-uri: http://127.0.0.1:8082
 
-      #Client User API registration
+#Client User API registration
       client:
         registration:
           forumhub-user:
@@ -40,8 +40,11 @@ spring:
           auth-server:
             issuer-uri: http://127.0.0.1:8082
 
-logging:
-  level:
-    org:
-      springframework:
-        security: trace
+#User client URL
+forumhub:
+  client:
+    user:
+      schema: http
+      host: 127.0.0.1
+      port: 8081
+
