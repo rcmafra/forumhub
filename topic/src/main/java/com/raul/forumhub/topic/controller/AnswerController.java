@@ -7,6 +7,7 @@ import com.raul.forumhub.topic.dto.response.HttpMessageDefault;
 import com.raul.forumhub.topic.security.IsAuthenticated;
 import com.raul.forumhub.topic.service.AnswerService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -31,7 +32,7 @@ public class AnswerController {
         Long user_id = Long.parseLong(jwt.getClaim("user_id"));
         this.answerService.answerTopic(topic_id, user_id, answerTopicDTO);
 
-        return ResponseEntity.ok(new HttpMessageDefault("HttpStatusCode OK"));
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @IsAuthenticated
@@ -48,7 +49,7 @@ public class AnswerController {
     @PreAuthorize("hasAuthority('SCOPE_answer:edit')")
     @PutMapping("/{topic_id}/answers")
     public ResponseEntity<GetAnswerDTO> updateAnswer(@PathVariable Long topic_id, @RequestParam Long answer_id,
-                                                     @AuthenticationPrincipal Jwt jwt, @RequestBody AnswerUpdateDTO answerUpdateDTO){
+                                                     @AuthenticationPrincipal Jwt jwt, @Valid @RequestBody AnswerUpdateDTO answerUpdateDTO){
 
         Long user_id = Long.parseLong(jwt.getClaim("user_id"));
         GetAnswerDTO getAnswerDTO = this.answerService.updateAnswer(topic_id, answer_id, user_id, answerUpdateDTO);
