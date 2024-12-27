@@ -7,9 +7,9 @@ import lombok.*;
 @Table(schema = "hub")
 @Getter
 @Setter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Builder
 public class Profile {
 
@@ -20,7 +20,6 @@ public class Profile {
     @Enumerated(EnumType.STRING)
     @Column(name = "profile")
     private ProfileName profileName;
-
 
     public enum ProfileName {
         ADM,
