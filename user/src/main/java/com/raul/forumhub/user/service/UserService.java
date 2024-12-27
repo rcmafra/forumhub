@@ -5,6 +5,7 @@ import com.raul.forumhub.user.domain.User;
 import com.raul.forumhub.user.dto.request.UserCreateDTO;
 import com.raul.forumhub.user.dto.request.UserUpdateDTO;
 import com.raul.forumhub.user.dto.response.UserDetailedInfo;
+import com.raul.forumhub.user.dto.response.UserSummaryInfo;
 import com.raul.forumhub.user.exception.InstanceNotFoundException;
 import com.raul.forumhub.user.respository.ProfileRepository;
 import com.raul.forumhub.user.respository.UserRepository;
@@ -30,8 +31,14 @@ public class UserService {
 
 
     public void createUser(UserCreateDTO userCreateDTO) {
-        Profile profile = this.getProfileByName(Profile.ProfileName.BASIC);
-        User user = new User(userCreateDTO);
+        Profile profile = this.findProfileByName(Profile.ProfileName.BASIC);
+        User user = User.builder()
+                .firstName(userCreateDTO.firstName())
+                .lastName(userCreateDTO.lastName())
+                .username(userCreateDTO.username())
+                .email(userCreateDTO.email())
+                .password(userCreateDTO.password())
+                .build();
 
         user.setProfile(profile);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -39,36 +46,34 @@ public class UserService {
         this.userRepository.save(user);
     }
 
-    public User getInfoUser(Long user_id) {
+    public User getDetailedInfoUser(Long user_id) {
         return this.getUserById(user_id);
     }
 
-    public Page<UserDetailedInfo> usersList(Pageable pageable){
-        return this.userRepository.findAll(pageable).map(UserDetailedInfo::new);
+    public Page<UserSummaryInfo> usersList(Pageable pageable) {
+        return this.userRepository.findAll(pageable).map(UserSummaryInfo::new);
     }
 
-    public UserDetailedInfo updateUser(Long user_id, String claimUserRole, UserUpdateDTO userUpdateDTO) {
+    public UserDetailedInfo updateUser(Long user_id, Profile.ProfileName claimUserRole, UserUpdateDTO userUpdateDTO) {
         User user = this.getUserById(user_id);
-        Profile profile = this.getProfileByName(userUpdateDTO.user().getProfile().getProfileName());
+        Profile profile = this.findProfileByName(userUpdateDTO.profileName());
 
-        user.setFirstName(userUpdateDTO.user().getFirstName());
-        user.setLastName(userUpdateDTO.user().getLastName());
-        user.setUsername(userUpdateDTO.user().getUsername());
-        user.setEmail(userUpdateDTO.user().getEmail());
+        user.setUsername(userUpdateDTO.username());
+        user.setEmail(userUpdateDTO.email());
 
-        if(claimUserRole.equals(Profile.ProfileName.ADM.name())){
+        if (claimUserRole.equals(Profile.ProfileName.ADM)) {
             user.setProfile(profile);
-            user.setAccountNonExpired(userUpdateDTO.user().getIsAccountNonExpired());
-            user.setAccountNonLocked(userUpdateDTO.user().getIsAccountNonLocked());
-            user.setCredentialsNonExpired(userUpdateDTO.user().getIsCredentialsNonExpired());
-            user.setEnabled(userUpdateDTO.user().getIsEnabled());
+            user.setAccountNonExpired(userUpdateDTO.accountNonExpired());
+            user.setAccountNonLocked(userUpdateDTO.accountNonLocked());
+            user.setCredentialsNonExpired(userUpdateDTO.credentialsNonExpired());
+            user.setEnabled(userUpdateDTO.enabled());
         }
 
         userRepository.save(user);
         return new UserDetailedInfo(user);
     }
 
-    public void deleteUser(Long user_id){
+    public void deleteUser(Long user_id) {
         User user = this.getUserById(user_id);
         this.userRepository.delete(user);
     }
@@ -78,7 +83,7 @@ public class UserService {
     }
 
 
-    private Profile getProfileByName(Profile.ProfileName profileName){
-        return profileRepository.findByProfileName(profileName).orElseThrow();
+    private Profile findProfileByName(Profile.ProfileName profileName) {
+        return profileRepository.findByProfileName(profileName).orElseThrow(() -> new InstanceNotFoundException("Perfil não encontrado"));
     }
 }
