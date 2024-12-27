@@ -6,7 +6,7 @@ import com.raul.forumhub.topic.dto.request.CourseCreateDTO;
 import com.raul.forumhub.topic.dto.request.CourseUpdateDTO;
 import com.raul.forumhub.topic.dto.response.GetCourseCollection;
 import com.raul.forumhub.topic.dto.response.GetCourseDTO;
-import com.raul.forumhub.topic.exception.handler.ExceptionResponseHandler;
+import com.raul.forumhub.topic.exception.handler.GlobalExceptionHandler;
 import com.raul.forumhub.topic.security.TopicSecurityConfig;
 import com.raul.forumhub.topic.service.CourseService;
 import com.raul.forumhub.topic.util.TestsHelper;
@@ -36,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest
 @ActiveProfiles(value = "test")
 @ContextConfiguration(classes = {CourseController.class,
-        TopicSecurityConfig.class, ExceptionResponseHandler.class})
+        TopicSecurityConfig.class, GlobalExceptionHandler.class})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class CourseControllerTest {
 

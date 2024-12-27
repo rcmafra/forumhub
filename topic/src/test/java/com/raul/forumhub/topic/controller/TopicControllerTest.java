@@ -6,7 +6,7 @@ import com.raul.forumhub.topic.domain.Topic;
 import com.raul.forumhub.topic.dto.request.TopicCreateDTO;
 import com.raul.forumhub.topic.dto.request.TopicUpdateDTO;
 import com.raul.forumhub.topic.dto.response.GetTopicDTO;
-import com.raul.forumhub.topic.exception.handler.ExceptionResponseHandler;
+import com.raul.forumhub.topic.exception.handler.GlobalExceptionHandler;
 import com.raul.forumhub.topic.security.TopicSecurityConfig;
 import com.raul.forumhub.topic.service.TopicService;
 import com.raul.forumhub.topic.util.TestsHelper;
@@ -40,7 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest
 @ActiveProfiles(value = "test")
 @ContextConfiguration(classes = {TopicController.class,
-        TopicSecurityConfig.class, ExceptionResponseHandler.class})
+        TopicSecurityConfig.class, GlobalExceptionHandler.class})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class TopicControllerTest {
 
@@ -99,10 +99,7 @@ class TopicControllerTest {
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
                                 .writeValueAsString(topicCreateDTO)))
-                .andExpectAll(status().isCreated(),
-                        content().string("{\"message\":\"HttpStatusCode OK\"}")
-
-                );
+                .andExpect(status().isCreated());
 
         BDDMockito.verify(this.topicService).createTopic(topicCreateDTO, 1L);
         BDDMockito.verifyNoMoreInteractions(this.topicService);
@@ -205,8 +202,8 @@ class TopicControllerTest {
                 .andExpect(jsonPath("$..getTopicDTOList[0].[?(@.status == \"SOLVED\")]").exists())
                 .andExpect(jsonPath("$..getTopicDTOList[1].[?(@.id == 2)]").exists())
                 .andExpect(jsonPath("$..getTopicDTOList[1].[?(@.status == \"UNSOLVED\")]").exists())
-                .andExpect(jsonPath("$..page.[?(@.number == 0)]").exists())
                 .andExpect(jsonPath("$..getTopicDTOList.length()", is(2)))
+                .andExpect(jsonPath("$..page.[?(@.number == 0)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.size == 2)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.totalElements == 2)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.totalPages == 1)]").exists());
@@ -243,8 +240,8 @@ class TopicControllerTest {
                 .andExpect(jsonPath("$..getTopicDTOList[0].[?(@.id == 3)]").exists())
                 .andExpect(jsonPath("$..getTopicDTOList[1].[?(@.id == 1)]").exists())
                 .andExpect(jsonPath("$..getTopicDTOList[2].[?(@.id == 2)]").exists())
-                .andExpect(jsonPath("$..page.[?(@.number == 0)]").exists())
                 .andExpect(jsonPath("$..getTopicDTOList.length()", is(3)))
+                .andExpect(jsonPath("$..page.[?(@.number == 0)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.size == 10)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.totalElements == 3)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.totalPages == 1)]").exists());

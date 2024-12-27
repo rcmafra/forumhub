@@ -5,7 +5,7 @@ import com.raul.forumhub.topic.domain.Answer;
 import com.raul.forumhub.topic.dto.request.AnswerTopicDTO;
 import com.raul.forumhub.topic.dto.request.AnswerUpdateDTO;
 import com.raul.forumhub.topic.dto.response.GetAnswerDTO;
-import com.raul.forumhub.topic.exception.handler.ExceptionResponseHandler;
+import com.raul.forumhub.topic.exception.handler.GlobalExceptionHandler;
 import com.raul.forumhub.topic.security.TopicSecurityConfig;
 import com.raul.forumhub.topic.service.AnswerService;
 import com.raul.forumhub.topic.util.TestsHelper;
@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest
 @ActiveProfiles(value = "test")
 @ContextConfiguration(classes = {AnswerController.class,
-        TopicSecurityConfig.class, ExceptionResponseHandler.class})
+        TopicSecurityConfig.class, GlobalExceptionHandler.class})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AnswerControllerTest {
 
@@ -88,8 +88,7 @@ public class AnswerControllerTest {
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
                                 .writeValueAsString(answerTopicDTO)))
-                .andExpectAll(status().isOk())
-                .andExpect(content().string("{\"message\":\"HttpStatusCode OK\"}"));
+                .andExpectAll(status().isCreated());
 
         BDDMockito.verify(this.answerService).answerTopic(1L, 1L, answerTopicDTO);
         BDDMockito.verifyNoMoreInteractions(this.answerService);
