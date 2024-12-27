@@ -45,7 +45,7 @@ public class CourseController {
     @PreAuthorize("hasRole('ADM') and hasAuthority('SCOPE_course:edit')")
     @PutMapping
     public  ResponseEntity<GetCourseDTO> updateNameCourse(@RequestParam String courseName,
-                                                          @RequestBody CourseUpdateDTO courseUpdateDTO){
+                                                          @Valid @RequestBody CourseUpdateDTO courseUpdateDTO){
         Assert.hasText(courseName, "O nome do curso não pode ser vazio");
 
         GetCourseDTO getCourseDTO = this.courseService.updateNameCourse(courseName, courseUpdateDTO);
