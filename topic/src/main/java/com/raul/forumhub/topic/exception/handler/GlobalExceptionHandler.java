@@ -6,7 +6,6 @@ import com.raul.forumhub.topic.exception.RestClientException;
 import com.raul.forumhub.topic.exception.ValidationException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.hibernate.exception.DataException;
 import org.hibernate.exception.GenericJDBCException;
@@ -20,6 +19,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.TransactionException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -29,7 +29,7 @@ import java.time.LocalDateTime;
 import java.util.Locale;
 
 @RestControllerAdvice
-public class ExceptionResponseHandler {
+public class GlobalExceptionHandler {
 
     public HttpHeaders headers() {
         HttpHeaders headers = new HttpHeaders();
@@ -38,12 +38,18 @@ public class ExceptionResponseHandler {
         return headers;
     }
 
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    private ResponseEntity<ExceptionEntity> paramValidationExceptionResolver(MethodArgumentNotValidException ex, HttpServletRequest request) {
+        String detail = ex.getBindingResult().getAllErrors().stream().findFirst().orElseThrow().getDefaultMessage();
+        ExceptionEntity entity = new ExceptionEntity(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(),
+                "Falha de validação", detail, request.getRequestURI());
+        return new ResponseEntity<>(entity, headers(), HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(ConstraintViolationException.class)
     private ResponseEntity<ExceptionEntity> constraintExceptionResolver(ConstraintViolationException ex, HttpServletRequest request) {
-        String detail = ex.getConstraintViolations().stream().map(ConstraintViolation::getMessageTemplate)
-                .findFirst().orElse("Erro de violação de constraint");
         ExceptionEntity entity = new ExceptionEntity(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(),
-                "Erro de constraint", detail, request.getRequestURI());
+                "Erro de constraint", "Falha de constraint durante a persistência", request.getRequestURI());
         return new ResponseEntity<>(entity, headers(), HttpStatus.BAD_REQUEST);
     }
 
