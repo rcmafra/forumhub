@@ -8,34 +8,34 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bde2c04d-06da-44ad-9010-f6df11e2d528" name="Changes" comment="Remoção do mock UserClientRequest em cenários desnecessário e validação de invocação desse mock">
-      <change afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/util/PermissionUtils.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/exception/handler/GlobalExceptionHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/topic/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/client/UserClientRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/client/UserClientRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/controller/AnswerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/controller/AnswerController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/controller/TopicController.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/controller/TopicController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/domain/Answer.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/domain/Answer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/domain/Author.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/domain/Author.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/domain/Course.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/domain/Course.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/domain/Profile.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/domain/Profile.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/domain/Topic.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/domain/Topic.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/dto/request/AnswerTopicDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/dto/request/AnswerTopicDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/dto/request/AnswerUpdateDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/dto/request/AnswerUpdateDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/dto/request/CourseCreateDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/dto/request/CourseCreateDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/dto/request/TopicCreateDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/dto/request/TopicCreateDTO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/dto/request/TopicUpdateDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/dto/request/TopicUpdateDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/repository/AnswerRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/repository/AnswerRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/service/AnswerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/service/AnswerService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/service/TopicService.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/service/TopicService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/utility/AuthorizationValidate.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/resources/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/resources/application-dev.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/exception/handler/ExceptionResponseHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/exception/handler/GlobalExceptionHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/topic/src/test/java/com/raul/forumhub/topic/controller/AnswerControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/test/java/com/raul/forumhub/topic/controller/AnswerControllerTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/topic/src/test/java/com/raul/forumhub/topic/controller/CourseControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/test/java/com/raul/forumhub/topic/controller/CourseControllerTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/topic/src/test/java/com/raul/forumhub/topic/controller/TopicControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/test/java/com/raul/forumhub/topic/controller/TopicControllerTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/test/java/com/raul/forumhub/topic/integration/AnswerControllerIT.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/test/java/com/raul/forumhub/topic/integration/controller/AnswerControllerIT.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/test/java/com/raul/forumhub/topic/integration/CourseControllerIT.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/test/java/com/raul/forumhub/topic/integration/controller/CourseControllerIT.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/test/java/com/raul/forumhub/topic/integration/TopicControllerIT.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/test/java/com/raul/forumhub/topic/integration/controller/TopicControllerIT.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/test/java/com/raul/forumhub/topic/utility/TestsHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/test/java/com/raul/forumhub/topic/util/TestsHelper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/test/resources/application-test.yml" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/test/resources/application-test.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/topic/src/test/java/com/raul/forumhub/topic/integration/controller/AnswerControllerIT.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/test/java/com/raul/forumhub/topic/integration/controller/AnswerControllerIT.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/topic/src/test/java/com/raul/forumhub/topic/integration/controller/CourseControllerIT.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/test/java/com/raul/forumhub/topic/integration/controller/CourseControllerIT.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/topic/src/test/java/com/raul/forumhub/topic/integration/controller/TopicControllerIT.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/test/java/com/raul/forumhub/topic/integration/controller/TopicControllerIT.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/user/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/controller/UserController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/domain/Profile.java" beforeDir="false" afterPath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/domain/Profile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/exception/handler/ExceptionResponseHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/exception/handler/ExceptionResponseHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/respository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/respository/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/domain/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/domain/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/dto/request/UserCreateDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/dto/request/UserCreateDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/dto/request/UserUpdateDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/dto/request/UserUpdateDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/dto/response/UserSummaryInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/dto/response/UserSummaryInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/exception/handler/ExceptionResponseHandler.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/service/UserService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -249,14 +249,15 @@
     "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
     "Application.Application-auth-server-dev.executor": "Run",
     "Application.Application-dev.executor": "Run",
-    "Application.Application-topic-dev.executor": "Debug",
-    "Application.Application-user-dev.executor": "Debug",
+    "Application.Application-topic-dev.executor": "Run",
+    "Application.Application-user-dev.executor": "Run",
     "Application.Application.executor": "Run",
     "Application.ForumHubApplication.executor": "Run",
     "Application.app.executor": "Run",
     "Attach to process.pid 4128.executor": "ProcessAttachDebug",
     "Downloaded.Files.Path.Enabled": "false",
     "JUnit.AnswerControllerIT.executor": "Run",
+    "JUnit.AnswerControllerIT.shouldFailIfSolutionPropertyIsEmptyWhenEditAnswer.executor": "Debug",
     "JUnit.AnswerControllerIT.shouldFailToAnswerTopicIfUnauthenticated.executor": "Run",
     "JUnit.AnswerControllerIT.shouldFailToMarkAnswerBestIfYetNotExistsAnswer.executor": "Debug",
     "JUnit.AnswerControllerTest.answerAuthorShouldEditSpecifiedAnswerWithSuccessIfHasSuitableAuthority.executor": "Run",
@@ -268,6 +269,7 @@
     "JUnit.AnswerServiceTest.shouldFailToMarkAnswerBestIfYetNotExistsAnswer.executor": "Debug",
     "JUnit.CourseControllerIT.executor": "Run",
     "JUnit.CourseControllerTest.executor": "Run",
+    "JUnit.CourseControllerTest.shouldCreateCourseWithSuccessIfAuthenticatedAndHasSuitableAuthority.executor": "Debug",
     "JUnit.CourseRepositoryIT.executor": "Run",
     "JUnit.CourseRepositoryIT.shouldFindCourseByNameWithSuccessIfExists.executor": "Run",
     "JUnit.CourseRepositoryIT.shouldReturnOptionalEmptyWhenSearchCourseByNameAndHimNotExists.executor": "Run",
@@ -276,11 +278,12 @@
     "JUnit.CourseServiceTest.executor": "Run",
     "JUnit.TopicControllerIT.executor": "Run",
     "JUnit.TopicControllerIT.shouldFailToCreateTopicIfTitlePropertyExceedsLimit.executor": "Run",
-    "JUnit.TopicControllerIT.shouldFailToCreateTopicIfUnauthenticated.executor": "Debug",
+    "JUnit.TopicControllerIT.shouldFailToCreateTopicIfUnauthenticated.executor": "Run",
     "JUnit.TopicControllerIT.shouldFailWhenAttemptEditTopicOfUnknownAuthor.executor": "Run",
     "JUnit.TopicControllerTest.executor": "Run",
     "JUnit.TopicControllerTest.shouldCreateTopicWithSuccessIfAuthenticated.executor": "Run",
-    "JUnit.TopicControllerTest.shouldEditTopicWithSuccessIfUserHasSuitableAuthority.executor": "Run",
+    "JUnit.TopicControllerTest.shouldDeleteTopicWithSuccessIfUserHasSuitableAuthority.executor": "Debug",
+    "JUnit.TopicControllerTest.shouldEditTopicWithSuccessIfUserHasSuitableAuthority.executor": "Debug",
     "JUnit.TopicControllerTest.shouldFailToCreateTopicIfUnauthenticated.executor": "Run",
     "JUnit.TopicControllerTest.shouldReturnTheSpecifiedTopicWithSuccessful.executor": "Run",
     "JUnit.TopicControllerTest.topicAuthorShouldEditSpecifiedTopicWithSuccessIfHasSuitableAuthority.executor": "Debug",
@@ -307,6 +310,13 @@
     "JUnit.UserClientRequestTest.shouldReturn503WhenRequestSummarizedInfoUser.executor": "Run",
     "JUnit.UserClientRequestTest.shouldThrowExceptionWhenReceiveTimeoutInTheRequestWithClient.executor": "Run",
     "JUnit.UserClientRequestTest.shouldThrowExceptionWhenRequestingInfoUserAndHimNotExists.executor": "Run",
+    "JUnit.UserControllerIT.executor": "Run",
+    "JUnit.UserControllerIT.shouldFailIfFirstNamePropertyIsEmptyWhenCreateUser.executor": "Debug",
+    "JUnit.UserControllerIT.shouldFailIfPasswordPropertyIsEmptyWhenCreateUser.executor": "Debug",
+    "JUnit.UserControllerIT.shouldFailToCreateUserIfBasicProfileNotExists.executor": "Run",
+    "JUnit.UserControllerTest.basicUserShouldGetDetailedInfoYourUserWithSuccessIfHasSuitableAuthority.executor": "Run",
+    "JUnit.UserControllerTest.executor": "Run",
+    "JUnit.UserControllerTest.modUserShouldToRequestTwoUsersSortedByFirstNameWithSuccess.executor": "Run",
     "JUnit.controller in topic.executor": "Run",
     "JUnit.integration in topic (1).executor": "Run",
     "JUnit.integration in topic.executor": "Run",
@@ -378,7 +388,7 @@
       <recent name="com.raul.forumhub.user.respository" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.java in topic">
+  <component name="RunManager" selected="JUnit.AnswerControllerIT.shouldFailIfSolutionPropertyIsEmptyWhenEditAnswer">
     <configuration name="Application-auth-server-dev" type="Application" factoryName="Application" singleton="true">
       <option name="ALTERNATIVE_JRE_PATH" value="$PROJECT_DIR$/../../Program Files/Java/jdk-17" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -412,96 +422,64 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="CourseRepositoryIT.shouldReturnOptionalEmptyWhenSearchCourseByNameAndHimNotExists" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="AnswerControllerIT.shouldFailIfSolutionPropertyIsEmptyWhenEditAnswer" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="topic" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.raul.forumhub.topic.integration.repository.*" />
+          <option name="PATTERN" value="com.raul.forumhub.topic.integration.controller.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="com.raul.forumhub.topic.integration.repository" />
-      <option name="MAIN_CLASS_NAME" value="com.raul.forumhub.topic.integration.repository.CourseRepositoryIT" />
-      <option name="METHOD_NAME" value="shouldReturnOptionalEmptyWhenSearchCourseByNameAndHimNotExists" />
+      <option name="PACKAGE_NAME" value="com.raul.forumhub.topic.integration.controller" />
+      <option name="MAIN_CLASS_NAME" value="com.raul.forumhub.topic.integration.controller.AnswerControllerIT" />
+      <option name="METHOD_NAME" value="shouldFailIfSolutionPropertyIsEmptyWhenEditAnswer" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="UserClientRequestTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="topic" />
+    <configuration name="UserControllerIT" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="user" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.raul.forumhub.topic.client.*" />
+          <option name="PATTERN" value="com.raul.forumhub.user.controller.integration.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="com.raul.forumhub.topic.client" />
-      <option name="MAIN_CLASS_NAME" value="com.raul.forumhub.topic.client.UserClientRequestTest" />
+      <option name="PACKAGE_NAME" value="com.raul.forumhub.user.controller.integration" />
+      <option name="MAIN_CLASS_NAME" value="com.raul.forumhub.user.controller.integration.UserControllerIT" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="UserClientRequestTest.shouldReturn200WhenRequestSummarizedInfoUser" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="topic" />
+    <configuration name="UserControllerIT.shouldFailIfPasswordPropertyIsEmptyWhenCreateUser" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="user" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.raul.forumhub.topic.client.*" />
+          <option name="PATTERN" value="com.raul.forumhub.user.controller.integration.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="com.raul.forumhub.topic.client" />
-      <option name="MAIN_CLASS_NAME" value="com.raul.forumhub.topic.client.UserClientRequestTest" />
-      <option name="METHOD_NAME" value="shouldReturn200WhenRequestSummarizedInfoUser" />
+      <option name="PACKAGE_NAME" value="com.raul.forumhub.user.controller.integration" />
+      <option name="MAIN_CLASS_NAME" value="com.raul.forumhub.user.controller.integration.UserControllerIT" />
+      <option name="METHOD_NAME" value="shouldFailIfPasswordPropertyIsEmptyWhenCreateUser" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="UserClientRequestTest.shouldReturn200WhenRequestSummarizedInfoUser" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="topic" />
+    <configuration name="UserControllerIT.shouldFailToCreateUserIfBasicProfileNotExists" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="user" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.raul.forumhub.topic.client.*" />
+          <option name="PATTERN" value="com.raul.forumhub.user.controller.integration.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="com.raul.forumhub.topic.client" />
-      <option name="MAIN_CLASS_NAME" value="com.raul.forumhub.topic.client.UserClientRequestTest" />
-      <option name="METHOD_NAME" value="shouldReturn200WhenRequestSummarizedInfoUser(org.springframework.http.client.reactive.ClientHttpConnector)" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="UserClientRequestTest.shouldReturn200WhenRequestSummarizedInfoUser" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="topic" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.raul.forumhub.topic.client.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="com.raul.forumhub.topic.client" />
-      <option name="MAIN_CLASS_NAME" value="com.raul.forumhub.topic.client.UserClientRequestTest" />
-      <option name="METHOD_NAME" value="shouldReturn200WhenRequestSummarizedInfoUser(org.springframework.http.client.reactive.ClientHttpConnector)" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="UserClientRequestTest.shouldThrowExceptionWhenRequestingInfoUserAndHimNotExists" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="topic" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.raul.forumhub.topic.client.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="com.raul.forumhub.topic.client" />
-      <option name="MAIN_CLASS_NAME" value="com.raul.forumhub.topic.client.UserClientRequestTest" />
-      <option name="METHOD_NAME" value="shouldThrowExceptionWhenRequestingInfoUserAndHimNotExists" />
+      <option name="PACKAGE_NAME" value="com.raul.forumhub.user.controller.integration" />
+      <option name="MAIN_CLASS_NAME" value="com.raul.forumhub.user.controller.integration.UserControllerIT" />
+      <option name="METHOD_NAME" value="shouldFailToCreateUserIfBasicProfileNotExists" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -538,19 +516,19 @@
       <item itemvalue="Application.Application-auth-server-dev" />
       <item itemvalue="Application.Application-topic-dev" />
       <item itemvalue="Application.Application-user-dev" />
-      <item itemvalue="JUnit.CourseRepositoryIT.shouldReturnOptionalEmptyWhenSearchCourseByNameAndHimNotExists" />
-      <item itemvalue="JUnit.UserClientRequestTest.shouldThrowExceptionWhenRequestingInfoUserAndHimNotExists" />
+      <item itemvalue="JUnit.AnswerControllerIT.shouldFailIfSolutionPropertyIsEmptyWhenEditAnswer" />
       <item itemvalue="JUnit.java in topic" />
-      <item itemvalue="JUnit.UserClientRequestTest" />
-      <item itemvalue="JUnit.UserClientRequestTest.shouldReturn200WhenRequestSummarizedInfoUser" />
+      <item itemvalue="JUnit.UserControllerIT" />
+      <item itemvalue="JUnit.UserControllerIT.shouldFailIfPasswordPropertyIsEmptyWhenCreateUser" />
+      <item itemvalue="JUnit.UserControllerIT.shouldFailToCreateUserIfBasicProfileNotExists" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="JUnit.java in topic" />
-        <item itemvalue="JUnit.CourseRepositoryIT.shouldReturnOptionalEmptyWhenSearchCourseByNameAndHimNotExists" />
-        <item itemvalue="JUnit.UserClientRequestTest" />
-        <item itemvalue="JUnit.UserClientRequestTest.shouldThrowExceptionWhenRequestingInfoUserAndHimNotExists" />
-        <item itemvalue="JUnit.UserClientRequestTest.shouldReturn200WhenRequestSummarizedInfoUser" />
+        <item itemvalue="JUnit.AnswerControllerIT.shouldFailIfSolutionPropertyIsEmptyWhenEditAnswer" />
+        <item itemvalue="JUnit.UserControllerIT.shouldFailIfPasswordPropertyIsEmptyWhenCreateUser" />
+        <item itemvalue="JUnit.UserControllerIT" />
+        <item itemvalue="JUnit.UserControllerIT.shouldFailToCreateUserIfBasicProfileNotExists" />
       </list>
     </recent_temporary>
   </component>
@@ -1499,6 +1477,50 @@
     {
       "branch": "develop",
       "currentBranchFilter": true
+    },
+    {
+      "branch": "develop",
+      "currentBranchFilter": true
+    },
+    {
+      "branch": "develop",
+      "currentBranchFilter": true
+    },
+    {
+      "branch": "develop",
+      "currentBranchFilter": true
+    },
+    {
+      "branch": "develop",
+      "currentBranchFilter": true
+    },
+    {
+      "branch": "develop",
+      "currentBranchFilter": true
+    },
+    {
+      "branch": "develop",
+      "currentBranchFilter": true
+    },
+    {
+      "branch": "develop",
+      "currentBranchFilter": true
+    },
+    {
+      "branch": "develop",
+      "currentBranchFilter": true
+    },
+    {
+      "branch": "develop",
+      "currentBranchFilter": true
+    },
+    {
+      "branch": "develop",
+      "currentBranchFilter": true
+    },
+    {
+      "branch": "develop",
+      "currentBranchFilter": true
     }
   ],
   "lastFilter": {
@@ -1527,10 +1549,38 @@
           </properties>
           <option name="timeStamp" value="29" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/user/src/test/java/com/raul/forumhub/user/controller/integration/UserControllerIT.java</url>
+          <line>207</line>
+          <properties class="com.raul.forumhub.user.controller.integration.UserControllerIT" method="shouldFailToCreateUserIfBasicProfileNotExists">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="36" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/controller/AnswerController.java</url>
+          <line>50</line>
+          <properties class="com.raul.forumhub.topic.controller.AnswerController" method="updateAnswer">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="40" />
+        </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-web/6.3.1/spring-security-web-6.3.1-sources.jar!/org/springframework/security/web/access/AccessDeniedHandlerImpl.java</url>
           <line>58</line>
           <option name="timeStamp" value="19" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>jar://$MAVEN_REPOSITORY$/org/springframework/data/spring-data-commons/3.3.2/spring-data-commons-3.3.2-sources.jar!/org/springframework/data/web/PagedResourcesAssembler.java</url>
+          <line>217</line>
+          <option name="timeStamp" value="32" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>jar://$MAVEN_REPOSITORY$/org/springframework/data/spring-data-commons/3.3.2/spring-data-commons-3.3.2-sources.jar!/org/springframework/data/web/PagedResourcesAssembler.java</url>
+          <line>109</line>
+          <option name="timeStamp" value="33" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -1,7 +1,6 @@
 package com.raul.forumhub.user.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.raul.forumhub.user.dto.request.UserCreateDTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -14,6 +13,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@Builder
 public class User {
 
     @Id
@@ -21,21 +21,21 @@ public class User {
     @Column(name = "user_id")
     private Long id;
     @Column
-    @NotBlank(message = "O primeiro nome não pode ser vazio")
+    @NotBlank
     private String firstName;
     @Column
-    @NotBlank(message = "O ultimo nome não pode ser vazio")
+    @NotBlank
     private String lastName;
-    @Column
-    @NotBlank(message = "O username não pode ser vazio")
+    @Column(unique = true)
+    @NotBlank
     private String username;
     @Column(unique = true)
-    @Email(message = "Formato do email inválido")
-    @NotBlank(message = "O email não pode ser vazio")
+    @Email
+    @NotBlank
     private String email;
     @Column
     @JsonIgnore
-    @NotBlank(message = "A senha não pode ser vazia")
+    @NotBlank
     private String password;
     private boolean isAccountNonExpired;
     private boolean isAccountNonLocked;
@@ -44,34 +44,6 @@ public class User {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumns(@JoinColumn(name = "profile_id", foreignKey = @ForeignKey(name = "profile_id")))
     private Profile profile;
-
-    public User(UserCreateDTO userCreateDTO){
-        this.firstName = userCreateDTO.firstName();
-        this.lastName = userCreateDTO.lastName();
-        this.username = userCreateDTO.username();
-        this.email = userCreateDTO.email();
-        this.password = userCreateDTO.password();
-        this.isAccountNonExpired = true;
-        this.isAccountNonLocked = true;
-        this.isCredentialsNonExpired = true;
-        this.isEnabled = true;
-    }
-
-    public boolean getIsAccountNonExpired() {
-        return isAccountNonExpired;
-    }
-
-    public boolean getIsAccountNonLocked() {
-        return isAccountNonLocked;
-    }
-
-    public boolean getIsCredentialsNonExpired() {
-        return isCredentialsNonExpired;
-    }
-
-    public boolean getIsEnabled() {
-        return isEnabled;
-    }
 
 }
 
