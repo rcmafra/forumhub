@@ -21,10 +21,10 @@ public class Topic {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "topic_id")
     private Long id;
-    @NotBlank(message = "O título não pode ser vazio")
+    @NotBlank
     @Column(length = 150)
     private String title;
-    @NotBlank(message = "A pergunta não pode ser vazia")
+    @NotBlank
     @Column
     private String question;
     @Column

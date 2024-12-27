@@ -1,4 +1,8 @@
 package com.raul.forumhub.topic.dto.request;
 
-public record TopicCreateDTO(String title, String question, Long course_id) {
+import jakarta.validation.constraints.NotBlank;
+
+public record TopicCreateDTO(@NotBlank(message = "O título não pode ser vazio") String title,
+                             @NotBlank(message = "A pergunta não pode ser vazia") String question,
+                             Long course_id) {
 }

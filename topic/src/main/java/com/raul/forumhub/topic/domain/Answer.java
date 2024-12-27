@@ -26,7 +26,7 @@ public class Answer {
     @JsonIgnore
     @ToString.Exclude
     private Topic topic;
-    @NotBlank(message = "A solução não pode ser vazia")
+    @NotBlank
     @Column(nullable = false)
     private String solution;
     @Column
@@ -37,7 +37,7 @@ public class Answer {
     @JoinColumns(value = @JoinColumn(name = "user_id"), foreignKey = @ForeignKey(name = "user_id"))
     private Author author;
 
-    public Answer(String solution){
+    public Answer(String solution) {
         this.solution = solution;
         this.createdAt = LocalDateTime.now();
     }

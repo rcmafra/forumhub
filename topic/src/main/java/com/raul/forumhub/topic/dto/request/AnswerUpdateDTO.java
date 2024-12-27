@@ -1,4 +1,6 @@
 package com.raul.forumhub.topic.dto.request;
 
-public record AnswerUpdateDTO(String solution) {
+import jakarta.validation.constraints.NotBlank;
+
+public record AnswerUpdateDTO(@NotBlank(message = "A solução não pode ser vazia") String solution) {
 }
