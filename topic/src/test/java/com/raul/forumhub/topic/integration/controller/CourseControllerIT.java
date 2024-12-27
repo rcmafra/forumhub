@@ -291,8 +291,7 @@ public class CourseControllerIT {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.detail", is("O nome do curso não pode ser vazio")));
 
-        assertFalse(this.courseRepository.findCourseByName(
-                "").isPresent());
+        assertFalse(this.courseRepository.findCourseByName("").isPresent());
     }
 
     @Order(13)

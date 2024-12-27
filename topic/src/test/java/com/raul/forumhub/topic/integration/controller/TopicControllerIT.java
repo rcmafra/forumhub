@@ -131,8 +131,7 @@ public class TopicControllerIT {
 
         Assertions.assertEquals(4, this.topicRepository.findAll().size());
 
-        BDDMockito.verify(this.userClientRequest).getUserById(1L);
-        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
+        BDDMockito.verifyNoInteractions(this.userClientRequest);
 
     }
 
@@ -158,8 +157,7 @@ public class TopicControllerIT {
 
         Assertions.assertEquals(4, this.topicRepository.findAll().size());
 
-        BDDMockito.verify(this.userClientRequest).getUserById(1L);
-        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
+        BDDMockito.verifyNoInteractions(this.userClientRequest);
 
     }
 
@@ -266,10 +264,7 @@ public class TopicControllerIT {
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
                                 .writeValueAsString(topicCreateDTO)))
-                .andExpectAll(status().isCreated(),
-                        content().string("{\"message\":\"HttpStatusCode OK\"}")
-
-                );
+                .andExpectAll(status().isCreated());
 
         Assertions.assertEquals(5, this.topicRepository.findAll().size());
 
@@ -480,8 +475,7 @@ public class TopicControllerIT {
                 () -> assertEquals("Como utilizar o Feign Client para integração do serviço x?", topic.getQuestion())
         );
 
-        BDDMockito.verify(this.userClientRequest).getUserById(1L);
-        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
+        BDDMockito.verifyNoInteractions(this.userClientRequest);
 
     }
 
@@ -516,8 +510,7 @@ public class TopicControllerIT {
                 () -> assertEquals("Como utilizar o Feign Client para integração do serviço x?", topic.getQuestion())
         );
 
-        BDDMockito.verify(this.userClientRequest).getUserById(1L);
-        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
+        BDDMockito.verifyNoInteractions(this.userClientRequest);
 
     }
 

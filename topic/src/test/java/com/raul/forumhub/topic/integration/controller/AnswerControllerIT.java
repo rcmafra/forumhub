@@ -136,8 +136,7 @@ public class AnswerControllerIT {
                 () -> assertEquals(2, this.topicRepository.findById(1L).orElseThrow().getAnswers().size())
         );
 
-        BDDMockito.verify(this.userClientRequest).getUserById(1L);
-        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
+        BDDMockito.verifyNoInteractions(this.userClientRequest);
 
     }
 
@@ -211,8 +210,7 @@ public class AnswerControllerIT {
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
                                 .writeValueAsString(answerTopicDTO)))
-                .andExpectAll(status().isOk())
-                .andExpect(content().string("{\"message\":\"HttpStatusCode OK\"}"));
+                .andExpectAll(status().isCreated());
 
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
 
@@ -513,8 +511,7 @@ public class AnswerControllerIT {
                         .getSolution())
         );
 
-        BDDMockito.verify(this.userClientRequest).getUserById(2L);
-        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
+        BDDMockito.verifyNoInteractions(this.userClientRequest);
 
     }
 
