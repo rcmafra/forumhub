@@ -37,7 +37,7 @@ public class TopicController {
         Long user_id = Long.parseLong(jwt.getClaim("user_id"));
         this.topicService.createTopic(topicCreateDTO, user_id);
 
-        return new ResponseEntity<>(new HttpMessageDefault("HttpStatusCode OK"), HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping("/listAll")
@@ -55,7 +55,7 @@ public class TopicController {
 
     @PreAuthorize("hasAuthority('SCOPE_topic:edit')")
     @PutMapping
-    public ResponseEntity<GetTopicDTO> updateTopic(@RequestParam Long topic_id,  @Valid @RequestBody TopicUpdateDTO topicUpdateDTO,
+    public ResponseEntity<GetTopicDTO> updateTopic(@RequestParam Long topic_id, @Valid @RequestBody TopicUpdateDTO topicUpdateDTO,
                                                     @AuthenticationPrincipal Jwt jwt){
 
         Long user_id = Long.parseLong(jwt.getClaim("user_id"));
