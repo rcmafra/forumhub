@@ -38,7 +38,8 @@ public class UserController {
     public ResponseEntity<HttpMessageDefault> createUser(@Valid @RequestBody UserCreateDTO userCreateDTO) {
 
         this.userService.createUser(userCreateDTO);
-        return new ResponseEntity<>(new HttpMessageDefault("HttpStatusCode OK"), HttpStatus.CREATED);
+
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 
@@ -46,33 +47,34 @@ public class UserController {
     @GetMapping("/detailed-info")
     public ResponseEntity<UserDetailedInfo> getDetailedInfoUser(@RequestParam(required = false) Long user_id, @AuthenticationPrincipal Jwt jwt) {
 
-        String claimUserRole = jwt.getClaim("authority").toString().substring(5);
+        Profile.ProfileName claimUserRole =
+                Enum.valueOf(Profile.ProfileName.class, jwt.getClaim("authority").toString().substring(5));
+
         Long claimUserId = Long.parseLong(jwt.getClaim("user_id"));
 
-        boolean isADM = claimUserRole.equals(Profile.ProfileName.ADM.name());
-        boolean isMOD = claimUserRole.equals(Profile.ProfileName.MOD.name());
-        boolean isBASIC = claimUserRole.equals(Profile.ProfileName.BASIC.name());
+        boolean isADM = claimUserRole.equals(Profile.ProfileName.ADM);
+        boolean isMOD = claimUserRole.equals(Profile.ProfileName.MOD);
+        boolean isBASIC = claimUserRole.equals(Profile.ProfileName.BASIC);
 
         if (isADM || isMOD) {
-            return ResponseEntity.ok(new UserDetailedInfo(this.userService.getInfoUser(Objects.requireNonNullElse(user_id, claimUserId))));
+            return ResponseEntity.ok(new UserDetailedInfo(this.userService.getDetailedInfoUser(Objects.requireNonNullElse(user_id, claimUserId))));
         } else if (isBASIC && Objects.isNull(user_id)) {
-            return ResponseEntity.ok(new UserDetailedInfo(this.userService.getInfoUser(claimUserId)));
-        } else {
-            throw new MalFormatedParamUserException("Parâmetros fornecidos não esperado");
+            return ResponseEntity.ok(new UserDetailedInfo(this.userService.getDetailedInfoUser(claimUserId)));
         }
+        throw new MalFormatedParamUserException("Parâmetros fornecidos não esperado");
     }
 
     @IsAuthenticated
     @GetMapping("/summary-info")
     public ResponseEntity<UserSummaryInfo> getSummaryInfoUser(@RequestParam Long user_id) {
-        return ResponseEntity.ok(new UserSummaryInfo(this.userService.getInfoUser(user_id)));
+        return ResponseEntity.ok(new UserSummaryInfo(this.userService.getDetailedInfoUser(user_id)));
     }
 
 
     @PreAuthorize("hasAnyRole('MOD','ADM') and hasAuthority('SCOPE_user:readAll')")
     @GetMapping("/listAll")
-    public PagedModel<EntityModel<UserDetailedInfo>> usersList(@PageableDefault Pageable pageable,
-                                                               PagedResourcesAssembler<UserDetailedInfo> assembler) {
+    public PagedModel<EntityModel<UserSummaryInfo>> usersList(@PageableDefault Pageable pageable,
+                                                              PagedResourcesAssembler<UserSummaryInfo> assembler) {
 
         return assembler.toModel(userService.usersList(pageable));
     }
@@ -83,21 +85,22 @@ public class UserController {
     public ResponseEntity<UserDetailedInfo> updateUser(@RequestParam(required = false) Long user_id, @Valid @RequestBody UserUpdateDTO userUpdateDTO,
                                                        @AuthenticationPrincipal Jwt jwt) {
 
-        String claimUserRole = jwt.getClaim("authority").toString().substring(5);
+        Profile.ProfileName claimUserRole =
+                Enum.valueOf(Profile.ProfileName.class, jwt.getClaim("authority").toString().substring(5));
+
         Long claimUserId = Long.parseLong(jwt.getClaim("user_id"));
 
-        String myUserEditScope = Objects.isNull(jwt.getClaim("scope")) ? "" :
-                jwt.getClaimAsStringList("scope").stream()
-                        .filter(s -> s.equals("myuser:edit")).findFirst().orElse("");
+        boolean isADM = claimUserRole.equals(Profile.ProfileName.ADM);
+        boolean isMOD = claimUserRole.equals(Profile.ProfileName.MOD);
+        boolean isBASIC = claimUserRole.equals(Profile.ProfileName.BASIC);
 
 
-        if (myUserEditScope.equals("myuser:edit") && Objects.isNull(user_id)) {
+        if (isADM) {
+            return ResponseEntity.ok(this.userService.updateUser(Objects.requireNonNullElse(user_id, claimUserId), claimUserRole, userUpdateDTO));
+        } else if ((isBASIC || isMOD) && Objects.isNull(user_id)) {
             return ResponseEntity.ok(this.userService.updateUser(claimUserId, claimUserRole, userUpdateDTO));
-        } else if (claimUserRole.equals(Profile.ProfileName.ADM.name()) && Objects.nonNull(user_id)) {
-            return ResponseEntity.ok(this.userService.updateUser(user_id, claimUserRole, userUpdateDTO));
-        } else {
-            throw new MalFormatedParamUserException("Parâmetros fornecidos não esperado");
         }
+        throw new MalFormatedParamUserException("Parâmetros fornecidos não esperado");
     }
 
 
@@ -105,20 +108,27 @@ public class UserController {
     @DeleteMapping("/delete")
     public ResponseEntity<HttpMessageDefault> deleteUser(@RequestParam(required = false) Long user_id, @AuthenticationPrincipal Jwt jwt) {
 
-        String claimUserRole = jwt.getClaim("authority").toString().substring(5);
+        Profile.ProfileName claimUserRole =
+                Enum.valueOf(Profile.ProfileName.class, jwt.getClaim("authority")
+                        .toString().substring(5));
+
         Long claimUserId = Long.parseLong(jwt.getClaim("user_id"));
-        String myUserDeleteScope = jwt.getClaimAsStringList("scope").stream()
-                .filter(s -> s.equals("myuser:delete")).findFirst().orElse("");
 
-        if (myUserDeleteScope.equals("myuser:delete") && Objects.isNull(user_id)) {
+        boolean isBASIC = claimUserRole.equals(Profile.ProfileName.BASIC);
+        boolean isMOD = claimUserRole.equals(Profile.ProfileName.MOD);
+        boolean isADM = claimUserRole.equals(Profile.ProfileName.ADM);
+
+
+        if (isADM) {
+            this.userService.deleteUser(Objects.requireNonNullElse(user_id, claimUserId));
+            return ResponseEntity.ok(new HttpMessageDefault("HttpStatusCode OK"));
+        } else if ((isBASIC || isMOD) && Objects.isNull(user_id)) {
             this.userService.deleteUser(claimUserId);
-        } else if (claimUserRole.equals(Profile.ProfileName.ADM.name()) && Objects.nonNull(user_id)) {
-            this.userService.deleteUser(user_id);
-        } else {
-            throw new MalFormatedParamUserException("Parâmetros fornecidos não esperado");
+            return ResponseEntity.ok(new HttpMessageDefault("HttpStatusCode OK"));
         }
+        throw new MalFormatedParamUserException("Parâmetros fornecidos não esperado");
 
-        return ResponseEntity.ok(new HttpMessageDefault("HttpStatusCode OK"));
+
     }
 
 
