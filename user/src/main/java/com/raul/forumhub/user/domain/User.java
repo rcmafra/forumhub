@@ -35,7 +35,6 @@ public class User {
     private String email;
     @Column
     @JsonIgnore
-    @NotBlank
     private String password;
     private boolean isAccountNonExpired;
     private boolean isAccountNonLocked;
