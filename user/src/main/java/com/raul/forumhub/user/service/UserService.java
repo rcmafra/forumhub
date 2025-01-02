@@ -30,7 +30,7 @@ public class UserService {
     }
 
 
-    public void createUser(UserCreateDTO userCreateDTO) {
+    public void registerUser(UserCreateDTO userCreateDTO) {
         Profile profile = this.findProfileByName(Profile.ProfileName.BASIC);
         User user = User.builder()
                 .firstName(userCreateDTO.firstName())
@@ -38,6 +38,10 @@ public class UserService {
                 .username(userCreateDTO.username())
                 .email(userCreateDTO.email())
                 .password(userCreateDTO.password())
+                .isAccountNonExpired(true)
+                .isAccountNonLocked(true)
+                .isCredentialsNonExpired(true)
+                .isEnabled(true)
                 .build();
 
         user.setProfile(profile);
@@ -83,7 +87,7 @@ public class UserService {
     }
 
 
-    private Profile findProfileByName(Profile.ProfileName profileName) {
+    public Profile findProfileByName(Profile.ProfileName profileName) {
         return profileRepository.findByProfileName(profileName).orElseThrow(() -> new InstanceNotFoundException("Perfil não encontrado"));
     }
 }
