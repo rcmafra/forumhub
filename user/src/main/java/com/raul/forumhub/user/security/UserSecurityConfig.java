@@ -8,6 +8,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
@@ -37,7 +39,7 @@ public class UserSecurityConfig {
 
                     String userRoleAuthority = jwt.getClaim("authority");
 
-                    if(Objects.isNull(userRoleAuthority)) {
+                    if (Objects.isNull(userRoleAuthority)) {
                         userRoleAuthority = "ANONYMOUS";
                     }
 
@@ -52,6 +54,11 @@ public class UserSecurityConfig {
                 });
 
         return converter;
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
 

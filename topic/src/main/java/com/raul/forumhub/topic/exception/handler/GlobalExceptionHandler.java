@@ -34,7 +34,7 @@ public class GlobalExceptionHandler {
     public HttpHeaders headers() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PROBLEM_JSON);
-        headers.setContentLanguage(new Locale("Pt", "BR"));
+        headers.setContentLanguage(new Locale("pt", "br"));
         return headers;
     }
 

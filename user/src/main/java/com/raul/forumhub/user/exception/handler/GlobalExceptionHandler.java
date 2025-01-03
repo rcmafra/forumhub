@@ -5,6 +5,7 @@ import com.raul.forumhub.user.exception.MalFormatedParamUserException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.ValidationException;
 import org.hibernate.exception.DataException;
 import org.hibernate.exception.GenericJDBCException;
 import org.springframework.dao.DataAccessException;
@@ -32,13 +33,17 @@ public class GlobalExceptionHandler {
     public HttpHeaders headers() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PROBLEM_JSON);
-        headers.setContentLanguage(new Locale("Pt", "BR"));
+        headers.setContentLanguage(new Locale("pt", "br"));
         return headers;
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    private ResponseEntity<ExceptionEntity> paramValidationExceptionResolver(MethodArgumentNotValidException ex, HttpServletRequest request) {
-        String detail = ex.getBindingResult().getAllErrors().stream().findFirst().orElseThrow().getDefaultMessage();
+    @ExceptionHandler({MethodArgumentNotValidException.class, ValidationException.class})
+    private ResponseEntity<ExceptionEntity> paramValidationExceptionResolver(Exception ex, HttpServletRequest request) {
+        String detail =
+                ex instanceof MethodArgumentNotValidException argEx ?
+                        argEx.getBindingResult().getAllErrors().stream().findFirst().orElseThrow().getDefaultMessage() :
+                        ex instanceof ValidationException validEx ?
+                                validEx.getCause().getMessage() : "Falha de validação inesperada durante o processamento";
         ExceptionEntity entity = new ExceptionEntity(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(),
                 "Falha de validação", detail, request.getRequestURI());
         return new ResponseEntity<>(entity, headers(), HttpStatus.BAD_REQUEST);
