@@ -1,0 +1,22 @@
+#Database connection configuration
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;INIT=CREATE SCHEMA IF NOT EXISTS HUB
+    username:
+    password:
+    driver:
+      class: org.h2.Driver
+
+  #Show formated SQL statements
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  #Authorization server configuration
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://127.0.0.1:8082
