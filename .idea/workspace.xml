@@ -7,10 +7,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bde2c04d-06da-44ad-9010-f6df11e2d528" name="Changes" comment="First commit">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="bde2c04d-06da-44ad-9010-f6df11e2d528" name="Changes" comment="Alteração gitignore" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -521,7 +518,6 @@
       <path value="$PROJECT_DIR$" />
       <path value="$PROJECT_DIR$/user" />
     </ignored-roots>
-    <MESSAGE value="Ajustes nos manipuladores de exceções" />
     <MESSAGE value="Ajustes no versionamento das entidades no flyway" />
     <MESSAGE value="Adicionado dependência do h2database e jetbrains annotation para análise de código" />
     <MESSAGE value="Corrigido a criação de múltiplos beans para os repositories, dispensando a necessidade da propriedade spring.main.allow-bean-definition-overriding: true" />
@@ -546,7 +542,8 @@
     <MESSAGE value="Remoção do mock UserClientRequest em cenários desnecessário e validação de invocação desse mock" />
     <MESSAGE value="Docker compose config" />
     <MESSAGE value="First commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="First commit" />
+    <MESSAGE value="Alteração gitignore" />
+    <option name="LAST_COMMIT_MESSAGE" value="Alteração gitignore" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
   </component>
   <component name="WfRunsListSearchHistory">{
