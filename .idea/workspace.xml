@@ -7,7 +7,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bde2c04d-06da-44ad-9010-f6df11e2d528" name="Changes" comment="" />
+    <list default="true" id="bde2c04d-06da-44ad-9010-f6df11e2d528" name="Changes" comment="Docker compose config" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -31,6 +31,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="PREVIOUS_COMMIT_AUTHORS">
+      <list>
+        <option value="RaulMafra &lt;raulcesar.sm@gmail.com&gt;" />
+      </list>
+    </option>
     <option name="PUSH_TAGS">
       <GitPushTagMode>
         <option name="argument" value="--follow-tags" />
@@ -39,10 +44,11 @@
     </option>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="main" />
+        <entry key="$PROJECT_DIR$" value="develop" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="ROOT_SYNC" value="SYNC" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -50,12 +56,12 @@
     &quot;assignee&quot;: &quot;RaulMafra&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;git@github.com:RaulMafra/ForumHub.git&quot;,
-    &quot;accountId&quot;: &quot;fb224bce-08fc-4b9d-b4b0-10bf0d7425b7&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/rcmafra/forumhub.git",
+    "accountId": "5e1b42e5-cac8-411e-9751-317d1318a481"
   }
-}</component>
+}]]></component>
   <component name="HierarchyBrowserManager">
     <option name="HIDE_CLASSES_WHERE_METHOD_NOT_IMPLEMENTED" value="true" />
     <option name="SCOPE" value="All" />
@@ -214,109 +220,110 @@
     <option name="showScratchesAndConsoles" value="false" />
     <option name="sortKey" value="BY_TIME_DESCENDING" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
-    &quot;Application.Application-auth-server-dev.executor&quot;: &quot;Run&quot;,
-    &quot;Application.Application-dev.executor&quot;: &quot;Run&quot;,
-    &quot;Application.Application-topic-dev.executor&quot;: &quot;Run&quot;,
-    &quot;Application.Application-user-dev.executor&quot;: &quot;Run&quot;,
-    &quot;Application.Application.executor&quot;: &quot;Run&quot;,
-    &quot;Application.ForumHubApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Application.app.executor&quot;: &quot;Run&quot;,
-    &quot;Attach to process.pid 4128.executor&quot;: &quot;ProcessAttachDebug&quot;,
-    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
-    &quot;JUnit.AnswerControllerIT.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AnswerControllerIT.shouldFailIfSolutionPropertyIsEmptyWhenEditAnswer.executor&quot;: &quot;Debug&quot;,
-    &quot;JUnit.AnswerControllerIT.shouldFailToAnswerTopicIfUnauthenticated.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AnswerControllerIT.shouldFailToMarkAnswerBestIfYetNotExistsAnswer.executor&quot;: &quot;Debug&quot;,
-    &quot;JUnit.AnswerControllerTest.answerAuthorShouldEditSpecifiedAnswerWithSuccessIfHasSuitableAuthority.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AnswerControllerTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AnswerControllerTest.shouldAnswerTheTopicWithSuccessfully.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AnswerControllerTest.shouldEditAnswerWithSuccessIfUserHasSuitableAuthority.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AnswerServiceTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AnswerServiceTest.shouldFailToMarkAnswerBestIfAuthenticatedUserIsNotOwnerTopic.executor&quot;: &quot;Debug&quot;,
-    &quot;JUnit.AnswerServiceTest.shouldFailToMarkAnswerBestIfYetNotExistsAnswer.executor&quot;: &quot;Debug&quot;,
-    &quot;JUnit.CourseControllerIT.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.CourseControllerTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.CourseControllerTest.shouldCreateCourseWithSuccessIfAuthenticatedAndHasSuitableAuthority.executor&quot;: &quot;Debug&quot;,
-    &quot;JUnit.CourseRepositoryIT.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.CourseRepositoryIT.shouldFindCourseByNameWithSuccessIfExists.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.CourseRepositoryIT.shouldReturnOptionalEmptyWhenSearchCourseByNameAndHimNotExists.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.CourseRepositoryTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.CourseRepositoryTest.shouldFindCourseByNameWithSuccessIfExists.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.CourseServiceTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.TopicControllerIT.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.TopicControllerIT.shouldFailToCreateTopicIfTitlePropertyExceedsLimit.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.TopicControllerIT.shouldFailToCreateTopicIfUnauthenticated.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.TopicControllerIT.shouldFailWhenAttemptEditTopicOfUnknownAuthor.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.TopicControllerTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.TopicControllerTest.shouldCreateTopicWithSuccessIfAuthenticated.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.TopicControllerTest.shouldDeleteTopicWithSuccessIfUserHasSuitableAuthority.executor&quot;: &quot;Debug&quot;,
-    &quot;JUnit.TopicControllerTest.shouldEditTopicWithSuccessIfUserHasSuitableAuthority.executor&quot;: &quot;Debug&quot;,
-    &quot;JUnit.TopicControllerTest.shouldFailToCreateTopicIfUnauthenticated.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.TopicControllerTest.shouldReturnTheSpecifiedTopicWithSuccessful.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.TopicControllerTest.topicAuthorShouldEditSpecifiedTopicWithSuccessIfHasSuitableAuthority.executor&quot;: &quot;Debug&quot;,
-    &quot;JUnit.TopicRepositoryTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.TopicRepositoryTest.shouldReturnAllTopicsSortedAscendantByTitleWithSuccessful.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.TopicRepositoryTest.shouldReturnAllTopicsSortedDescendantByCreateDateWithSuccessful.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.TopicRepositoryTest.shouldReturnAllTopicsUnsortedWithSuccessful.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.TopicServiceTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.TopicServiceTest.shouldCreateTopicWithSuccessIfEverythingIsOK.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.TopicServiceTest.shouldFailIfQuestionPropertyIsEmptyWhenCreateTopic.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.TopicServiceTest.shouldFailIfTitlePropertyIsEmptyWhenCreateTopic.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.TopicServiceTest.shouldFailIfTitlePropertyIsEmptyWhenEditTopic.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.TopicServiceTest.shouldFailToCreateTopicIfCourseNotExists.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.TopicServiceTest.shouldFailToCreateTopicIfTitlePropertyIsGreaterThan150Chars.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.TopicServiceTest.shouldFailToCreateTopicIfUserServiceReturn404StatusCode.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.TopicServiceTest.shouldReturnAllTopicsSortedAscendantByTitleWithSuccessful.executor&quot;: &quot;Debug&quot;,
-    &quot;JUnit.TopicServiceTest.shouldReturnAllTopicsSortedDescendantByCreateDateWithSuccessful.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.TopicServiceTest.shouldReturnAllTopicsUnsortedWithSuccessful.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.UserClientRequestTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.UserClientRequestTest.shouldReturn200WhenRequestSummarizedInfoUser (1).executor&quot;: &quot;Debug&quot;,
-    &quot;JUnit.UserClientRequestTest.shouldReturn200WhenRequestSummarizedInfoUser.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.UserClientRequestTest.shouldReturn200WhenRequestSummarizedInfoUserWithSlowNetwork.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.UserClientRequestTest.shouldReturn200WhenRequestSummarizedInfoUserWithSlowNetworkx.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.UserClientRequestTest.shouldReturn503WhenRequestSummarizedInfoUser.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.UserClientRequestTest.shouldThrowExceptionWhenReceiveTimeoutInTheRequestWithClient.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.UserClientRequestTest.shouldThrowExceptionWhenRequestingInfoUserAndHimNotExists.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.UserControllerIT.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.UserControllerIT.shouldFailIfFirstNamePropertyIsEmptyWhenCreateUser.executor&quot;: &quot;Debug&quot;,
-    &quot;JUnit.UserControllerIT.shouldFailIfPasswordPropertyIsEmptyWhenCreateUser.executor&quot;: &quot;Debug&quot;,
-    &quot;JUnit.UserControllerIT.shouldFailToCreateUserIfBasicProfileNotExists.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.UserControllerTest.basicUserShouldGetDetailedInfoYourUserWithSuccessIfHasSuitableAuthority.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.UserControllerTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.UserControllerTest.modUserShouldToRequestTwoUsersSortedByFirstNameWithSuccess.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.controller in topic.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.integration in topic (1).executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.integration in topic.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.java in topic.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.topic in topic.executor&quot;: &quot;Run&quot;,
-    &quot;RESOURCE_BUNDLE_EXPRESSION_USED&quot;: &quot;&quot;,
-    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary&quot;: &quot;JUnit5&quot;,
-    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5&quot;: &quot;&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_directory_selection&quot;: &quot;C:/Projects/authorizationserver/src/main/java&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Projects/forumhub/authorization-server/src/main/java/com/raul/forumhub/auth/server&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.508046&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.project.maven.repository.indices&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
+    "Application.Application-auth-server-dev.executor": "Run",
+    "Application.Application-dev.executor": "Run",
+    "Application.Application-topic-dev.executor": "Run",
+    "Application.Application-user-dev.executor": "Run",
+    "Application.Application.executor": "Run",
+    "Application.ForumHubApplication.executor": "Run",
+    "Application.app.executor": "Run",
+    "Attach to process.pid 4128.executor": "ProcessAttachDebug",
+    "Downloaded.Files.Path.Enabled": "false",
+    "JUnit.AnswerControllerIT.executor": "Run",
+    "JUnit.AnswerControllerIT.shouldFailIfSolutionPropertyIsEmptyWhenEditAnswer.executor": "Debug",
+    "JUnit.AnswerControllerIT.shouldFailToAnswerTopicIfUnauthenticated.executor": "Run",
+    "JUnit.AnswerControllerIT.shouldFailToMarkAnswerBestIfYetNotExistsAnswer.executor": "Debug",
+    "JUnit.AnswerControllerTest.answerAuthorShouldEditSpecifiedAnswerWithSuccessIfHasSuitableAuthority.executor": "Run",
+    "JUnit.AnswerControllerTest.executor": "Run",
+    "JUnit.AnswerControllerTest.shouldAnswerTheTopicWithSuccessfully.executor": "Run",
+    "JUnit.AnswerControllerTest.shouldEditAnswerWithSuccessIfUserHasSuitableAuthority.executor": "Run",
+    "JUnit.AnswerServiceTest.executor": "Run",
+    "JUnit.AnswerServiceTest.shouldFailToMarkAnswerBestIfAuthenticatedUserIsNotOwnerTopic.executor": "Debug",
+    "JUnit.AnswerServiceTest.shouldFailToMarkAnswerBestIfYetNotExistsAnswer.executor": "Debug",
+    "JUnit.CourseControllerIT.executor": "Run",
+    "JUnit.CourseControllerTest.executor": "Run",
+    "JUnit.CourseControllerTest.shouldCreateCourseWithSuccessIfAuthenticatedAndHasSuitableAuthority.executor": "Debug",
+    "JUnit.CourseRepositoryIT.executor": "Run",
+    "JUnit.CourseRepositoryIT.shouldFindCourseByNameWithSuccessIfExists.executor": "Run",
+    "JUnit.CourseRepositoryIT.shouldReturnOptionalEmptyWhenSearchCourseByNameAndHimNotExists.executor": "Run",
+    "JUnit.CourseRepositoryTest.executor": "Run",
+    "JUnit.CourseRepositoryTest.shouldFindCourseByNameWithSuccessIfExists.executor": "Run",
+    "JUnit.CourseServiceTest.executor": "Run",
+    "JUnit.TopicControllerIT.executor": "Run",
+    "JUnit.TopicControllerIT.shouldFailToCreateTopicIfTitlePropertyExceedsLimit.executor": "Run",
+    "JUnit.TopicControllerIT.shouldFailToCreateTopicIfUnauthenticated.executor": "Run",
+    "JUnit.TopicControllerIT.shouldFailWhenAttemptEditTopicOfUnknownAuthor.executor": "Run",
+    "JUnit.TopicControllerTest.executor": "Run",
+    "JUnit.TopicControllerTest.shouldCreateTopicWithSuccessIfAuthenticated.executor": "Run",
+    "JUnit.TopicControllerTest.shouldDeleteTopicWithSuccessIfUserHasSuitableAuthority.executor": "Debug",
+    "JUnit.TopicControllerTest.shouldEditTopicWithSuccessIfUserHasSuitableAuthority.executor": "Debug",
+    "JUnit.TopicControllerTest.shouldFailToCreateTopicIfUnauthenticated.executor": "Run",
+    "JUnit.TopicControllerTest.shouldReturnTheSpecifiedTopicWithSuccessful.executor": "Run",
+    "JUnit.TopicControllerTest.topicAuthorShouldEditSpecifiedTopicWithSuccessIfHasSuitableAuthority.executor": "Debug",
+    "JUnit.TopicRepositoryTest.executor": "Run",
+    "JUnit.TopicRepositoryTest.shouldReturnAllTopicsSortedAscendantByTitleWithSuccessful.executor": "Run",
+    "JUnit.TopicRepositoryTest.shouldReturnAllTopicsSortedDescendantByCreateDateWithSuccessful.executor": "Run",
+    "JUnit.TopicRepositoryTest.shouldReturnAllTopicsUnsortedWithSuccessful.executor": "Run",
+    "JUnit.TopicServiceTest.executor": "Run",
+    "JUnit.TopicServiceTest.shouldCreateTopicWithSuccessIfEverythingIsOK.executor": "Run",
+    "JUnit.TopicServiceTest.shouldFailIfQuestionPropertyIsEmptyWhenCreateTopic.executor": "Run",
+    "JUnit.TopicServiceTest.shouldFailIfTitlePropertyIsEmptyWhenCreateTopic.executor": "Run",
+    "JUnit.TopicServiceTest.shouldFailIfTitlePropertyIsEmptyWhenEditTopic.executor": "Run",
+    "JUnit.TopicServiceTest.shouldFailToCreateTopicIfCourseNotExists.executor": "Run",
+    "JUnit.TopicServiceTest.shouldFailToCreateTopicIfTitlePropertyIsGreaterThan150Chars.executor": "Run",
+    "JUnit.TopicServiceTest.shouldFailToCreateTopicIfUserServiceReturn404StatusCode.executor": "Run",
+    "JUnit.TopicServiceTest.shouldReturnAllTopicsSortedAscendantByTitleWithSuccessful.executor": "Debug",
+    "JUnit.TopicServiceTest.shouldReturnAllTopicsSortedDescendantByCreateDateWithSuccessful.executor": "Run",
+    "JUnit.TopicServiceTest.shouldReturnAllTopicsUnsortedWithSuccessful.executor": "Run",
+    "JUnit.UserClientRequestTest.executor": "Run",
+    "JUnit.UserClientRequestTest.shouldReturn200WhenRequestSummarizedInfoUser (1).executor": "Debug",
+    "JUnit.UserClientRequestTest.shouldReturn200WhenRequestSummarizedInfoUser.executor": "Run",
+    "JUnit.UserClientRequestTest.shouldReturn200WhenRequestSummarizedInfoUserWithSlowNetwork.executor": "Run",
+    "JUnit.UserClientRequestTest.shouldReturn200WhenRequestSummarizedInfoUserWithSlowNetworkx.executor": "Run",
+    "JUnit.UserClientRequestTest.shouldReturn503WhenRequestSummarizedInfoUser.executor": "Run",
+    "JUnit.UserClientRequestTest.shouldThrowExceptionWhenReceiveTimeoutInTheRequestWithClient.executor": "Run",
+    "JUnit.UserClientRequestTest.shouldThrowExceptionWhenRequestingInfoUserAndHimNotExists.executor": "Run",
+    "JUnit.UserControllerIT.executor": "Run",
+    "JUnit.UserControllerIT.shouldFailIfFirstNamePropertyIsEmptyWhenCreateUser.executor": "Debug",
+    "JUnit.UserControllerIT.shouldFailIfPasswordPropertyIsEmptyWhenCreateUser.executor": "Debug",
+    "JUnit.UserControllerIT.shouldFailToCreateUserIfBasicProfileNotExists.executor": "Run",
+    "JUnit.UserControllerTest.basicUserShouldGetDetailedInfoYourUserWithSuccessIfHasSuitableAuthority.executor": "Run",
+    "JUnit.UserControllerTest.executor": "Run",
+    "JUnit.UserControllerTest.modUserShouldToRequestTwoUsersSortedByFirstNameWithSuccess.executor": "Run",
+    "JUnit.controller in topic.executor": "Run",
+    "JUnit.integration in topic (1).executor": "Run",
+    "JUnit.integration in topic.executor": "Run",
+    "JUnit.java in topic.executor": "Run",
+    "JUnit.java in user.executor": "Run",
+    "JUnit.topic in topic.executor": "Run",
+    "RESOURCE_BUNDLE_EXPRESSION_USED": "",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "false",
+    "Repository.Attach.Sources": "false",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_directory_selection": "C:/Projects/authorizationserver/src/main/java",
+    "last_opened_file_path": "C:/Projects/forumhub/authorization-server",
+    "project.structure.last.edited": "Libraries",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.508046",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "reference.idesettings.emmet"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;GitStage.ChangesTree.GroupingKeys&quot;: [
-      &quot;directory&quot;,
-      &quot;module&quot;,
-      &quot;repository&quot;
+  "keyToStringList": {
+    "GitStage.ChangesTree.GroupingKeys": [
+      "directory",
+      "module",
+      "repository"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="com.backend.challenge.ForumHub.service" />
@@ -358,7 +365,7 @@
       <recent name="com.raul.forumhub.user.respository" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.AnswerControllerIT.shouldFailIfSolutionPropertyIsEmptyWhenEditAnswer">
+  <component name="RunManager" selected="JUnit.java in topic">
     <configuration name="Application-auth-server-dev" type="Application" factoryName="Application" singleton="true">
       <option name="ALTERNATIVE_JRE_PATH" value="$PROJECT_DIR$/../../Program Files/Java/jdk-17" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -388,22 +395,6 @@
       <module name="user" />
       <option name="PROGRAM_PARAMETERS" value="--spring.profiles.active=dev" />
       <option name="VM_PARAMETERS" value="-Dspring.output.ansi.enabled=ALWAYS" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="AnswerControllerIT.shouldFailIfSolutionPropertyIsEmptyWhenEditAnswer" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="topic" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.raul.forumhub.topic.integration.controller.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="com.raul.forumhub.topic.integration.controller" />
-      <option name="MAIN_CLASS_NAME" value="com.raul.forumhub.topic.integration.controller.AnswerControllerIT" />
-      <option name="METHOD_NAME" value="shouldFailIfSolutionPropertyIsEmptyWhenEditAnswer" />
-      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -463,15 +454,10 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="JetRunConfigurationType">
-      <module name="topic" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
-      <module name="topic" />
-      <option name="filePath" />
+    <configuration name="java in user" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="user" />
+      <option name="TEST_OBJECT" value="directory" />
+      <dir value="$PROJECT_DIR$/user/src/test/java" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -486,7 +472,7 @@
       <item itemvalue="Application.Application-auth-server-dev" />
       <item itemvalue="Application.Application-topic-dev" />
       <item itemvalue="Application.Application-user-dev" />
-      <item itemvalue="JUnit.AnswerControllerIT.shouldFailIfSolutionPropertyIsEmptyWhenEditAnswer" />
+      <item itemvalue="JUnit.java in user" />
       <item itemvalue="JUnit.java in topic" />
       <item itemvalue="JUnit.UserControllerIT" />
       <item itemvalue="JUnit.UserControllerIT.shouldFailIfPasswordPropertyIsEmptyWhenCreateUser" />
@@ -495,14 +481,17 @@
     <recent_temporary>
       <list>
         <item itemvalue="JUnit.java in topic" />
-        <item itemvalue="JUnit.AnswerControllerIT.shouldFailIfSolutionPropertyIsEmptyWhenEditAnswer" />
+        <item itemvalue="JUnit.java in user" />
+        <item itemvalue="JUnit.UserControllerIT.shouldFailToCreateUserIfBasicProfileNotExists" />
         <item itemvalue="JUnit.UserControllerIT.shouldFailIfPasswordPropertyIsEmptyWhenCreateUser" />
         <item itemvalue="JUnit.UserControllerIT" />
-        <item itemvalue="JUnit.UserControllerIT.shouldFailToCreateUserIfBasicProfileNotExists" />
       </list>
     </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TerminalProjectNonSharedOptionsProvider">
+    <option name="startingDirectory" value="C:\Projects\forumhub\" />
+  </component>
   <component name="UnknownFeatures">
     <option featureType="com.intellij.fileTypeFactory" implementationName="*.pem" />
   </component>
@@ -517,17 +506,6 @@
                   <entry key="Show.Git.Branches" value="true" />
                 </map>
               </option>
-              <option name="FILTERS">
-                <map>
-                  <entry key="branch">
-                    <value>
-                      <list>
-                        <option value="develop" />
-                      </list>
-                    </value>
-                  </entry>
-                </map>
-              </option>
             </State>
           </value>
         </entry>
@@ -537,8 +515,9 @@
   <component name="VcsManagerConfiguration">
     <ignored-roots>
       <path value="$PROJECT_DIR$/topic" />
+      <path value="$PROJECT_DIR$" />
+      <path value="$PROJECT_DIR$/user" />
     </ignored-roots>
-    <MESSAGE value="Substituido o nome da propriedade de message para question" />
     <MESSAGE value="Removido o consentimento para os clients topic e user" />
     <MESSAGE value="Ajustes nos manipuladores de exceções" />
     <MESSAGE value="Ajustes no versionamento das entidades no flyway" />
@@ -563,7 +542,8 @@
     <MESSAGE value="Criação de testes unitários para os controllers" />
     <MESSAGE value="Ajustes no TestsHelper para se adequar aos cenários de testes" />
     <MESSAGE value="Remoção do mock UserClientRequest em cenários desnecessário e validação de invocação desse mock" />
-    <option name="LAST_COMMIT_MESSAGE" value="" />
+    <MESSAGE value="Docker compose config" />
+    <option name="LAST_COMMIT_MESSAGE" value="Docker compose config" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
   </component>
   <component name="WfRunsListSearchHistory">{
@@ -1491,10 +1471,15 @@
     {
       &quot;branch&quot;: &quot;develop&quot;,
       &quot;currentBranchFilter&quot;: true
+    },
+    {
+      &quot;currentBranchFilter&quot;: true
+    },
+    {
+      &quot;currentBranchFilter&quot;: true
     }
   ],
   &quot;lastFilter&quot;: {
-    &quot;branch&quot;: &quot;develop&quot;,
     &quot;currentBranchFilter&quot;: true
   }
 }</component>
