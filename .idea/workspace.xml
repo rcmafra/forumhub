@@ -7,37 +7,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bde2c04d-06da-44ad-9010-f6df11e2d528" name="Changes" comment="Remoção do mock UserClientRequest em cenários desnecessário e validação de invocação desse mock">
-      <change afterPath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/exception/handler/GlobalExceptionHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/controller/AnswerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/controller/AnswerController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/controller/TopicController.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/controller/TopicController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/domain/Answer.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/domain/Answer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/domain/Course.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/domain/Course.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/domain/Profile.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/domain/Profile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/domain/Topic.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/domain/Topic.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/dto/request/AnswerTopicDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/dto/request/AnswerTopicDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/dto/request/AnswerUpdateDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/dto/request/AnswerUpdateDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/dto/request/CourseCreateDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/dto/request/CourseCreateDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/dto/request/TopicCreateDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/dto/request/TopicCreateDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/dto/request/TopicUpdateDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/dto/request/TopicUpdateDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/exception/handler/ExceptionResponseHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/exception/handler/GlobalExceptionHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/test/java/com/raul/forumhub/topic/controller/AnswerControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/test/java/com/raul/forumhub/topic/controller/AnswerControllerTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/test/java/com/raul/forumhub/topic/controller/CourseControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/test/java/com/raul/forumhub/topic/controller/CourseControllerTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/test/java/com/raul/forumhub/topic/controller/TopicControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/test/java/com/raul/forumhub/topic/controller/TopicControllerTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/test/java/com/raul/forumhub/topic/integration/controller/AnswerControllerIT.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/test/java/com/raul/forumhub/topic/integration/controller/AnswerControllerIT.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/test/java/com/raul/forumhub/topic/integration/controller/CourseControllerIT.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/test/java/com/raul/forumhub/topic/integration/controller/CourseControllerIT.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic/src/test/java/com/raul/forumhub/topic/integration/controller/TopicControllerIT.java" beforeDir="false" afterPath="$PROJECT_DIR$/topic/src/test/java/com/raul/forumhub/topic/integration/controller/TopicControllerIT.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/user/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/domain/Profile.java" beforeDir="false" afterPath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/domain/Profile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/domain/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/domain/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/dto/request/UserCreateDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/dto/request/UserCreateDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/dto/request/UserUpdateDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/dto/request/UserUpdateDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/dto/response/UserSummaryInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/dto/response/UserSummaryInfo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/exception/handler/ExceptionResponseHandler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user/src/main/java/com/raul/forumhub/user/service/UserService.java" afterDir="false" />
-    </list>
+    <list default="true" id="bde2c04d-06da-44ad-9010-f6df11e2d528" name="Changes" comment="Remoção do mock UserClientRequest em cenários desnecessário e validação de invocação desse mock" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -329,7 +299,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
     "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
-    "git-widget-placeholder": "develop",
+    "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
     "last_directory_selection": "C:/Projects/authorizationserver/src/main/java",
     "last_opened_file_path": "C:/Projects/forumhub/authorization-server/src/main/java/com/raul/forumhub/auth/server",
@@ -596,938 +566,938 @@
     <option name="LAST_COMMIT_MESSAGE" value="Remoção do mock UserClientRequest em cenários desnecessário e validação de invocação desse mock" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
   </component>
-  <component name="WfRunsListSearchHistory"><![CDATA[{
-  "history": [
+  <component name="WfRunsListSearchHistory">{
+  &quot;history&quot;: [
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "main",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;main&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     },
     {
-      "branch": "develop",
-      "currentBranchFilter": true
+      &quot;branch&quot;: &quot;develop&quot;,
+      &quot;currentBranchFilter&quot;: true
     }
   ],
-  "lastFilter": {
-    "branch": "develop",
-    "currentBranchFilter": true
+  &quot;lastFilter&quot;: {
+    &quot;branch&quot;: &quot;develop&quot;,
+    &quot;currentBranchFilter&quot;: true
   }
-}]]></component>
+}</component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
@@ -1543,7 +1513,7 @@
         <line-breakpoint enabled="true" type="java-method">
           <url>jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-oauth2-client/6.3.1/spring-security-oauth2-client-6.3.1-sources.jar!/org/springframework/security/oauth2/client/registration/InMemoryClientRegistrationRepository.java</url>
           <line>99</line>
-          <properties class="org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository" method="iterator">
+          <properties class="org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>
@@ -1552,7 +1522,7 @@
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/user/src/test/java/com/raul/forumhub/user/controller/integration/UserControllerIT.java</url>
           <line>207</line>
-          <properties class="com.raul.forumhub.user.controller.integration.UserControllerIT" method="shouldFailToCreateUserIfBasicProfileNotExists">
+          <properties class="com.raul.forumhub.user.controller.integration.UserControllerIT">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>
@@ -1561,7 +1531,7 @@
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/topic/src/main/java/com/raul/forumhub/topic/controller/AnswerController.java</url>
           <line>50</line>
-          <properties class="com.raul.forumhub.topic.controller.AnswerController" method="updateAnswer">
+          <properties class="com.raul.forumhub.topic.controller.AnswerController">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>
