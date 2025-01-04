@@ -36,7 +36,7 @@ public class UserService {
                 .firstName(userCreateDTO.firstName())
                 .lastName(userCreateDTO.lastName())
                 .username(userCreateDTO.username())
-                .email(userCreateDTO.email())
+                .email(userCreateDTO.email().toLowerCase())
                 .password(userCreateDTO.password())
                 .isAccountNonExpired(true)
                 .isAccountNonLocked(true)
