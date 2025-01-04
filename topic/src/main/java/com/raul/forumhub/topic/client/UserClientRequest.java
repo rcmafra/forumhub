@@ -45,10 +45,11 @@ public class UserClientRequest {
                     .retrieve()
                     .toEntity(Author.class)
                     .timeout(Duration.ofMillis(10000))
+                    .onErrorResume(WebClientRequestException.class, ex ->
+                            Mono.error(new RestClientException(HttpStatus.SERVICE_UNAVAILABLE, "Serviço de usuário indisponível")))
                     .onErrorResume(WebClientResponseException.class, ex ->
                             Mono.error(new RestClientException(ex.getStatusCode(), ex.getResponseBodyAsString())))
-                    .onErrorResume((ex) -> ex instanceof TimeoutException ^ ex instanceof WebClientRequestException ?
-                            Mono.error(() -> new RestClientException(HttpStatus.SERVICE_UNAVAILABLE, "Serviço de usuário indisponível")) :
+                    .onErrorResume(TimeoutException.class, ex ->
                             Mono.error(() -> new RestClientException(HttpStatus.SERVICE_UNAVAILABLE,
                                     "Erro inesperado durante a comunicação com o serviço de usuário")));
 
