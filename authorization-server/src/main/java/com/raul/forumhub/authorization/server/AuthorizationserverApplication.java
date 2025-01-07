@@ -1,4 +1,4 @@
-package com.raul.forumhub.auth.server;
+package com.raul.forumhub.authorization.server;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
