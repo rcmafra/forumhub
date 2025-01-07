@@ -1,4 +1,4 @@
-package com.raul.forumhub.auth.server.domain;
+package com.raul.forumhub.authorization.server.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;

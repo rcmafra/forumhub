@@ -1,7 +1,7 @@
-package com.raul.forumhub.auth.server.security.userdetails;
+package com.raul.forumhub.authorization.server.security.userdetails;
 
-import com.raul.forumhub.auth.server.domain.UserEntity;
-import com.raul.forumhub.auth.server.repository.UserRepository;
+import com.raul.forumhub.authorization.server.domain.UserEntity;
+import com.raul.forumhub.authorization.server.repository.UserRepository;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;

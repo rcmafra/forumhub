@@ -1,6 +1,6 @@
-package com.raul.forumhub.auth.server.repository;
+package com.raul.forumhub.authorization.server.repository;
 
-import com.raul.forumhub.auth.server.domain.UserEntity;
+import com.raul.forumhub.authorization.server.domain.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
