@@ -81,7 +81,7 @@ public class UserController {
 
 
     @PreAuthorize("hasRole('ADM') or hasAuthority('SCOPE_myuser:edit')")
-    @PutMapping("/update")
+    @PutMapping("/edit")
     public ResponseEntity<UserDetailedInfo> updateUser(@RequestParam(required = false) Long user_id, @Valid @RequestBody UserUpdateDTO userUpdateDTO,
                                                        @AuthenticationPrincipal Jwt jwt) {
 
