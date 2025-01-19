@@ -9,7 +9,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -23,7 +23,7 @@ public class ProfileRepositoryIT {
     void shouldFindProfileByNameWithSuccessIfExists() {
         this.profileRepository.save(TestsHelper.ProfileHelper.profileList().get(0));
 
-        assertThat(this.profileRepository.findByProfileName(Profile.ProfileName.BASIC)
+        assertTrue(this.profileRepository.findByProfileName(Profile.ProfileName.BASIC)
                 .isPresent());
 
     }
@@ -32,7 +32,7 @@ public class ProfileRepositoryIT {
     void shouldReturnOptionalEmptyWhenSearchCourseByNameAndHimNotExists() {
         this.profileRepository.save(TestsHelper.ProfileHelper.profileList().get(1));
 
-        assertThat(this.profileRepository.findByProfileName(Profile.ProfileName.ADM)
+        assertTrue(this.profileRepository.findByProfileName(Profile.ProfileName.ADM)
                 .isEmpty());
 
     }

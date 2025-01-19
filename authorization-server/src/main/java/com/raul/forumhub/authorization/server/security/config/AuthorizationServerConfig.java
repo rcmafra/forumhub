@@ -1,7 +1,7 @@
-package com.raul.forumhub.auth.server.security.config;
+package com.raul.forumhub.authorization.server.security.config;
 
-import com.raul.forumhub.auth.server.domain.UserEntity;
-import com.raul.forumhub.auth.server.repository.UserRepository;
+import com.raul.forumhub.authorization.server.domain.UserEntity;
+import com.raul.forumhub.authorization.server.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;

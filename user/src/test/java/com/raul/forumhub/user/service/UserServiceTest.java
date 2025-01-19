@@ -9,14 +9,18 @@ import com.raul.forumhub.user.exception.InstanceNotFoundException;
 import com.raul.forumhub.user.respository.ProfileRepository;
 import com.raul.forumhub.user.respository.UserRepository;
 import com.raul.forumhub.user.util.TestsHelper;
-import jakarta.validation.ConstraintViolationException;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.*;
+import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Comparator;
@@ -44,7 +48,6 @@ public class UserServiceTest {
     PasswordEncoder passwordEncoder;
 
 
-    @Order(1)
     @Test
     void shouldFailToCreateUserIfBasicProfileNotExists() {
         final UserCreateDTO userCreateDTO = new UserCreateDTO("Marcus",
@@ -63,7 +66,6 @@ public class UserServiceTest {
 
     }
 
-    @Order(2)
     @Test
     void shouldFailToCreateUserIfAlreadyExistsAnUserWithSameUsername() {
         final UserCreateDTO userCreateDTO = new UserCreateDTO("Marcus",
@@ -77,9 +79,9 @@ public class UserServiceTest {
                 .willReturn("encrypted-password-test");
 
         BDDMockito.given(this.userRepository.save(any(User.class)))
-                .willThrow(ConstraintViolationException.class);
+                .willThrow(DataIntegrityViolationException.class);
 
-        assertThrows(ConstraintViolationException.class, () -> this.userService.registerUser(userCreateDTO));
+        assertThrows(DataIntegrityViolationException.class, () -> this.userService.registerUser(userCreateDTO));
 
         BDDMockito.verify(profileRepository).findByProfileName(Profile.ProfileName.BASIC);
         BDDMockito.verify(passwordEncoder).encode(any(String.class));
@@ -89,7 +91,6 @@ public class UserServiceTest {
 
     }
 
-    @Order(3)
     @Test
     void shouldFailToCreateUserIfAlreadyExistsAnUserWithSameEmail() {
         final UserCreateDTO userCreateDTO = new UserCreateDTO("Marcus",
@@ -103,9 +104,9 @@ public class UserServiceTest {
                 .willReturn("encrypted-password-test");
 
         BDDMockito.given(this.userRepository.save(any(User.class)))
-                .willThrow(ConstraintViolationException.class);
+                .willThrow(DataIntegrityViolationException.class);
 
-        assertThrows(ConstraintViolationException.class, () -> this.userService.registerUser(userCreateDTO));
+        assertThrows(DataIntegrityViolationException.class, () -> this.userService.registerUser(userCreateDTO));
 
         BDDMockito.verify(profileRepository).findByProfileName(Profile.ProfileName.BASIC);
         BDDMockito.verify(passwordEncoder).encode(any(String.class));
@@ -115,7 +116,90 @@ public class UserServiceTest {
 
     }
 
-    @Order(4)
+    @Test
+    void shouldFailToCreateUserIfFirstNameLengthOvertake255Chars() {
+        final UserCreateDTO userCreateDTO = new UserCreateDTO(
+                "User1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+-=[]{}|;:,." +
+                        "<>?~User1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+-=[]{}|;:," +
+                        ".<>?~User1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^",
+                "Silva", "jose_silva", "marcus@email.com",
+                "P4s$word");
+
+        BDDMockito.given(this.profileRepository.findByProfileName(Profile.ProfileName.BASIC))
+                .willReturn(Optional.of(new Profile(1L, Profile.ProfileName.BASIC)));
+
+        BDDMockito.given(this.passwordEncoder.encode(any(String.class)))
+                .willReturn("encrypted-password-test");
+
+        BDDMockito.given(this.userRepository.save(any(User.class)))
+                .willThrow(JpaSystemException.class);
+
+        assertThrows(JpaSystemException.class, () -> this.userService.registerUser(userCreateDTO));
+
+        BDDMockito.verify(profileRepository).findByProfileName(Profile.ProfileName.BASIC);
+        BDDMockito.verify(passwordEncoder).encode(any(String.class));
+        BDDMockito.verify(userRepository).save(any(User.class));
+        BDDMockito.verifyNoMoreInteractions(this.passwordEncoder);
+        BDDMockito.verifyNoMoreInteractions(this.userRepository);
+
+    }
+
+    @Test
+    void shouldFailToCreateUserIfLastNameLengthOvertake255Chars() {
+        final UserCreateDTO userCreateDTO = new UserCreateDTO("Marcus",
+                "User1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+-=[]{}|;:,." +
+                        "<>?~User1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+-=[]{}|;:,." +
+                        "<>?~User1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^",
+                "jose_silva", "marcus@email.com",
+                "P4s$word");
+
+        BDDMockito.given(this.profileRepository.findByProfileName(Profile.ProfileName.BASIC))
+                .willReturn(Optional.of(new Profile(1L, Profile.ProfileName.BASIC)));
+
+        BDDMockito.given(this.passwordEncoder.encode(any(String.class)))
+                .willReturn("encrypted-password-test");
+
+        BDDMockito.given(this.userRepository.save(any(User.class)))
+                .willThrow(JpaSystemException.class);
+
+        assertThrows(JpaSystemException.class, () -> this.userService.registerUser(userCreateDTO));
+
+        BDDMockito.verify(profileRepository).findByProfileName(Profile.ProfileName.BASIC);
+        BDDMockito.verify(passwordEncoder).encode(any(String.class));
+        BDDMockito.verify(userRepository).save(any(User.class));
+        BDDMockito.verifyNoMoreInteractions(this.passwordEncoder);
+        BDDMockito.verifyNoMoreInteractions(this.userRepository);
+
+    }
+
+    @Test
+    void shouldFailToCreateUserIfUsernameLengthOvertake255Chars() {
+        final UserCreateDTO userCreateDTO = new UserCreateDTO("Marcus",
+                "Silva", "User1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUV" +
+                "WXYZ!@#$%^&*()_+-=[]{}|;:,.<>?~User1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRST" +
+                "UVWXYZ!@#$%^&*()_+-=[]{}|;:,.<>?~User1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRST" +
+                "UVWXYZ!@#$%", "marcus@email.com",
+                "P4s$word");
+
+        BDDMockito.given(this.profileRepository.findByProfileName(Profile.ProfileName.BASIC))
+                .willReturn(Optional.of(new Profile(1L, Profile.ProfileName.BASIC)));
+
+        BDDMockito.given(this.passwordEncoder.encode(any(String.class)))
+                .willReturn("encrypted-password-test");
+
+        BDDMockito.given(this.userRepository.save(any(User.class)))
+                .willThrow(JpaSystemException.class);
+
+        assertThrows(JpaSystemException.class, () -> this.userService.registerUser(userCreateDTO));
+
+        BDDMockito.verify(profileRepository).findByProfileName(Profile.ProfileName.BASIC);
+        BDDMockito.verify(passwordEncoder).encode(any(String.class));
+        BDDMockito.verify(userRepository).save(any(User.class));
+        BDDMockito.verifyNoMoreInteractions(this.passwordEncoder);
+        BDDMockito.verifyNoMoreInteractions(this.userRepository);
+
+    }
+
     @Test
     void shouldCreateUserWithSuccessIfEverythingIsOk() {
         final UserCreateDTO userCreateDTO = new UserCreateDTO("Marcus",
@@ -139,7 +223,6 @@ public class UserServiceTest {
 
     }
 
-    @Order(5)
     @Test
     void shouldFailToRequestDetailedInfoUserIfHimNotExists() {
         BDDMockito.given(this.userRepository.findById(4L)).willThrow(InstanceNotFoundException.class);
@@ -152,7 +235,6 @@ public class UserServiceTest {
 
     }
 
-    @Order(6)
     @Test
     void shouldToReturnDetailedInfoUserWithSuccessIfExists() {
         User user = TestsHelper.UserHelper.userList().get(0);
@@ -181,7 +263,6 @@ public class UserServiceTest {
 
     }
 
-    @Order(7)
     @Test
     void shouldToReturnAllUsersUnsortedWithSuccess() {
         Pageable pageable = PageRequest.of(0, 10, Sort.unsorted());
@@ -213,7 +294,6 @@ public class UserServiceTest {
 
     }
 
-    @Order(8)
     @Test
     void shouldToReturnAllUsersSortedDescendantByIdWithSuccess() {
         Pageable pageable = PageRequest.of(0, 10,
@@ -248,7 +328,6 @@ public class UserServiceTest {
 
     }
 
-    @Order(9)
     @Test
     void shouldToReturnAllUsersSortedAscendantByProfileWithSuccess() {
         Pageable pageable = PageRequest.of(0, 10,
@@ -282,7 +361,6 @@ public class UserServiceTest {
         BDDMockito.verifyNoMoreInteractions(this.userRepository);
     }
 
-    @Order(10)
     @Test
     void shouldToReturnTwoUsersSortedAscendantByFirstNameWithSuccess() {
         Pageable pageable = PageRequest.of(0, 10,
@@ -319,7 +397,6 @@ public class UserServiceTest {
         BDDMockito.verifyNoMoreInteractions(this.userRepository);
     }
 
-    @Order(11)
     @Test
     void shouldFailToEditUserIfInformedUserNotExists() {
         BDDMockito.given(this.userRepository.findById(4L)).willThrow(InstanceNotFoundException.class);
@@ -339,7 +416,6 @@ public class UserServiceTest {
 
     }
 
-    @Order(12)
     @Test
     void shouldFailToEditUserIfInformedProfileNotExists() {
         BDDMockito.given(this.userRepository.findById(1L))
@@ -365,7 +441,6 @@ public class UserServiceTest {
 
     }
 
-    @Order(13)
     @Test
     void shouldNotEditExtraInformationIfEditRequestUserIsNotADM() {
         User user = TestsHelper.UserHelper.userList().get(0);
@@ -401,7 +476,6 @@ public class UserServiceTest {
     }
 
 
-    @Order(14)
     @Test
     void shouldEditExtraInformationIfEditRequestUserIsADM() {
         User user = TestsHelper.UserHelper.userList().get(0);
@@ -434,7 +508,6 @@ public class UserServiceTest {
 
     }
 
-    @Order(15)
     @Test
     void shouldFailToDeleteUserIfRequestedUserNotExists() {
         BDDMockito.given(this.userRepository.findById(4L)).willThrow(InstanceNotFoundException.class);
@@ -448,7 +521,6 @@ public class UserServiceTest {
 
     }
 
-    @Order(16)
     @Test
     void shouldDeleteUserWithSuccessIfRequestedUserExists() {
         BDDMockito.given(this.userRepository.findById(1L))

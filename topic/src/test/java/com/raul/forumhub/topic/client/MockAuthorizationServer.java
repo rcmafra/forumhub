@@ -28,7 +28,7 @@ import java.util.*;
 public class MockAuthorizationServer {
 
     static RSAKey rsaKey;
-    static String jwt;
+    final static String jwt;
 
     static {
         generateKeyPair();

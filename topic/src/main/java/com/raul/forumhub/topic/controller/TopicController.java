@@ -54,7 +54,7 @@ public class TopicController {
     }
 
     @PreAuthorize("hasAuthority('SCOPE_topic:edit')")
-    @PutMapping
+    @PutMapping("/edit")
     public ResponseEntity<GetTopicDTO> updateTopic(@RequestParam Long topic_id, @Valid @RequestBody TopicUpdateDTO topicUpdateDTO,
                                                     @AuthenticationPrincipal Jwt jwt){
 

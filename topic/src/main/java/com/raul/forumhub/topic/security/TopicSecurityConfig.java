@@ -37,20 +37,15 @@ public class TopicSecurityConfig {
         JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
         converter.setJwtGrantedAuthoritiesConverter(
                 jwt -> {
-
-                    String userRoleAuthority = jwt.getClaim("authority");
-
-                    if(Objects.isNull(userRoleAuthority)) {
-                        userRoleAuthority = "ANONYMOUS";
-                    }
+                    String roleAuthority = jwt.getClaim("authority");
+                    roleAuthority = Objects.isNull(roleAuthority) ? "ANONYMOUS" : roleAuthority;
 
                     JwtGrantedAuthoritiesConverter scopeConverter = new JwtGrantedAuthoritiesConverter();
                     Collection<GrantedAuthority> userScopeAuthorities = scopeConverter.convert(jwt);
 
-                    userScopeAuthorities.add(new SimpleGrantedAuthority(userRoleAuthority));
+                    userScopeAuthorities.add(new SimpleGrantedAuthority(roleAuthority));
 
                     return userScopeAuthorities;
-
 
                 });
 

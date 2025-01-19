@@ -47,7 +47,7 @@ public class AnswerController {
     }
 
     @PreAuthorize("hasAuthority('SCOPE_answer:edit')")
-    @PutMapping("/{topic_id}/answers")
+    @PutMapping("/{topic_id}/answers/edit")
     public ResponseEntity<GetAnswerDTO> updateAnswer(@PathVariable Long topic_id, @RequestParam Long answer_id,
                                                      @AuthenticationPrincipal Jwt jwt, @Valid @RequestBody AnswerUpdateDTO answerUpdateDTO){
 

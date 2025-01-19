@@ -27,10 +27,4 @@ public class Author {
     @ManyToOne
     @JoinColumns(@JoinColumn(name = "profile_id", foreignKey = @ForeignKey(name = "profile_id")))
     private Profile profile;
-
-    public Author(String username, String email, Profile profile) {
-        this.username = username;
-        this.email = email;
-        this.profile = profile;
-    }
 }

@@ -7,7 +7,10 @@ import com.raul.forumhub.topic.exception.InstanceNotFoundException;
 import com.raul.forumhub.topic.repository.CourseRepository;
 import com.raul.forumhub.topic.util.TestsHelper;
 import jakarta.validation.ConstraintViolationException;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
@@ -29,7 +32,7 @@ public class CourseServiceTest {
     @InjectMocks
     CourseService courseService;
 
-    @Order(1)
+
     @Test
     void shouldFailToCreateCourseIfCourseNamePropertyIsEmpty() {
         final CourseCreateDTO courseCreateDTO = new CourseCreateDTO(
@@ -50,7 +53,6 @@ public class CourseServiceTest {
     }
 
 
-    @Order(2)
     @Test
     void shouldFailToCreateCourseIfHerAlreadyExists() {
         final CourseCreateDTO courseCreateDTO = new CourseCreateDTO(
@@ -71,7 +73,7 @@ public class CourseServiceTest {
 
     }
 
-    @Order(3)
+
     @Test
     void shouldCreateCourseWithSuccessIfEverythingIsOk() {
         final CourseCreateDTO courseCreateDTO = new CourseCreateDTO(
@@ -87,7 +89,7 @@ public class CourseServiceTest {
 
     }
 
-    @Order(4)
+
     @Test
     void shouldReturnAllCoursesCreatedWithSuccessful() {
         BDDMockito.given(this.courseRepository.findAll())
@@ -102,7 +104,7 @@ public class CourseServiceTest {
 
     }
 
-    @Order(5)
+
     @Test
     void shouldFailIfCourseNamePropertyOfDtoObjectIsEmptyWhenEditCourse() {
         final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("");
@@ -124,7 +126,7 @@ public class CourseServiceTest {
         BDDMockito.verifyNoMoreInteractions(this.courseRepository);
     }
 
-    @Order(6)
+
     @Test
     void shouldFailToEditCourseIfDesiredCourseNotExists() {
         final CourseUpdateDTO courseUpdateDTO =
@@ -147,7 +149,7 @@ public class CourseServiceTest {
 
     }
 
-    @Order(7)
+
     @Test
     void shouldEditCourseWithSuccessIfEverythingIsOk() {
         final CourseUpdateDTO courseUpdateDTO =
@@ -168,7 +170,7 @@ public class CourseServiceTest {
 
     }
 
-    @Order(8)
+
     @Test
     void shouldFailToDeleteCourseIfDesiredCourseNotExists() {
         BDDMockito.given(this.courseRepository.findCourseByName(
@@ -187,7 +189,7 @@ public class CourseServiceTest {
 
     }
 
-    @Order(9)
+
     @Test
     void shouldDeleteCourseWithSuccessIfEverythingIsOk() {
         BDDMockito.given(this.courseRepository.findCourseByName(
