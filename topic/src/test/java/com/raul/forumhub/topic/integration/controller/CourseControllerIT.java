@@ -17,6 +17,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.StandardCharsets;
 
@@ -55,7 +56,42 @@ public class CourseControllerIT {
     }
 
 
-    @Order(1)
+    @DisplayName("Should fail with status code 404 if resource doesn't exists")
+    @Test
+    void shouldFailIfResourceDoesNotExistToTheSendRequest() throws Exception {
+        final CourseCreateDTO courseCreateDTO = new CourseCreateDTO(
+                "Conhecendo a arquitetura cliente/servidor", Course.Category.JAVA);
+
+        this.mockMvc.perform(post("/api-forum/v1/forumhub/courses/creat")
+                        .with(jwt().authorities(
+                                new SimpleGrantedAuthority("SCOPE_course:create"),
+                                new SimpleGrantedAuthority("ROLE_ADM")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .content(new ObjectMapper()
+                                .writeValueAsString(courseCreateDTO)))
+                .andExpect(status().isNotFound());
+
+    }
+
+    @DisplayName("Should fail with status code 400 if method isn't supported")
+    @Test
+    void shouldFailIfMethodIsNotSupportedToTheSendRequest() throws Exception {
+        final CourseCreateDTO courseCreateDTO = new CourseCreateDTO(
+                "Conhecendo a arquitetura cliente/servidor", Course.Category.JAVA);
+
+        this.mockMvc.perform(put("/api-forum/v1/forumhub/courses/create")
+                        .with(jwt().authorities(
+                                new SimpleGrantedAuthority("SCOPE_course:create"),
+                                new SimpleGrantedAuthority("ROLE_ADM")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .content(new ObjectMapper()
+                                .writeValueAsString(courseCreateDTO)))
+                .andExpect(status().isBadRequest());
+    }
+
+
     @DisplayName("Should fail with status code 401 when attempt create course if user unauthenticated")
     @Test
     void shouldFailToCreateCourseIfUnauthenticated() throws Exception {
@@ -73,7 +109,7 @@ public class CourseControllerIT {
 
     }
 
-    @Order(2)
+
     @DisplayName("Should fail with status code 403 when attempt create course if user is ADM, but " +
             "hasn't authority course:create")
     @Test
@@ -93,7 +129,7 @@ public class CourseControllerIT {
 
     }
 
-    @Order(3)
+
     @DisplayName("Should fail with status code 403 when attempt create course if user has authority" +
             " course:create, but isn't ADM")
     @Test
@@ -114,7 +150,30 @@ public class CourseControllerIT {
 
     }
 
-    @Order(4)
+    @DisplayName("Should fail with status code 400 when create course if category sent is" +
+            " different of the enum types available")
+    @Test
+    void shouldFailToCreateCourseIfEnumTypeSentNonExists() throws Exception {
+        String request = """
+                    {
+                        "name": "Conhecendo a arquitetura cliente servidor",
+                        "category": "FORTRAN"
+                    }
+                """;
+
+        this.mockMvc.perform(post("/api-forum/v1/forumhub/courses/create")
+                        .with(jwt().authorities(
+                                new SimpleGrantedAuthority("SCOPE_course:create"),
+                                new SimpleGrantedAuthority("ROLE_ADM")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .content(request))
+                .andExpect(status().isBadRequest());
+
+        assertEquals(3, this.courseRepository.findAll().size());
+    }
+
+
     @DisplayName("Should fail with status code 400 when create course if the course name property is empty")
     @Test
     void shouldFailToCreateCourseIfCourseNamePropertyIsEmpty() throws Exception {
@@ -137,7 +196,6 @@ public class CourseControllerIT {
     }
 
 
-    @Order(5)
     @DisplayName("Should fail with status code 409 when create course if her already exists")
     @Test
     void shouldFailToCreateCourseIfHerAlreadyExists() throws Exception {
@@ -159,7 +217,8 @@ public class CourseControllerIT {
 
     }
 
-    @Order(6)
+
+    @Transactional
     @DisplayName("Should create course with success if user ADM authenticated, " +
             "has authority course:create and previous premisses are adequate")
     @Test
@@ -183,7 +242,7 @@ public class CourseControllerIT {
 
     }
 
-    @Order(7)
+
     @DisplayName("Should fail with status code 401 when return all courses created if unauthenticated")
     @Test
     void shouldFailToReturnAllCoursesCreatedIfUnauthenticated() throws Exception {
@@ -192,11 +251,11 @@ public class CourseControllerIT {
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isUnauthorized());
 
-        assertEquals(4, this.courseRepository.findAll().size());
+        assertEquals(3, this.courseRepository.findAll().size());
 
     }
 
-    @Order(8)
+
     @DisplayName("Should return all courses created with successful if authenticated")
     @Test
     void shouldReturnAllCoursesCreatedWithSuccessful() throws Exception {
@@ -205,20 +264,19 @@ public class CourseControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$..course.length()", is(4)));
+                .andExpect(jsonPath("$..course.length()", is(3)));
 
-        assertEquals(4, this.courseRepository.findAll().size());
+        assertEquals(3, this.courseRepository.findAll().size());
 
     }
 
 
-    @Order(9)
     @DisplayName("Should fail with status code 401 when edit course if unauthenticated")
     @Test
     void shouldFailToEditCourseIfUnauthenticated() throws Exception {
         final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API Rest escalável");
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/courses")
+        this.mockMvc.perform(put("/api-forum/v1/forumhub/courses/edit")
                         .queryParam("courseName", "Criação de uma API Rest")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -231,14 +289,14 @@ public class CourseControllerIT {
 
     }
 
-    @Order(10)
+
     @DisplayName("Should fail with status code 403 when attempt edit course if user is ADM, but " +
             "hasn't authority course:edit")
     @Test
     void shouldFailToEditCourseIfUserIsADMButHasNotSuitableAuthority() throws Exception {
         final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API Rest escalável");
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/courses")
+        this.mockMvc.perform(put("/api-forum/v1/forumhub/courses/edit")
                         .queryParam("courseName", "Criação de uma API Rest")
                         .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_ADM")))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -252,14 +310,14 @@ public class CourseControllerIT {
 
     }
 
-    @Order(11)
+
     @DisplayName("Should fail with status code 403 when attempt edit course if user has authority" +
             " course:edit, but isn't ADM")
     @Test
     void shouldFailToEditCourseIfUserHasSuitableAuthorityButNotIsADM() throws Exception {
         final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API Rest escalável");
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/courses")
+        this.mockMvc.perform(put("/api-forum/v1/forumhub/courses/edit")
                         .queryParam("courseName", "Criação de uma API Rest")
                         .with(jwt().authorities(new SimpleGrantedAuthority("SCOPE_course:edit")))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -272,14 +330,13 @@ public class CourseControllerIT {
                 "Como criar uma API Rest escalável").isPresent());
     }
 
-    @Order(12)
     @DisplayName("Should fail with status code 400 when attempt edit course if course name property " +
             "of DTO object is sent empty")
     @Test
     void shouldFailIfCourseNamePropertyOfDtoObjectIsEmptyWhenEditCourse() throws Exception {
         final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("");
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/courses")
+        this.mockMvc.perform(put("/api-forum/v1/forumhub/courses/edit")
                         .queryParam("courseName", "Criação de uma API Rest")
                         .with(jwt().authorities(
                                 new SimpleGrantedAuthority("SCOPE_course:edit"),
@@ -294,14 +351,14 @@ public class CourseControllerIT {
         assertFalse(this.courseRepository.findCourseByName("").isPresent());
     }
 
-    @Order(13)
+
     @DisplayName("Should fail with status code 400 when attempt edit course if course name property " +
             "of query param is sent empty")
     @Test
     void shouldFailIfCourseNamePropertyOfQueryParamIsEmptyWhenEditCourse() throws Exception {
         final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API Rest escalável");
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/courses")
+        this.mockMvc.perform(put("/api-forum/v1/forumhub/courses/edit")
                         .queryParam("courseName", "")
                         .with(jwt().authorities(
                                 new SimpleGrantedAuthority("SCOPE_course:edit"),
@@ -318,13 +375,12 @@ public class CourseControllerIT {
 
     }
 
-    @Order(14)
     @DisplayName("Should fail to edit course if desired course not exists")
     @Test
     void shouldFailToEditCourseIfDesiredCourseNotExists() throws Exception {
         final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API Rest escalável");
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/courses")
+        this.mockMvc.perform(put("/api-forum/v1/forumhub/courses/edit")
                         .queryParam("courseName", "Lidando com load balancer na AWS")
                         .with(jwt().authorities(
                                 new SimpleGrantedAuthority("SCOPE_course:edit"),
@@ -341,14 +397,15 @@ public class CourseControllerIT {
 
     }
 
-    @Order(15)
+
+    @Transactional
     @DisplayName("Should edit course with success if user ADM authenticated, " +
             "has authority course:edit and previous premisses are adequate")
     @Test
     void shouldEditCourseWithSuccessIfAuthenticatedAndHasSuitableAuthority() throws Exception {
         final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API Rest escalável");
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/courses")
+        this.mockMvc.perform(put("/api-forum/v1/forumhub/courses/edit")
                         .queryParam("courseName", "Criação de uma API Rest")
                         .with(jwt().authorities(
                                 new SimpleGrantedAuthority("SCOPE_course:edit"),
@@ -368,7 +425,7 @@ public class CourseControllerIT {
         );
     }
 
-    @Order(16)
+
     @DisplayName("Should fail with status code 401 when delete course if unauthenticated")
     @Test
     void shouldFailToDeleteCourseIfUnauthenticated() throws Exception {
@@ -378,11 +435,11 @@ public class CourseControllerIT {
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isUnauthorized());
 
-        assertEquals(4, this.courseRepository.findAll().size());
+        assertEquals(3, this.courseRepository.findAll().size());
 
     }
 
-    @Order(17)
+
     @DisplayName("Should fail with status code 403 when attempt delete course if user is ADM, but " +
             "hasn't authority course:delete")
     @Test
@@ -394,11 +451,11 @@ public class CourseControllerIT {
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isForbidden());
 
-        assertEquals(4, this.courseRepository.findAll().size());
+        assertEquals(3, this.courseRepository.findAll().size());
 
     }
 
-    @Order(18)
+
     @DisplayName("Should fail with status code 403 when attempt delete course if user has authority" +
             " course:delete, but isn't ADM")
     @Test
@@ -410,11 +467,11 @@ public class CourseControllerIT {
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isForbidden());
 
-        assertEquals(4, this.courseRepository.findAll().size());
+        assertEquals(3, this.courseRepository.findAll().size());
 
     }
 
-    @Order(19)
+
     @DisplayName("Should fail with status code 400 when attempt delete course if course name property " +
             "of query param is sent empty")
     @Test
@@ -429,13 +486,12 @@ public class CourseControllerIT {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.detail", is("O nome do curso não pode ser vazio")));
 
-        assertEquals(4, this.courseRepository.findAll().size());
+        assertEquals(3, this.courseRepository.findAll().size());
 
 
     }
 
 
-    @Order(20)
     @DisplayName("Should fail to delete course if desired course not exists")
     @Test
     void shouldFailToDeleteCourseIfDesiredCourseNotExists() throws Exception {
@@ -450,14 +506,15 @@ public class CourseControllerIT {
                 .andExpect(jsonPath("$.detail", is("O curso informado não existe")));
 
         Assertions.assertAll(
-                () -> assertEquals(4, this.courseRepository.findAll().size()),
+                () -> assertEquals(3, this.courseRepository.findAll().size()),
                 () -> assertFalse(this.courseRepository.findCourseByName(
                         "Lidando com load balancer na AWS").isPresent())
         );
 
     }
 
-    @Order(21)
+
+    @Transactional
     @DisplayName("Should delete course with success if user ADM authenticated, " +
             "has authority course:delete and previous premisses are adequate")
     @Test
@@ -472,7 +529,7 @@ public class CourseControllerIT {
                 .andExpect(status().isOk())
                 .andExpect(content().string("{\"message\":\"HttpStatusCode OK\"}"));
 
-        assertEquals(3, this.courseRepository.findAll().size());
+        assertEquals(2, this.courseRepository.findAll().size());
 
     }
 
