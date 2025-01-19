@@ -90,7 +90,7 @@ public class AnswerService {
 
         if (answer.getAuthor().getUsername().equals("Desconhecido") &&
                 answer.getAuthor().getEmail().equals("desconhecido@email.com")) {
-            throw new AnswerServiceException("O tópico pertence a um autor inexistente, " +
+            throw new AnswerServiceException("A resposta pertence a um autor inexistente, " +
                     "ele não pode ser editado");
         }
 
