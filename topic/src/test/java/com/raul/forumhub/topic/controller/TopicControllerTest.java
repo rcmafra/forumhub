@@ -10,7 +10,10 @@ import com.raul.forumhub.topic.exception.handler.GlobalExceptionHandler;
 import com.raul.forumhub.topic.security.TopicSecurityConfig;
 import com.raul.forumhub.topic.service.TopicService;
 import com.raul.forumhub.topic.util.TestsHelper;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -62,8 +65,41 @@ class TopicControllerTest {
                 .build();
     }
 
+    @DisplayName("Should fail with status code 404 if resource doesn't exists")
+    @Test
+    void shouldFailIfResourceDoesNotExistToTheSendRequest() throws Exception {
+        final TopicCreateDTO topicCreateDTO = new TopicCreateDTO("Dúvida na utilização do Feign Client",
+                "Como utilizar o Feign Client para integração do serviço x?",
+                1L);
 
-    @Order(1)
+        this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/creat")
+                        .with(jwt().jwt(jwt))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .content(new ObjectMapper()
+                                .writeValueAsString(topicCreateDTO)))
+                .andExpect(status().isNotFound());
+
+    }
+
+    @DisplayName("Should fail with status code 400 if method isn't supported")
+    @Test
+    void shouldFailIfMethodIsNotSupportedToTheSendRequest() throws Exception {
+        final TopicCreateDTO topicCreateDTO = new TopicCreateDTO("Dúvida na utilização do Feign Client",
+                "Como utilizar o Feign Client para integração do serviço x?",
+                1L);
+
+        this.mockMvc.perform(put("/api-forum/v1/forumhub/topics/create")
+                        .with(jwt().jwt(jwt))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .content(new ObjectMapper()
+                                .writeValueAsString(topicCreateDTO)))
+                .andExpect(status().isBadRequest());
+
+    }
+
+
     @DisplayName("Should fail with status code 401 when create topic if user unauthenticated")
     @Test
     void shouldFailToCreateTopicIfUnauthenticated() throws Exception {
@@ -83,7 +119,6 @@ class TopicControllerTest {
     }
 
 
-    @Order(2)
     @DisplayName("Should create topic with success if user is authenticated")
     @Test
     void shouldCreateTopicWithSuccessIfAuthenticated() throws Exception {
@@ -107,7 +142,6 @@ class TopicControllerTest {
     }
 
 
-    @Order(3)
     @DisplayName("Should return all topics unsorted with successful")
     @Test
     void shouldReturnAllTopicsUnsortedWithSuccessful() throws Exception {
@@ -135,7 +169,7 @@ class TopicControllerTest {
 
     }
 
-    @Order(4)
+
     @DisplayName("Should return all topics sorted descendants by created date with successful")
     @Test
     void shouldReturnAllTopicsSortedDescendantByCreateDateWithSuccessful() throws Exception {
@@ -173,7 +207,7 @@ class TopicControllerTest {
 
     }
 
-    @Order(5)
+
     @DisplayName("Should return only two topics sorted in ascendant by status with successful")
     @Test
     void shouldReturnTwoTopicsSortedAscendantByStatusWithSuccessful() throws Exception {
@@ -214,7 +248,6 @@ class TopicControllerTest {
     }
 
 
-    @Order(6)
     @DisplayName("Should return all topics sorted ascendants by title with successful")
     @Test
     void shouldReturnAllTopicsSortedAscendantByTitleWithSuccessful() throws Exception {
@@ -252,7 +285,7 @@ class TopicControllerTest {
 
     }
 
-    @Order(7)
+
     @DisplayName("Should fail with status code 400 when attempt get topic if topic_id property " +
             "of query param is sent empty")
     @Test
@@ -267,8 +300,21 @@ class TopicControllerTest {
 
     }
 
+    @DisplayName("Should fail with status code 400 when request topic with" +
+            " param different of type number")
+    @Test
+    void shouldFailToRequestTopicIfParamDifferentOfTypeNumber() throws Exception {
+        this.mockMvc.perform(get("/api-forum/v1/forumhub/topics")
+                        .queryParam("topic_id", "unexpected")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isBadRequest());
 
-    @Order(8)
+        BDDMockito.verifyNoInteractions(this.topicService);
+
+    }
+
+
     @DisplayName("Should return the specified topic with successful if exists")
     @Test
     void shouldReturnTheSpecifiedTopicWithSuccessful() throws Exception {
@@ -288,7 +334,7 @@ class TopicControllerTest {
 
     }
 
-    @Order(9)
+
     @DisplayName("Should fail with status code 403 if user authenticated hasn't authority 'topic:edit'" +
             "when edit topic")
     @Test
@@ -299,7 +345,7 @@ class TopicControllerTest {
                 Status.UNSOLVED, 1L
         );
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/topics")
+        this.mockMvc.perform(put("/api-forum/v1/forumhub/topics/edit")
                         .queryParam("topic_id", "1")
                         .with(jwt().jwt(jwt))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -312,7 +358,31 @@ class TopicControllerTest {
 
     }
 
-    @Order(10)
+    @DisplayName("Should fail with status code 400 when edit topic with" +
+            " param different of type number")
+    @Test
+    void shouldFailToEditTopicIfParamDifferentOfTypeNumber() throws Exception {
+        final TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO(
+                "Dúvida na utilização do WebClient",
+                "Como utilizar o WebClient para integração do serviço x?",
+                Status.UNSOLVED, 1L
+        );
+
+        this.mockMvc.perform(put("/api-forum/v1/forumhub/topics/edit")
+                        .queryParam("topic_id", "unexpected")
+                        .with(jwt().jwt(jwt)
+                                .authorities(new SimpleGrantedAuthority("SCOPE_topic:edit")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .content(new ObjectMapper()
+                                .writeValueAsString(topicUpdateDTO)))
+                .andExpect(status().isBadRequest());
+
+        BDDMockito.verifyNoInteractions(this.topicService);
+
+    }
+
+
     @DisplayName("Should fail with status code 400 when attempt update topic if topic_id property " +
             "of query param is sent empty")
     @Test
@@ -338,7 +408,7 @@ class TopicControllerTest {
 
     }
 
-    @Order(11)
+
     @DisplayName("Should edit topic with success if user authenticated has authority 'topic:edit'")
     @Test
     void shouldEditTopicWithSuccessIfUserHasSuitableAuthority() throws Exception {
@@ -354,7 +424,7 @@ class TopicControllerTest {
         BDDMockito.given(this.topicService.updateTopic(1L, 1L, topicUpdateDTO))
                 .willReturn(new GetTopicDTO(topic));
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/topics")
+        this.mockMvc.perform(put("/api-forum/v1/forumhub/topics/edit")
                         .queryParam("topic_id", "1")
                         .with(jwt().jwt(jwt)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:edit")))
@@ -374,7 +444,7 @@ class TopicControllerTest {
 
     }
 
-    @Order(12)
+
     @DisplayName("Should fail with status code 403 if user authenticated hasn't authority 'topic:delete'" +
             " when delete topic")
     @Test
@@ -389,7 +459,7 @@ class TopicControllerTest {
         BDDMockito.verifyNoInteractions(this.topicService);
     }
 
-    @Order(13)
+
     @DisplayName("Should fail with status code 400 when attempt delete topic if topic_id property " +
             "of query param is sent empty")
     @Test
@@ -406,7 +476,23 @@ class TopicControllerTest {
 
     }
 
-    @Order(14)
+    @DisplayName("Should fail with status code 400 when delete topic with" +
+            " param different of type number")
+    @Test
+    void shouldFailToDeleteTopicIfParamDifferentOfTypeNumber() throws Exception {
+        this.mockMvc.perform(delete("/api-forum/v1/forumhub/topics/delete")
+                        .queryParam("topic_id", "unexpected")
+                        .with(jwt().jwt(jwt)
+                                .authorities(new SimpleGrantedAuthority("SCOPE_topic:delete")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isBadRequest());
+
+        BDDMockito.verifyNoInteractions(this.topicService);
+
+    }
+
+
     @DisplayName("Should delete topic with success if user authenticated has authority 'topic:delete'")
     @Test
     void shouldDeleteTopicWithSuccessIfUserHasSuitableAuthority() throws Exception {

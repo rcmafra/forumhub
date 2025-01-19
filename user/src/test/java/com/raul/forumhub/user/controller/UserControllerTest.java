@@ -11,7 +11,10 @@ import com.raul.forumhub.user.exception.handler.GlobalExceptionHandler;
 import com.raul.forumhub.user.security.UserSecurityConfig;
 import com.raul.forumhub.user.service.UserService;
 import com.raul.forumhub.user.util.TestsHelper;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -50,7 +53,43 @@ public class UserControllerTest {
     @MockBean
     UserService userService;
 
-    @Order(1)
+
+    @DisplayName("Should fail with status code 404 if resource doesn't exists")
+    @Test
+    void shouldFailIfResourceDoesNotExistToTheSendRequest() throws Exception {
+        final UserCreateDTO userCreateDTO = new UserCreateDTO("Marcus",
+                "Silva", "marcus_silva", "marcus@email.com",
+                "P4s$word");
+
+        this.mockMvc.perform(post("/api-forum/v1/forumhub/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .content(new ObjectMapper()
+                                .writeValueAsString(userCreateDTO)))
+                .andExpect(status().isNotFound());
+
+        BDDMockito.verifyNoInteractions(this.userService);
+
+    }
+
+    @DisplayName("Should fail with status code 400 if method isn't supported")
+    @Test
+    void shouldFailIfMethodIsNotSupportedToTheSendRequest() throws Exception {
+        final UserCreateDTO userCreateDTO = new UserCreateDTO("Marcus",
+                "Silva", "marcus_silva", "marcus@email.com",
+                "P4s$word");
+
+        this.mockMvc.perform(put("/api-forum/v1/forumhub/users/create")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .content(new ObjectMapper()
+                                .writeValueAsString(userCreateDTO)))
+                .andExpect(status().isBadRequest());
+
+        BDDMockito.verifyNoInteractions(this.userService);
+
+    }
+
     @DisplayName("Should fail if password length is less than 8 characters when create user")
     @Test
     void shouldFailIfPasswordLengthIsLess8CharsWhenCreateUser() throws Exception {
@@ -71,7 +110,6 @@ public class UserControllerTest {
 
     }
 
-    @Order(2)
     @DisplayName("Should fail if password length is larger than 16 characters when create user")
     @Test
     void shouldFailIfPasswordLengthIsLarger16CharsWhenCreateUser() throws Exception {
@@ -93,7 +131,6 @@ public class UserControllerTest {
 
     }
 
-    @Order(3)
     @DisplayName("Should fail if password hasn't at least one character " +
             "uppercase when create user")
     @Test
@@ -116,7 +153,6 @@ public class UserControllerTest {
 
     }
 
-    @Order(4)
     @DisplayName("Should fail if password hasn't at least one character " +
             "lowercase when create user")
     @Test
@@ -139,7 +175,6 @@ public class UserControllerTest {
 
     }
 
-    @Order(5)
     @DisplayName("Should fail if password hasn't at least one digit when create user")
     @Test
     void shouldFailIfPasswordHasNotDigitWhenCreateUser() throws Exception {
@@ -161,7 +196,6 @@ public class UserControllerTest {
 
     }
 
-    @Order(6)
     @DisplayName("Should fail if password hasn't at least one special character when create user")
     @Test
     void shouldFailIfPasswordHasNotSpecialCharWhenCreateUser() throws Exception {
@@ -183,7 +217,6 @@ public class UserControllerTest {
 
     }
 
-    @Order(7)
     @DisplayName("Should fail if exists five sequence alphabetic in the password " +
             "when create user (e.g.: abcde)")
     @Test
@@ -206,7 +239,6 @@ public class UserControllerTest {
 
     }
 
-    @Order(8)
     @DisplayName("Should fail if exists five sequence numerical in the password " +
             "when create user (e.g.: 12345)")
     @Test
@@ -229,7 +261,6 @@ public class UserControllerTest {
 
     }
 
-    @Order(9)
     @DisplayName("Should fail if exists 'qwerty' sequence in the password " +
             "when create user")
     @Test
@@ -252,7 +283,6 @@ public class UserControllerTest {
 
     }
 
-    @Order(10)
     @DisplayName("Should fail if exists whitespace in the password " +
             "when create user")
     @Test
@@ -275,7 +305,6 @@ public class UserControllerTest {
 
     }
 
-    @Order(11)
     @DisplayName("Should create user with success if every thing is ok")
     @Test
     void shouldCreateUserWithSuccessIfEveryThingIsOk() throws Exception {
@@ -296,7 +325,6 @@ public class UserControllerTest {
 
     }
 
-    @Order(12)
     @DisplayName("Should fail with status code 401 when to request detailed info " +
             "user if user unauthenticated")
     @Test
@@ -310,10 +338,8 @@ public class UserControllerTest {
 
     }
 
-    @Order(13)
     @DisplayName("Should fail with status code 403 when to request detailed info " +
-            "user if authenticated user isn't ADM or MOD, " +
-            "or hasn't authority 'myuser:read'")
+            "user if authenticated user isn't ADM or MOD, or hasn't authority 'myuser:read'")
     @Test
     void shouldFailToRequestDetailedInfoUserIfUserHasNotSuitableAuthority() throws Exception {
         this.mockMvc.perform(get("/api-forum/v1/forumhub/users/detailed-info")
@@ -326,7 +352,23 @@ public class UserControllerTest {
 
     }
 
-    @Order(14)
+    @DisplayName("Should fail with status code 400 when request detailed info user" +
+            " with param different of type number, if him exists")
+    @Test
+    void shouldFailToRequestDetailedInfoUserIfParamDifferentOfTypeNumber() throws Exception {
+        this.mockMvc.perform(get("/api-forum/v1/forumhub/users/detailed-info")
+                        .queryParam("user_id", "unexpected")
+                        .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
+                                        "user_id", "3",
+                                        "authority", "ROLE_ADM"))))
+                                .authorities(new SimpleGrantedAuthority("ROLE_ADM")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isBadRequest());
+
+        BDDMockito.verifyNoInteractions(this.userService);
+    }
+
     @DisplayName("BASIC user should be able get detailed info your user with success if " +
             "has authority 'myuser:read' and user_id param is null")
     @Test
@@ -359,7 +401,6 @@ public class UserControllerTest {
 
     }
 
-    @Order(15)
     @DisplayName("MOD user should be able get detailed info your user with success if " +
             "user_id param is null")
     @Test
@@ -392,7 +433,6 @@ public class UserControllerTest {
 
     }
 
-    @Order(16)
     @DisplayName("ADM user should be able get detailed info your user with success if " +
             "user_id param is null")
     @Test
@@ -425,7 +465,6 @@ public class UserControllerTest {
 
     }
 
-    @Order(17)
     @DisplayName("MOD user should be able get detailed info of other user with success if " +
             "user_id param isn't null")
     @Test
@@ -459,7 +498,6 @@ public class UserControllerTest {
 
     }
 
-    @Order(18)
     @DisplayName("ADM user should be able get detailed info of other user with success if " +
             "user_id param isn't null")
     @Test
@@ -494,7 +532,6 @@ public class UserControllerTest {
     }
 
 
-    @Order(19)
     @DisplayName("Should raise exception if BASIC user to request detailed info of other user " +
             "or yourself with user_id param not null")
     @Test
@@ -516,7 +553,7 @@ public class UserControllerTest {
 
     }
 
-    @Order(20)
+
     @DisplayName("Should fail with status code 401 when to request summary info " +
             "user if user unauthenticated")
     @Test
@@ -531,7 +568,7 @@ public class UserControllerTest {
 
     }
 
-    @Order(21)
+
     @DisplayName("Authenticated user should be able of to request user summary info with success")
     @Test
     void AuthenticatedUserShouldToRequestSummaryInfoUserWithSuccess() throws Exception {
@@ -556,7 +593,22 @@ public class UserControllerTest {
 
     }
 
-    @Order(22)
+    @DisplayName("Should fail with status code 400 if request user summary info " +
+            "with param different of type number, if him exists")
+    @Test
+    void shouldFailToRequestSummaryInfoUserIfParamDifferentOfNumber() throws Exception {
+        this.mockMvc.perform(get("/api-forum/v1/forumhub/users/summary-info")
+                        .queryParam("user_id", "unexpected")
+                        .with(jwt())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isBadRequest());
+
+        BDDMockito.verifyNoInteractions(this.userService);
+
+    }
+
+
     @DisplayName("Should fail with status code 401 when to request all " +
             "users if user is unauthenticated")
     @Test
@@ -570,7 +622,7 @@ public class UserControllerTest {
 
     }
 
-    @Order(23)
+
     @DisplayName("Should fail with status code 403 when to request all users " +
             "if authenticated user isn't ADM or MOD or hasn't authority 'user:readAll'")
     @Test
@@ -585,7 +637,7 @@ public class UserControllerTest {
 
     }
 
-    @Order(24)
+
     @DisplayName("Should raise exception if BASIC user to request all users" +
             "same with authority 'user:readAll'")
     @Test
@@ -614,7 +666,7 @@ public class UserControllerTest {
 
     }
 
-    @Order(25)
+
     @DisplayName("MOD user should be able to request all users unsorted with success")
     @Test
     void modUserShouldToRequestAllUsersUnsortedWithSuccess() throws Exception {
@@ -648,7 +700,7 @@ public class UserControllerTest {
 
     }
 
-    @Order(26)
+
     @DisplayName("ADM user should be able to request all users unsorted with success")
     @Test
     void admUserShouldToRequestAllUsersUnsortedWithSuccess() throws Exception {
@@ -682,7 +734,7 @@ public class UserControllerTest {
 
     }
 
-    @Order(27)
+
     @DisplayName("MOD user should be able to request all users sorted descendant by id " +
             "with success")
     @Test
@@ -726,7 +778,7 @@ public class UserControllerTest {
 
     }
 
-    @Order(28)
+
     @DisplayName("ADM user should be able to request all users sorted descendant by id " +
             "with success")
     @Test
@@ -770,7 +822,7 @@ public class UserControllerTest {
 
     }
 
-    @Order(29)
+
     @DisplayName("MOD user should be able to request two users sorted ascendant by firstName " +
             "with success")
     @Test
@@ -813,7 +865,7 @@ public class UserControllerTest {
         BDDMockito.verifyNoMoreInteractions(this.userService);
     }
 
-    @Order(30)
+
     @DisplayName("ADM user should be able to request two users sorted descendant by firstName " +
             "with success")
     @Test
@@ -858,7 +910,7 @@ public class UserControllerTest {
 
     }
 
-    @Order(31)
+
     @DisplayName("Should fail with status code 401 when to edit user " +
             "if user is unauthenticated")
     @Test
@@ -866,7 +918,7 @@ public class UserControllerTest {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO("newJose", "new_jose@email.com",
                 Profile.ProfileName.BASIC, true, true, true, true);
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/users/update")
+        this.mockMvc.perform(put("/api-forum/v1/forumhub/users/edit")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(userUpdateDTO))
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -876,7 +928,7 @@ public class UserControllerTest {
 
     }
 
-    @Order(32)
+
     @DisplayName("Should fail with status code 403 when to edit user " +
             "if authenticated user isn't ADM or hasn't authority 'myuser:edit'")
     @Test
@@ -884,7 +936,7 @@ public class UserControllerTest {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO("newJose", "new_jose@email.com",
                 Profile.ProfileName.BASIC, true, true, true, true);
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/users/update")
+        this.mockMvc.perform(put("/api-forum/v1/forumhub/users/edit")
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "1")))
                         .content(new ObjectMapper().writeValueAsString(userUpdateDTO))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -895,7 +947,60 @@ public class UserControllerTest {
 
     }
 
-    @Order(33)
+    @DisplayName("Should fail with status code 400 when ADM user edit other user" +
+            " with param different of type number")
+    @Test
+    void shouldFailToEditUserIfParamDifferentOfTypeNumber() throws Exception {
+        UserUpdateDTO userUpdateDTO = new UserUpdateDTO("newJose", "new_jose@email.com",
+                Profile.ProfileName.BASIC, true, true, true, true);
+
+        this.mockMvc.perform(put("/api-forum/v1/forumhub/users/edit")
+                        .queryParam("user_id", "unexpected")
+                        .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
+                                        "user_id", "3",
+                                        "authority", "ROLE_ADM"))))
+                                .authorities(new SimpleGrantedAuthority("ROLE_ADM")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(userUpdateDTO))
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isBadRequest());
+
+        BDDMockito.verifyNoInteractions(this.userService);
+
+    }
+
+    @DisplayName("Should fail with status code 400 when edit user if profile sent is" +
+            "different of the enum types available")
+    @Test
+    void shouldFailToEditUserIfEnumTypeSentNonExists() throws Exception {
+        String request = """
+                {
+                 "username": "newJose",
+                 "profile": "unexpected",
+                 "email": "new_jose@email.com",
+                 "accountNonExpired",: true,
+                 "accountNonLocked": true,
+                 "credentialsNonExpired": true,
+                 "enabled": true
+                }
+                """;
+
+        this.mockMvc.perform(put("/api-forum/v1/forumhub/users/edit")
+                        .queryParam("user_id", "1")
+                        .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
+                                        "user_id", "3",
+                                        "authority", "ROLE_ADM"))))
+                                .authorities(new SimpleGrantedAuthority("ROLE_ADM")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(request)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isBadRequest());
+
+        BDDMockito.verifyNoInteractions(this.userService);
+
+    }
+
+
     @DisplayName("BASIC user should be able of edit your user with success if " +
             "user_id param is null and has authority 'myuser:edit'")
     @Test
@@ -910,7 +1015,7 @@ public class UserControllerTest {
         BDDMockito.given(this.userService.updateUser(1L, Profile.ProfileName.BASIC, userUpdateDTO))
                 .willReturn(new UserDetailedInfo(user));
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/users/update")
+        this.mockMvc.perform(put("/api-forum/v1/forumhub/users/edit")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "1",
                                         "authority", "ROLE_BASIC"))))
@@ -936,7 +1041,7 @@ public class UserControllerTest {
 
     }
 
-    @Order(34)
+
     @DisplayName("MOD user should be able of edit your user with success if " +
             "user_id param is null and has authority 'myuser:edit'")
     @Test
@@ -951,7 +1056,7 @@ public class UserControllerTest {
         BDDMockito.given(this.userService.updateUser(2L, Profile.ProfileName.MOD, userUpdateDTO))
                 .willReturn(new UserDetailedInfo(user));
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/users/update")
+        this.mockMvc.perform(put("/api-forum/v1/forumhub/users/edit")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "2",
                                         "authority", "ROLE_MOD"))))
@@ -977,7 +1082,7 @@ public class UserControllerTest {
 
     }
 
-    @Order(35)
+
     @DisplayName("ADM user should be able of edit your user with success if " +
             "user_id param is null")
     @Test
@@ -992,7 +1097,7 @@ public class UserControllerTest {
         BDDMockito.given(this.userService.updateUser(3L, Profile.ProfileName.ADM, userUpdateDTO))
                 .willReturn(new UserDetailedInfo(user));
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/users/update")
+        this.mockMvc.perform(put("/api-forum/v1/forumhub/users/edit")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "3",
                                         "authority", "ROLE_ADM"))))
@@ -1019,7 +1124,6 @@ public class UserControllerTest {
     }
 
 
-    @Order(36)
     @DisplayName("ADM user should be able of edit other user with success if " +
             "user_id param isn't null")
     @Test
@@ -1034,7 +1138,7 @@ public class UserControllerTest {
         BDDMockito.given(this.userService.updateUser(2L, Profile.ProfileName.ADM, userUpdateDTO))
                 .willReturn(new UserDetailedInfo(user));
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/users/update")
+        this.mockMvc.perform(put("/api-forum/v1/forumhub/users/edit")
                         .queryParam("user_id", "2")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "3",
@@ -1061,7 +1165,7 @@ public class UserControllerTest {
 
     }
 
-    @Order(37)
+
     @DisplayName("Should raise exception if BASIC user to try edit other user " +
             "or yourself with user_id param not null")
     @Test
@@ -1072,7 +1176,7 @@ public class UserControllerTest {
         BDDMockito.given(this.userService.updateUser(2L, Profile.ProfileName.BASIC, userUpdateDTO))
                 .willReturn(new UserDetailedInfo(TestsHelper.UserHelper.userList().get(1)));
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/users/update")
+        this.mockMvc.perform(put("/api-forum/v1/forumhub/users/edit")
                         .queryParam("user_id", "2")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "1",
@@ -1086,7 +1190,7 @@ public class UserControllerTest {
         BDDMockito.verifyNoInteractions(this.userService);
     }
 
-    @Order(38)
+
     @DisplayName("Should raise exception if MOD user to try edit other user " +
             "or yourself with user_id param not null")
     @Test
@@ -1097,7 +1201,7 @@ public class UserControllerTest {
         BDDMockito.given(this.userService.updateUser(1L, Profile.ProfileName.MOD, userUpdateDTO))
                 .willReturn(new UserDetailedInfo(TestsHelper.UserHelper.userList().get(0)));
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/users/update")
+        this.mockMvc.perform(put("/api-forum/v1/forumhub/users/edit")
                         .queryParam("user_id", "1")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "2",
@@ -1111,7 +1215,7 @@ public class UserControllerTest {
         BDDMockito.verifyNoInteractions(this.userService);
     }
 
-    @Order(39)
+
     @DisplayName("Should fail with status code 401 when to delete user " +
             "if user is unauthenticated")
     @Test
@@ -1125,7 +1229,7 @@ public class UserControllerTest {
 
     }
 
-    @Order(40)
+
     @DisplayName("Should fail with status code 403 when to delete user " +
             "if authenticated user isn't ADM or hasn't authority 'myuser:delete'")
     @Test
@@ -1140,7 +1244,25 @@ public class UserControllerTest {
 
     }
 
-    @Order(41)
+    @DisplayName("Should fail with status code 400 when ADM user delete other user" +
+            " with param different of type number, if him exists")
+    @Test
+    void shouldFailIfParamDifferentOfTypeNumber() throws Exception {
+        this.mockMvc.perform(delete("/api-forum/v1/forumhub/users/delete")
+                        .queryParam("user_id", "unexpected")
+                        .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
+                                        "user_id", "3",
+                                        "authority", "ROLE_ADM"))))
+                                .authorities(new SimpleGrantedAuthority("ROLE_ADM")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isBadRequest());
+
+        BDDMockito.verifyNoInteractions(this.userService);
+
+    }
+
+
     @DisplayName("BASIC user should be able of delete your user with success if " +
             "user_id param is null and has authority 'myuser:delete'")
     @Test
@@ -1163,7 +1285,7 @@ public class UserControllerTest {
 
     }
 
-    @Order(42)
+
     @DisplayName("MOD user should be able of delete your user with success if " +
             "user_id param is null and has authority 'myuser:delete'")
     @Test
@@ -1187,7 +1309,6 @@ public class UserControllerTest {
     }
 
 
-    @Order(43)
     @DisplayName("ADM user should be able of delete your user with success if " +
             "user_id param is null")
     @Test
@@ -1211,7 +1332,6 @@ public class UserControllerTest {
     }
 
 
-    @Order(44)
     @DisplayName("ADM user should be able of delete other user with success if " +
             "user_id param isn't null")
     @Test
@@ -1235,17 +1355,19 @@ public class UserControllerTest {
 
     }
 
-    @Order(45)
+
     @DisplayName("Should raise exception if BASIC user to try delete other user " +
             "or yourself with user_id param not null")
     @Test
     void shouldFailIfBasicUserTryToDeleteWithUserIdParamNotNull() throws Exception {
         BDDMockito.doNothing().when(this.userService).deleteUser(2L);
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/users/update")
+        this.mockMvc.perform(delete("/api-forum/v1/forumhub/users/delete")
                         .queryParam("user_id", "2")
-                        .with(jwt().jwt(jwt -> jwt.claim("user_id", "1"))
-                                .authorities(new SimpleGrantedAuthority(Profile.ProfileName.BASIC.name())))
+                        .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
+                                        "user_id", "1",
+                                        "authority", "ROLE_BASIC"))))
+                                .authorities(new SimpleGrantedAuthority("SCOPE_myuser:delete")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isBadRequest());
@@ -1253,17 +1375,19 @@ public class UserControllerTest {
         BDDMockito.verifyNoInteractions(this.userService);
     }
 
-    @Order(46)
+
     @DisplayName("Should raise exception if MOD user to try delete other user " +
             "or yourself with user_id param not null")
     @Test
     void shouldFailIfModUserTryToDeleteWithUserIdParamNotNull() throws Exception {
         BDDMockito.doNothing().when(this.userService).deleteUser(1L);
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/users/update")
+        this.mockMvc.perform(delete("/api-forum/v1/forumhub/users/delete")
                         .queryParam("user_id", "1")
-                        .with(jwt().jwt(jwt -> jwt.claim("user_id", "2"))
-                                .authorities(new SimpleGrantedAuthority(Profile.ProfileName.MOD.name())))
+                        .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
+                                        "user_id", "2",
+                                        "authority", "ROLE_MOD"))))
+                                .authorities(new SimpleGrantedAuthority("SCOPE_myuser:delete")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isBadRequest());

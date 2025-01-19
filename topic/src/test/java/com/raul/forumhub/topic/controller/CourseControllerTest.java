@@ -4,13 +4,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.raul.forumhub.topic.domain.Course;
 import com.raul.forumhub.topic.dto.request.CourseCreateDTO;
 import com.raul.forumhub.topic.dto.request.CourseUpdateDTO;
+import com.raul.forumhub.topic.dto.request.TopicCreateDTO;
 import com.raul.forumhub.topic.dto.response.GetCourseCollection;
 import com.raul.forumhub.topic.dto.response.GetCourseDTO;
 import com.raul.forumhub.topic.exception.handler.GlobalExceptionHandler;
 import com.raul.forumhub.topic.security.TopicSecurityConfig;
 import com.raul.forumhub.topic.service.CourseService;
 import com.raul.forumhub.topic.util.TestsHelper;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -49,7 +53,39 @@ public class CourseControllerTest {
     @MockBean
     ClientRegistrationRepository clientRegistrationRepository;
 
-    @Order(1)
+
+    @DisplayName("Should fail with status code 404 if resource doesn't exists")
+    @Test
+    void shouldFailIfResourceDoesNotExistToTheSendRequest() throws Exception {
+        final TopicCreateDTO topicCreateDTO = new TopicCreateDTO("Dúvida na utilização do Feign Client",
+                "Como utilizar o Feign Client para integração do serviço x?",
+                1L);
+
+        this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/creat")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .content(new ObjectMapper()
+                                .writeValueAsString(topicCreateDTO)))
+                .andExpectAll(status().isNotFound());
+
+    }
+
+    @DisplayName("Should fail with status code 400 if method isn't supported")
+    @Test
+    void shouldFailIfMethodIsNotSupportedToTheSendRequest() throws Exception {
+        final TopicCreateDTO topicCreateDTO = new TopicCreateDTO("Dúvida na utilização do Feign Client",
+                "Como utilizar o Feign Client para integração do serviço x?",
+                1L);
+
+        this.mockMvc.perform(put("/api-forum/v1/forumhub/courses/create")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .content(new ObjectMapper()
+                                .writeValueAsString(topicCreateDTO)))
+                .andExpectAll(status().isBadRequest());
+
+    }
+
     @DisplayName("Should fail with status code 401 when attempt create course if user unauthenticated")
     @Test
     void shouldFailToCreateCourseIfUnauthenticated() throws Exception {
@@ -67,7 +103,7 @@ public class CourseControllerTest {
 
     }
 
-    @Order(2)
+
     @DisplayName("Should fail with status code 403 when attempt create course if user is ADM, but " +
             "hasn't authority course:create")
     @Test
@@ -87,7 +123,7 @@ public class CourseControllerTest {
 
     }
 
-    @Order(3)
+
     @DisplayName("Should fail with status code 403 when attempt create course if user has authority" +
             " course:create, but isn't ADM")
     @Test
@@ -108,7 +144,30 @@ public class CourseControllerTest {
 
     }
 
-    @Order(4)
+    @DisplayName("Should fail with status code 400 when create course if category sent is" +
+            " different of the enum types available")
+    @Test
+    void shouldFailToCreateCourseIfEnumTypeSentNonExists() throws Exception {
+        String request = """
+                    {
+                        "name": "Conhecendo a arquitetura cliente servidor",
+                        "category": "FORTRAN"
+                    }
+                """;
+
+        this.mockMvc.perform(post("/api-forum/v1/forumhub/courses/create")
+                        .with(jwt().authorities(
+                                new SimpleGrantedAuthority("SCOPE_course:create"),
+                                new SimpleGrantedAuthority("ROLE_ADM")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .content(request))
+                .andExpect(status().isBadRequest());
+
+        BDDMockito.verifyNoInteractions(this.courseService);
+    }
+
+
     @DisplayName("Should create course with success if user ADM authenticated " +
             "has authority course:create")
     @Test
@@ -135,7 +194,7 @@ public class CourseControllerTest {
 
     }
 
-    @Order(5)
+
     @DisplayName("Should fail with status code 401 when return all courses created if unauthenticated")
     @Test
     void shouldFailToReturnAllCoursesCreatedIfUnauthenticated() throws Exception {
@@ -148,7 +207,7 @@ public class CourseControllerTest {
 
     }
 
-    @Order(6)
+
     @DisplayName("Should return all courses created with successful if authenticated")
     @Test
     void shouldReturnAllCoursesCreatedWithSuccessful() throws Exception {
@@ -169,13 +228,12 @@ public class CourseControllerTest {
     }
 
 
-    @Order(7)
     @DisplayName("Should fail with status code 401 when edit course if unauthenticated")
     @Test
     void shouldFailToEditCourseIfUnauthenticated() throws Exception {
         final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API Rest escalável");
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/courses")
+        this.mockMvc.perform(put("/api-forum/v1/forumhub/courses/edit")
                         .queryParam("courseName", "Criação de uma API Rest")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -187,14 +245,14 @@ public class CourseControllerTest {
 
     }
 
-    @Order(8)
+
     @DisplayName("Should fail with status code 403 when attempt edit course if user is ADM, but " +
             "hasn't authority course:edit")
     @Test
     void shouldFailToEditCourseIfUserIsADMButHasNotSuitableAuthority() throws Exception {
         final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API Rest escalável");
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/courses")
+        this.mockMvc.perform(put("/api-forum/v1/forumhub/courses/edit")
                         .queryParam("courseName", "Criação de uma API Rest")
                         .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_ADM")))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -207,14 +265,14 @@ public class CourseControllerTest {
 
     }
 
-    @Order(11)
+
     @DisplayName("Should fail with status code 403 when attempt edit course if user has authority" +
             " course:edit, but isn't ADM")
     @Test
     void shouldFailToEditCourseIfUserHasSuitableAuthorityButNotIsADM() throws Exception {
         final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API Rest escalável");
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/courses")
+        this.mockMvc.perform(put("/api-forum/v1/forumhub/courses/edit")
                         .queryParam("courseName", "Criação de uma API Rest")
                         .with(jwt().authorities(new SimpleGrantedAuthority("SCOPE_course:edit")))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -227,14 +285,14 @@ public class CourseControllerTest {
 
     }
 
-    @Order(12)
+
     @DisplayName("Should fail with status code 400 when attempt edit course if course name property " +
             "of query param is sent empty")
     @Test
     void shouldFailIfCourseNamePropertyOfQueryParamIsEmptyWhenEditCourse() throws Exception {
         final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API Rest escalável");
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/courses")
+        this.mockMvc.perform(put("/api-forum/v1/forumhub/courses/edit")
                         .queryParam("courseName", "")
                         .with(jwt().authorities(
                                 new SimpleGrantedAuthority("SCOPE_course:edit"),
@@ -250,7 +308,7 @@ public class CourseControllerTest {
 
     }
 
-    @Order(13)
+
     @DisplayName("Should edit course with success if user ADM authenticated has authority 'course:edit'")
     @Test
     void shouldEditCourseWithSuccessIfAuthenticatedAndHasSuitableAuthority() throws Exception {
@@ -262,7 +320,7 @@ public class CourseControllerTest {
         BDDMockito.given(this.courseService.updateNameCourse("Criação de uma API Rest", courseUpdateDTO))
                 .willReturn(new GetCourseDTO(course));
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/courses")
+        this.mockMvc.perform(put("/api-forum/v1/forumhub/courses/edit")
                         .queryParam("courseName", "Criação de uma API Rest")
                         .with(jwt().authorities(
                                 new SimpleGrantedAuthority("SCOPE_course:edit"),
@@ -279,7 +337,7 @@ public class CourseControllerTest {
 
     }
 
-    @Order(14)
+
     @DisplayName("Should fail with status code 401 when delete course if unauthenticated")
     @Test
     void shouldFailToDeleteCourseIfUnauthenticated() throws Exception {
@@ -293,7 +351,7 @@ public class CourseControllerTest {
 
     }
 
-    @Order(15)
+
     @DisplayName("Should fail with status code 403 when attempt delete course if user is ADM, but " +
             "hasn't authority course:delete")
     @Test
@@ -309,7 +367,7 @@ public class CourseControllerTest {
 
     }
 
-    @Order(16)
+
     @DisplayName("Should fail with status code 403 when attempt delete course if user has authority" +
             " course:delete, but isn't ADM")
     @Test
@@ -325,7 +383,7 @@ public class CourseControllerTest {
 
     }
 
-    @Order(17)
+
     @DisplayName("Should fail with status code 400 when attempt delete course if course name property " +
             "of query param is sent empty")
     @Test
@@ -345,8 +403,6 @@ public class CourseControllerTest {
 
     }
 
-
-    @Order(18)
     @DisplayName("Should delete course with success if user ADM authenticated and " +
             "has authority 'course:delete'")
     @Test
