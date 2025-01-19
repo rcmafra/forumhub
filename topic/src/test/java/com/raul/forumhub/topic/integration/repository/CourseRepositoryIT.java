@@ -8,7 +8,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -23,7 +23,7 @@ public class CourseRepositoryIT {
     void shouldFindCourseByNameWithSuccessIfExists() {
         this.courseRepository.save(TestsHelper.CourseHelper.courseList().get(0));
 
-        assertThat(this.courseRepository.findCourseByName("Criação de uma API Rest")
+        assertTrue(this.courseRepository.findCourseByName("Criação de uma API Rest")
                 .isPresent());
 
     }
@@ -32,7 +32,7 @@ public class CourseRepositoryIT {
     void shouldReturnOptionalEmptyWhenSearchCourseByNameAndHimNotExists() {
         this.courseRepository.saveAll(TestsHelper.CourseHelper.courseList());
 
-        assertThat(this.courseRepository.findCourseByName("Aprendendo sobre mocks")
+        assertTrue(this.courseRepository.findCourseByName("Aprendendo sobre mocks")
                 .isEmpty());
 
     }
