@@ -13,7 +13,7 @@ public class PasswordConstraintValidator implements ConstraintValidator<Password
 
     @Override
     public boolean isValid(String password, ConstraintValidatorContext context) {
-        Assert.notNull(password, "A senha não pode ser null");
+        Assert.notNull(password, "A senha não pode ser vazia");
 
         PasswordValidator passwordValidator = new PasswordValidator(translatedPasswordRules(),
                 new LengthRule(8, 16),
@@ -34,7 +34,7 @@ public class PasswordConstraintValidator implements ConstraintValidator<Password
         }
 
         context.buildConstraintViolationWithTemplate(passwordValidator.getMessages(result)
-                .stream().findFirst().get()).addConstraintViolation().disableDefaultConstraintViolation();
+                .stream().findFirst().orElseThrow()).addConstraintViolation().disableDefaultConstraintViolation();
 
         return false;
     }
