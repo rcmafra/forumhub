@@ -48,7 +48,6 @@ public class TopicServiceTest {
     TopicService topicService;
 
 
-    @Order(1)
     @Test
     void shouldFailIfTitlePropertyIsEmptyWhenCreateTopic() {
         final TopicCreateDTO topicCreateDTO = new TopicCreateDTO("",
@@ -78,7 +77,7 @@ public class TopicServiceTest {
 
     }
 
-    @Order(2)
+
     @Test
     void shouldFailIfQuestionPropertyIsEmptyWhenCreateTopic() {
         final TopicCreateDTO topicCreateDTO = new TopicCreateDTO("Dúvida na utilização do Feign Client",
@@ -108,7 +107,7 @@ public class TopicServiceTest {
 
     }
 
-    @Order(3)
+
     @Test
     void shouldFailToCreateTopicIfTitlePropertyIsGreaterThan150Chars() {
         final TopicCreateDTO topicCreateDTO = new TopicCreateDTO(
@@ -142,7 +141,7 @@ public class TopicServiceTest {
 
     }
 
-    @Order(4)
+
     @Test
     void shouldFailToCreateTopicIfCourseNotExists() {
         final TopicCreateDTO topicCreateDTO = new TopicCreateDTO("Dúvida na utilização do Feign Client",
@@ -171,7 +170,6 @@ public class TopicServiceTest {
     }
 
 
-    @Order(5)
     @Test
     void shouldFailToCreateTopicIfUserServiceReturn404StatusCode() {
         final TopicCreateDTO topicCreateDTO = new TopicCreateDTO("Dúvida na utilização do Feign Client",
@@ -195,7 +193,7 @@ public class TopicServiceTest {
 
     }
 
-    @Order(6)
+
     @Test
     void shouldCreateTopicWithSuccessIfEverythingIsOK() {
         final TopicCreateDTO topicCreateDTO = new TopicCreateDTO("Dúvida na utilização do Feign Client",
@@ -221,7 +219,7 @@ public class TopicServiceTest {
 
     }
 
-    @Order(7)
+
     @Test
     void shouldReturnAllTopicsUnsortedWithSuccessful() {
         Pageable pageable = PageRequest.of(0, 10, Sort.unsorted());
@@ -251,7 +249,7 @@ public class TopicServiceTest {
 
     }
 
-    @Order(8)
+
     @Test
     void shouldReturnAllTopicsSortedDescendantByCreateDateWithSuccessful() {
         Pageable pageable = PageRequest.of(0, 10,
@@ -288,7 +286,7 @@ public class TopicServiceTest {
 
     }
 
-    @Order(9)
+
     @Test
     void shouldReturnTwoTopicsSortedAscendantByStatusWithSuccessful() {
         Pageable pageable = PageRequest.of(0, 2,
@@ -328,7 +326,6 @@ public class TopicServiceTest {
     }
 
 
-    @Order(10)
     @Test
     void shouldReturnAllTopicsSortedAscendantByTitleWithSuccessful() {
         Pageable pageable = PageRequest.of(0, 10,
@@ -365,7 +362,7 @@ public class TopicServiceTest {
 
     }
 
-    @Order(11)
+
     @Test
     void shouldFailToRequestTheSpecifiedTopicIfNotExists() {
         BDDMockito.given(this.topicRepository.findById(1L))
@@ -383,7 +380,7 @@ public class TopicServiceTest {
 
     }
 
-    @Order(12)
+
     @DisplayName("Should return the specified topic with successful if exists")
     @Test
     void shouldReturnTheSpecifiedTopicWithSuccessful() {
@@ -406,7 +403,7 @@ public class TopicServiceTest {
 
     }
 
-    @Order(13)
+
     @Test
     void shouldFailIfTitlePropertyIsEmptyWhenEditTopic() {
         final TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO(
@@ -443,7 +440,7 @@ public class TopicServiceTest {
 
     }
 
-    @Order(14)
+
     @Test
     void shouldFailIfQuestionPropertyIsEmptyWhenEditTopic() {
         TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO(
@@ -480,7 +477,7 @@ public class TopicServiceTest {
 
     }
 
-    @Order(15)
+
     @Test
     void shouldFailToEditTopicIfCourseNotExists() {
         final TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO(
@@ -509,7 +506,6 @@ public class TopicServiceTest {
     }
 
 
-    @Order(16)
     @Test
     void shouldFailToEditTopicIfUserServiceReturn404StatusCode() {
         final TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO(
@@ -544,7 +540,6 @@ public class TopicServiceTest {
     }
 
 
-    @Order(17)
     @Test
     void shouldFailIfBasicUserAttemptEditTopicOfOtherAuthor() {
         final TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO(
@@ -577,7 +572,7 @@ public class TopicServiceTest {
 
     }
 
-    @Order(18)
+
     @Test
     void shouldFailWhenAttemptEditTopicOfUnknownAuthor() {
         final TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO(
@@ -611,7 +606,7 @@ public class TopicServiceTest {
 
     }
 
-    @Order(19)
+
     @Test
     void topicAuthorShouldEditSpecifiedTopicWithSuccess() {
         final TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO(
@@ -643,7 +638,7 @@ public class TopicServiceTest {
 
     }
 
-    @Order(20)
+
     @Test
     void userADMShouldEditTopicOfOtherAuthorWithSuccess() {
         final TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO(
@@ -675,7 +670,7 @@ public class TopicServiceTest {
 
     }
 
-    @Order(21)
+
     @Test
     void userMODShouldEditTopicOfOtherAuthorWithSuccess() {
         final TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO(
@@ -708,7 +703,7 @@ public class TopicServiceTest {
 
     }
 
-    @Order(22)
+
     @Test
     void shouldFailToDeleteTopicIfUserServiceReturn404StatusCode() {
         BDDMockito.given(this.topicRepository.findById(1L))
@@ -731,7 +726,7 @@ public class TopicServiceTest {
 
     }
 
-    @Order(23)
+
     @Test
     void shouldFailIfBasicUserAttemptDeleteTopicOfOtherAuthor() {
         BDDMockito.given(this.topicRepository.findById(2L))
@@ -754,7 +749,7 @@ public class TopicServiceTest {
 
     }
 
-    @Order(24)
+
     @Test
     void topicAuthorShouldDeleteSpecifiedTopicWithSuccess() {
         BDDMockito.given(this.topicRepository.findById(1L))
@@ -777,7 +772,7 @@ public class TopicServiceTest {
 
     }
 
-    @Order(25)
+
     @Test
     void userADMShouldDeleteTopicOfOtherAuthorWithSuccess() {
         BDDMockito.given(this.topicRepository.findById(2L))
@@ -798,7 +793,7 @@ public class TopicServiceTest {
 
     }
 
-    @Order(26)
+
     @Test
     void userMODShouldDeleteTopicOfOtherAuthorWithSuccess() {
         BDDMockito.given(this.topicRepository.findById(3L))

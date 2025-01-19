@@ -38,7 +38,6 @@ public class AnswerServiceTest {
     AnswerService answerService;
 
 
-    @Order(1)
     @Test
     void shouldFailIfQuestionPropertyIsEmptyWhenAnswerTopic() {
         final AnswerTopicDTO answerTopicDTO = new AnswerTopicDTO("");
@@ -66,7 +65,7 @@ public class AnswerServiceTest {
 
     }
 
-    @Order(2)
+
     @Test
     void shouldFailToAnswerTopicIfSpecifiedTopicNotExists() {
         final AnswerTopicDTO answerTopicDTO = new AnswerTopicDTO("Resposta teste");
@@ -89,7 +88,6 @@ public class AnswerServiceTest {
     }
 
 
-    @Order(3)
     @Test
     void shouldFailToAnswerTopicIfUserServiceReturn404StatusCode() {
         final AnswerTopicDTO answerTopicDTO = new AnswerTopicDTO("Resposta teste");
@@ -115,7 +113,7 @@ public class AnswerServiceTest {
 
     }
 
-    @Order(4)
+
     @Test
     void shouldAnswerTopicWithSuccessIfEverythingIsOk() {
         final AnswerTopicDTO answerTopicDTO = new AnswerTopicDTO("Resposta teste");
@@ -141,7 +139,7 @@ public class AnswerServiceTest {
 
     }
 
-    @Order(5)
+
     @Test
     void shouldFailToMarkAnswerBestIfSpecifiedTopicNotExists() {
         BDDMockito.given(this.topicService.getTopicById(1L)).
@@ -161,7 +159,7 @@ public class AnswerServiceTest {
 
     }
 
-    @Order(6)
+
     @Test
     void shouldFailToMarkAnswerBestIfUserServiceReturn404StatusCode() {
         BDDMockito.given(this.topicService.getTopicById(1L))
@@ -183,7 +181,7 @@ public class AnswerServiceTest {
 
     }
 
-    @Order(7)
+
     @Test
     void shouldFailToMarkAnswerBestIfAuthenticatedUserIsNotOwnerTopic() {
         BDDMockito.given(this.topicService.getTopicById(1L))
@@ -206,7 +204,7 @@ public class AnswerServiceTest {
 
     }
 
-    @Order(8)
+
     @Test
     void shouldFailToMarkAnswerBestIfYetNotExistsAnswer() {
         BDDMockito.given(this.topicService.getTopicById(4L))
@@ -229,7 +227,6 @@ public class AnswerServiceTest {
     }
 
 
-    @Order(9)
     @Test
     void shouldFailToMarkAnswerBestIfAlreadyExistsBestAnswer() {
         BDDMockito.given(this.topicService.getTopicById(2L))
@@ -253,7 +250,7 @@ public class AnswerServiceTest {
 
     }
 
-    @Order(10)
+
     @Test
     void shouldMarkAnswerBestWithSuccessIfEverythingIsOk() {
         BDDMockito.given(this.topicService.getTopicById(1L))
@@ -282,7 +279,7 @@ public class AnswerServiceTest {
 
     }
 
-    @Order(11)
+
     @Test
     void shouldFailIfSolutionPropertyIsEmptyWhenEditAnswer() {
         final AnswerUpdateDTO answerUpdateDTO = new AnswerUpdateDTO("");
@@ -315,7 +312,7 @@ public class AnswerServiceTest {
 
     }
 
-    @Order(12)
+
     @Test
     void shouldFailToEditAnswerIfTopicNotExists() {
         final AnswerUpdateDTO answerUpdateDTO =
@@ -337,7 +334,7 @@ public class AnswerServiceTest {
 
     }
 
-    @Order(13)
+
     @Test
     void shouldFailToEditAnswerIfAnswerNotExists() {
         final AnswerUpdateDTO answerUpdateDTO =
@@ -364,7 +361,6 @@ public class AnswerServiceTest {
     }
 
 
-    @Order(14)
     @Test
     void shouldFailToEditAnswerIfUserServiceReturn404StatusCode() {
         final AnswerUpdateDTO answerUpdateDTO =
@@ -394,7 +390,7 @@ public class AnswerServiceTest {
 
     }
 
-    @Order(15)
+
     @Test
     void shouldFailIfBasicUserAttemptEditAnswerOfOtherAuthor() {
         final AnswerUpdateDTO answerUpdateDTO =
@@ -424,7 +420,7 @@ public class AnswerServiceTest {
 
     }
 
-    @Order(16)
+
     @DisplayName("Should fail with status code 422 when attempt edit a answer of unknown author")
     @Test
     void shouldFailWhenAttemptEditAnswerOfUnknownAuthor() {
@@ -458,7 +454,7 @@ public class AnswerServiceTest {
 
     }
 
-    @Order(17)
+
     @Test
     void answerAuthorShouldEditSpecifiedAnswerWithSuccessIfEverythingIsOk() {
         final AnswerUpdateDTO answerUpdateDTO =
@@ -490,7 +486,7 @@ public class AnswerServiceTest {
 
     }
 
-    @Order(18)
+
     @Test
     void userADMShouldEditAnswerOfOtherAuthorWithSuccessIfEverythingIsOk() {
         final AnswerUpdateDTO answerUpdateDTO =
@@ -523,7 +519,7 @@ public class AnswerServiceTest {
 
     }
 
-    @Order(19)
+
     @Test
     void userMODShouldEditAnswerOfOtherAuthorWithSuccessIfEverythingIsOk() {
         final AnswerUpdateDTO answerUpdateDTO =
@@ -555,7 +551,7 @@ public class AnswerServiceTest {
 
     }
 
-    @Order(20)
+
     @Test
     void shouldFailToDeleteAnswerIfUserServiceReturn404StatusCode() {
         BDDMockito.given(this.answerRepository.findById(1L))
@@ -578,7 +574,7 @@ public class AnswerServiceTest {
 
     }
 
-    @Order(21)
+
     @Test
     void shouldFailIfProvidedAnswerNotBelongingToTheProvidedTopicWhenDeleteAnswer() {
         BDDMockito.given(this.answerRepository.findById(2L))
@@ -601,7 +597,7 @@ public class AnswerServiceTest {
 
     }
 
-    @Order(22)
+
     @Test
     void shouldFailIfBasicUserAttemptDeleteAnswerOfOtherAuthor() {
         BDDMockito.given(this.answerRepository.findById(1L))
@@ -624,7 +620,7 @@ public class AnswerServiceTest {
 
     }
 
-    @Order(23)
+
     @Test
     void answerAuthorShouldDeleteSpecifiedAnswerWithSuccessIfEverythingIsOk() {
         BDDMockito.given(this.answerRepository.findById(1L))
@@ -647,7 +643,7 @@ public class AnswerServiceTest {
 
     }
 
-    @Order(24)
+
     @Test
     void userADMShouldDeleteTopicOfOtherAuthorWithSuccessIfEverythingIsOk() {
         BDDMockito.given(this.answerRepository.findById(1L))
@@ -670,7 +666,7 @@ public class AnswerServiceTest {
 
     }
 
-    @Order(25)
+
     @Test
     void userMODShouldDeleteTopicOfOtherAuthorWithSuccessIfEverythingIsOk() {
         BDDMockito.given(this.answerRepository.findById(3L))
