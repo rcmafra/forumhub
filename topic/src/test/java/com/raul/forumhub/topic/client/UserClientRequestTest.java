@@ -7,6 +7,7 @@ import lombok.SneakyThrows;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
+import okhttp3.mockwebserver.SocketPolicy;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -68,9 +69,8 @@ class UserClientRequestTest {
 
 
     @Test
-    @DisplayName("Should return OK and summarized info user " +
-            "in the body with success")
-    void shouldReturn200WhenRequestingSummarizedInfoUser() throws Exception {
+    @DisplayName("Should return OK and summarized info user in the body with success")
+    void shouldReturn200WhenRequestingSummarizedInfoUser() {
         Author author = TestsHelper.AuthorHelper.authorList().get(0);
 
         prepareResponse(response -> {
@@ -83,7 +83,7 @@ class UserClientRequestTest {
 
         assertThat(authorResponse.toString()).isEqualTo(author.toString());
 
-        expectedRequestCount(1);
+        expecOnlyOneRequest();
         expectedRequest(expected -> {
                     assertThat(expected.getMethod()).isEqualTo("GET");
                     assertThat(expected.getPath()).isEqualTo("/api-forum/v1/forumhub/users/summary-info?user_id=1");
@@ -98,7 +98,7 @@ class UserClientRequestTest {
     @Test
     @DisplayName("Should return OK and summarized info user " +
             "in the body with success same with the slow network")
-    void shouldReturn200WhenRequestingSummarizedInfoUserWithSlowNetwork() throws Exception {
+    void shouldReturn200WhenRequestingSummarizedInfoUserWithSlowNetwork() {
         Author author = TestsHelper.AuthorHelper.authorList().get(0);
 
         prepareResponse(response -> {
@@ -111,7 +111,7 @@ class UserClientRequestTest {
 
         assertThat(authorResponse.toString()).isEqualTo(author.toString());
 
-        expectedRequestCount(1);
+        expecOnlyOneRequest();
         expectedRequest(expected -> {
                     assertThat(expected.getMethod()).isEqualTo("GET");
                     assertThat(expected.getPath()).isEqualTo("/api-forum/v1/forumhub/users/summary-info?user_id=1");
@@ -125,22 +125,44 @@ class UserClientRequestTest {
 
     @Test
     @DisplayName("Should throw an exception when requesting info " +
-            "summarized from user and the client doesn't respond")
-    void shouldThrowExceptionWhenReceiveTimedOutInTheRequestWithClient() throws Exception {
-        Author author = TestsHelper.AuthorHelper.authorList().get(0);
-
+            "summarized from user and the server doesn't respond")
+    void shouldThrowExceptionWhenReceiveTimedOutInTheRequestWithClient() {
         prepareResponse(response -> {
             response.setHeadersDelay(11000, TimeUnit.MILLISECONDS);
             response.setBodyDelay(11000, TimeUnit.MILLISECONDS);
             response.setHeader("Content-Type", "application/json");
-            response.setBody("{\"id\":1,\"username\":\"Jose\",\"email\":\"jose@email.com\"," +
-                    "\"profile\":{\"profileName\":\"BASIC\"}}");
+        });
+
+        assertThrows(RestClientException.class, () -> this.userClientRequest.getUserById(1L),
+                "Erro inesperado durante a comunicação com o serviço de usuário");
+
+        expecOnlyOneRequest();
+        expectedRequest(expected -> {
+                    assertThat(expected.getMethod()).isEqualTo("GET");
+                    assertThat(expected.getPath()).isEqualTo("/api-forum/v1/forumhub/users/summary-info?user_id=1");
+                    assertThat(expected.getHeader(HttpHeaders.ACCEPT)).isEqualTo("application/json");
+                    assertThat(expected.getHeader(HttpHeaders.ACCEPT_CHARSET)).isEqualTo("utf-8");
+                    assertThat(expected.getHeader(HttpHeaders.AUTHORIZATION)).isNotEmpty();
+                }
+        );
+
+    }
+
+    @Test
+    @DisplayName("Should throw an exception when requesting info summarized from user " +
+            "and the client not able open connection with server")
+    void shouldThrowExceptionWhenNotAbleOpenConnectionWithServer() {
+        prepareResponse(response -> {
+            response.setHeader("Content-Type", "application/json");
+            response.setResponseCode(503);
+            response.socketPolicy(SocketPolicy.DISCONNECT_AFTER_REQUEST);
+            response.setBody("Serviço de usuário indisponível");
         });
 
         assertThrows(RestClientException.class, () -> this.userClientRequest.getUserById(1L),
                 "Serviço de usuário indisponível");
 
-        expectedRequestCount(1);
+        expecOnlyOneRequest();
         expectedRequest(expected -> {
                     assertThat(expected.getMethod()).isEqualTo("GET");
                     assertThat(expected.getPath()).isEqualTo("/api-forum/v1/forumhub/users/summary-info?user_id=1");
@@ -155,14 +177,14 @@ class UserClientRequestTest {
     @Test
     @DisplayName("Should throw an exception when requesting info " +
             "summarized from user and he not exists")
-    void shouldThrowExceptionWhenRequestingInfoUserAndHimNotToExists() throws Exception {
-        Author author = TestsHelper.AuthorHelper.authorList().get(0);
-
+    void shouldThrowExceptionWhenRequestingInfoUserAndHimNotToExists() {
         String body = """
-                "{\\"timestamp\\":\\"2024-12-17T14:58:21.9721648\\",\\"status\\":404,\\"title\\":\\"Solicitação não processada\\"," 
-                  "\\"detail\\":\\"{\\"timestamp\\":\\"2024-12-17T14:58:21.9653061\\",\\"status\\":404,\\"title\\":\\"Solicitação não encontrada\\","
-                  "\\"detail\\":\\"Usuário não encontrado\\",\\"instance\\":\\"/api-forum/v1/forumhub/users/summary-info\\"}\\","
-                   "\\"instance\\":\\"/api-forum/v1/forumhub/topics/create\\"}"
+                {
+                    "timestamp":"2024-12-17T14:58:21.9721648","status":404,"title":"Solicitação não processada",
+                    "detail":"{"timestamp":"2024-12-17T14:58:21.9653061","status":404,"title":"Solicitação não encontrada"
+                    "detail":"Usuário não encontrado","instance":"/api-forum/v1/forumhub/users/summary-info"}"
+                    "instance":"/api-forum/v1/forumhub/topics/create"
+                  }
                 """;
 
         prepareResponse(response -> {
@@ -171,10 +193,10 @@ class UserClientRequestTest {
             response.setBody(body);
         });
 
-        assertThrows(RestClientException.class, () -> this.userClientRequest.getUserById(5L),
-                body);
+        assertThrows(RestClientException.class,
+                () -> this.userClientRequest.getUserById(5L), body);
 
-        expectedRequestCount(1);
+        expecOnlyOneRequest();
         expectedRequest(expected -> {
                     assertThat(expected.getMethod()).isEqualTo("GET");
                     assertThat(expected.getPath()).isEqualTo("/api-forum/v1/forumhub/users/summary-info?user_id=5");
@@ -194,8 +216,8 @@ class UserClientRequestTest {
     }
 
 
-    private void expectedRequestCount(int count) {
-        assertThat(userClient.getRequestCount()).isEqualTo(count);
+    private void expecOnlyOneRequest() {
+        assertThat(userClient.getRequestCount()).isEqualTo(1);
     }
 
 
