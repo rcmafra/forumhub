@@ -169,7 +169,7 @@ public class UserControllerIT {
                         .content(new ObjectMapper()
                                 .writeValueAsString(userCreateDTO)))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.detail", is("A senha não pode ser null")));
+                .andExpect(jsonPath("$.detail", is("A senha não pode ser vazia")));
 
     }
 
