@@ -756,7 +756,7 @@ public class AnswerControllerIT {
                                 .writeValueAsString(answerUpdateDTO)))
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.detail", is(
-                        "O tópico pertence a um autor inexistente," +
+                        "A resposta pertence a um autor inexistente," +
                                 " ele não pode ser editado"
                 )));
 
