@@ -67,12 +67,12 @@ public class AnswerControllerIT {
     @MockBean
     UserClientRequest userClientRequest;
 
-    private static final Jwt jwt;
+    private static final Jwt JWT;
 
     private static boolean hasBeenInitialized = false;
 
     static {
-        jwt = Jwt.withTokenValue("token")
+        JWT = Jwt.withTokenValue("token")
                 .header("alg", "none")
                 .claim("user_id", "1")
                 .build();
@@ -150,7 +150,7 @@ public class AnswerControllerIT {
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
 
         this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/{topic_id}/answer", 1)
-                        .with(jwt().jwt(jwt))
+                        .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -174,7 +174,7 @@ public class AnswerControllerIT {
         final AnswerTopicDTO answerTopicDTO = new AnswerTopicDTO("Resposta teste");
 
         this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/{topic_id}/answer", 6)
-                        .with(jwt().jwt(jwt))
+                        .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -202,7 +202,7 @@ public class AnswerControllerIT {
                 .willThrow(new RestClientException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
 
         this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/{topic_id}/answer", 1)
-                        .with(jwt().jwt(jwt))
+                        .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -232,7 +232,7 @@ public class AnswerControllerIT {
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
 
         this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/{topic_id}/answer", 1)
-                        .with(jwt().jwt(jwt))
+                        .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -281,7 +281,7 @@ public class AnswerControllerIT {
     void shouldFailIfAnswerIdPropertyOfQueryParamIsEmptyWhenMarkAnswerBest() throws Exception {
         this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/{topic_id}/markBestAnswer", 1)
                         .queryParam("answer_id", "")
-                        .with(jwt().jwt(jwt))
+                        .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isBadRequest());
@@ -306,7 +306,7 @@ public class AnswerControllerIT {
     void shouldFailToRequestTopicIfParamDifferentOfTypeNumber() throws Exception {
         this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/{topic_id}/markBestAnswer", 1)
                         .queryParam("answer_id", "unexpected")
-                        .with(jwt().jwt(jwt))
+                        .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isBadRequest());
@@ -319,7 +319,7 @@ public class AnswerControllerIT {
     void shouldFailToMarkAnswerBestIfSpecifiedTopicNotExists() throws Exception {
         this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/6/markBestAnswer")
                         .queryParam("answer_id", "1")
-                        .with(jwt().jwt(jwt))
+                        .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isNotFound())
@@ -344,7 +344,7 @@ public class AnswerControllerIT {
 
         this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/{topic_id}/markBestAnswer", 1)
                         .queryParam("answer_id", "1")
-                        .with(jwt().jwt(jwt))
+                        .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isNotFound());
@@ -405,7 +405,7 @@ public class AnswerControllerIT {
 
         this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/{topic_id}/markBestAnswer", 4)
                         .queryParam("answer_id", "1")
-                        .with(jwt().jwt(jwt))
+                        .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isUnprocessableEntity())
@@ -467,7 +467,7 @@ public class AnswerControllerIT {
 
         this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/{topic_id}/markBestAnswer", 1)
                         .queryParam("answer_id", "1")
-                        .with(jwt().jwt(jwt))
+                        .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
@@ -498,7 +498,7 @@ public class AnswerControllerIT {
         this.mockMvc.perform(put("/api-forum/v1/forumhub/topics/{topic_id}/answers/edit", 1)
                         .param("topic_id", "1")
                         .queryParam("answer_id", "1")
-                        .with(jwt().jwt(jwt))
+                        .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -712,7 +712,7 @@ public class AnswerControllerIT {
 
         this.mockMvc.perform(put("/api-forum/v1/forumhub/topics/{topic_id}/answers/edit", 1)
                         .queryParam("answer_id", "1")
-                        .with(jwt().jwt(jwt)
+                        .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_answer:edit")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -900,7 +900,7 @@ public class AnswerControllerIT {
     void shouldFailIfUserHasNotSuitableAuthorityWhenDeleteAnswer() throws Exception {
         this.mockMvc.perform(delete("/api-forum/v1/forumhub/topics/{topic_id}/answers/delete", 1)
                         .queryParam("answer_id", "1")
-                        .with(jwt().jwt(jwt))
+                        .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isForbidden());
@@ -925,7 +925,7 @@ public class AnswerControllerIT {
     void shouldFailIfAnswerIdPropertyOfQueryParamIsEmptyWhenDeleteAnswer() throws Exception {
         this.mockMvc.perform(delete("/api-forum/v1/forumhub/topics/{topic_id}/answers/delete", 1)
                         .queryParam("answer_id", "")
-                        .with(jwt().jwt(jwt)
+                        .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_answer:delete")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -967,7 +967,7 @@ public class AnswerControllerIT {
 
         this.mockMvc.perform(delete("/api-forum/v1/forumhub/topics/{topic_id}/answers/delete", 1)
                         .queryParam("answer_id", "1")
-                        .with(jwt().jwt(jwt)
+                        .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_answer:delete")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -1028,7 +1028,7 @@ public class AnswerControllerIT {
 
         this.mockMvc.perform(delete("/api-forum/v1/forumhub/topics/{topic_id}/answers/delete", 1)
                         .queryParam("answer_id", "1")
-                        .with(jwt().jwt(jwt)
+                        .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_answer:delete")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))

@@ -66,12 +66,12 @@ public class TopicControllerIT {
     @MockBean
     UserClientRequest userClientRequest;
 
-    private static final Jwt jwt;
+    private static final Jwt JWT;
 
     private static boolean hasBeenInitialized = false;
 
     static {
-        jwt = Jwt.withTokenValue("token")
+        JWT = Jwt.withTokenValue("token")
                 .header("alg", "none")
                 .claim("user_id", "1")
                 .build();
@@ -98,7 +98,7 @@ public class TopicControllerIT {
                 1L);
 
         this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/creat")
-                        .with(jwt().jwt(jwt))
+                        .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -115,7 +115,7 @@ public class TopicControllerIT {
                 1L);
 
         this.mockMvc.perform(put("/api-forum/v1/forumhub/topics/create")
-                        .with(jwt().jwt(jwt))
+                        .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -157,7 +157,7 @@ public class TopicControllerIT {
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
 
         this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/create")
-                        .with(jwt().jwt(jwt))
+                        .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -183,7 +183,7 @@ public class TopicControllerIT {
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
 
         this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/create")
-                        .with(jwt().jwt(jwt))
+                        .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -211,7 +211,7 @@ public class TopicControllerIT {
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
 
         this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/create")
-                        .with(jwt().jwt(jwt))
+                        .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -236,7 +236,7 @@ public class TopicControllerIT {
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
 
         this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/create")
-                        .with(jwt().jwt(jwt))
+                        .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -263,7 +263,7 @@ public class TopicControllerIT {
                 .willThrow(new RestClientException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
 
         this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/create")
-                        .with(jwt().jwt(jwt))
+                        .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -291,7 +291,7 @@ public class TopicControllerIT {
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
 
         this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/create")
-                        .with(jwt().jwt(jwt))
+                        .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -470,7 +470,7 @@ public class TopicControllerIT {
 
         this.mockMvc.perform(put("/api-forum/v1/forumhub/topics/edit")
                         .queryParam("topic_id", "1")
-                        .with(jwt().jwt(jwt))
+                        .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -503,7 +503,7 @@ public class TopicControllerIT {
 
         this.mockMvc.perform(put("/api-forum/v1/forumhub/topics/edit")
                         .queryParam("topic_id", "unexpected")
-                        .with(jwt().jwt(jwt)
+                        .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:edit")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -530,7 +530,7 @@ public class TopicControllerIT {
 
         this.mockMvc.perform(put("/api-forum/v1/forumhub/topics/edit")
                         .queryParam("topic_id", "1")
-                        .with(jwt().jwt(jwt)
+                        .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:edit")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -565,7 +565,7 @@ public class TopicControllerIT {
 
         this.mockMvc.perform(put("/api-forum/v1/forumhub/topics/edit")
                         .queryParam("topic_id", "1")
-                        .with(jwt().jwt(jwt)
+                        .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:edit")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -598,7 +598,7 @@ public class TopicControllerIT {
 
         this.mockMvc.perform(put("/api-forum/v1/forumhub/topics/edit")
                         .queryParam("topic_id", "")
-                        .with(jwt().jwt(jwt)
+                        .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:edit")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -623,7 +623,7 @@ public class TopicControllerIT {
 
         this.mockMvc.perform(put("/api-forum/v1/forumhub/topics/edit")
                         .queryParam("topic_id", "1")
-                        .with(jwt().jwt(jwt)
+                        .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:edit")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -658,7 +658,7 @@ public class TopicControllerIT {
 
         this.mockMvc.perform(put("/api-forum/v1/forumhub/topics/edit")
                         .queryParam("topic_id", "1")
-                        .with(jwt().jwt(jwt)
+                        .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:edit")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -693,7 +693,7 @@ public class TopicControllerIT {
 
         this.mockMvc.perform(put("/api-forum/v1/forumhub/topics/edit")
                         .queryParam("topic_id", "2")
-                        .with(jwt().jwt(jwt)
+                        .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:edit")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -769,7 +769,7 @@ public class TopicControllerIT {
 
         this.mockMvc.perform(put("/api-forum/v1/forumhub/topics/edit")
                         .queryParam("topic_id", "1")
-                        .with(jwt().jwt(jwt)
+                        .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:edit")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -881,7 +881,7 @@ public class TopicControllerIT {
     void shouldFailIfUserHasNotSuitableAuthorityWhenDeleteTopic() throws Exception {
         this.mockMvc.perform(delete("/api-forum/v1/forumhub/topics/delete")
                         .queryParam("topic_id", "1")
-                        .with(jwt().jwt(jwt))
+                        .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isForbidden());
@@ -899,7 +899,7 @@ public class TopicControllerIT {
     void shouldFailIfTopicIdPropertyOfQueryParamIsEmptyWhenDeleteTopic() throws Exception {
         this.mockMvc.perform(delete("/api-forum/v1/forumhub/topics")
                         .queryParam("topic_id", "")
-                        .with(jwt().jwt(jwt)
+                        .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:delete")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -920,7 +920,7 @@ public class TopicControllerIT {
 
         this.mockMvc.perform(delete("/api-forum/v1/forumhub/topics/delete")
                         .queryParam("topic_id", "unexpected")
-                        .with(jwt().jwt(jwt)
+                        .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:delete")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -938,7 +938,7 @@ public class TopicControllerIT {
 
         this.mockMvc.perform(delete("/api-forum/v1/forumhub/topics/delete")
                         .queryParam("topic_id", "1")
-                        .with(jwt().jwt(jwt)
+                        .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:delete")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -960,7 +960,7 @@ public class TopicControllerIT {
 
         this.mockMvc.perform(delete("/api-forum/v1/forumhub/topics/delete")
                         .queryParam("topic_id", "2")
-                        .with(jwt().jwt(jwt)
+                        .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:delete")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -984,7 +984,7 @@ public class TopicControllerIT {
 
         this.mockMvc.perform(delete("/api-forum/v1/forumhub/topics/delete")
                         .queryParam("topic_id", "1")
-                        .with(jwt().jwt(jwt)
+                        .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:delete")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))

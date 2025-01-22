@@ -28,11 +28,13 @@ import java.util.*;
 public class MockAuthorizationServer {
 
     static RSAKey rsaKey;
-    final static String jwt;
+
+    final static String JWT;
+
 
     static {
         generateKeyPair();
-        jwt = signJwt();
+        JWT = signJwt();
 
     }
 
@@ -44,7 +46,7 @@ public class MockAuthorizationServer {
         @Override
         public MockResponse dispatch(@NotNull RecordedRequest request) {
             Assert.notNull(request, "Request cannot be null");
-            Assert.notNull(jwt, "Jwt cannot be null");
+            Assert.notNull(JWT, "Jwt cannot be null");
 
             final Map<String, Object> wellKnowEndpoints = Map.of(
                     "token_endpoint", "http://127.0.0.1:8082/oauth2/token",
@@ -62,7 +64,7 @@ public class MockAuthorizationServer {
                         .setResponseCode(200);
                 case "/oauth2/token" -> mockResponse
                         .addHeader("Content-Type", "application/json")
-                        .setBody(jwt)
+                        .setBody(JWT)
                         .setResponseCode(200);
                 default -> new MockResponse().setResponseCode(404);
             };

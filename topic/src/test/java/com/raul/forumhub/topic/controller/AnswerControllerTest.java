@@ -51,10 +51,10 @@ public class AnswerControllerTest {
     @MockBean
     ClientRegistrationRepository clientRegistrationRepository;
 
-    private static final Jwt jwt;
+    private static final Jwt JWT;
 
     static {
-        jwt = Jwt.withTokenValue("token")
+        JWT = Jwt.withTokenValue("token")
                 .header("alg", "none")
                 .claim("user_id", "1")
                 .build();
@@ -114,7 +114,7 @@ public class AnswerControllerTest {
         BDDMockito.doNothing().when(this.answerService).answerTopic(1L, 1L, answerTopicDTO);
 
         this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/{topic_id}/answer",1)
-                        .with(jwt().jwt(jwt))
+                        .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -148,7 +148,7 @@ public class AnswerControllerTest {
     void shouldFailIfAnswerIdPropertyOfQueryParamIsEmptyWhenMarkAnswerBest() throws Exception {
         this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/{topic_id}/markBestAnswer",1)
                         .queryParam("answer_id", "")
-                        .with(jwt().jwt(jwt))
+                        .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isBadRequest());
@@ -163,7 +163,7 @@ public class AnswerControllerTest {
     void shouldFailToRequestTopicIfParamDifferentOfTypeNumber() throws Exception {
         this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/{topic_id}/markBestAnswer",1)
                         .queryParam("answer_id", "unexpected")
-                        .with(jwt().jwt(jwt))
+                        .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isBadRequest());
@@ -178,7 +178,7 @@ public class AnswerControllerTest {
 
         this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/{topic_id}/markBestAnswer",1)
                         .queryParam("answer_id", "1")
-                        .with(jwt().jwt(jwt))
+                        .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
@@ -200,7 +200,7 @@ public class AnswerControllerTest {
 
         this.mockMvc.perform(put("/api-forum/v1/forumhub/topics/{topic_id}/answers/edit",1)
                         .queryParam("answer_id", "1")
-                        .with(jwt().jwt(jwt))
+                        .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -287,7 +287,7 @@ public class AnswerControllerTest {
     void shouldFailIfUserHasNotSuitableAuthorityWhenDeleteAnswer() throws Exception {
         this.mockMvc.perform(delete("/api-forum/v1/forumhub/topics/{topic_id}/answers/delete",1)
                         .queryParam("answer_id", "1")
-                        .with(jwt().jwt(jwt))
+                        .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isForbidden());
@@ -303,7 +303,7 @@ public class AnswerControllerTest {
     void shouldFailIfAnswerIdPropertyOfQueryParamIsEmptyWhenDeleteAnswer() throws Exception {
         this.mockMvc.perform(delete("/api-forum/v1/forumhub/topics/{topic_id}/answers/delete",1)
                         .queryParam("answer_id", "")
-                        .with(jwt().jwt(jwt)
+                        .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_answer:delete")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
