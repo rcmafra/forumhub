@@ -1,10 +1,25 @@
 services:
-  database:
-    container_name: oracle19c
-    image: oracle/database:19.3.0-ee
+  postgres-db:
+    container_name: postgres-db
+    image: postgres:16-alpine3.20
     environment:
-      ORACLE_PASSWORD: system
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-      - '1521:1521'
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    volumes:
+      - data:/database/postgres
+    networks:
+      - backend
     healthcheck:
-      test: ["CMD", "true"]
+      test: [ "CMD-SHELL", "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}'" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+volumes:
+  data:
+
+networks:
+  backend:
