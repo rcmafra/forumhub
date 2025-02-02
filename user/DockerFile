@@ -1,0 +1,11 @@
+FROM maven:3.8.3-openjdk-17 AS build
+
+ENV PROJECT_HOME /home/app/user
+
+RUN mkdir -p ${PROJECT_HOME}
+WORKDIR ${PROJECT_HOME}
+COPY . .
+RUN mvn clean package
+RUN mv ${PROJECT_HOME}/target/forumhub-user-0.0.1-SNAPSHOT.jar ${PROJECT_HOME}
+EXPOSE 8081
+ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=prod", "forumhub-user-0.0.1-SNAPSHOT.jar"]
