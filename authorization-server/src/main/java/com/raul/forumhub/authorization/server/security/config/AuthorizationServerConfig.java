@@ -2,8 +2,10 @@ package com.raul.forumhub.authorization.server.security.config;
 
 import com.raul.forumhub.authorization.server.domain.UserEntity;
 import com.raul.forumhub.authorization.server.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -35,6 +37,8 @@ import org.springframework.security.web.authentication.LoginUrlAuthenticationEnt
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 
 import java.time.Duration;
+import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -42,6 +46,12 @@ import java.util.UUID;
 @EnableWebSecurity
 public class AuthorizationServerConfig {
 
+    @Autowired
+    private final RegisteredClientProperties clientProperties;
+
+    public AuthorizationServerConfig(RegisteredClientProperties clientProperties) {
+        this.clientProperties = clientProperties;
+    }
 
     @Bean
     public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -88,9 +98,9 @@ public class AuthorizationServerConfig {
                                                                  JdbcTemplate jdbcTemplate) {
         RegisteredClient topicApiClient = RegisteredClient
                 .withId(UUID.randomUUID().toString())
-                .clientName("forumhub-topic")
-                .clientId("hub-topic")
-                .clientSecret(bCryptPasswordEncoder.encode("topic123456"))
+                .clientName(this.clientProperties.topicName)
+                .clientId(this.clientProperties.topicClientID)
+                .clientSecret(bCryptPasswordEncoder.encode(this.clientProperties.topicPassword))
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
@@ -113,9 +123,9 @@ public class AuthorizationServerConfig {
 
         RegisteredClient userApiClient = RegisteredClient
                 .withId(UUID.randomUUID().toString())
-                .clientName("forumhub-user")
-                .clientId("hub-user")
-                .clientSecret(bCryptPasswordEncoder.encode("user123456"))
+                .clientName(this.clientProperties.userName)
+                .clientId(this.clientProperties.userClientID)
+                .clientSecret(bCryptPasswordEncoder.encode(this.clientProperties.userPassword))
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
@@ -134,7 +144,20 @@ public class AuthorizationServerConfig {
                         .reuseRefreshTokens(false).build())
                 .build();
 
-        return new JdbcRegisteredClientRepository(jdbcTemplate);
+        JdbcRegisteredClientRepository clientRepository = new JdbcRegisteredClientRepository(jdbcTemplate);
+        saveRegisteredClient(List.of(topicApiClient, userApiClient), clientRepository);
+
+        return clientRepository;
+    }
+
+    @Profile("prod")
+    private void saveRegisteredClient(List<RegisteredClient> clients, JdbcRegisteredClientRepository repository) {
+        clients.forEach(client -> {
+            if (Objects.isNull(repository.findByClientId(client.getClientId()))) {
+                repository.save(client);
+            }
+        });
+
     }
 
 
