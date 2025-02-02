@@ -3,9 +3,9 @@ package com.raul.forumhub.user.security.password;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.passay.*;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.Assert;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -42,8 +42,8 @@ public class PasswordConstraintValidator implements ConstraintValidator<Password
     private MessageResolver translatedPasswordRules() {
         Properties properties = new Properties();
         try {
-            properties.load(new FileInputStream("C:\\Projects\\forumhub\\user\\src\\main\\" +
-                    "resources\\translated-passwd-rule-msg.properties"));
+            ClassPathResource resource = new ClassPathResource("translated-passwd-rule-msg.properties");
+            properties.load(resource.getInputStream());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
