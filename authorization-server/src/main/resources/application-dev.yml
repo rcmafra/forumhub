@@ -1,25 +1,24 @@
 #Database connection configuration
 spring:
   datasource:
-    url: jdbc:oracle:thin:@//localhost:1521/ORCLPDB1
-    username: ${ORACLEDB.USERNAME}
-    password: ${ORACLEDB.PASSWORD}
+    url: ${POSTGRES_URL}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
     driver:
-      class: oracle.jdbc.driver.OracleDriver
+      class: org.postgresql.Driver
 
-#Show formated SQL statements
+  #Show formated SQL statements
   jpa:
     show-sql: true
     properties:
       hibernate:
         format_sql: true
 
-
-#Override duplicated beans encountered in the repositories
+  #Override duplicated beans encountered in the repositories
   main:
     allow-bean-definition-overriding: true
 
-#Authorization server configuration
+  #Authorization server configuration
   security:
     oauth2:
       resourceserver:

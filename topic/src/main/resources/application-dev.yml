@@ -1,43 +1,46 @@
 #Database connection configuration
 spring:
   datasource:
-    url: jdbc:oracle:thin:@//localhost:1521/ORCLPDB1
-    username: ${ORACLEDB.USERNAME}
-    password: ${ORACLEDB.PASSWORD}
+    url: ${POSTGRES_URL}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
     driver:
-      class: oracle.jdbc.driver.OracleDriver
+      class: org.postgresql.Driver
 
-#Show formated SQL statements
+  #Show formated SQL statements
   jpa:
     show-sql: true
     properties:
       hibernate:
         format_sql: true
 
-#Flyway configuration
+  #Flyway configuration
   flyway:
-    default-schema: HUB
+    url: ${POSTGRES_URL}
+    default-schema: ${POSTGRES_USER}
+    user: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
     baseline-on-migrate: true
     enabled: true
 
-#Authorization server configuration
+  #Authorization server configuration
   security:
     oauth2:
       resourceserver:
         jwt:
           issuer-uri: http://127.0.0.1:8082
 
-#Client User API registration
+      #Client User API registration
       client:
         registration:
           forumhub-user:
-            provider: auth-server
-            client-id: hub-user
-            client-secret: user123456
-            client-authentication-method: client_secret_basic
-            authorization-grant-type: client_credentials
-            client-name: forumhub-user
-            scope: myuser:read
+            provider: ${AUTH_SERVER-PROVIDER}
+            client-id: ${USER_CLIENT-ID}
+            client-secret: ${USER_CLIENT-SECRET}
+            client-authentication-method: ${USER_CLIENT-AUTHENTICATION-METHOD}
+            authorization-grant-type: ${USER_CLIENT-AUTHORIZATION-GRANT-TYPE}
+            client-name: ${USER_CLIENT-NAME}
+            scope: ${USER_CLIET-SCOPE}
         provider:
           auth-server:
             issuer-uri: http://127.0.0.1:8082
