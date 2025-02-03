@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(schema = "hub")
+@Table
 @Getter
 @Setter
 @ToString
