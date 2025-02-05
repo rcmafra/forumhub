@@ -16,7 +16,6 @@ spring:
 
   #Flyway configuration
   flyway:
-    url: jdbc:postgresql://localhost:${POSTGRES_PORT}/${POSTGRES_DB}
     default-schema: ${POSTGRES_USER}
     user: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
