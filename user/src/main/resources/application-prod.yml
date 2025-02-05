@@ -1,7 +1,7 @@
 #Database connection configuration
 spring:
   datasource:
-    url: ${POSTGRES_URL}
+    url: jdbc:postgresql://localhost:${POSTGRES_PORT}/${POSTGRES_DB}
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
     driver:
@@ -19,18 +19,8 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://127.0.0.1:8082
+          issuer-uri: http://${AUTH_SERVER_HOST}:${AUTH_SERVER_PORT}
 
 #User API port
 server:
   port: 8081
-
-logging:
-  level:
-    org:
-      springframework:
-        security: trace
-        jdbc:
-          code: trace
-      hibernate:
-        SQL: trace
