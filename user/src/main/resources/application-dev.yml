@@ -14,7 +14,7 @@ spring:
       hibernate:
         format_sql: true
 
-#Authorization server configuration
+  #Authorization server configuration
   security:
     oauth2:
       resourceserver:
