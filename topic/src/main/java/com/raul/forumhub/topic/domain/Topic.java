@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
-@Table(schema = "hub")
+@Table
 @Getter
 @Setter
 @AllArgsConstructor

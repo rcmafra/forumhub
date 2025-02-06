@@ -8,7 +8,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(schema = "hub")
+@Table
 @Getter
 @Setter
 @NoArgsConstructor

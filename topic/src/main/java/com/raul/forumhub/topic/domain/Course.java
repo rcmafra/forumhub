@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Entity
-@Table(schema = "hub")
+@Table
 @Getter
 @Setter
 @AllArgsConstructor

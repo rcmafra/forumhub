@@ -9,7 +9,7 @@ import lombok.Setter;
 
 
 @Entity
-@Table(schema = "hub")
+@Table
 @Getter
 @Setter
 @AllArgsConstructor

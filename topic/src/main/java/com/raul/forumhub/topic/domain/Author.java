@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Entity(name = "users")
-@Table(schema = "hub", name = "users")
+@Table(name = "users")
 @Getter
 @Setter
 @AllArgsConstructor
