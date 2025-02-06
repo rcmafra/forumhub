@@ -8,4 +8,4 @@ COPY . .
 RUN mvn clean package
 RUN mv ${PROJECT_HOME}/target/forumhub-authorization-server-0.0.1-SNAPSHOT.jar ${PROJECT_HOME}
 EXPOSE 8082
-ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=dev", "forumhub-authorization-server-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=prod", "forumhub-authorization-server-0.0.1-SNAPSHOT.jar"]
