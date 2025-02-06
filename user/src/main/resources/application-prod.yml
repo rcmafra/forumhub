@@ -19,7 +19,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://${AUTH_SERVER_HOST}:${AUTH_SERVER_PORT}
+          issuer-uri: ${ISSUER_URI}
 
 #User API port
 server:

@@ -27,7 +27,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://${AUTH_SERVER_HOST}:${AUTH_SERVER_PORT}
+          issuer-uri: ${ISSUER_URI}
 
       #Client User API registration
       client:
@@ -42,7 +42,7 @@ spring:
             scope: ${USER_CLIET-SCOPE}
         provider:
           auth-server:
-            issuer-uri: http://${AUTH_SERVER_HOST}:${AUTH_SERVER_PORT}
+            issuer-uri: ${ISSUER_URI}
 
 #Topic API port
 server:
@@ -52,6 +52,6 @@ server:
 forumhub:
   client:
     user:
-      schema: http
+      schema: ${USER_SERVER_PROTOCOL}
       host: ${USER_SERVER_HOST}
       port: ${USER_SERVER_PORT}
