@@ -10,16 +10,16 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RegisteredClientProperties {
 
-    @Value("${REGISTERED_CLIENT_TOPIC_NAME}")
+    @Value("${registered.client.topic.name}")
     String topicName;
-    @Value("${REGISTERED_CLIENT_TOPIC_CLIENT-ID}")
+    @Value("${registered.client.topic.client-id}")
     String topicClientID;
-    @Value("${REGISTERED_CLIENT_TOPIC_PASSWORD}")
+    @Value("${registered.client.topic.password}")
     String topicPassword;
-    @Value("${REGISTERED_CLIENT_USER_NAME}")
+    @Value("${registered.client.user.name}")
     String userName;
-    @Value("${REGISTERED_CLIENT_USER_CLIENT-ID}")
+    @Value("${registered.client.user.client-id}")
     String userClientID;
-    @Value("${REGISTERED_CLIENT_USER_PASSWORD}")
+    @Value("${registered.client.user.password}")
     String userPassword;
 }

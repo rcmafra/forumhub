@@ -25,6 +25,17 @@ spring:
         jwt:
           issuer-uri: http://127.0.0.1:8082
 
+registered:
+  client:
+    topic:
+      name: ${REGISTERED_CLIENT_TOPIC_NAME}
+      client-id: ${REGISTERED_CLIENT_TOPIC_CLIENT-ID}
+      password: ${REGISTERED_CLIENT_TOPIC_PASSWORD}
+    user:
+      name: ${REGISTERED_CLIENT_USER_NAME}
+      client-id: ${REGISTERED_CLIENT_USER_CLIENT-ID}
+      password: ${REGISTERED_CLIENT_USER_PASSWORD}
+
 #Auth-Server port
 server:
    port: 8082
