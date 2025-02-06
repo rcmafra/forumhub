@@ -44,6 +44,6 @@ INSERT INTO profile (profile) VALUES ('ADM');
 INSERT INTO profile (profile) VALUES ('MOD');
 INSERT INTO profile (profile) VALUES ('BASIC');
 
-INSERT INTO "user"
+INSERT INTO "users"
 (FIRST_NAME, LAST_NAME, USERNAME, EMAIL, PASSWORD, PROFILE_ID)
 VALUES('adm', 'adm', 'adm', 'adm@email.com', '$2a$10$dKvyjxi6gbqvGWzchu0dDedZsvTzDvhKp6rf5xVBlTg62pwtZwfCO', 1);
