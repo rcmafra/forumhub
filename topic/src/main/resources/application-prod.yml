@@ -1,0 +1,57 @@
+#Database connection configuration
+spring:
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    driver:
+      class: org.postgresql.Driver
+
+  #Show formated SQL statements
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  #Flyway configuration
+  flyway:
+    default-schema: ${POSTGRES_USER}
+    user: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    baseline-on-migrate: true
+    enabled: true
+
+  #Authorization server configuration
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://${AUTH_SERVER_HOST}:${AUTH_SERVER_PORT}
+
+      #Client User API registration
+      client:
+        registration:
+          forumhub-user:
+            provider: ${AUTH_SERVER-PROVIDER}
+            client-id: ${USER_CLIENT-ID}
+            client-secret: ${USER_CLIENT-SECRET}
+            client-authentication-method: ${USER_CLIENT-AUTHENTICATION-METHOD}
+            authorization-grant-type: ${USER_CLIENT-AUTHORIZATION-GRANT-TYPE}
+            client-name: ${USER_CLIENT-NAME}
+            scope: ${USER_CLIET-SCOPE}
+        provider:
+          auth-server:
+            issuer-uri: http://${AUTH_SERVER_HOST}:${AUTH_SERVER_PORT}
+
+#Topic API port
+server:
+  port: 8080
+
+#User client URL
+forumhub:
+  client:
+    user:
+      schema: http
+      host: ${USER_SERVER_HOST}
+      port: ${USER_SERVER_PORT}
