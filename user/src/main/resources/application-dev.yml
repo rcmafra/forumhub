@@ -1,9 +1,9 @@
 #Database connection configuration
 spring:
   datasource:
-    url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
-    username: ${POSTGRES_USER}
-    password: ${POSTGRES_PASSWORD}
+    url: jdbc:postgresql://localhost:5432/PSQLDEVBR
+    username: hub
+    password: forumhub
     driver:
       class: org.postgresql.Driver
 

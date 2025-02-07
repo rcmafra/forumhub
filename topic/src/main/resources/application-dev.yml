@@ -1,9 +1,9 @@
 #Database connection configuration
 spring:
   datasource:
-    url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
-    username: ${POSTGRES_USER}
-    password: ${POSTGRES_PASSWORD}
+    url: jdbc:postgresql://localhost:5432/PSQLDEVBR
+    username: hub
+    password: forumhub
     driver:
       class: org.postgresql.Driver
 
@@ -16,9 +16,9 @@ spring:
 
   #Flyway configuration
   flyway:
-    default-schema: ${POSTGRES_USER}
-    user: ${POSTGRES_USER}
-    password: ${POSTGRES_PASSWORD}
+    default-schema: hub
+    user: hub
+    password: forumhub
     baseline-on-migrate: true
     enabled: true
 
@@ -33,13 +33,13 @@ spring:
       client:
         registration:
           forumhub-user:
-            provider: ${AUTH_SERVER-PROVIDER}
-            client-id: ${USER_CLIENT-ID}
-            client-secret: ${USER_CLIENT-SECRET}
-            client-authentication-method: ${USER_CLIENT-AUTHENTICATION-METHOD}
-            authorization-grant-type: ${USER_CLIENT-AUTHORIZATION-GRANT-TYPE}
-            client-name: ${USER_CLIENT-NAME}
-            scope: ${USER_CLIET-SCOPE}
+            provider: auth-server
+            client-id: hub-user
+            client-secret: user123456
+            client-authentication-method: client_secret_basic
+            authorization-grant-type: client_credentials
+            client-name: forumhub-user
+            scope: myuser:read
         provider:
           auth-server:
             issuer-uri: http://127.0.0.1:8082

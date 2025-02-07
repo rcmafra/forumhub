@@ -33,13 +33,13 @@ spring:
       client:
         registration:
           forumhub-user:
-            provider: ${AUTH_SERVER-PROVIDER}
-            client-id: ${USER_CLIENT-ID}
-            client-secret: ${USER_CLIENT-SECRET}
-            client-authentication-method: ${USER_CLIENT-AUTHENTICATION-METHOD}
-            authorization-grant-type: ${USER_CLIENT-AUTHORIZATION-GRANT-TYPE}
-            client-name: ${USER_CLIENT-NAME}
-            scope: ${USER_CLIET-SCOPE}
+            provider: ${AUTH_SERVER_PROVIDER}
+            client-id: ${USER_CLIENT_ID}
+            client-secret: ${USER_CLIENT_SECRET}
+            client-authentication-method: ${USER_CLIENT_AUTHENTICATION_METHOD}
+            authorization-grant-type: ${USER_CLIENT_AUTHORIZATION_GRANT_TYPE}
+            client-name: ${USER_CLIENT_NAME}
+            scope: ${USER_CLIET_SCOPE}
         provider:
           auth-server:
             issuer-uri: ${ISSUER_URI}

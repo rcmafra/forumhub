@@ -1,9 +1,9 @@
 #Database connection configuration
 spring:
   datasource:
-    url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
-    username: ${POSTGRES_USER}
-    password: ${POSTGRES_PASSWORD}
+    url: jdbc:postgresql://localhost:5432/PSQLDEVBR
+    username: hub
+    password: forumhub
     driver:
       class: org.postgresql.Driver
 
@@ -25,20 +25,21 @@ spring:
         jwt:
           issuer-uri: http://127.0.0.1:8082
 
+#Registered topichub and userhub client credentials
 registered:
   client:
     topic:
-      name: ${REGISTERED_CLIENT_TOPIC_NAME}
-      client-id: ${REGISTERED_CLIENT_TOPIC_CLIENT_ID}
-      password: ${REGISTERED_CLIENT_TOPIC_PASSWORD}
+      name: forumhub-topic
+      client-id: hub-topic
+      password: topic123456
     user:
-      name: ${REGISTERED_CLIENT_USER_NAME}
-      client-id: ${REGISTERED_CLIENT_USER_CLIENT_ID}
-      password: ${REGISTERED_CLIENT_USER_PASSWORD}
+      name: forumhub-user
+      client-id: hub-user
+      password: user123456
 
 #Auth-Server port
 server:
-   port: 8082
+  port: 8082
 
 logging:
   level:
