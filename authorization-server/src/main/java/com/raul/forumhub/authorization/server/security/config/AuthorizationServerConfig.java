@@ -46,7 +46,6 @@ import java.util.UUID;
 @EnableWebSecurity
 public class AuthorizationServerConfig {
 
-    @Autowired
     private final RegisteredClientProperties clientProperties;
 
     public AuthorizationServerConfig(RegisteredClientProperties clientProperties) {
