@@ -4,8 +4,7 @@ spring:
     url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
-    driver:
-      class: org.postgresql.Driver
+    driver-class-name: org.postgresql.Driver
 
   #Show formated SQL statements
   jpa:

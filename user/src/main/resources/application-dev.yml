@@ -4,8 +4,7 @@ spring:
     url: jdbc:postgresql://localhost:5432/PSQLDEVBR
     username: hub
     password: forumhub
-    driver:
-      class: org.postgresql.Driver
+    driver-class-name: org.postgresql.Driver
 
   #Show formated SQL statements
   jpa:
