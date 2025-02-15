@@ -3,7 +3,7 @@ package com.raul.forumhub.topic.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.raul.forumhub.topic.domain.Answer;
 import com.raul.forumhub.topic.dto.request.AnswerDTO;
-import com.raul.forumhub.topic.dto.response.GetAnswerDTO;
+import com.raul.forumhub.topic.dto.response.AnswerResponseDTO;
 import com.raul.forumhub.topic.exception.handler.GlobalExceptionHandler;
 import com.raul.forumhub.topic.security.TopicSecurityConfig;
 import com.raul.forumhub.topic.service.AnswerService;
@@ -260,7 +260,7 @@ public class AnswerControllerTest {
         answer.setSolution("Primeiro teste de edição de uma resposta");
 
         BDDMockito.given(this.answerService.updateAnswer(1L, 1L, 2L, answerUpdateDTO))
-                .willReturn(new GetAnswerDTO(answer));
+                .willReturn(new AnswerResponseDTO(answer));
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/edit", 1)
                         .queryParam("answer_id", "1")

@@ -4,5 +4,5 @@ import com.raul.forumhub.topic.domain.Course;
 
 import java.util.List;
 
-public record GetCourseCollection(List<Course> course) {
+public record CourseResponseCollection(List<Course> course) {
 }

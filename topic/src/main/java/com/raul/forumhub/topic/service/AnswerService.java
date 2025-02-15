@@ -6,7 +6,7 @@ import com.raul.forumhub.topic.domain.Author;
 import com.raul.forumhub.topic.domain.Status;
 import com.raul.forumhub.topic.domain.Topic;
 import com.raul.forumhub.topic.dto.request.AnswerDTO;
-import com.raul.forumhub.topic.dto.response.GetAnswerDTO;
+import com.raul.forumhub.topic.dto.response.AnswerResponseDTO;
 import com.raul.forumhub.topic.exception.AnswerServiceException;
 import com.raul.forumhub.topic.exception.InstanceNotFoundException;
 import com.raul.forumhub.topic.repository.AnswerRepository;
@@ -80,7 +80,7 @@ public class AnswerService {
 
     }
 
-    public GetAnswerDTO updateAnswer(Long topic_id, Long answer_id, Long user_id, AnswerDTO answerDTO) {
+    public AnswerResponseDTO updateAnswer(Long topic_id, Long answer_id, Long user_id, AnswerDTO answerDTO) {
         this.topicService.getTopicById(topic_id);
         Answer answer = this.getAnswerById(answer_id);
         Author author = this.userClientRequest.getUserById(user_id);
@@ -96,7 +96,7 @@ public class AnswerService {
         answer.setSolution(answerDTO.solution());
         this.answerRepository.save(answer);
 
-        return new GetAnswerDTO(answer);
+        return new AnswerResponseDTO(answer);
     }
 
     public void deleteAnswer(Long topic_id, Long answer_id, Long user_id) {

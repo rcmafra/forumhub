@@ -5,7 +5,7 @@ import com.raul.forumhub.topic.domain.Status;
 import com.raul.forumhub.topic.domain.Topic;
 import com.raul.forumhub.topic.dto.request.TopicCreateDTO;
 import com.raul.forumhub.topic.dto.request.TopicUpdateDTO;
-import com.raul.forumhub.topic.dto.response.GetTopicDTO;
+import com.raul.forumhub.topic.dto.response.TopicResponseDTO;
 import com.raul.forumhub.topic.exception.handler.GlobalExceptionHandler;
 import com.raul.forumhub.topic.security.TopicSecurityConfig;
 import com.raul.forumhub.topic.service.TopicService;
@@ -145,10 +145,10 @@ class TopicControllerTest {
     @DisplayName("Should return all topics unsorted with successful")
     @Test
     void shouldReturnAllTopicsUnsortedWithSuccessful() throws Exception {
-        Page<GetTopicDTO> topicPage =
+        Page<TopicResponseDTO> topicPage =
                 new PageImpl<>(TestsHelper.TopicHelper.topicListWithAnswers(),
                         Pageable.unpaged(), 3)
-                        .map(GetTopicDTO::new);
+                        .map(TopicResponseDTO::new);
 
         BDDMockito.given(this.topicService.topicList(any(Pageable.class)))
                 .willReturn(topicPage);
@@ -180,9 +180,9 @@ class TopicControllerTest {
                 .stream().sorted(Comparator.comparing(Topic::getCreatedAt).reversed())
                 .toList();
 
-        Page<GetTopicDTO> topicPage =
+        Page<TopicResponseDTO> topicPage =
                 new PageImpl<>(sortedTopicByCreatedAt, pageable, 3)
-                        .map(GetTopicDTO::new);
+                        .map(TopicResponseDTO::new);
 
         BDDMockito.given(this.topicService.topicList(pageable))
                 .willReturn(topicPage);
@@ -219,9 +219,9 @@ class TopicControllerTest {
                 .sorted(Comparator.comparing(Topic::getStatus))
                 .toList();
 
-        Page<GetTopicDTO> topicPage =
+        Page<TopicResponseDTO> topicPage =
                 new PageImpl<>(sortedTopicByStatus, pageable, 2)
-                        .map(GetTopicDTO::new);
+                        .map(TopicResponseDTO::new);
 
         BDDMockito.given(this.topicService.topicList(pageable))
                 .willReturn(topicPage);
@@ -258,9 +258,9 @@ class TopicControllerTest {
                 .stream().sorted(Comparator.comparing(Topic::getTitle))
                 .toList();
 
-        Page<GetTopicDTO> topicPage =
+        Page<TopicResponseDTO> topicPage =
                 new PageImpl<>(sortedTopicByTitle, pageable, 3)
-                        .map(GetTopicDTO::new);
+                        .map(TopicResponseDTO::new);
 
         BDDMockito.given(this.topicService.topicList(pageable))
                 .willReturn(topicPage);
@@ -422,7 +422,7 @@ class TopicControllerTest {
         topic.setQuestion("Como utilizar o WebClient para integração do serviço x?");
 
         BDDMockito.given(this.topicService.updateTopic(1L, 1L, topicUpdateDTO))
-                .willReturn(new GetTopicDTO(topic));
+                .willReturn(new TopicResponseDTO(topic));
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/topics/edit")
                         .queryParam("topic_id", "1")

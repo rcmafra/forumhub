@@ -6,7 +6,7 @@ import com.raul.forumhub.topic.domain.Course;
 import com.raul.forumhub.topic.domain.Topic;
 import com.raul.forumhub.topic.dto.request.TopicCreateDTO;
 import com.raul.forumhub.topic.dto.request.TopicUpdateDTO;
-import com.raul.forumhub.topic.dto.response.GetTopicDTO;
+import com.raul.forumhub.topic.dto.response.TopicResponseDTO;
 import com.raul.forumhub.topic.exception.InstanceNotFoundException;
 import com.raul.forumhub.topic.exception.TopicServiceException;
 import com.raul.forumhub.topic.repository.TopicRepository;
@@ -39,8 +39,8 @@ public class TopicService {
         this.saveTopic(topic);
     }
 
-    public Page<GetTopicDTO> topicList(Pageable pageable) {
-        return this.topicRepository.findAll(pageable).map(GetTopicDTO::new);
+    public Page<TopicResponseDTO> topicList(Pageable pageable) {
+        return this.topicRepository.findAll(pageable).map(TopicResponseDTO::new);
     }
 
 
@@ -50,7 +50,7 @@ public class TopicService {
     }
 
 
-    public GetTopicDTO updateTopic(Long topic_id, Long user_id, TopicUpdateDTO update) {
+    public TopicResponseDTO updateTopic(Long topic_id, Long user_id, TopicUpdateDTO update) {
         Topic topic = this.getTopicById(topic_id);
         Course course = this.courseService.getCourseById(update.course_id());
         Author author = this.userClientRequest.getUserById(user_id);
@@ -69,7 +69,7 @@ public class TopicService {
         topic.setCourse(course);
 
         this.saveTopic(topic);
-        return new GetTopicDTO(topic);
+        return new TopicResponseDTO(topic);
 
     }
 

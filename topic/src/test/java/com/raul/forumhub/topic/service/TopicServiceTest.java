@@ -5,7 +5,7 @@ import com.raul.forumhub.topic.domain.Status;
 import com.raul.forumhub.topic.domain.Topic;
 import com.raul.forumhub.topic.dto.request.TopicCreateDTO;
 import com.raul.forumhub.topic.dto.request.TopicUpdateDTO;
-import com.raul.forumhub.topic.dto.response.GetTopicDTO;
+import com.raul.forumhub.topic.dto.response.TopicResponseDTO;
 import com.raul.forumhub.topic.exception.InstanceNotFoundException;
 import com.raul.forumhub.topic.exception.RestClientException;
 import com.raul.forumhub.topic.exception.TopicServiceException;
@@ -226,9 +226,9 @@ public class TopicServiceTest {
 
         List<Topic> topicList = TestsHelper.TopicHelper.topicListWithAnswers();
 
-        Page<GetTopicDTO> topicPage =
+        Page<TopicResponseDTO> topicPage =
                 new PageImpl<>(topicList, pageable, 3)
-                        .map(GetTopicDTO::new);
+                        .map(TopicResponseDTO::new);
 
         BDDMockito.given(this.topicRepository.findAll(pageable))
                 .willReturn(new PageImpl<>(topicList, Pageable.unpaged(), 3));
@@ -259,9 +259,9 @@ public class TopicServiceTest {
                 .stream().sorted(Comparator.comparing(Topic::getCreatedAt).reversed())
                 .toList();
 
-        Page<GetTopicDTO> topicPage =
+        Page<TopicResponseDTO> topicPage =
                 new PageImpl<>(sortedTopicByCreatedAt, pageable, 3)
-                        .map(GetTopicDTO::new);
+                        .map(TopicResponseDTO::new);
 
         BDDMockito.given(this.topicRepository.findAll(pageable))
                 .willReturn(new PageImpl<>(sortedTopicByCreatedAt, pageable, 3));
@@ -297,9 +297,9 @@ public class TopicServiceTest {
                 .sorted(Comparator.comparing(Topic::getStatus))
                 .toList();
 
-        Page<GetTopicDTO> topicPage =
+        Page<TopicResponseDTO> topicPage =
                 new PageImpl<>(sortedTopicByStatus, pageable, 2)
-                        .map(GetTopicDTO::new);
+                        .map(TopicResponseDTO::new);
 
         BDDMockito.given(this.topicRepository.findAll(pageable))
                 .willReturn(new PageImpl<>(sortedTopicByStatus, pageable, 2));
@@ -335,9 +335,9 @@ public class TopicServiceTest {
                 .stream().sorted(Comparator.comparing(Topic::getCreatedAt).reversed())
                 .toList();
 
-        Page<GetTopicDTO> topicPage =
+        Page<TopicResponseDTO> topicPage =
                 new PageImpl<>(sortedTopicByStatus, pageable, 3)
-                        .map(GetTopicDTO::new);
+                        .map(TopicResponseDTO::new);
 
         BDDMockito.given(this.topicRepository.findAll(pageable))
                 .willReturn(new PageImpl<>(sortedTopicByStatus, pageable, 3));

@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.raul.forumhub.topic.domain.Course;
 import com.raul.forumhub.topic.dto.request.CourseDTO;
 import com.raul.forumhub.topic.dto.request.TopicCreateDTO;
-import com.raul.forumhub.topic.dto.response.GetCourseCollection;
-import com.raul.forumhub.topic.dto.response.GetCourseDTO;
+import com.raul.forumhub.topic.dto.response.CourseResponseCollection;
+import com.raul.forumhub.topic.dto.response.CourseResponseDTO;
 import com.raul.forumhub.topic.exception.handler.GlobalExceptionHandler;
 import com.raul.forumhub.topic.security.TopicSecurityConfig;
 import com.raul.forumhub.topic.service.CourseService;
@@ -212,7 +212,7 @@ public class CourseControllerTest {
     void shouldReturnAllCoursesCreatedWithSuccessful() throws Exception {
         BDDMockito.given(this.courseService.getAllCourse())
                 .willReturn(Collections.singletonList(
-                        new GetCourseCollection(TestsHelper.CourseHelper.courseList())));
+                        new CourseResponseCollection(TestsHelper.CourseHelper.courseList())));
 
         this.mockMvc.perform(get("/forumhub.io/api/v1/courses/listAll")
                         .with(jwt())
@@ -317,7 +317,7 @@ public class CourseControllerTest {
         course.setName("Como criar uma API Rest escalável");
 
         BDDMockito.given(this.courseService.updateCourse("Criação de uma API Rest", courseUpdateDTO))
-                .willReturn(new GetCourseDTO(course));
+                .willReturn(new CourseResponseDTO(course));
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/courses/edit")
                         .queryParam("courseName", "Criação de uma API Rest")

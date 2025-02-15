@@ -1,9 +1,9 @@
 package com.raul.forumhub.topic.controller;
 
 import com.raul.forumhub.topic.dto.request.CourseDTO;
-import com.raul.forumhub.topic.dto.response.GetCourseCollection;
-import com.raul.forumhub.topic.dto.response.GetCourseDTO;
-import com.raul.forumhub.topic.dto.response.HttpMessageDefault;
+import com.raul.forumhub.topic.dto.response.CourseResponseCollection;
+import com.raul.forumhub.topic.dto.response.CourseResponseDTO;
+import com.raul.forumhub.topic.dto.response.HttpMessage;
 import com.raul.forumhub.topic.security.IsAuthenticated;
 import com.raul.forumhub.topic.service.CourseService;
 import jakarta.validation.Valid;
@@ -27,37 +27,37 @@ public class CourseController {
 
     @PreAuthorize("hasRole('ADM') and hasAuthority('SCOPE_course:create')")
     @PostMapping("/create")
-    public ResponseEntity<HttpMessageDefault> createCourse(@Valid @RequestBody CourseDTO courseDTO) {
+    public ResponseEntity<HttpMessage> createCourse(@Valid @RequestBody CourseDTO courseDTO) {
 
         this.courseService.createCourse(courseDTO);
-        return new ResponseEntity<>(new HttpMessageDefault("HttpStatusCode OK"), HttpStatus.CREATED);
+        return new ResponseEntity<>(new HttpMessage("HttpStatusCode OK"), HttpStatus.CREATED);
     }
 
     @IsAuthenticated
     @GetMapping("/listAll")
-    public ResponseEntity<List<GetCourseCollection>> getAllCourse() {
-        List<GetCourseCollection> getCourseCollection = this.courseService.getAllCourse();
+    public ResponseEntity<List<CourseResponseCollection>> getAllCourse() {
+        List<CourseResponseCollection> courseResponseCollection = this.courseService.getAllCourse();
 
-        return new ResponseEntity<>(getCourseCollection, HttpStatus.OK);
+        return new ResponseEntity<>(courseResponseCollection, HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('ADM') and hasAuthority('SCOPE_course:edit')")
     @PutMapping("/edit")
-    public ResponseEntity<GetCourseDTO> updateCourse(@RequestParam String courseName,
-                                                     @Valid @RequestBody CourseDTO courseUpdateDTO) {
+    public ResponseEntity<CourseResponseDTO> updateCourse(@RequestParam String courseName,
+                                                          @Valid @RequestBody CourseDTO courseUpdateDTO) {
         Assert.hasText(courseName, "O nome do curso não pode ser vazio");
 
-        GetCourseDTO getCourseDTO = this.courseService.updateCourse(courseName, courseUpdateDTO);
-        return ResponseEntity.ok(getCourseDTO);
+        CourseResponseDTO courseResponseDTO = this.courseService.updateCourse(courseName, courseUpdateDTO);
+        return ResponseEntity.ok(courseResponseDTO);
     }
 
     @PreAuthorize("hasRole('ADM') and hasAuthority('SCOPE_course:delete')")
     @DeleteMapping("/delete")
-    public ResponseEntity<HttpMessageDefault> deleteCourse(@RequestParam String courseName) {
+    public ResponseEntity<HttpMessage> deleteCourse(@RequestParam String courseName) {
         Assert.hasText(courseName, "O nome do curso não pode ser vazio");
 
         this.courseService.deleteCourse(courseName);
-        return ResponseEntity.ok(new HttpMessageDefault("HttpStatusCode OK"));
+        return ResponseEntity.ok(new HttpMessage("HttpStatusCode OK"));
 
     }
 
