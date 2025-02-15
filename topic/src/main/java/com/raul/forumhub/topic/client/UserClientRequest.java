@@ -37,7 +37,7 @@ public class UserClientRequest {
                             .scheme(userClientProperties.getSchema())
                             .host(userClientProperties.getHost())
                             .port(userClientProperties.getPort())
-                            .path("/api-forum/v1/forumhub/users/summary-info")
+                            .path(userClientProperties.getPath())
                             .queryParam("user_id", id)
                             .build())
                     .accept(MediaType.APPLICATION_JSON)
