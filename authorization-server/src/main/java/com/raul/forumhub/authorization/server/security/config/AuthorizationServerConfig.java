@@ -2,7 +2,6 @@ package com.raul.forumhub.authorization.server.security.config;
 
 import com.raul.forumhub.authorization.server.domain.UserEntity;
 import com.raul.forumhub.authorization.server.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
