@@ -18,5 +18,7 @@ public class UserClientProperties {
     private String host;
     @NotNull
     private String port;
+    @NotNull
+    private String path;
 
 }
