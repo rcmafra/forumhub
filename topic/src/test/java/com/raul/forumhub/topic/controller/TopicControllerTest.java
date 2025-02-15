@@ -3,8 +3,8 @@ package com.raul.forumhub.topic.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.raul.forumhub.topic.domain.Status;
 import com.raul.forumhub.topic.domain.Topic;
-import com.raul.forumhub.topic.dto.request.TopicCreateDTO;
-import com.raul.forumhub.topic.dto.request.TopicUpdateDTO;
+import com.raul.forumhub.topic.dto.request.TopicCreateRequestDTO;
+import com.raul.forumhub.topic.dto.request.TopicUpdateRequestDTO;
 import com.raul.forumhub.topic.dto.response.TopicResponseDTO;
 import com.raul.forumhub.topic.exception.handler.GlobalExceptionHandler;
 import com.raul.forumhub.topic.security.TopicSecurityConfig;
@@ -68,7 +68,7 @@ class TopicControllerTest {
     @DisplayName("Should fail with status code 404 if resource doesn't exists")
     @Test
     void shouldFailIfResourceDoesNotExistToTheSendRequest() throws Exception {
-        final TopicCreateDTO topicCreateDTO = new TopicCreateDTO("Dúvida na utilização do Feign Client",
+        final TopicCreateRequestDTO topicCreateRequestDTO = new TopicCreateRequestDTO("Dúvida na utilização do Feign Client",
                 "Como utilizar o Feign Client para integração do serviço x?",
                 1L);
 
@@ -77,7 +77,7 @@ class TopicControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
-                                .writeValueAsString(topicCreateDTO)))
+                                .writeValueAsString(topicCreateRequestDTO)))
                 .andExpect(status().isNotFound());
 
     }
@@ -85,7 +85,7 @@ class TopicControllerTest {
     @DisplayName("Should fail with status code 400 if method isn't supported")
     @Test
     void shouldFailIfMethodIsNotSupportedToTheSendRequest() throws Exception {
-        final TopicCreateDTO topicCreateDTO = new TopicCreateDTO("Dúvida na utilização do Feign Client",
+        final TopicCreateRequestDTO topicCreateRequestDTO = new TopicCreateRequestDTO("Dúvida na utilização do Feign Client",
                 "Como utilizar o Feign Client para integração do serviço x?",
                 1L);
 
@@ -94,7 +94,7 @@ class TopicControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
-                                .writeValueAsString(topicCreateDTO)))
+                                .writeValueAsString(topicCreateRequestDTO)))
                 .andExpect(status().isBadRequest());
 
     }
@@ -103,7 +103,7 @@ class TopicControllerTest {
     @DisplayName("Should fail with status code 401 when create topic if user unauthenticated")
     @Test
     void shouldFailToCreateTopicIfUnauthenticated() throws Exception {
-        final TopicCreateDTO topicCreateDTO = new TopicCreateDTO("Dúvida na utilização do Feign Client",
+        final TopicCreateRequestDTO topicCreateRequestDTO = new TopicCreateRequestDTO("Dúvida na utilização do Feign Client",
                 "Como utilizar o Feign Client para integração do serviço x?",
                 1L);
 
@@ -111,7 +111,7 @@ class TopicControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
-                                .writeValueAsString(topicCreateDTO)))
+                                .writeValueAsString(topicCreateRequestDTO)))
                 .andExpect(status().isUnauthorized());
 
         BDDMockito.verifyNoInteractions(this.topicService);
@@ -122,21 +122,21 @@ class TopicControllerTest {
     @DisplayName("Should create topic with success if user is authenticated")
     @Test
     void shouldCreateTopicWithSuccessIfAuthenticated() throws Exception {
-        final TopicCreateDTO topicCreateDTO = new TopicCreateDTO("Dúvida na utilização do Feign Client",
+        final TopicCreateRequestDTO topicCreateRequestDTO = new TopicCreateRequestDTO("Dúvida na utilização do Feign Client",
                 "Como utilizar o Feign Client para integração do serviço x?",
                 1L);
 
-        BDDMockito.doNothing().when(this.topicService).createTopic(topicCreateDTO, 1L);
+        BDDMockito.doNothing().when(this.topicService).createTopic(topicCreateRequestDTO, 1L);
 
         this.mockMvc.perform(post("/forumhub.io/api/v1/topics/create")
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
-                                .writeValueAsString(topicCreateDTO)))
+                                .writeValueAsString(topicCreateRequestDTO)))
                 .andExpect(status().isCreated());
 
-        BDDMockito.verify(this.topicService).createTopic(topicCreateDTO, 1L);
+        BDDMockito.verify(this.topicService).createTopic(topicCreateRequestDTO, 1L);
         BDDMockito.verifyNoMoreInteractions(this.topicService);
 
     }
@@ -339,7 +339,7 @@ class TopicControllerTest {
             "when edit topic")
     @Test
     void shouldFailIfUserHasNotSuitableAuthorityWhenEditTopic() throws Exception {
-        final TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO(
+        final TopicUpdateRequestDTO topicUpdateRequestDTO = new TopicUpdateRequestDTO(
                 "Dúvida quanto a utilização do Elasticsearch",
                 "Como posso integrar minha API com o Elasticsearch para monitoração?",
                 Status.UNSOLVED, 1L
@@ -351,7 +351,7 @@ class TopicControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
-                                .writeValueAsString(topicUpdateDTO)))
+                                .writeValueAsString(topicUpdateRequestDTO)))
                 .andExpect(status().isForbidden());
 
         BDDMockito.verifyNoInteractions(this.topicService);
@@ -362,7 +362,7 @@ class TopicControllerTest {
             " param different of type number")
     @Test
     void shouldFailToEditTopicIfParamDifferentOfTypeNumber() throws Exception {
-        final TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO(
+        final TopicUpdateRequestDTO topicUpdateRequestDTO = new TopicUpdateRequestDTO(
                 "Dúvida na utilização do WebClient",
                 "Como utilizar o WebClient para integração do serviço x?",
                 Status.UNSOLVED, 1L
@@ -375,7 +375,7 @@ class TopicControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
-                                .writeValueAsString(topicUpdateDTO)))
+                                .writeValueAsString(topicUpdateRequestDTO)))
                 .andExpect(status().isBadRequest());
 
         BDDMockito.verifyNoInteractions(this.topicService);
@@ -387,7 +387,7 @@ class TopicControllerTest {
             "of query param is sent empty")
     @Test
     void shouldFailIfTopicIdPropertyOfQueryParamIsEmptyWhenUpdateTopic() throws Exception {
-        TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO(
+        TopicUpdateRequestDTO topicUpdateRequestDTO = new TopicUpdateRequestDTO(
                 "Dúvida quanto a utilização do Elasticsearch",
                 "Como posso integrar minha API com o Elasticsearch para monitoração?",
                 Status.UNSOLVED, 1L
@@ -400,7 +400,7 @@ class TopicControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
-                                .writeValueAsString(topicUpdateDTO)))
+                                .writeValueAsString(topicUpdateRequestDTO)))
                 .andExpect(status().isBadRequest());
 
         BDDMockito.verifyNoInteractions(this.topicService);
@@ -412,7 +412,7 @@ class TopicControllerTest {
     @DisplayName("Should edit topic with success if user authenticated has authority 'topic:edit'")
     @Test
     void shouldEditTopicWithSuccessIfUserHasSuitableAuthority() throws Exception {
-        final TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO("Dúvida na utilização do WebClient",
+        final TopicUpdateRequestDTO topicUpdateRequestDTO = new TopicUpdateRequestDTO("Dúvida na utilização do WebClient",
                 "Como utilizar o WebClient para integração do serviço x?",
                 Status.UNSOLVED, 1L
         );
@@ -421,7 +421,7 @@ class TopicControllerTest {
         topic.setTitle("Dúvida na utilização do WebClient");
         topic.setQuestion("Como utilizar o WebClient para integração do serviço x?");
 
-        BDDMockito.given(this.topicService.updateTopic(1L, 1L, topicUpdateDTO))
+        BDDMockito.given(this.topicService.updateTopic(1L, 1L, topicUpdateRequestDTO))
                 .willReturn(new TopicResponseDTO(topic));
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/topics/edit")
@@ -431,14 +431,14 @@ class TopicControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
-                                .writeValueAsString(topicUpdateDTO)))
+                                .writeValueAsString(topicUpdateRequestDTO)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.topic.title", is("Dúvida na utilização do WebClient")))
                 .andExpect(jsonPath("$.topic.question", is("Como utilizar o WebClient para " +
                         "integração do serviço x?")));
 
 
-        BDDMockito.verify(this.topicService).updateTopic(1L, 1L, topicUpdateDTO);
+        BDDMockito.verify(this.topicService).updateTopic(1L, 1L, topicUpdateRequestDTO);
         BDDMockito.verifyNoMoreInteractions(this.topicService);
 
 

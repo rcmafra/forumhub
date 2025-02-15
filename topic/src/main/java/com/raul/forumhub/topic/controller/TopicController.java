@@ -1,7 +1,7 @@
 package com.raul.forumhub.topic.controller;
 
-import com.raul.forumhub.topic.dto.request.TopicCreateDTO;
-import com.raul.forumhub.topic.dto.request.TopicUpdateDTO;
+import com.raul.forumhub.topic.dto.request.TopicCreateRequestDTO;
+import com.raul.forumhub.topic.dto.request.TopicUpdateRequestDTO;
 import com.raul.forumhub.topic.dto.response.TopicResponseDTO;
 import com.raul.forumhub.topic.dto.response.HttpMessage;
 import com.raul.forumhub.topic.security.IsAuthenticated;
@@ -31,11 +31,11 @@ public class TopicController {
 
     @IsAuthenticated
     @PostMapping("/create")
-    public ResponseEntity<HttpMessage> createTopic(@Valid @RequestBody TopicCreateDTO topicCreateDTO,
+    public ResponseEntity<HttpMessage> createTopic(@Valid @RequestBody TopicCreateRequestDTO topicCreateRequestDTO,
                                                    @AuthenticationPrincipal Jwt jwt){
 
         Long user_id = Long.parseLong(jwt.getClaim("user_id"));
-        this.topicService.createTopic(topicCreateDTO, user_id);
+        this.topicService.createTopic(topicCreateRequestDTO, user_id);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -55,11 +55,11 @@ public class TopicController {
 
     @PreAuthorize("hasAuthority('SCOPE_topic:edit')")
     @PutMapping("/edit")
-    public ResponseEntity<TopicResponseDTO> updateTopic(@RequestParam Long topic_id, @Valid @RequestBody TopicUpdateDTO topicUpdateDTO,
+    public ResponseEntity<TopicResponseDTO> updateTopic(@RequestParam Long topic_id, @Valid @RequestBody TopicUpdateRequestDTO topicUpdateRequestDTO,
                                                         @AuthenticationPrincipal Jwt jwt){
 
         Long user_id = Long.parseLong(jwt.getClaim("user_id"));
-        TopicResponseDTO topicResponseDTO = this.topicService.updateTopic(topic_id, user_id, topicUpdateDTO);
+        TopicResponseDTO topicResponseDTO = this.topicService.updateTopic(topic_id, user_id, topicUpdateRequestDTO);
 
         return ResponseEntity.ok(topicResponseDTO);
     }

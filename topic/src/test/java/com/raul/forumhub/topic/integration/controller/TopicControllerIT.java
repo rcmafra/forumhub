@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.raul.forumhub.topic.client.UserClientRequest;
 import com.raul.forumhub.topic.domain.Status;
 import com.raul.forumhub.topic.domain.Topic;
-import com.raul.forumhub.topic.dto.request.TopicCreateDTO;
-import com.raul.forumhub.topic.dto.request.TopicUpdateDTO;
+import com.raul.forumhub.topic.dto.request.TopicCreateRequestDTO;
+import com.raul.forumhub.topic.dto.request.TopicUpdateRequestDTO;
 import com.raul.forumhub.topic.exception.RestClientException;
 import com.raul.forumhub.topic.repository.*;
 import com.raul.forumhub.topic.util.TestsHelper;
@@ -93,7 +93,7 @@ public class TopicControllerIT {
     @DisplayName("Should fail with status code 404 if resource doesn't exists")
     @Test
     void shouldFailIfResourceDoesNotExistToTheSendRequest() throws Exception {
-        final TopicCreateDTO topicCreateDTO = new TopicCreateDTO("Dúvida na utilização do Feign Client",
+        final TopicCreateRequestDTO topicCreateRequestDTO = new TopicCreateRequestDTO("Dúvida na utilização do Feign Client",
                 "Como utilizar o Feign Client para integração do serviço x?",
                 1L);
 
@@ -102,7 +102,7 @@ public class TopicControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
-                                .writeValueAsString(topicCreateDTO)))
+                                .writeValueAsString(topicCreateRequestDTO)))
                 .andExpect(status().isNotFound());
 
     }
@@ -110,7 +110,7 @@ public class TopicControllerIT {
     @DisplayName("Should fail with status code 400 if method isn't supported")
     @Test
     void shouldFailIfMethodIsNotSupportedToTheSendRequest() throws Exception {
-        final TopicCreateDTO topicCreateDTO = new TopicCreateDTO("Dúvida na utilização do Feign Client",
+        final TopicCreateRequestDTO topicCreateRequestDTO = new TopicCreateRequestDTO("Dúvida na utilização do Feign Client",
                 "Como utilizar o Feign Client para integração do serviço x?",
                 1L);
 
@@ -119,7 +119,7 @@ public class TopicControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
-                                .writeValueAsString(topicCreateDTO)))
+                                .writeValueAsString(topicCreateRequestDTO)))
                 .andExpect(status().isBadRequest());
 
     }
@@ -128,7 +128,7 @@ public class TopicControllerIT {
     @DisplayName("Should fail with status code 401 when create topic if user unauthenticated")
     @Test
     void shouldFailToCreateTopicIfUnauthenticated() throws Exception {
-        final TopicCreateDTO topicCreateDTO = new TopicCreateDTO("Dúvida na utilização do Feign Client",
+        final TopicCreateRequestDTO topicCreateRequestDTO = new TopicCreateRequestDTO("Dúvida na utilização do Feign Client",
                 "Como utilizar o Feign Client para integração do serviço x?",
                 1L);
 
@@ -136,7 +136,7 @@ public class TopicControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
-                                .writeValueAsString(topicCreateDTO)))
+                                .writeValueAsString(topicCreateRequestDTO)))
                 .andExpect(status().isUnauthorized());
 
         Assertions.assertEquals(4, this.topicRepository.findAll().size());
@@ -149,7 +149,7 @@ public class TopicControllerIT {
     @DisplayName("Should fail with status code 400 if title property is sent empty when create topic")
     @Test
     void shouldFailIfTitlePropertyIsEmptyWhenCreateTopic() throws Exception {
-        final TopicCreateDTO topicCreateDTO = new TopicCreateDTO("",
+        final TopicCreateRequestDTO topicCreateRequestDTO = new TopicCreateRequestDTO("",
                 "Como utilizar o Feign Client para integração do serviço x?",
                 1L);
 
@@ -161,7 +161,7 @@ public class TopicControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
-                                .writeValueAsString(topicCreateDTO)))
+                                .writeValueAsString(topicCreateRequestDTO)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.detail", is("O título não pode ser vazio")));
 
@@ -175,7 +175,7 @@ public class TopicControllerIT {
     @DisplayName("Should fail with status code 400 if question property is sent empty when create topic")
     @Test
     void shouldFailIfQuestionPropertyIsEmptyWhenCreateTopic() throws Exception {
-        final TopicCreateDTO topicCreateDTO = new TopicCreateDTO("Dúvida na utilização do Feign Client",
+        final TopicCreateRequestDTO topicCreateRequestDTO = new TopicCreateRequestDTO("Dúvida na utilização do Feign Client",
                 "",
                 1L);
 
@@ -187,7 +187,7 @@ public class TopicControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
-                                .writeValueAsString(topicCreateDTO)))
+                                .writeValueAsString(topicCreateRequestDTO)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.detail", is("A pergunta não pode ser vazia")));
 
@@ -200,7 +200,7 @@ public class TopicControllerIT {
             "property is greater than 150 chars")
     @Test
     void shouldFailToCreateTopicIfTitlePropertyExceedsLimit() throws Exception {
-        final TopicCreateDTO topicCreateDTO = new TopicCreateDTO(
+        final TopicCreateRequestDTO topicCreateRequestDTO = new TopicCreateRequestDTO(
                 "Qual é a diferença entre o Feign Client, RestTemplate e o WebClient no " +
                         "Spring Framework e em que situações é mais adequado utilizá-los durante a " +
                         "integração de um serviço?",
@@ -215,7 +215,7 @@ public class TopicControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
-                                .writeValueAsString(topicCreateDTO)))
+                                .writeValueAsString(topicCreateRequestDTO)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.detail", is("Payload com valor muito grande")));
 
@@ -228,7 +228,7 @@ public class TopicControllerIT {
     @DisplayName("Should fail with status code 404 when create topic if the course not exists")
     @Test
     void shouldFailToCreateTopicIfCourseNotExists() throws Exception {
-        final TopicCreateDTO topicCreateDTO = new TopicCreateDTO("Dúvida na utilização do Feign Client",
+        final TopicCreateRequestDTO topicCreateRequestDTO = new TopicCreateRequestDTO("Dúvida na utilização do Feign Client",
                 "Como utilizar o Feign Client para integração do serviço x?",
                 4L);
 
@@ -240,7 +240,7 @@ public class TopicControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
-                                .writeValueAsString(topicCreateDTO)))
+                                .writeValueAsString(topicCreateRequestDTO)))
                 .andExpect(status().isNotFound());
 
         Assertions.assertEquals(4, this.topicRepository.findAll().size());
@@ -255,7 +255,7 @@ public class TopicControllerIT {
             "return 404 not found status code")
     @Test
     void shouldFailToCreateTopicIfUserServiceReturn404StatusCode() throws Exception {
-        final TopicCreateDTO topicCreateDTO = new TopicCreateDTO("Dúvida na utilização do Feign Client",
+        final TopicCreateRequestDTO topicCreateRequestDTO = new TopicCreateRequestDTO("Dúvida na utilização do Feign Client",
                 "Como utilizar o Feign Client para integração do serviço x?",
                 1L);
 
@@ -267,7 +267,7 @@ public class TopicControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
-                                .writeValueAsString(topicCreateDTO)))
+                                .writeValueAsString(topicCreateRequestDTO)))
                 .andExpectAll(status().isNotFound());
 
         Assertions.assertEquals(4, this.topicRepository.findAll().size());
@@ -283,7 +283,7 @@ public class TopicControllerIT {
             "previous premisses are adequate")
     @Test
     void shouldCreateTopicWithSuccessIfAuthenticated() throws Exception {
-        final TopicCreateDTO topicCreateDTO = new TopicCreateDTO("Dúvida na utilização do Feign Client",
+        final TopicCreateRequestDTO topicCreateRequestDTO = new TopicCreateRequestDTO("Dúvida na utilização do Feign Client",
                 "Como utilizar o Feign Client para integração do serviço x?",
                 1L);
 
@@ -295,7 +295,7 @@ public class TopicControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
-                                .writeValueAsString(topicCreateDTO)))
+                                .writeValueAsString(topicCreateRequestDTO)))
                 .andExpectAll(status().isCreated());
 
         Assertions.assertEquals(5, this.topicRepository.findAll().size());
@@ -462,7 +462,7 @@ public class TopicControllerIT {
             "when edit topic")
     @Test
     void shouldFailIfUserHasNotSuitableAuthorityWhenEditTopic() throws Exception {
-        final TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO(
+        final TopicUpdateRequestDTO topicUpdateRequestDTO = new TopicUpdateRequestDTO(
                 "Dúvida quanto a utilização do Elasticsearch",
                 "Como posso integrar minha API com o Elasticsearch para monitoração?",
                 Status.UNSOLVED, 1L
@@ -474,7 +474,7 @@ public class TopicControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
-                                .writeValueAsString(topicUpdateDTO)))
+                                .writeValueAsString(topicUpdateRequestDTO)))
                 .andExpect(status().isForbidden());
 
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
@@ -492,7 +492,7 @@ public class TopicControllerIT {
             " param different of type number")
     @Test
     void shouldFailToEditTopicIfParamDifferentOfTypeNumber() throws Exception {
-        final TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO(
+        final TopicUpdateRequestDTO topicUpdateRequestDTO = new TopicUpdateRequestDTO(
                 "Dúvida na utilização do WebClient",
                 "Como utilizar o WebClient para integração do serviço x?",
                 Status.UNSOLVED, 1L
@@ -508,7 +508,7 @@ public class TopicControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
-                                .writeValueAsString(topicUpdateDTO)))
+                                .writeValueAsString(topicUpdateRequestDTO)))
                 .andExpect(status().isBadRequest());
 
         BDDMockito.verifyNoInteractions(this.userClientRequest);
@@ -519,7 +519,7 @@ public class TopicControllerIT {
     @DisplayName("Should fail with status code 400 if title property is sent empty when edit topic")
     @Test
     void shouldFailIfTitlePropertyIsEmptyWhenEditTopic() throws Exception {
-        final TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO(
+        final TopicUpdateRequestDTO topicUpdateRequestDTO = new TopicUpdateRequestDTO(
                 "",
                 "Como posso integrar minha API com o Elasticsearch para monitoração?",
                 Status.UNSOLVED, 1L
@@ -535,7 +535,7 @@ public class TopicControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
-                                .writeValueAsString(topicUpdateDTO)))
+                                .writeValueAsString(topicUpdateRequestDTO)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.detail", is("O título não pode ser vazio")));
 
@@ -554,7 +554,7 @@ public class TopicControllerIT {
     @DisplayName("Should fail with status code 400 if question property is sent empty when edit topic")
     @Test
     void shouldFailIfQuestionPropertyIsEmptyWhenEditTopic() throws Exception {
-        TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO(
+        TopicUpdateRequestDTO topicUpdateRequestDTO = new TopicUpdateRequestDTO(
                 "Dúvida quanto a utilização do Elasticsearch",
                 "",
                 Status.UNSOLVED, 1L
@@ -570,7 +570,7 @@ public class TopicControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
-                                .writeValueAsString(topicUpdateDTO)))
+                                .writeValueAsString(topicUpdateRequestDTO)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.detail", is("A pergunta não pode ser vazia")));
 
@@ -590,7 +590,7 @@ public class TopicControllerIT {
             "of query param is sent empty")
     @Test
     void shouldFailIfTopicIdPropertyOfQueryParamIsEmptyWhenEditTopic() throws Exception {
-        TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO(
+        TopicUpdateRequestDTO topicUpdateRequestDTO = new TopicUpdateRequestDTO(
                 "Dúvida quanto a utilização do Elasticsearch",
                 "Como posso integrar minha API com o Elasticsearch para monitoração?",
                 Status.UNSOLVED, 1L
@@ -603,7 +603,7 @@ public class TopicControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
-                                .writeValueAsString(topicUpdateDTO)))
+                                .writeValueAsString(topicUpdateRequestDTO)))
                 .andExpect(status().isBadRequest());
 
         BDDMockito.verifyNoInteractions(this.userClientRequest);
@@ -615,7 +615,7 @@ public class TopicControllerIT {
     @DisplayName("Should fail with status code 404 when edit topic if the course not exists")
     @Test
     void shouldFailToEditTopicIfCourseNotExists() throws Exception {
-        final TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO(
+        final TopicUpdateRequestDTO topicUpdateRequestDTO = new TopicUpdateRequestDTO(
                 "Dúvida quanto a utilização do Elasticsearch",
                 "Como posso integrar minha API com o Elasticsearch para monitoração?",
                 Status.UNSOLVED, 4L
@@ -628,7 +628,7 @@ public class TopicControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
-                                .writeValueAsString(topicUpdateDTO)))
+                                .writeValueAsString(topicUpdateRequestDTO)))
                 .andExpect(status().isNotFound());
 
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
@@ -647,7 +647,7 @@ public class TopicControllerIT {
             "404 not found status code")
     @Test
     void shouldFailToEditTopicIfUserServiceReturn404StatusCode() throws Exception {
-        final TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO(
+        final TopicUpdateRequestDTO topicUpdateRequestDTO = new TopicUpdateRequestDTO(
                 "Dúvida quanto a utilização do Elasticsearch",
                 "Como posso integrar minha API com o Elasticsearch para monitoração?",
                 Status.UNSOLVED, 1L
@@ -663,7 +663,7 @@ public class TopicControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
-                                .writeValueAsString(topicUpdateDTO)))
+                                .writeValueAsString(topicUpdateRequestDTO)))
                 .andExpect(status().isNotFound());
 
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
@@ -682,7 +682,7 @@ public class TopicControllerIT {
     @DisplayName("Should fail with status code 418 if basic user attempt edit topic of other author")
     @Test
     void shouldFailIfBasicUserAttemptEditTopicOfOtherAuthor() throws Exception {
-        final TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO(
+        final TopicUpdateRequestDTO topicUpdateRequestDTO = new TopicUpdateRequestDTO(
                 "Dúvida quanto a utilização do Elasticsearch",
                 "Como posso integrar minha API com o Elasticsearch para monitoração?",
                 Status.UNSOLVED, 1L
@@ -698,7 +698,7 @@ public class TopicControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
-                                .writeValueAsString(topicUpdateDTO)))
+                                .writeValueAsString(topicUpdateRequestDTO)))
                 .andExpect(status().isIAmATeapot())
                 .andExpect(jsonPath("$.detail", is("Privilégio insuficiente")));
 
@@ -718,7 +718,7 @@ public class TopicControllerIT {
     @DisplayName("Should fail with status code 422 when attempt edit a topic of unknown author")
     @Test
     void shouldFailWhenAttemptEditTopicOfUnknownAuthor() throws Exception {
-        final TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO(
+        final TopicUpdateRequestDTO topicUpdateRequestDTO = new TopicUpdateRequestDTO(
                 "Dúvida quanto a utilização do Elasticsearch",
                 "Como posso integrar minha API com o Elasticsearch para monitoração?",
                 Status.SOLVED, 1L
@@ -734,7 +734,7 @@ public class TopicControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
-                                .writeValueAsString(topicUpdateDTO)))
+                                .writeValueAsString(topicUpdateRequestDTO)))
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.detail", is(
                         "O tópico pertence a um autor inexistente," +
@@ -758,7 +758,7 @@ public class TopicControllerIT {
             "has authority 'topic:edit' and previous premisses are adequate")
     @Test
     void topicAuthorShouldEditSpecifiedTopicWithSuccessIfHasSuitableAuthority() throws Exception {
-        final TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO(
+        final TopicUpdateRequestDTO topicUpdateRequestDTO = new TopicUpdateRequestDTO(
                 "Dúvida na utilização do WebClient",
                 "Como utilizar o WebClient para integração do serviço x?",
                 Status.UNSOLVED, 1L
@@ -774,7 +774,7 @@ public class TopicControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
-                                .writeValueAsString(topicUpdateDTO)))
+                                .writeValueAsString(topicUpdateRequestDTO)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.topic.title", is("Dúvida na utilização do WebClient")))
                 .andExpect(jsonPath("$.topic.question", is("Como utilizar o WebClient para " +
@@ -798,7 +798,7 @@ public class TopicControllerIT {
             "has authority 'topic:edit' and previous premisses are adequate")
     @Test
     void userADMShouldEditTopicOfOtherAuthorWithSuccessIfHasSuitableAuthority() throws Exception {
-        final TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO(
+        final TopicUpdateRequestDTO topicUpdateRequestDTO = new TopicUpdateRequestDTO(
                 "Dúvida na utilização do RestTemplate",
                 "Como utilizar o RestTemplate para integração do serviço x?",
                 Status.UNSOLVED, 1L
@@ -814,7 +814,7 @@ public class TopicControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
-                                .writeValueAsString(topicUpdateDTO)))
+                                .writeValueAsString(topicUpdateRequestDTO)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.topic.title", is("Dúvida na utilização do RestTemplate")))
                 .andExpect(jsonPath("$.topic.question", is("Como utilizar o RestTemplate para " +
@@ -838,7 +838,7 @@ public class TopicControllerIT {
             "has authority 'topic:edit' and previous premisses are adequate")
     @Test
     void userMODShouldEditTopicOfOtherAuthorWithSuccessIfHasSuitableAuthority() throws Exception {
-        final TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO(
+        final TopicUpdateRequestDTO topicUpdateRequestDTO = new TopicUpdateRequestDTO(
                 "Dúvida na utilização da API de validação do Spring",
                 "Quais são as anotações da API de validação do Spring?",
                 Status.UNSOLVED, 1L
@@ -854,7 +854,7 @@ public class TopicControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
-                                .writeValueAsString(topicUpdateDTO)))
+                                .writeValueAsString(topicUpdateRequestDTO)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.topic.title", is("Dúvida na utilização da API de " +
                         "validação do Spring")))

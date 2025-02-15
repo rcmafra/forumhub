@@ -3,8 +3,8 @@ package com.raul.forumhub.topic.service;
 import com.raul.forumhub.topic.client.UserClientRequest;
 import com.raul.forumhub.topic.domain.Status;
 import com.raul.forumhub.topic.domain.Topic;
-import com.raul.forumhub.topic.dto.request.TopicCreateDTO;
-import com.raul.forumhub.topic.dto.request.TopicUpdateDTO;
+import com.raul.forumhub.topic.dto.request.TopicCreateRequestDTO;
+import com.raul.forumhub.topic.dto.request.TopicUpdateRequestDTO;
 import com.raul.forumhub.topic.dto.response.TopicResponseDTO;
 import com.raul.forumhub.topic.exception.InstanceNotFoundException;
 import com.raul.forumhub.topic.exception.RestClientException;
@@ -50,7 +50,7 @@ public class TopicServiceTest {
 
     @Test
     void shouldFailIfTitlePropertyIsEmptyWhenCreateTopic() {
-        final TopicCreateDTO topicCreateDTO = new TopicCreateDTO("",
+        final TopicCreateRequestDTO topicCreateRequestDTO = new TopicCreateRequestDTO("",
                 "Como utilizar o Feign Client para integração do serviço x?",
                 1L);
 
@@ -65,7 +65,7 @@ public class TopicServiceTest {
 
 
         Assertions.assertThrows(ConstraintViolationException.class,
-                () -> this.topicService.createTopic(topicCreateDTO, 1L));
+                () -> this.topicService.createTopic(topicCreateRequestDTO, 1L));
 
 
         BDDMockito.verify(this.userClientRequest).getUserById(1L);
@@ -80,7 +80,7 @@ public class TopicServiceTest {
 
     @Test
     void shouldFailIfQuestionPropertyIsEmptyWhenCreateTopic() {
-        final TopicCreateDTO topicCreateDTO = new TopicCreateDTO("Dúvida na utilização do Feign Client",
+        final TopicCreateRequestDTO topicCreateRequestDTO = new TopicCreateRequestDTO("Dúvida na utilização do Feign Client",
                 "",
                 1L);
 
@@ -95,7 +95,7 @@ public class TopicServiceTest {
 
 
         Assertions.assertThrows(ConstraintViolationException.class,
-                () -> this.topicService.createTopic(topicCreateDTO, 1L));
+                () -> this.topicService.createTopic(topicCreateRequestDTO, 1L));
 
 
         BDDMockito.verify(this.userClientRequest).getUserById(1L);
@@ -110,7 +110,7 @@ public class TopicServiceTest {
 
     @Test
     void shouldFailToCreateTopicIfTitlePropertyIsGreaterThan150Chars() {
-        final TopicCreateDTO topicCreateDTO = new TopicCreateDTO(
+        final TopicCreateRequestDTO topicCreateRequestDTO = new TopicCreateRequestDTO(
                 "Qual é a diferença entre o Feign Client, RestTemplate e o WebClient no " +
                         "Spring Framework e em que situações é mais adequado utilizá-los durante a " +
                         "integração de um serviço?",
@@ -128,7 +128,7 @@ public class TopicServiceTest {
 
 
         Assertions.assertThrows(DataIntegrityViolationException.class,
-                () -> this.topicService.createTopic(topicCreateDTO, 1L),
+                () -> this.topicService.createTopic(topicCreateRequestDTO, 1L),
                 "Payload com valor muito grande");
 
 
@@ -144,7 +144,7 @@ public class TopicServiceTest {
 
     @Test
     void shouldFailToCreateTopicIfCourseNotExists() {
-        final TopicCreateDTO topicCreateDTO = new TopicCreateDTO("Dúvida na utilização do Feign Client",
+        final TopicCreateRequestDTO topicCreateRequestDTO = new TopicCreateRequestDTO("Dúvida na utilização do Feign Client",
                 "Como utilizar o Feign Client para integração do serviço x?",
                 1L);
 
@@ -156,7 +156,7 @@ public class TopicServiceTest {
 
 
         Assertions.assertThrows(InstanceNotFoundException.class,
-                () -> this.topicService.createTopic(topicCreateDTO, 1L),
+                () -> this.topicService.createTopic(topicCreateRequestDTO, 1L),
                 "O curso informado não existe");
 
 
@@ -172,7 +172,7 @@ public class TopicServiceTest {
 
     @Test
     void shouldFailToCreateTopicIfUserServiceReturn404StatusCode() {
-        final TopicCreateDTO topicCreateDTO = new TopicCreateDTO("Dúvida na utilização do Feign Client",
+        final TopicCreateRequestDTO topicCreateRequestDTO = new TopicCreateRequestDTO("Dúvida na utilização do Feign Client",
                 "Como utilizar o Feign Client para integração do serviço x?",
                 1L);
 
@@ -181,7 +181,7 @@ public class TopicServiceTest {
 
 
         Assertions.assertThrows(RestClientException.class,
-                () -> this.topicService.createTopic(topicCreateDTO, 1L),
+                () -> this.topicService.createTopic(topicCreateRequestDTO, 1L),
                 "Usuário não encontrado");
 
 
@@ -196,7 +196,7 @@ public class TopicServiceTest {
 
     @Test
     void shouldCreateTopicWithSuccessIfEverythingIsOK() {
-        final TopicCreateDTO topicCreateDTO = new TopicCreateDTO("Dúvida na utilização do Feign Client",
+        final TopicCreateRequestDTO topicCreateRequestDTO = new TopicCreateRequestDTO("Dúvida na utilização do Feign Client",
                 "Como utilizar o Feign Client para integração do serviço x?",
                 1L);
 
@@ -207,7 +207,7 @@ public class TopicServiceTest {
                 .willReturn(TestsHelper.CourseHelper.courseList().get(0));
 
 
-        Assertions.assertDoesNotThrow(() -> this.topicService.createTopic(topicCreateDTO, 1L));
+        Assertions.assertDoesNotThrow(() -> this.topicService.createTopic(topicCreateRequestDTO, 1L));
 
 
         BDDMockito.verify(this.userClientRequest).getUserById(1L);
@@ -406,7 +406,7 @@ public class TopicServiceTest {
 
     @Test
     void shouldFailIfTitlePropertyIsEmptyWhenEditTopic() {
-        final TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO(
+        final TopicUpdateRequestDTO topicUpdateRequestDTO = new TopicUpdateRequestDTO(
                 "",
                 "Como posso integrar minha API com o Elasticsearch para monitoração?",
                 Status.UNSOLVED, 1L
@@ -426,7 +426,7 @@ public class TopicServiceTest {
 
 
         Assertions.assertThrows(ConstraintViolationException.class,
-                () -> this.topicService.updateTopic(1L, 1L, topicUpdateDTO));
+                () -> this.topicService.updateTopic(1L, 1L, topicUpdateRequestDTO));
 
 
         BDDMockito.verify(this.topicRepository).findById(1L);
@@ -443,7 +443,7 @@ public class TopicServiceTest {
 
     @Test
     void shouldFailIfQuestionPropertyIsEmptyWhenEditTopic() {
-        TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO(
+        TopicUpdateRequestDTO topicUpdateRequestDTO = new TopicUpdateRequestDTO(
                 "Dúvida quanto a utilização do Elasticsearch",
                 "",
                 Status.UNSOLVED, 1L
@@ -463,7 +463,7 @@ public class TopicServiceTest {
 
 
         Assertions.assertThrows(ConstraintViolationException.class,
-                () -> this.topicService.updateTopic(1L, 1L, topicUpdateDTO));
+                () -> this.topicService.updateTopic(1L, 1L, topicUpdateRequestDTO));
 
 
         BDDMockito.verify(this.topicRepository).findById(1L);
@@ -480,7 +480,7 @@ public class TopicServiceTest {
 
     @Test
     void shouldFailToEditTopicIfCourseNotExists() {
-        final TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO(
+        final TopicUpdateRequestDTO topicUpdateRequestDTO = new TopicUpdateRequestDTO(
                 "Dúvida quanto a utilização do Elasticsearch",
                 "Como posso integrar minha API com o Elasticsearch para monitoração?",
                 Status.UNSOLVED, 1L
@@ -493,7 +493,7 @@ public class TopicServiceTest {
                 .willThrow(new InstanceNotFoundException("O curso informado não existe"));
 
         Assertions.assertThrows(InstanceNotFoundException.class,
-                () -> this.topicService.updateTopic(1L, 1L, topicUpdateDTO),
+                () -> this.topicService.updateTopic(1L, 1L, topicUpdateRequestDTO),
                 "O curso informado não existe");
 
         BDDMockito.verify(this.topicRepository).findById(1L);
@@ -508,7 +508,7 @@ public class TopicServiceTest {
 
     @Test
     void shouldFailToEditTopicIfUserServiceReturn404StatusCode() {
-        final TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO(
+        final TopicUpdateRequestDTO topicUpdateRequestDTO = new TopicUpdateRequestDTO(
                 "Dúvida quanto a utilização do Elasticsearch",
                 "Como posso integrar minha API com o Elasticsearch para monitoração?",
                 Status.UNSOLVED, 1L
@@ -524,7 +524,7 @@ public class TopicServiceTest {
                 .willThrow(new RestClientException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
 
         Assertions.assertThrows(RestClientException.class,
-                () -> this.topicService.updateTopic(1L, 1L, topicUpdateDTO),
+                () -> this.topicService.updateTopic(1L, 1L, topicUpdateRequestDTO),
                 "Usuário não encontrado");
 
 
@@ -542,7 +542,7 @@ public class TopicServiceTest {
 
     @Test
     void shouldFailIfBasicUserAttemptEditTopicOfOtherAuthor() {
-        final TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO(
+        final TopicUpdateRequestDTO topicUpdateRequestDTO = new TopicUpdateRequestDTO(
                 "Dúvida quanto a utilização do Elasticsearch",
                 "Como posso integrar minha API com o Elasticsearch para monitoração?",
                 Status.UNSOLVED, 1L
@@ -558,7 +558,7 @@ public class TopicServiceTest {
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
 
         Assertions.assertThrows(ValidationException.class,
-                () -> this.topicService.updateTopic(2L, 1L, topicUpdateDTO),
+                () -> this.topicService.updateTopic(2L, 1L, topicUpdateRequestDTO),
                 "Privilégio insuficiente");
 
 
@@ -575,7 +575,7 @@ public class TopicServiceTest {
 
     @Test
     void shouldFailWhenAttemptEditTopicOfUnknownAuthor() {
-        final TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO(
+        final TopicUpdateRequestDTO topicUpdateRequestDTO = new TopicUpdateRequestDTO(
                 "Dúvida quanto a utilização do Elasticsearch",
                 "Como posso integrar minha API com o Elasticsearch para monitoração?",
                 Status.SOLVED, 1L
@@ -591,7 +591,7 @@ public class TopicServiceTest {
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(2));
 
         Assertions.assertThrows(TopicServiceException.class,
-                () -> this.topicService.updateTopic(3L, 3L, topicUpdateDTO),
+                () -> this.topicService.updateTopic(3L, 3L, topicUpdateRequestDTO),
                 "O tópico pertence a um autor inexistente, ele não pode ser editado");
 
 
@@ -609,7 +609,7 @@ public class TopicServiceTest {
 
     @Test
     void topicAuthorShouldEditSpecifiedTopicWithSuccess() {
-        final TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO(
+        final TopicUpdateRequestDTO topicUpdateRequestDTO = new TopicUpdateRequestDTO(
                 "Dúvida na utilização do WebClient",
                 "Como utilizar o WebClient para integração do serviço x?",
                 Status.UNSOLVED, 1L
@@ -625,7 +625,7 @@ public class TopicServiceTest {
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
 
         Assertions.assertDoesNotThrow(
-                () -> this.topicService.updateTopic(1L, 1L, topicUpdateDTO));
+                () -> this.topicService.updateTopic(1L, 1L, topicUpdateRequestDTO));
 
 
         BDDMockito.verify(this.topicRepository).findById(1L);
@@ -641,7 +641,7 @@ public class TopicServiceTest {
 
     @Test
     void userADMShouldEditTopicOfOtherAuthorWithSuccess() {
-        final TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO(
+        final TopicUpdateRequestDTO topicUpdateRequestDTO = new TopicUpdateRequestDTO(
                 "Dúvida na utilização do RestTemplate",
                 "Como utilizar o RestTemplate para integração do serviço x?",
                 Status.UNSOLVED, 1L
@@ -657,7 +657,7 @@ public class TopicServiceTest {
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(2));
 
         Assertions.assertDoesNotThrow(
-                () -> this.topicService.updateTopic(1L, 3L, topicUpdateDTO));
+                () -> this.topicService.updateTopic(1L, 3L, topicUpdateRequestDTO));
 
 
         BDDMockito.verify(this.topicRepository).findById(1L);
@@ -673,7 +673,7 @@ public class TopicServiceTest {
 
     @Test
     void userMODShouldEditTopicOfOtherAuthorWithSuccess() {
-        final TopicUpdateDTO topicUpdateDTO = new TopicUpdateDTO(
+        final TopicUpdateRequestDTO topicUpdateRequestDTO = new TopicUpdateRequestDTO(
                 "Dúvida na utilização da API de validação do Spring",
                 "Quais são as anotações da API de validação do Spring?",
                 Status.UNSOLVED, 1L
@@ -689,7 +689,7 @@ public class TopicServiceTest {
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
         Assertions.assertDoesNotThrow(
-                () -> this.topicService.updateTopic(1L, 2L, topicUpdateDTO));
+                () -> this.topicService.updateTopic(1L, 2L, topicUpdateRequestDTO));
 
 
         BDDMockito.verify(this.topicRepository).findById(1L);

@@ -4,8 +4,8 @@ import com.raul.forumhub.topic.client.UserClientRequest;
 import com.raul.forumhub.topic.domain.Author;
 import com.raul.forumhub.topic.domain.Course;
 import com.raul.forumhub.topic.domain.Topic;
-import com.raul.forumhub.topic.dto.request.TopicCreateDTO;
-import com.raul.forumhub.topic.dto.request.TopicUpdateDTO;
+import com.raul.forumhub.topic.dto.request.TopicCreateRequestDTO;
+import com.raul.forumhub.topic.dto.request.TopicUpdateRequestDTO;
 import com.raul.forumhub.topic.dto.response.TopicResponseDTO;
 import com.raul.forumhub.topic.exception.InstanceNotFoundException;
 import com.raul.forumhub.topic.exception.TopicServiceException;
@@ -31,11 +31,11 @@ public class TopicService {
         this.courseService = courseService;
     }
 
-    public void createTopic(TopicCreateDTO topicCreateDTO, Long user_id) {
+    public void createTopic(TopicCreateRequestDTO topicCreateRequestDTO, Long user_id) {
         Author author = userClientRequest.getUserById(user_id);
-        Course course = courseService.getCourseById(topicCreateDTO.course_id());
+        Course course = courseService.getCourseById(topicCreateRequestDTO.course_id());
 
-        Topic topic = new Topic(topicCreateDTO.title(), topicCreateDTO.question(), author, course);
+        Topic topic = new Topic(topicCreateRequestDTO.title(), topicCreateRequestDTO.question(), author, course);
         this.saveTopic(topic);
     }
 
@@ -50,7 +50,7 @@ public class TopicService {
     }
 
 
-    public TopicResponseDTO updateTopic(Long topic_id, Long user_id, TopicUpdateDTO update) {
+    public TopicResponseDTO updateTopic(Long topic_id, Long user_id, TopicUpdateRequestDTO update) {
         Topic topic = this.getTopicById(topic_id);
         Course course = this.courseService.getCourseById(update.course_id());
         Author author = this.userClientRequest.getUserById(user_id);

@@ -1,6 +1,6 @@
 package com.raul.forumhub.topic.controller;
 
-import com.raul.forumhub.topic.dto.request.CourseDTO;
+import com.raul.forumhub.topic.dto.request.CourseRequestDTO;
 import com.raul.forumhub.topic.dto.response.CourseResponseCollection;
 import com.raul.forumhub.topic.dto.response.CourseResponseDTO;
 import com.raul.forumhub.topic.dto.response.HttpMessage;
@@ -27,9 +27,9 @@ public class CourseController {
 
     @PreAuthorize("hasRole('ADM') and hasAuthority('SCOPE_course:create')")
     @PostMapping("/create")
-    public ResponseEntity<HttpMessage> createCourse(@Valid @RequestBody CourseDTO courseDTO) {
+    public ResponseEntity<HttpMessage> createCourse(@Valid @RequestBody CourseRequestDTO courseRequestDTO) {
 
-        this.courseService.createCourse(courseDTO);
+        this.courseService.createCourse(courseRequestDTO);
         return new ResponseEntity<>(new HttpMessage("HttpStatusCode OK"), HttpStatus.CREATED);
     }
 
@@ -44,7 +44,7 @@ public class CourseController {
     @PreAuthorize("hasRole('ADM') and hasAuthority('SCOPE_course:edit')")
     @PutMapping("/edit")
     public ResponseEntity<CourseResponseDTO> updateCourse(@RequestParam String courseName,
-                                                          @Valid @RequestBody CourseDTO courseUpdateDTO) {
+                                                          @Valid @RequestBody CourseRequestDTO courseUpdateDTO) {
         Assert.hasText(courseName, "O nome do curso não pode ser vazio");
 
         CourseResponseDTO courseResponseDTO = this.courseService.updateCourse(courseName, courseUpdateDTO);

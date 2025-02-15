@@ -1,7 +1,7 @@
 package com.raul.forumhub.topic.service;
 
 import com.raul.forumhub.topic.domain.Course;
-import com.raul.forumhub.topic.dto.request.CourseDTO;
+import com.raul.forumhub.topic.dto.request.CourseRequestDTO;
 import com.raul.forumhub.topic.exception.InstanceNotFoundException;
 import com.raul.forumhub.topic.repository.CourseRepository;
 import com.raul.forumhub.topic.util.TestsHelper;
@@ -34,7 +34,7 @@ public class CourseServiceTest {
 
     @Test
     void shouldFailToCreateCourseIfCourseNamePropertyIsEmpty() {
-        final CourseDTO courseDTO = new CourseDTO(
+        final CourseRequestDTO courseRequestDTO = new CourseRequestDTO(
                 "", Course.Category.C);
 
         BDDMockito.given(this.courseRepository.save(any(Course.class)))
@@ -42,7 +42,7 @@ public class CourseServiceTest {
 
 
         Assertions.assertThrows(ConstraintViolationException.class,
-                () -> this.courseService.createCourse(courseDTO));
+                () -> this.courseService.createCourse(courseRequestDTO));
 
 
         BDDMockito.verify(this.courseRepository).save(any(Course.class));
@@ -54,7 +54,7 @@ public class CourseServiceTest {
 
     @Test
     void shouldFailToCreateCourseIfHerAlreadyExists() {
-        final CourseDTO courseDTO = new CourseDTO(
+        final CourseRequestDTO courseRequestDTO = new CourseRequestDTO(
                 "Criação de uma API Rest", Course.Category.JAVA);
 
         BDDMockito.given(this.courseRepository.save(any(Course.class)))
@@ -62,7 +62,7 @@ public class CourseServiceTest {
 
 
         Assertions.assertThrows(DataIntegrityViolationException.class,
-                () -> this.courseService.createCourse(courseDTO),
+                () -> this.courseService.createCourse(courseRequestDTO),
                 "Payload conflitante");
 
 
@@ -75,11 +75,11 @@ public class CourseServiceTest {
 
     @Test
     void shouldCreateCourseWithSuccessIfEverythingIsOk() {
-        final CourseDTO courseDTO = new CourseDTO(
+        final CourseRequestDTO courseRequestDTO = new CourseRequestDTO(
                 "Conhecendo a arquitetura cliente servidor", Course.Category.JAVA);
 
 
-        Assertions.assertDoesNotThrow(() -> this.courseService.createCourse(courseDTO));
+        Assertions.assertDoesNotThrow(() -> this.courseService.createCourse(courseRequestDTO));
 
 
         BDDMockito.verify(this.courseRepository).save(any(Course.class));
@@ -106,7 +106,7 @@ public class CourseServiceTest {
 
     @Test
     void shouldFailIfCourseNamePropertyOfDtoObjectIsEmptyWhenEditCourse() {
-        final CourseDTO courseUpdateDTO = new CourseDTO("", Course.Category.C);
+        final CourseRequestDTO courseUpdateDTO = new CourseRequestDTO("", Course.Category.C);
 
         BDDMockito.given(this.courseRepository.findCourseByName("Criação de uma API Rest"))
                 .willReturn(Optional.of(TestsHelper.CourseHelper.courseList().get(0)));
@@ -128,8 +128,8 @@ public class CourseServiceTest {
 
     @Test
     void shouldFailToEditCourseIfDesiredCourseNotExists() {
-        final CourseDTO courseUpdateDTO =
-                new CourseDTO("Como criar uma API Rest escalável", Course.Category.C);
+        final CourseRequestDTO courseUpdateDTO =
+                new CourseRequestDTO("Como criar uma API Rest escalável", Course.Category.C);
 
 
         BDDMockito.given(this.courseRepository.findCourseByName(
@@ -151,8 +151,8 @@ public class CourseServiceTest {
 
     @Test
     void shouldEditCourseWithSuccessIfEverythingIsOk() {
-        final CourseDTO courseUpdateDTO =
-                new CourseDTO("Como criar uma API Rest escalável", Course.Category.C);
+        final CourseRequestDTO courseUpdateDTO =
+                new CourseRequestDTO("Como criar uma API Rest escalável", Course.Category.C);
 
         BDDMockito.given(this.courseRepository.findCourseByName(
                         "Criação de uma API Rest"))

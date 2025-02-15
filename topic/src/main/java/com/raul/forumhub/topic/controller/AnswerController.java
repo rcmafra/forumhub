@@ -1,6 +1,6 @@
 package com.raul.forumhub.topic.controller;
 
-import com.raul.forumhub.topic.dto.request.AnswerDTO;
+import com.raul.forumhub.topic.dto.request.AnswerRequestDTO;
 import com.raul.forumhub.topic.dto.response.AnswerResponseDTO;
 import com.raul.forumhub.topic.dto.response.HttpMessage;
 import com.raul.forumhub.topic.security.IsAuthenticated;
@@ -25,11 +25,11 @@ public class AnswerController {
 
     @IsAuthenticated
     @PostMapping("/{topic_id}/answer")
-    public ResponseEntity<HttpMessage> answerTopic(@PathVariable Long topic_id, @Valid @RequestBody AnswerDTO answerDTO,
+    public ResponseEntity<HttpMessage> answerTopic(@PathVariable Long topic_id, @Valid @RequestBody AnswerRequestDTO answerRequestDTO,
                                                    @AuthenticationPrincipal Jwt jwt) {
 
         Long user_id = Long.parseLong(jwt.getClaim("user_id"));
-        this.answerService.answerTopic(topic_id, user_id, answerDTO);
+        this.answerService.answerTopic(topic_id, user_id, answerRequestDTO);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -48,10 +48,10 @@ public class AnswerController {
     @PreAuthorize("hasAuthority('SCOPE_answer:edit')")
     @PutMapping("/{topic_id}/answers/edit")
     public ResponseEntity<AnswerResponseDTO> updateAnswer(@PathVariable Long topic_id, @RequestParam Long answer_id,
-                                                          @AuthenticationPrincipal Jwt jwt, @Valid @RequestBody AnswerDTO answerDTO) {
+                                                          @AuthenticationPrincipal Jwt jwt, @Valid @RequestBody AnswerRequestDTO answerRequestDTO) {
 
         Long user_id = Long.parseLong(jwt.getClaim("user_id"));
-        AnswerResponseDTO answerResponseDTO = this.answerService.updateAnswer(topic_id, answer_id, user_id, answerDTO);
+        AnswerResponseDTO answerResponseDTO = this.answerService.updateAnswer(topic_id, answer_id, user_id, answerRequestDTO);
 
         return ResponseEntity.ok(answerResponseDTO);
     }

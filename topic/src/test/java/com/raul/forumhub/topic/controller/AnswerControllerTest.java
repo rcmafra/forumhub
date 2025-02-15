@@ -2,7 +2,7 @@ package com.raul.forumhub.topic.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.raul.forumhub.topic.domain.Answer;
-import com.raul.forumhub.topic.dto.request.AnswerDTO;
+import com.raul.forumhub.topic.dto.request.AnswerRequestDTO;
 import com.raul.forumhub.topic.dto.response.AnswerResponseDTO;
 import com.raul.forumhub.topic.exception.handler.GlobalExceptionHandler;
 import com.raul.forumhub.topic.security.TopicSecurityConfig;
@@ -63,13 +63,13 @@ public class AnswerControllerTest {
     @DisplayName("Should fail with status code 404 if resource doesn't exists")
     @Test
     void shouldFailIfResourceDoesNotExistToTheSendRequest() throws Exception {
-        final AnswerDTO answerDTO = new AnswerDTO("Resposta teste");
+        final AnswerRequestDTO answerRequestDTO = new AnswerRequestDTO("Resposta teste");
 
         this.mockMvc.perform(post("/forumhub.io/api/v1/topics/{topic_id}/ans", 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
-                                .writeValueAsString(answerDTO)))
+                                .writeValueAsString(answerRequestDTO)))
                 .andExpect(status().isNotFound());
 
     }
@@ -77,13 +77,13 @@ public class AnswerControllerTest {
     @DisplayName("Should fail with status code 400 if method isn't supported")
     @Test
     void shouldFailIfMethodIsNotSupportedToTheSendRequest() throws Exception {
-        final AnswerDTO answerDTO = new AnswerDTO("Resposta teste");
+        final AnswerRequestDTO answerRequestDTO = new AnswerRequestDTO("Resposta teste");
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answer", 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
-                                .writeValueAsString(answerDTO)))
+                                .writeValueAsString(answerRequestDTO)))
                 .andExpect(status().isBadRequest());
 
     }
@@ -91,13 +91,13 @@ public class AnswerControllerTest {
     @DisplayName("Should fail with status code 401 when answer topic if user unauthenticated")
     @Test
     void shouldFailToAnswerTopicIfUnauthenticated() throws Exception {
-        final AnswerDTO answerDTO = new AnswerDTO("Resposta teste");
+        final AnswerRequestDTO answerRequestDTO = new AnswerRequestDTO("Resposta teste");
 
         this.mockMvc.perform(post("/forumhub.io/api/v1/topics/{topic_id}/answer", 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
-                                .writeValueAsString(answerDTO)))
+                                .writeValueAsString(answerRequestDTO)))
                 .andExpect(status().isUnauthorized());
 
         BDDMockito.verifyNoInteractions(this.answerService);
@@ -108,19 +108,19 @@ public class AnswerControllerTest {
     @DisplayName("Should answer topic with success if user is authenticated")
     @Test
     void shouldAnswerTopicWithSuccessIfAuthenticated() throws Exception {
-        final AnswerDTO answerDTO = new AnswerDTO("Resposta teste");
+        final AnswerRequestDTO answerRequestDTO = new AnswerRequestDTO("Resposta teste");
 
-        BDDMockito.doNothing().when(this.answerService).answerTopic(1L, 1L, answerDTO);
+        BDDMockito.doNothing().when(this.answerService).answerTopic(1L, 1L, answerRequestDTO);
 
         this.mockMvc.perform(post("/forumhub.io/api/v1/topics/{topic_id}/answer", 1)
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
-                                .writeValueAsString(answerDTO)))
+                                .writeValueAsString(answerRequestDTO)))
                 .andExpect(status().isCreated());
 
-        BDDMockito.verify(this.answerService).answerTopic(1L, 1L, answerDTO);
+        BDDMockito.verify(this.answerService).answerTopic(1L, 1L, answerRequestDTO);
         BDDMockito.verifyNoMoreInteractions(this.answerService);
 
 
@@ -194,8 +194,8 @@ public class AnswerControllerTest {
             "when edit answer")
     @Test
     void shouldFailIfUserHasNotSuitableAuthorityWhenEditAnswer() throws Exception {
-        final AnswerDTO answerUpdateDTO =
-                new AnswerDTO("Primeiro teste de edição de uma resposta");
+        final AnswerRequestDTO answerUpdateDTO =
+                new AnswerRequestDTO("Primeiro teste de edição de uma resposta");
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/edit", 1)
                         .queryParam("answer_id", "1")
@@ -213,8 +213,8 @@ public class AnswerControllerTest {
             " param different of type number")
     @Test
     void shouldFailToEditAnswerIfParamDifferentOfTypeNumber() throws Exception {
-        final AnswerDTO answerUpdateDTO =
-                new AnswerDTO("Primeiro teste de edição de uma resposta");
+        final AnswerRequestDTO answerUpdateDTO =
+                new AnswerRequestDTO("Primeiro teste de edição de uma resposta");
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/edit", 1)
                         .queryParam("answer_id", "unexpected")
@@ -232,8 +232,8 @@ public class AnswerControllerTest {
             "of query param is sent empty")
     @Test
     void shouldFailIfAnswerIdPropertyOfQueryParamIsEmptyWhenUpdateAnswer() throws Exception {
-        final AnswerDTO answerUpdateDTO =
-                new AnswerDTO("Primeiro teste de edição de uma resposta");
+        final AnswerRequestDTO answerUpdateDTO =
+                new AnswerRequestDTO("Primeiro teste de edição de uma resposta");
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/edit", 1)
                         .queryParam("answer_id", "")
@@ -253,8 +253,8 @@ public class AnswerControllerTest {
     @DisplayName("Should edit answer with success if user authenticated has authority 'answer:edit'")
     @Test
     void shouldEditAnswerWithSuccessIfUserHasSuitableAuthority() throws Exception {
-        final AnswerDTO answerUpdateDTO =
-                new AnswerDTO("Primeiro teste de edição de uma resposta");
+        final AnswerRequestDTO answerUpdateDTO =
+                new AnswerRequestDTO("Primeiro teste de edição de uma resposta");
 
         Answer answer = TestsHelper.AnswerHelper.answerList().get(0);
         answer.setSolution("Primeiro teste de edição de uma resposta");
