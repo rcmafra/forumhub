@@ -25,11 +25,6 @@ public class Course {
     @Enumerated(EnumType.STRING)
     private Category category;
 
-    public Course(String name, Category category){
-        this.name = name;
-        this.category = category;
-    }
-
     public enum Category {
 
         JAVA,
