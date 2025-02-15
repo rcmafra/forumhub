@@ -1,8 +1,7 @@
 package com.raul.forumhub.topic.service;
 
 import com.raul.forumhub.topic.domain.Course;
-import com.raul.forumhub.topic.dto.request.CourseCreateDTO;
-import com.raul.forumhub.topic.dto.request.CourseUpdateDTO;
+import com.raul.forumhub.topic.dto.request.CourseDTO;
 import com.raul.forumhub.topic.dto.response.GetCourseCollection;
 import com.raul.forumhub.topic.dto.response.GetCourseDTO;
 import com.raul.forumhub.topic.exception.InstanceNotFoundException;
@@ -22,9 +21,9 @@ public class CourseService {
     }
 
 
-    public void createCourse(CourseCreateDTO courseCreateDTO) {
-        Course course = Course.builder().name(courseCreateDTO.name())
-                .category(courseCreateDTO.category())
+    public void createCourse(CourseDTO courseDTO) {
+        Course course = Course.builder().name(courseDTO.name())
+                .category(courseDTO.category())
                 .build();
 
         this.courseRepository.save(course);
@@ -39,7 +38,7 @@ public class CourseService {
         this.courseRepository.delete(course);
     }
 
-    public GetCourseDTO updateCourse(String courseName, CourseUpdateDTO courseUpdateDTO) {
+    public GetCourseDTO updateCourse(String courseName, CourseDTO courseUpdateDTO) {
         Course course = this.getCourseByName(courseName);
 
         course.setName(courseUpdateDTO.name());

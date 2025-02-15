@@ -2,8 +2,7 @@ package com.raul.forumhub.topic.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.raul.forumhub.topic.domain.Course;
-import com.raul.forumhub.topic.dto.request.CourseCreateDTO;
-import com.raul.forumhub.topic.dto.request.CourseUpdateDTO;
+import com.raul.forumhub.topic.dto.request.CourseDTO;
 import com.raul.forumhub.topic.dto.request.TopicCreateDTO;
 import com.raul.forumhub.topic.dto.response.GetCourseCollection;
 import com.raul.forumhub.topic.dto.response.GetCourseDTO;
@@ -89,14 +88,14 @@ public class CourseControllerTest {
     @DisplayName("Should fail with status code 401 when attempt create course if user unauthenticated")
     @Test
     void shouldFailToCreateCourseIfUnauthenticated() throws Exception {
-        final CourseCreateDTO courseCreateDTO = new CourseCreateDTO(
+        final CourseDTO courseDTO = new CourseDTO(
                 "Conhecendo a arquitetura de microserviços", Course.Category.C);
 
         this.mockMvc.perform(post("/forumhub.io/api/v1/courses/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
-                                .writeValueAsString(courseCreateDTO)))
+                                .writeValueAsString(courseDTO)))
                 .andExpectAll(status().isUnauthorized());
 
         BDDMockito.verifyNoInteractions(this.courseService);
@@ -108,7 +107,7 @@ public class CourseControllerTest {
             "hasn't authority course:create")
     @Test
     void shouldFailToCreateCourseIfUserIsADMButHasNotSuitableAuthority() throws Exception {
-        final CourseCreateDTO courseCreateDTO = new CourseCreateDTO(
+        final CourseDTO courseDTO = new CourseDTO(
                 "Conhecendo a arquitetura de microserviços", Course.Category.C);
 
         this.mockMvc.perform(post("/forumhub.io/api/v1/courses/create")
@@ -116,7 +115,7 @@ public class CourseControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
-                                .writeValueAsString(courseCreateDTO)))
+                                .writeValueAsString(courseDTO)))
                 .andExpectAll(status().isForbidden());
 
         BDDMockito.verifyNoInteractions(this.courseService);
@@ -128,7 +127,7 @@ public class CourseControllerTest {
             " course:create, but isn't ADM")
     @Test
     void shouldFailToCreateCourseIfUserHasSuitableAuthorityButNotIsADM() throws Exception {
-        final CourseCreateDTO courseCreateDTO = new CourseCreateDTO(
+        final CourseDTO courseDTO = new CourseDTO(
                 "Conhecendo a arquitetura de microserviços", Course.Category.C);
 
         this.mockMvc.perform(post("/forumhub.io/api/v1/courses/create")
@@ -137,7 +136,7 @@ public class CourseControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
-                                .writeValueAsString(courseCreateDTO)))
+                                .writeValueAsString(courseDTO)))
                 .andExpectAll(status().isForbidden());
 
         BDDMockito.verifyNoInteractions(this.courseService);
@@ -172,10 +171,10 @@ public class CourseControllerTest {
             "has authority course:create")
     @Test
     void shouldCreateCourseWithSuccessIfAuthenticatedAndHasSuitableAuthority() throws Exception {
-        final CourseCreateDTO courseCreateDTO = new CourseCreateDTO(
+        final CourseDTO courseDTO = new CourseDTO(
                 "Conhecendo a arquitetura cliente servidor", Course.Category.JAVA);
 
-        BDDMockito.doNothing().when(this.courseService).createCourse(courseCreateDTO);
+        BDDMockito.doNothing().when(this.courseService).createCourse(courseDTO);
 
         this.mockMvc.perform(post("/forumhub.io/api/v1/courses/create")
                         .with(jwt().authorities(
@@ -184,11 +183,11 @@ public class CourseControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
-                                .writeValueAsString(courseCreateDTO)))
+                                .writeValueAsString(courseDTO)))
                 .andExpect(status().isCreated())
                 .andExpect(content().string("{\"message\":\"HttpStatusCode OK\"}"));
 
-        BDDMockito.verify(this.courseService).createCourse(courseCreateDTO);
+        BDDMockito.verify(this.courseService).createCourse(courseDTO);
         BDDMockito.verifyNoMoreInteractions(this.courseService);
 
 
@@ -231,7 +230,7 @@ public class CourseControllerTest {
     @DisplayName("Should fail with status code 401 when edit course if unauthenticated")
     @Test
     void shouldFailToEditCourseIfUnauthenticated() throws Exception {
-        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API Rest escalável", Course.Category.C);
+        final CourseDTO courseUpdateDTO = new CourseDTO("Como criar uma API Rest escalável", Course.Category.C);
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/courses/edit")
                         .queryParam("courseName", "Criação de uma API Rest")
@@ -250,7 +249,7 @@ public class CourseControllerTest {
             "hasn't authority course:edit")
     @Test
     void shouldFailToEditCourseIfUserIsADMButHasNotSuitableAuthority() throws Exception {
-        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API Rest escalável", Course.Category.C);
+        final CourseDTO courseUpdateDTO = new CourseDTO("Como criar uma API Rest escalável", Course.Category.C);
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/courses/edit")
                         .queryParam("courseName", "Criação de uma API Rest")
@@ -270,7 +269,7 @@ public class CourseControllerTest {
             " course:edit, but isn't ADM")
     @Test
     void shouldFailToEditCourseIfUserHasSuitableAuthorityButNotIsADM() throws Exception {
-        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API Rest escalável", Course.Category.C);
+        final CourseDTO courseUpdateDTO = new CourseDTO("Como criar uma API Rest escalável", Course.Category.C);
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/courses/edit")
                         .queryParam("courseName", "Criação de uma API Rest")
@@ -290,7 +289,7 @@ public class CourseControllerTest {
             "of query param is sent empty")
     @Test
     void shouldFailIfCourseNamePropertyOfQueryParamIsEmptyWhenEditCourse() throws Exception {
-        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API Rest escalável", Course.Category.C);
+        final CourseDTO courseUpdateDTO = new CourseDTO("Como criar uma API Rest escalável", Course.Category.C);
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/courses/edit")
                         .queryParam("courseName", "")
@@ -312,7 +311,7 @@ public class CourseControllerTest {
     @DisplayName("Should edit course with success if user ADM authenticated has authority 'course:edit'")
     @Test
     void shouldEditCourseWithSuccessIfAuthenticatedAndHasSuitableAuthority() throws Exception {
-        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API Rest escalável", Course.Category.C);
+        final CourseDTO courseUpdateDTO = new CourseDTO("Como criar uma API Rest escalável", Course.Category.C);
 
         Course course = TestsHelper.CourseHelper.courseList().get(0);
         course.setName("Como criar uma API Rest escalável");

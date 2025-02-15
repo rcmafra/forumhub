@@ -3,8 +3,7 @@ package com.raul.forumhub.topic.integration.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.raul.forumhub.topic.domain.Course;
-import com.raul.forumhub.topic.dto.request.CourseCreateDTO;
-import com.raul.forumhub.topic.dto.request.CourseUpdateDTO;
+import com.raul.forumhub.topic.dto.request.CourseDTO;
 import com.raul.forumhub.topic.repository.CourseRepository;
 import com.raul.forumhub.topic.util.TestsHelper;
 import org.junit.jupiter.api.*;
@@ -59,7 +58,7 @@ public class CourseControllerIT {
     @DisplayName("Should fail with status code 404 if resource doesn't exists")
     @Test
     void shouldFailIfResourceDoesNotExistToTheSendRequest() throws Exception {
-        final CourseCreateDTO courseCreateDTO = new CourseCreateDTO(
+        final CourseDTO courseDTO = new CourseDTO(
                 "Conhecendo a arquitetura cliente/servidor", Course.Category.JAVA);
 
         this.mockMvc.perform(post("/forumhub.io/api/v1/courses/creat")
@@ -69,7 +68,7 @@ public class CourseControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
-                                .writeValueAsString(courseCreateDTO)))
+                                .writeValueAsString(courseDTO)))
                 .andExpect(status().isNotFound());
 
     }
@@ -77,7 +76,7 @@ public class CourseControllerIT {
     @DisplayName("Should fail with status code 400 if method isn't supported")
     @Test
     void shouldFailIfMethodIsNotSupportedToTheSendRequest() throws Exception {
-        final CourseCreateDTO courseCreateDTO = new CourseCreateDTO(
+        final CourseDTO courseDTO = new CourseDTO(
                 "Conhecendo a arquitetura cliente/servidor", Course.Category.JAVA);
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/courses/create")
@@ -87,7 +86,7 @@ public class CourseControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
-                                .writeValueAsString(courseCreateDTO)))
+                                .writeValueAsString(courseDTO)))
                 .andExpect(status().isBadRequest());
     }
 
@@ -95,14 +94,14 @@ public class CourseControllerIT {
     @DisplayName("Should fail with status code 401 when attempt create course if user unauthenticated")
     @Test
     void shouldFailToCreateCourseIfUnauthenticated() throws Exception {
-        final CourseCreateDTO courseCreateDTO = new CourseCreateDTO(
+        final CourseDTO courseDTO = new CourseDTO(
                 "Conhecendo a arquitetura de microserviços", Course.Category.C);
 
         this.mockMvc.perform(post("/forumhub.io/api/v1/courses/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
-                                .writeValueAsString(courseCreateDTO)))
+                                .writeValueAsString(courseDTO)))
                 .andExpectAll(status().isUnauthorized());
 
         assertEquals(3, this.courseRepository.findAll().size());
@@ -114,7 +113,7 @@ public class CourseControllerIT {
             "hasn't authority course:create")
     @Test
     void shouldFailToCreateCourseIfUserIsADMButHasNotSuitableAuthority() throws Exception {
-        final CourseCreateDTO courseCreateDTO = new CourseCreateDTO(
+        final CourseDTO courseDTO = new CourseDTO(
                 "Conhecendo a arquitetura de microserviços", Course.Category.C);
 
         this.mockMvc.perform(post("/forumhub.io/api/v1/courses/create")
@@ -122,7 +121,7 @@ public class CourseControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
-                                .writeValueAsString(courseCreateDTO)))
+                                .writeValueAsString(courseDTO)))
                 .andExpectAll(status().isForbidden());
 
         assertEquals(3, this.courseRepository.findAll().size());
@@ -134,7 +133,7 @@ public class CourseControllerIT {
             " course:create, but isn't ADM")
     @Test
     void shouldFailToCreateCourseIfUserHasSuitableAuthorityButNotIsADM() throws Exception {
-        final CourseCreateDTO courseCreateDTO = new CourseCreateDTO(
+        final CourseDTO courseDTO = new CourseDTO(
                 "Conhecendo a arquitetura de microserviços", Course.Category.C);
 
         this.mockMvc.perform(post("/forumhub.io/api/v1/courses/create")
@@ -143,7 +142,7 @@ public class CourseControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
-                                .writeValueAsString(courseCreateDTO)))
+                                .writeValueAsString(courseDTO)))
                 .andExpectAll(status().isForbidden());
 
         assertEquals(3, this.courseRepository.findAll().size());
@@ -177,7 +176,7 @@ public class CourseControllerIT {
     @DisplayName("Should fail with status code 400 when create course if the course name property is empty")
     @Test
     void shouldFailToCreateCourseIfCourseNamePropertyIsEmpty() throws Exception {
-        final CourseCreateDTO courseCreateDTO = new CourseCreateDTO(
+        final CourseDTO courseDTO = new CourseDTO(
                 "", Course.Category.C);
 
         this.mockMvc.perform(post("/forumhub.io/api/v1/courses/create")
@@ -187,7 +186,7 @@ public class CourseControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
-                                .writeValueAsString(courseCreateDTO)))
+                                .writeValueAsString(courseDTO)))
                 .andExpectAll(status().isBadRequest())
                 .andExpect(jsonPath("$.detail", is("O nome do curso não pode ser vazio")));
 
@@ -199,7 +198,7 @@ public class CourseControllerIT {
     @DisplayName("Should fail with status code 409 when create course if her already exists")
     @Test
     void shouldFailToCreateCourseIfHerAlreadyExists() throws Exception {
-        final CourseCreateDTO courseCreateDTO = new CourseCreateDTO(
+        final CourseDTO courseDTO = new CourseDTO(
                 "Criação de uma API Rest", Course.Category.JAVA);
 
         this.mockMvc.perform(post("/forumhub.io/api/v1/courses/create")
@@ -209,7 +208,7 @@ public class CourseControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
-                                .writeValueAsString(courseCreateDTO)))
+                                .writeValueAsString(courseDTO)))
                 .andExpectAll(status().isConflict())
                 .andExpect(jsonPath("$.detail", is("Payload conflitante")));
 
@@ -223,7 +222,7 @@ public class CourseControllerIT {
             "has authority course:create and previous premisses are adequate")
     @Test
     void shouldCreateCourseWithSuccessIfAuthenticatedAndHasSuitableAuthority() throws Exception {
-        final CourseCreateDTO courseCreateDTO = new CourseCreateDTO(
+        final CourseDTO courseDTO = new CourseDTO(
                 "Conhecendo a arquitetura cliente servidor", Course.Category.JAVA);
 
         this.mockMvc.perform(post("/forumhub.io/api/v1/courses/create")
@@ -233,7 +232,7 @@ public class CourseControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
-                                .writeValueAsString(courseCreateDTO)))
+                                .writeValueAsString(courseDTO)))
                 .andExpect(status().isCreated())
                 .andExpect(content().string("{\"message\":\"HttpStatusCode OK\"}"));
 
@@ -274,7 +273,7 @@ public class CourseControllerIT {
     @DisplayName("Should fail with status code 401 when edit course if unauthenticated")
     @Test
     void shouldFailToEditCourseIfUnauthenticated() throws Exception {
-        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API Rest escalável", Course.Category.C);
+        final CourseDTO courseUpdateDTO = new CourseDTO("Como criar uma API Rest escalável", Course.Category.C);
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/courses/edit")
                         .queryParam("courseName", "Criação de uma API Rest")
@@ -294,7 +293,7 @@ public class CourseControllerIT {
             "hasn't authority course:edit")
     @Test
     void shouldFailToEditCourseIfUserIsADMButHasNotSuitableAuthority() throws Exception {
-        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API Rest escalável", Course.Category.C);
+        final CourseDTO courseUpdateDTO = new CourseDTO("Como criar uma API Rest escalável", Course.Category.C);
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/courses/edit")
                         .queryParam("courseName", "Criação de uma API Rest")
@@ -315,7 +314,7 @@ public class CourseControllerIT {
             " course:edit, but isn't ADM")
     @Test
     void shouldFailToEditCourseIfUserHasSuitableAuthorityButNotIsADM() throws Exception {
-        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API Rest escalável", Course.Category.C);
+        final CourseDTO courseUpdateDTO = new CourseDTO("Como criar uma API Rest escalável", Course.Category.C);
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/courses/edit")
                         .queryParam("courseName", "Criação de uma API Rest")
@@ -334,7 +333,7 @@ public class CourseControllerIT {
             "of DTO object is sent empty")
     @Test
     void shouldFailIfCourseNamePropertyOfDtoObjectIsEmptyWhenEditCourse() throws Exception {
-        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("", Course.Category.C);
+        final CourseDTO courseUpdateDTO = new CourseDTO("", Course.Category.C);
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/courses/edit")
                         .queryParam("courseName", "Criação de uma API Rest")
@@ -356,7 +355,7 @@ public class CourseControllerIT {
             "of query param is sent empty")
     @Test
     void shouldFailIfCourseNamePropertyOfQueryParamIsEmptyWhenEditCourse() throws Exception {
-        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API Rest escalável", Course.Category.C);
+        final CourseDTO courseUpdateDTO = new CourseDTO("Como criar uma API Rest escalável", Course.Category.C);
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/courses/edit")
                         .queryParam("courseName", "")
@@ -378,7 +377,7 @@ public class CourseControllerIT {
     @DisplayName("Should fail to edit course if desired course not exists")
     @Test
     void shouldFailToEditCourseIfDesiredCourseNotExists() throws Exception {
-        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API Rest escalável", Course.Category.C);
+        final CourseDTO courseUpdateDTO = new CourseDTO("Como criar uma API Rest escalável", Course.Category.C);
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/courses/edit")
                         .queryParam("courseName", "Lidando com load balancer na AWS")
@@ -403,7 +402,7 @@ public class CourseControllerIT {
             "has authority course:edit and previous premisses are adequate")
     @Test
     void shouldEditCourseWithSuccessIfAuthenticatedAndHasSuitableAuthority() throws Exception {
-        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API Rest escalável", Course.Category.C);
+        final CourseDTO courseUpdateDTO = new CourseDTO("Como criar uma API Rest escalável", Course.Category.C);
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/courses/edit")
                         .queryParam("courseName", "Criação de uma API Rest")
