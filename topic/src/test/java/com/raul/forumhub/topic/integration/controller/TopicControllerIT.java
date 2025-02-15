@@ -332,10 +332,10 @@ public class TopicControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$..getTopicDTOList[0].[?(@.id == 3)]").exists())
-                .andExpect(jsonPath("$..getTopicDTOList[1].[?(@.id == 1)]").exists())
-                .andExpect(jsonPath("$..getTopicDTOList[2].[?(@.id == 2)]").exists())
-                .andExpect(jsonPath("$..getTopicDTOList[3].[?(@.id == 4)]").exists())
+                .andExpect(jsonPath("$..getTopicDTOList[0].[?(@.topic.id == 3)]").exists())
+                .andExpect(jsonPath("$..getTopicDTOList[1].[?(@.topic.id == 1)]").exists())
+                .andExpect(jsonPath("$..getTopicDTOList[2].[?(@.topic.id == 2)]").exists())
+                .andExpect(jsonPath("$..getTopicDTOList[3].[?(@.topic.id == 4)]").exists())
                 .andExpect(jsonPath("$..getTopicDTOList.length()", is(4)))
                 .andExpect(jsonPath("$..page.[?(@.size == 10)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.totalElements == 4)]").exists())
@@ -356,8 +356,8 @@ public class TopicControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$..getTopicDTOList[0].[?(@.status == \"SOLVED\")]").exists())
-                .andExpect(jsonPath("$..getTopicDTOList[1].[?(@.status == \"UNSOLVED\")]").exists())
+                .andExpect(jsonPath("$..getTopicDTOList[0].[?(@.topic.status == \"SOLVED\")]").exists())
+                .andExpect(jsonPath("$..getTopicDTOList[1].[?(@.topic.status == \"UNSOLVED\")]").exists())
                 .andExpect(jsonPath("$..page.[?(@.number == 0)]").exists())
                 .andExpect(jsonPath("$..getTopicDTOList.length()", is(2)))
                 .andExpect(jsonPath("$..page.[?(@.size == 2)]").exists())
@@ -377,10 +377,10 @@ public class TopicControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$..getTopicDTOList[0].[?(@.id == 3)]").exists())
-                .andExpect(jsonPath("$..getTopicDTOList[1].[?(@.id == 1)]").exists())
-                .andExpect(jsonPath("$..getTopicDTOList[2].[?(@.id == 2)]").exists())
-                .andExpect(jsonPath("$..getTopicDTOList[3].[?(@.id == 4)]").exists())
+                .andExpect(jsonPath("$..getTopicDTOList[0].[?(@.topic.id == 3)]").exists())
+                .andExpect(jsonPath("$..getTopicDTOList[1].[?(@.topic.id == 1)]").exists())
+                .andExpect(jsonPath("$..getTopicDTOList[2].[?(@.topic.id == 2)]").exists())
+                .andExpect(jsonPath("$..getTopicDTOList[3].[?(@.topic.id == 4)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.number == 0)]").exists())
                 .andExpect(jsonPath("$..getTopicDTOList.length()", is(4)))
                 .andExpect(jsonPath("$..page.[?(@.size == 10)]").exists())
@@ -447,8 +447,8 @@ public class TopicControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.[?(@.id == 1)]").exists())
-                .andExpect(jsonPath("$.title", is("Dúvida na utilização do Feign Client")));
+                .andExpect(jsonPath("$.[?(@.topic.id == 1)]").exists())
+                .andExpect(jsonPath("$.topic.title", is("Dúvida na utilização do Feign Client")));
 
         assertAll(
                 () -> assertThat(this.topicRepository.findAll().size(), is(4)),
@@ -776,8 +776,8 @@ public class TopicControllerIT {
                         .content(new ObjectMapper()
                                 .writeValueAsString(topicUpdateDTO)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.title", is("Dúvida na utilização do WebClient")))
-                .andExpect(jsonPath("$.question", is("Como utilizar o WebClient para " +
+                .andExpect(jsonPath("$.topic.title", is("Dúvida na utilização do WebClient")))
+                .andExpect(jsonPath("$.topic.question", is("Como utilizar o WebClient para " +
                         "integração do serviço x?")));
 
 
@@ -816,8 +816,8 @@ public class TopicControllerIT {
                         .content(new ObjectMapper()
                                 .writeValueAsString(topicUpdateDTO)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.title", is("Dúvida na utilização do RestTemplate")))
-                .andExpect(jsonPath("$.question", is("Como utilizar o RestTemplate para " +
+                .andExpect(jsonPath("$.topic.title", is("Dúvida na utilização do RestTemplate")))
+                .andExpect(jsonPath("$.topic.question", is("Como utilizar o RestTemplate para " +
                         "integração do serviço x?")));
 
 
@@ -856,9 +856,9 @@ public class TopicControllerIT {
                         .content(new ObjectMapper()
                                 .writeValueAsString(topicUpdateDTO)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.title", is("Dúvida na utilização da API de " +
+                .andExpect(jsonPath("$.topic.title", is("Dúvida na utilização da API de " +
                         "validação do Spring")))
-                .andExpect(jsonPath("$.question", is("Quais são as anotações da API de " +
+                .andExpect(jsonPath("$.topic.question", is("Quais são as anotações da API de " +
                         "validação do Spring?")));
 
 

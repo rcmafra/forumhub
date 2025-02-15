@@ -271,9 +271,9 @@ public class TopicServiceTest {
 
 
         Assertions.assertAll(
-                () -> Assertions.assertEquals(3L, topicPage.getContent().get(0).id()),
-                () -> Assertions.assertEquals(1L, topicPage.getContent().get(1).id()),
-                () -> Assertions.assertEquals(2L, topicPage.getContent().get(2).id()),
+                () -> Assertions.assertEquals(3L, topicPage.getContent().get(0).topic().getId()),
+                () -> Assertions.assertEquals(1L, topicPage.getContent().get(1).topic().getId()),
+                () -> Assertions.assertEquals(2L, topicPage.getContent().get(2).topic().getId()),
                 () -> Assertions.assertEquals(0, topicPage.getNumber()),
                 () -> Assertions.assertEquals(3, topicPage.getContent().size()),
                 () -> Assertions.assertEquals(10, topicPage.getSize()),
@@ -309,10 +309,10 @@ public class TopicServiceTest {
 
 
         Assertions.assertAll(
-                () -> Assertions.assertEquals(3L, topicPage.getContent().get(0).id()),
-                () -> Assertions.assertEquals(Status.SOLVED, topicPage.getContent().get(0).status()),
-                () -> Assertions.assertEquals(2L, topicPage.getContent().get(1).id()),
-                () -> Assertions.assertEquals(Status.UNSOLVED, topicPage.getContent().get(1).status()),
+                () -> Assertions.assertEquals(3L, topicPage.getContent().get(0).topic().getId()),
+                () -> Assertions.assertEquals(Status.SOLVED, topicPage.getContent().get(0).topic().getStatus()),
+                () -> Assertions.assertEquals(2L, topicPage.getContent().get(1).topic().getId()),
+                () -> Assertions.assertEquals(Status.UNSOLVED, topicPage.getContent().get(1).topic().getStatus()),
                 () -> Assertions.assertEquals(0, topicPage.getNumber()),
                 () -> Assertions.assertEquals(2, topicPage.getContent().size()),
                 () -> Assertions.assertEquals(2, topicPage.getSize()),
@@ -347,9 +347,9 @@ public class TopicServiceTest {
 
 
         Assertions.assertAll(
-                () -> Assertions.assertEquals(3L, topicPage.getContent().get(0).id()),
-                () -> Assertions.assertEquals(1L, topicPage.getContent().get(1).id()),
-                () -> Assertions.assertEquals(2L, topicPage.getContent().get(2).id()),
+                () -> Assertions.assertEquals(3L, topicPage.getContent().get(0).topic().getId()),
+                () -> Assertions.assertEquals(1L, topicPage.getContent().get(1).topic().getId()),
+                () -> Assertions.assertEquals(2L, topicPage.getContent().get(2).topic().getId()),
                 () -> Assertions.assertEquals(0, topicPage.getNumber()),
                 () -> Assertions.assertEquals(3, topicPage.getContent().size()),
                 () -> Assertions.assertEquals(10, topicPage.getSize()),
