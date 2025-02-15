@@ -61,7 +61,7 @@ public class UserControllerTest {
                 "Silva", "marcus_silva", "marcus@email.com",
                 "P4s$word");
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/users")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -79,7 +79,7 @@ public class UserControllerTest {
                 "Silva", "marcus_silva", "marcus@email.com",
                 "P4s$word");
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/users/create")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/users/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -97,7 +97,7 @@ public class UserControllerTest {
                 "Silva", "marcus_silva", "marcus@email.com",
                 "PA$swd");
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/users/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/users/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -117,7 +117,7 @@ public class UserControllerTest {
                 "Silva", "marcus_silva", "marcus@email.com",
                 "PA$sword_L4arg&r_Th4n_16_Char$s");
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/users/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/users/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -139,7 +139,7 @@ public class UserControllerTest {
                 "Silva", "marcus_silva", "marcus@email.com",
                 "p4$sword");
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/users/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/users/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -161,7 +161,7 @@ public class UserControllerTest {
                 "Silva", "marcus_silva", "marcus@email.com",
                 "P4$SWORD");
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/users/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/users/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -182,7 +182,7 @@ public class UserControllerTest {
                 "Silva", "marcus_silva", "marcus@email.com",
                 "Pa$sword");
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/users/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/users/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -203,7 +203,7 @@ public class UserControllerTest {
                 "Silva", "marcus_silva", "marcus@email.com",
                 "P4ssword");
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/users/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/users/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -225,7 +225,7 @@ public class UserControllerTest {
                 "Silva", "marcus_silva", "marcus@email.com",
                 "asdfgS$w0rd");
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/users/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/users/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -247,7 +247,7 @@ public class UserControllerTest {
                 "Silva", "marcus_silva", "marcus@email.com",
                 "45678$Sword");
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/users/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/users/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -269,7 +269,7 @@ public class UserControllerTest {
                 "Silva", "marcus_silva", "marcus@email.com",
                 "qwertyS$0rd");
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/users/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/users/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -291,7 +291,7 @@ public class UserControllerTest {
                 "Silva", "marcus_silva", "marcus@email.com",
                 "P4s$w ord");
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/users/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/users/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -313,7 +313,7 @@ public class UserControllerTest {
 
         BDDMockito.doNothing().when(this.userService).registerUser(userCreateDTO);
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/users/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/users/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -329,7 +329,7 @@ public class UserControllerTest {
             "user if user unauthenticated")
     @Test
     void shouldFailToRequestDetailedInfoUserIfUnauthenticated() throws Exception {
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/users/detailed-info")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/users/detailed-info")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isUnauthorized());
@@ -342,7 +342,7 @@ public class UserControllerTest {
             "user if authenticated user isn't ADM or MOD, or hasn't authority 'myuser:read'")
     @Test
     void shouldFailToRequestDetailedInfoUserIfUserHasNotSuitableAuthority() throws Exception {
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/users/detailed-info")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/users/detailed-info")
                         .with(jwt())
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -356,7 +356,7 @@ public class UserControllerTest {
             " with param different of type number, if him exists")
     @Test
     void shouldFailToRequestDetailedInfoUserIfParamDifferentOfTypeNumber() throws Exception {
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/users/detailed-info")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/users/detailed-info")
                         .queryParam("user_id", "unexpected")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "3",
@@ -376,7 +376,7 @@ public class UserControllerTest {
         BDDMockito.given(this.userService.getDetailedInfoUser(1L))
                 .willReturn(TestsHelper.UserHelper.userList().get(0));
 
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/users/detailed-info")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/users/detailed-info")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "1",
                                         "authority", "ROLE_BASIC"))))
@@ -408,7 +408,7 @@ public class UserControllerTest {
         BDDMockito.given(this.userService.getDetailedInfoUser(2L))
                 .willReturn(TestsHelper.UserHelper.userList().get(1));
 
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/users/detailed-info")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/users/detailed-info")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "2",
                                         "authority", "ROLE_MOD"))))
@@ -440,7 +440,7 @@ public class UserControllerTest {
         BDDMockito.given(this.userService.getDetailedInfoUser(3L))
                 .willReturn(TestsHelper.UserHelper.userList().get(2));
 
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/users/detailed-info")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/users/detailed-info")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "3",
                                         "authority", "ROLE_ADM"))))
@@ -472,7 +472,7 @@ public class UserControllerTest {
         BDDMockito.given(this.userService.getDetailedInfoUser(1L))
                 .willReturn(TestsHelper.UserHelper.userList().get(0));
 
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/users/detailed-info")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/users/detailed-info")
                         .queryParam("user_id", "1")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "2",
@@ -505,7 +505,7 @@ public class UserControllerTest {
         BDDMockito.given(this.userService.getDetailedInfoUser(1L))
                 .willReturn(TestsHelper.UserHelper.userList().get(0));
 
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/users/detailed-info")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/users/detailed-info")
                         .queryParam("user_id", "1")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "3",
@@ -539,7 +539,7 @@ public class UserControllerTest {
         BDDMockito.given(this.userService.getDetailedInfoUser(1L))
                 .willReturn(TestsHelper.UserHelper.userList().get(0));
 
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/users/detailed-info")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/users/detailed-info")
                         .queryParam("user_id", "2")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "1",
@@ -558,7 +558,7 @@ public class UserControllerTest {
             "user if user unauthenticated")
     @Test
     void shouldFailToRequestSummaryInfoUserIfUnauthenticated() throws Exception {
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/users/summary-info")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/users/summary-info")
                         .queryParam("user_id", "1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -575,7 +575,7 @@ public class UserControllerTest {
         BDDMockito.given(this.userService.getDetailedInfoUser(1L))
                 .willReturn(TestsHelper.UserHelper.userList().get(0));
 
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/users/summary-info")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/users/summary-info")
                         .queryParam("user_id", "1")
                         .with(jwt())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -597,7 +597,7 @@ public class UserControllerTest {
             "with param different of type number, if him exists")
     @Test
     void shouldFailToRequestSummaryInfoUserIfParamDifferentOfNumber() throws Exception {
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/users/summary-info")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/users/summary-info")
                         .queryParam("user_id", "unexpected")
                         .with(jwt())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -613,7 +613,7 @@ public class UserControllerTest {
             "users if user is unauthenticated")
     @Test
     void shouldFailToRequestAllUsersIfUserIsUnauthenticated() throws Exception {
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/users/listAll")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/users/listAll")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isUnauthorized());
@@ -627,7 +627,7 @@ public class UserControllerTest {
             "if authenticated user isn't ADM or MOD or hasn't authority 'user:readAll'")
     @Test
     void shouldFailToRequestAllUsersIfUserHasNotSuitableAuthority() throws Exception {
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/users/listAll")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/users/listAll")
                         .with(jwt())
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -650,7 +650,7 @@ public class UserControllerTest {
         BDDMockito.given(this.userService.usersList(any(Pageable.class)))
                 .willReturn(userDetailedInfoPage);
 
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/users/listAll")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/users/listAll")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "1",
                                         "authority", "ROLE_BASIC"))))
@@ -678,7 +678,7 @@ public class UserControllerTest {
         BDDMockito.given(this.userService.usersList(any(Pageable.class)))
                 .willReturn(userDetailedInfoPage);
 
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/users/listAll")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/users/listAll")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "2",
                                         "authority", "ROLE_MOD"))))
@@ -712,7 +712,7 @@ public class UserControllerTest {
         BDDMockito.given(this.userService.usersList(any(Pageable.class)))
                 .willReturn(userDetailedInfoPage);
 
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/users/listAll")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/users/listAll")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "3",
                                         "authority", "ROLE_ADM"))))
@@ -752,7 +752,7 @@ public class UserControllerTest {
         BDDMockito.given(this.userService.usersList(pageable))
                 .willReturn(userSummaryInfoPage);
 
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/users/listAll")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/users/listAll")
                         .queryParam("sort", "id,desc")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "2",
@@ -796,7 +796,7 @@ public class UserControllerTest {
         BDDMockito.given(this.userService.usersList(pageable))
                 .willReturn(userSummaryInfoPage);
 
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/users/listAll")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/users/listAll")
                         .queryParam("sort", "id,desc")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "3",
@@ -841,7 +841,7 @@ public class UserControllerTest {
         BDDMockito.given(this.userService.usersList(pageable))
                 .willReturn(userSummaryInfoPage);
 
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/users/listAll")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/users/listAll")
                         .queryParam("size", "2")
                         .queryParam("sort", "firstName,asc")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
@@ -884,7 +884,7 @@ public class UserControllerTest {
         BDDMockito.given(this.userService.usersList(pageable))
                 .willReturn(userSummaryInfoPage);
 
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/users/listAll")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/users/listAll")
                         .queryParam("size", "2")
                         .queryParam("sort", "firstName,asc")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
@@ -918,7 +918,7 @@ public class UserControllerTest {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO("newJose", "new_jose@email.com",
                 Profile.ProfileName.BASIC, true, true, true, true);
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/users/edit")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(userUpdateDTO))
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -936,7 +936,7 @@ public class UserControllerTest {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO("newJose", "new_jose@email.com",
                 Profile.ProfileName.BASIC, true, true, true, true);
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/users/edit")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "1")))
                         .content(new ObjectMapper().writeValueAsString(userUpdateDTO))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -954,7 +954,7 @@ public class UserControllerTest {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO("newJose", "new_jose@email.com",
                 Profile.ProfileName.BASIC, true, true, true, true);
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/users/edit")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
                         .queryParam("user_id", "unexpected")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "3",
@@ -985,7 +985,7 @@ public class UserControllerTest {
                 }
                 """;
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/users/edit")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
                         .queryParam("user_id", "1")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "3",
@@ -1015,7 +1015,7 @@ public class UserControllerTest {
         BDDMockito.given(this.userService.updateUser(1L, Profile.ProfileName.BASIC, userUpdateDTO))
                 .willReturn(new UserDetailedInfo(user));
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/users/edit")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "1",
                                         "authority", "ROLE_BASIC"))))
@@ -1056,7 +1056,7 @@ public class UserControllerTest {
         BDDMockito.given(this.userService.updateUser(2L, Profile.ProfileName.MOD, userUpdateDTO))
                 .willReturn(new UserDetailedInfo(user));
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/users/edit")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "2",
                                         "authority", "ROLE_MOD"))))
@@ -1097,7 +1097,7 @@ public class UserControllerTest {
         BDDMockito.given(this.userService.updateUser(3L, Profile.ProfileName.ADM, userUpdateDTO))
                 .willReturn(new UserDetailedInfo(user));
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/users/edit")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "3",
                                         "authority", "ROLE_ADM"))))
@@ -1138,7 +1138,7 @@ public class UserControllerTest {
         BDDMockito.given(this.userService.updateUser(2L, Profile.ProfileName.ADM, userUpdateDTO))
                 .willReturn(new UserDetailedInfo(user));
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/users/edit")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
                         .queryParam("user_id", "2")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "3",
@@ -1176,7 +1176,7 @@ public class UserControllerTest {
         BDDMockito.given(this.userService.updateUser(2L, Profile.ProfileName.BASIC, userUpdateDTO))
                 .willReturn(new UserDetailedInfo(TestsHelper.UserHelper.userList().get(1)));
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/users/edit")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
                         .queryParam("user_id", "2")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "1",
@@ -1201,7 +1201,7 @@ public class UserControllerTest {
         BDDMockito.given(this.userService.updateUser(1L, Profile.ProfileName.MOD, userUpdateDTO))
                 .willReturn(new UserDetailedInfo(TestsHelper.UserHelper.userList().get(0)));
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/users/edit")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
                         .queryParam("user_id", "1")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "2",
@@ -1220,7 +1220,7 @@ public class UserControllerTest {
             "if user is unauthenticated")
     @Test
     void shouldFailToDeleteUserIfUnauthenticated() throws Exception {
-        this.mockMvc.perform(delete("/api-forum/v1/forumhub/users/delete")
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/users/delete")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isUnauthorized());
@@ -1234,7 +1234,7 @@ public class UserControllerTest {
             "if authenticated user isn't ADM or hasn't authority 'myuser:delete'")
     @Test
     void shouldFailIfUserHasNotSuitableAuthorityWhenDeleteUser() throws Exception {
-        this.mockMvc.perform(delete("/api-forum/v1/forumhub/users/delete")
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/users/delete")
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "1")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -1248,7 +1248,7 @@ public class UserControllerTest {
             " with param different of type number, if him exists")
     @Test
     void shouldFailIfParamDifferentOfTypeNumber() throws Exception {
-        this.mockMvc.perform(delete("/api-forum/v1/forumhub/users/delete")
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/users/delete")
                         .queryParam("user_id", "unexpected")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "3",
@@ -1269,7 +1269,7 @@ public class UserControllerTest {
     void basicUserShouldDeleteYourUserWithSuccessIfHasSuitableAuthority() throws Exception {
         BDDMockito.doNothing().when(this.userService).deleteUser(1L);
 
-        this.mockMvc.perform(delete("/api-forum/v1/forumhub/users/delete")
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/users/delete")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "1",
                                         "authority", "ROLE_BASIC"))))
@@ -1292,7 +1292,7 @@ public class UserControllerTest {
     void modUserShouldDeleteYourUserWithSuccessIfHasSuitableAuthority() throws Exception {
         BDDMockito.doNothing().when(this.userService).deleteUser(2L);
 
-        this.mockMvc.perform(delete("/api-forum/v1/forumhub/users/delete")
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/users/delete")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "2",
                                         "authority", "ROLE_MOD"))))
@@ -1315,7 +1315,7 @@ public class UserControllerTest {
     void admUserShouldDeleteYourUserWithSuccessIfUserIdParamIsNull() throws Exception {
         BDDMockito.doNothing().when(this.userService).deleteUser(3L);
 
-        this.mockMvc.perform(delete("/api-forum/v1/forumhub/users/delete")
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/users/delete")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "3",
                                         "authority", "ROLE_ADM"))))
@@ -1338,7 +1338,7 @@ public class UserControllerTest {
     void admUserShouldDeleteOtherUserWithSuccessIfUserIdParamIsNotNull() throws Exception {
         BDDMockito.doNothing().when(this.userService).deleteUser(3L);
 
-        this.mockMvc.perform(delete("/api-forum/v1/forumhub/users/delete")
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/users/delete")
                         .queryParam("user_id", "2")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "3",
@@ -1362,7 +1362,7 @@ public class UserControllerTest {
     void shouldFailIfBasicUserTryToDeleteWithUserIdParamNotNull() throws Exception {
         BDDMockito.doNothing().when(this.userService).deleteUser(2L);
 
-        this.mockMvc.perform(delete("/api-forum/v1/forumhub/users/delete")
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/users/delete")
                         .queryParam("user_id", "2")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "1",
@@ -1382,7 +1382,7 @@ public class UserControllerTest {
     void shouldFailIfModUserTryToDeleteWithUserIdParamNotNull() throws Exception {
         BDDMockito.doNothing().when(this.userService).deleteUser(1L);
 
-        this.mockMvc.perform(delete("/api-forum/v1/forumhub/users/delete")
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/users/delete")
                         .queryParam("user_id", "1")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "2",

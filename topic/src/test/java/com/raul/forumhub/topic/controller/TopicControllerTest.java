@@ -72,7 +72,7 @@ class TopicControllerTest {
                 "Como utilizar o Feign Client para integração do serviço x?",
                 1L);
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/creat")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/topics/creat")
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -89,7 +89,7 @@ class TopicControllerTest {
                 "Como utilizar o Feign Client para integração do serviço x?",
                 1L);
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/topics/create")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/create")
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -107,7 +107,7 @@ class TopicControllerTest {
                 "Como utilizar o Feign Client para integração do serviço x?",
                 1L);
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/topics/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -128,7 +128,7 @@ class TopicControllerTest {
 
         BDDMockito.doNothing().when(this.topicService).createTopic(topicCreateDTO, 1L);
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/topics/create")
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -153,7 +153,7 @@ class TopicControllerTest {
         BDDMockito.given(this.topicService.topicList(any(Pageable.class)))
                 .willReturn(topicPage);
 
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/topics/listAll")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/topics/listAll")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
@@ -187,7 +187,7 @@ class TopicControllerTest {
         BDDMockito.given(this.topicService.topicList(pageable))
                 .willReturn(topicPage);
 
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/topics/listAll")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/topics/listAll")
                         .queryParam("sort", "createdAt,desc")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -226,7 +226,7 @@ class TopicControllerTest {
         BDDMockito.given(this.topicService.topicList(pageable))
                 .willReturn(topicPage);
 
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/topics/listAll")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/topics/listAll")
                         .queryParam("size", "2")
                         .queryParam("sort", "status,asc")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -265,7 +265,7 @@ class TopicControllerTest {
         BDDMockito.given(this.topicService.topicList(pageable))
                 .willReturn(topicPage);
 
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/topics/listAll")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/topics/listAll")
                         .queryParam("sort", "title,asc")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -290,7 +290,7 @@ class TopicControllerTest {
             "of query param is sent empty")
     @Test
     void shouldFailIfTopicIdPropertyOfQueryParamIsEmptyWhenGetTopic() throws Exception {
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/topics")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/topics")
                         .queryParam("topic_id", "")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -304,7 +304,7 @@ class TopicControllerTest {
             " param different of type number")
     @Test
     void shouldFailToRequestTopicIfParamDifferentOfTypeNumber() throws Exception {
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/topics")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/topics")
                         .queryParam("topic_id", "unexpected")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -321,7 +321,7 @@ class TopicControllerTest {
         BDDMockito.given(this.topicService.getTopicById(1L))
                 .willReturn(TestsHelper.TopicHelper.topicListWithAnswers().get(0));
 
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/topics")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/topics")
                         .queryParam("topic_id", "1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -345,7 +345,7 @@ class TopicControllerTest {
                 Status.UNSOLVED, 1L
         );
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/topics/edit")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/edit")
                         .queryParam("topic_id", "1")
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -368,7 +368,7 @@ class TopicControllerTest {
                 Status.UNSOLVED, 1L
         );
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/topics/edit")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/edit")
                         .queryParam("topic_id", "unexpected")
                         .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:edit")))
@@ -393,7 +393,7 @@ class TopicControllerTest {
                 Status.UNSOLVED, 1L
         );
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/topics")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics")
                         .queryParam("topic_id", "")
                         .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:edit")))
@@ -424,7 +424,7 @@ class TopicControllerTest {
         BDDMockito.given(this.topicService.updateTopic(1L, 1L, topicUpdateDTO))
                 .willReturn(new GetTopicDTO(topic));
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/topics/edit")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/edit")
                         .queryParam("topic_id", "1")
                         .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:edit")))
@@ -449,7 +449,7 @@ class TopicControllerTest {
             " when delete topic")
     @Test
     void shouldFailIfUserHasNotSuitableAuthorityWhenDeleteTopic() throws Exception {
-        this.mockMvc.perform(delete("/api-forum/v1/forumhub/topics/delete")
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/delete")
                         .queryParam("topic_id", "1")
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -464,7 +464,7 @@ class TopicControllerTest {
             "of query param is sent empty")
     @Test
     void shouldFailIfTopicIdPropertyOfQueryParamIsEmptyWhenDeleteTopic() throws Exception {
-        this.mockMvc.perform(delete("/api-forum/v1/forumhub/topics")
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics")
                         .queryParam("topic_id", "")
                         .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:delete")))
@@ -480,7 +480,7 @@ class TopicControllerTest {
             " param different of type number")
     @Test
     void shouldFailToDeleteTopicIfParamDifferentOfTypeNumber() throws Exception {
-        this.mockMvc.perform(delete("/api-forum/v1/forumhub/topics/delete")
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/delete")
                         .queryParam("topic_id", "unexpected")
                         .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:delete")))
@@ -498,7 +498,7 @@ class TopicControllerTest {
     void shouldDeleteTopicWithSuccessIfUserHasSuitableAuthority() throws Exception {
         BDDMockito.doNothing().when(this.topicService).deleteTopic(1L, 1L);
 
-        this.mockMvc.perform(delete("/api-forum/v1/forumhub/topics/delete")
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/delete")
                         .queryParam("topic_id", "1")
                         .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:delete")))

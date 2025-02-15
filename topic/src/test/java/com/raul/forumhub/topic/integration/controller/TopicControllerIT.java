@@ -97,7 +97,7 @@ public class TopicControllerIT {
                 "Como utilizar o Feign Client para integração do serviço x?",
                 1L);
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/creat")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/topics/creat")
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -114,7 +114,7 @@ public class TopicControllerIT {
                 "Como utilizar o Feign Client para integração do serviço x?",
                 1L);
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/topics/create")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/create")
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -132,7 +132,7 @@ public class TopicControllerIT {
                 "Como utilizar o Feign Client para integração do serviço x?",
                 1L);
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/topics/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -156,7 +156,7 @@ public class TopicControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(1L))
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/topics/create")
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -182,7 +182,7 @@ public class TopicControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(1L))
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/topics/create")
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -210,7 +210,7 @@ public class TopicControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(1L))
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/topics/create")
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -235,7 +235,7 @@ public class TopicControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(1L))
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/topics/create")
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -262,7 +262,7 @@ public class TopicControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(1L))
                 .willThrow(new RestClientException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/topics/create")
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -290,7 +290,7 @@ public class TopicControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(1L))
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/topics/create")
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -309,7 +309,7 @@ public class TopicControllerIT {
     @DisplayName("Should return all topics unsorted with successful")
     @Test
     void shouldReturnAllTopicsUnsortedWithSuccessful() throws Exception {
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/topics/listAll")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/topics/listAll")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
@@ -327,7 +327,7 @@ public class TopicControllerIT {
     @DisplayName("Should return all topics sorted descendants by created date with successful")
     @Test
     void shouldReturnAllTopicsSortedDescendantByCreateDateWithSuccessful() throws Exception {
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/topics/listAll")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/topics/listAll")
                         .queryParam("sort", "createdAt,desc")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -350,7 +350,7 @@ public class TopicControllerIT {
     @DisplayName("Should return only two topics sorted in ascendant by status with successful")
     @Test
     void shouldReturnTwoTopicsSortedAscendantByStatusWithSuccessful() throws Exception {
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/topics/listAll")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/topics/listAll")
                         .queryParam("size", "2")
                         .queryParam("sort", "status,asc")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -372,7 +372,7 @@ public class TopicControllerIT {
     @DisplayName("Should return all topics sorted ascendants by title with successful")
     @Test
     void shouldReturnAllTopicsSortedAscendantByTitleWithSuccessful() throws Exception {
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/topics/listAll")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/topics/listAll")
                         .queryParam("sort", "title,asc")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -397,7 +397,7 @@ public class TopicControllerIT {
             "of query param is sent empty")
     @Test
     void shouldFailIfTopicIdPropertyOfQueryParamIsEmptyWhenGetTopic() throws Exception {
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/topics")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/topics")
                         .queryParam("topic_id", "")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -411,7 +411,7 @@ public class TopicControllerIT {
             " param different of type number")
     @Test
     void shouldFailToRequestTopicIfParamDifferentOfTypeNumber() throws Exception {
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/topics")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/topics")
                         .queryParam("topic_id", "unexpected")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -425,7 +425,7 @@ public class TopicControllerIT {
     @DisplayName("Should fail with status code 404 when request the specified topic if not exists")
     @Test
     void shouldFailToRequestTheSpecifiedTopicIfNotExists() throws Exception {
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/topics")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/topics")
                         .queryParam("topic_id", "7")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -442,7 +442,7 @@ public class TopicControllerIT {
     @DisplayName("Should return the specified topic with successful if exists")
     @Test
     void shouldReturnTheSpecifiedTopicWithSuccessful() throws Exception {
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/topics")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/topics")
                         .queryParam("topic_id", "1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -468,7 +468,7 @@ public class TopicControllerIT {
                 Status.UNSOLVED, 1L
         );
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/topics/edit")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/edit")
                         .queryParam("topic_id", "1")
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -501,7 +501,7 @@ public class TopicControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(1L))
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/topics/edit")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/edit")
                         .queryParam("topic_id", "unexpected")
                         .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:edit")))
@@ -528,7 +528,7 @@ public class TopicControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(1L))
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/topics/edit")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/edit")
                         .queryParam("topic_id", "1")
                         .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:edit")))
@@ -563,7 +563,7 @@ public class TopicControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(1L))
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/topics/edit")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/edit")
                         .queryParam("topic_id", "1")
                         .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:edit")))
@@ -596,7 +596,7 @@ public class TopicControllerIT {
                 Status.UNSOLVED, 1L
         );
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/topics/edit")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/edit")
                         .queryParam("topic_id", "")
                         .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:edit")))
@@ -621,7 +621,7 @@ public class TopicControllerIT {
                 Status.UNSOLVED, 4L
         );
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/topics/edit")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/edit")
                         .queryParam("topic_id", "1")
                         .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:edit")))
@@ -656,7 +656,7 @@ public class TopicControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(1L))
                 .willThrow(new RestClientException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/topics/edit")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/edit")
                         .queryParam("topic_id", "1")
                         .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:edit")))
@@ -691,7 +691,7 @@ public class TopicControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(1L))
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/topics/edit")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/edit")
                         .queryParam("topic_id", "2")
                         .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:edit")))
@@ -727,7 +727,7 @@ public class TopicControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(3L))
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(2));
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/topics/edit")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/edit")
                         .queryParam("topic_id", "3")
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "3"))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:edit")))
@@ -767,7 +767,7 @@ public class TopicControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(1L))
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/topics/edit")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/edit")
                         .queryParam("topic_id", "1")
                         .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:edit")))
@@ -807,7 +807,7 @@ public class TopicControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(3L))
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(2));
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/topics/edit")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/edit")
                         .queryParam("topic_id", "1")
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "3"))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:edit")))
@@ -847,7 +847,7 @@ public class TopicControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(2L))
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/topics/edit")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/edit")
                         .queryParam("topic_id", "1")
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "2"))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:edit")))
@@ -879,7 +879,7 @@ public class TopicControllerIT {
             " when delete topic")
     @Test
     void shouldFailIfUserHasNotSuitableAuthorityWhenDeleteTopic() throws Exception {
-        this.mockMvc.perform(delete("/api-forum/v1/forumhub/topics/delete")
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/delete")
                         .queryParam("topic_id", "1")
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -897,7 +897,7 @@ public class TopicControllerIT {
             "of query param is sent empty")
     @Test
     void shouldFailIfTopicIdPropertyOfQueryParamIsEmptyWhenDeleteTopic() throws Exception {
-        this.mockMvc.perform(delete("/api-forum/v1/forumhub/topics")
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics")
                         .queryParam("topic_id", "")
                         .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:delete")))
@@ -918,7 +918,7 @@ public class TopicControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(1L))
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
 
-        this.mockMvc.perform(delete("/api-forum/v1/forumhub/topics/delete")
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/delete")
                         .queryParam("topic_id", "unexpected")
                         .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:delete")))
@@ -936,7 +936,7 @@ public class TopicControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(1L))
                 .willThrow(new RestClientException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
 
-        this.mockMvc.perform(delete("/api-forum/v1/forumhub/topics/delete")
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/delete")
                         .queryParam("topic_id", "1")
                         .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:delete")))
@@ -958,7 +958,7 @@ public class TopicControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(1L))
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
 
-        this.mockMvc.perform(delete("/api-forum/v1/forumhub/topics/delete")
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/delete")
                         .queryParam("topic_id", "2")
                         .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:delete")))
@@ -982,7 +982,7 @@ public class TopicControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(1L))
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
 
-        this.mockMvc.perform(delete("/api-forum/v1/forumhub/topics/delete")
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/delete")
                         .queryParam("topic_id", "1")
                         .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:delete")))
@@ -1006,7 +1006,7 @@ public class TopicControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(3L))
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(2));
 
-        this.mockMvc.perform(delete("/api-forum/v1/forumhub/topics/delete")
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/delete")
                         .queryParam("topic_id", "2")
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "3"))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:delete")))
@@ -1030,7 +1030,7 @@ public class TopicControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(2L))
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
-        this.mockMvc.perform(delete("/api-forum/v1/forumhub/topics/delete")
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/delete")
                         .queryParam("topic_id", "3")
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "2"))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:delete")))

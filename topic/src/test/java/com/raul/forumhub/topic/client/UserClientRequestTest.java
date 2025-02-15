@@ -86,7 +86,7 @@ class UserClientRequestTest {
         expecOnlyOneRequest();
         expectedRequest(expected -> {
                     assertThat(expected.getMethod()).isEqualTo("GET");
-                    assertThat(expected.getPath()).isEqualTo("/api-forum/v1/forumhub/users/summary-info?user_id=1");
+                    assertThat(expected.getPath()).isEqualTo("/forumhub.io/api/v1/users/summary-info?user_id=1");
                     assertThat(expected.getHeader(HttpHeaders.ACCEPT)).isEqualTo("application/json");
                     assertThat(expected.getHeader(HttpHeaders.ACCEPT_CHARSET)).isEqualTo("utf-8");
                     assertThat(expected.getHeader(HttpHeaders.AUTHORIZATION)).isNotEmpty();
@@ -114,7 +114,7 @@ class UserClientRequestTest {
         expecOnlyOneRequest();
         expectedRequest(expected -> {
                     assertThat(expected.getMethod()).isEqualTo("GET");
-                    assertThat(expected.getPath()).isEqualTo("/api-forum/v1/forumhub/users/summary-info?user_id=1");
+                    assertThat(expected.getPath()).isEqualTo("/forumhub.io/api/v1/users/summary-info?user_id=1");
                     assertThat(expected.getHeader(HttpHeaders.ACCEPT)).isEqualTo("application/json");
                     assertThat(expected.getHeader(HttpHeaders.ACCEPT_CHARSET)).isEqualTo("utf-8");
                     assertThat(expected.getHeader(HttpHeaders.AUTHORIZATION)).isNotEmpty();
@@ -139,7 +139,7 @@ class UserClientRequestTest {
         expecOnlyOneRequest();
         expectedRequest(expected -> {
                     assertThat(expected.getMethod()).isEqualTo("GET");
-                    assertThat(expected.getPath()).isEqualTo("/api-forum/v1/forumhub/users/summary-info?user_id=1");
+                    assertThat(expected.getPath()).isEqualTo("/forumhub.io/api/v1/users/summary-info?user_id=1");
                     assertThat(expected.getHeader(HttpHeaders.ACCEPT)).isEqualTo("application/json");
                     assertThat(expected.getHeader(HttpHeaders.ACCEPT_CHARSET)).isEqualTo("utf-8");
                     assertThat(expected.getHeader(HttpHeaders.AUTHORIZATION)).isNotEmpty();
@@ -165,7 +165,7 @@ class UserClientRequestTest {
         expecOnlyOneRequest();
         expectedRequest(expected -> {
                     assertThat(expected.getMethod()).isEqualTo("GET");
-                    assertThat(expected.getPath()).isEqualTo("/api-forum/v1/forumhub/users/summary-info?user_id=1");
+                    assertThat(expected.getPath()).isEqualTo("/forumhub.io/api/v1/users/summary-info?user_id=1");
                     assertThat(expected.getHeader(HttpHeaders.ACCEPT)).isEqualTo("application/json");
                     assertThat(expected.getHeader(HttpHeaders.ACCEPT_CHARSET)).isEqualTo("utf-8");
                     assertThat(expected.getHeader(HttpHeaders.AUTHORIZATION)).isNotEmpty();
@@ -182,8 +182,8 @@ class UserClientRequestTest {
                 {
                     "timestamp":"2024-12-17T14:58:21.9721648","status":404,"title":"Solicitação não processada",
                     "detail":"{"timestamp":"2024-12-17T14:58:21.9653061","status":404,"title":"Solicitação não encontrada"
-                    "detail":"Usuário não encontrado","instance":"/api-forum/v1/forumhub/users/summary-info"}"
-                    "instance":"/api-forum/v1/forumhub/topics/create"
+                    "detail":"Usuário não encontrado","instance":"/forumhub.io/api/v1/users/summary-info"}"
+                    "instance":"/forumhub.io/api/v1/topics/create"
                   }
                 """;
 
@@ -199,7 +199,7 @@ class UserClientRequestTest {
         expecOnlyOneRequest();
         expectedRequest(expected -> {
                     assertThat(expected.getMethod()).isEqualTo("GET");
-                    assertThat(expected.getPath()).isEqualTo("/api-forum/v1/forumhub/users/summary-info?user_id=5");
+                    assertThat(expected.getPath()).isEqualTo("/forumhub.io/api/v1/users/summary-info?user_id=5");
                     assertThat(expected.getHeader(HttpHeaders.ACCEPT)).isEqualTo("application/json");
                     assertThat(expected.getHeader(HttpHeaders.ACCEPT_CHARSET)).isEqualTo("utf-8");
                     assertThat(expected.getHeader(HttpHeaders.AUTHORIZATION)).isNotEmpty();

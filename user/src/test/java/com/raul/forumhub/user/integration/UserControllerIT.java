@@ -63,7 +63,7 @@ public class UserControllerIT {
                 "Silva", "marcus_silva", "marcus@email.com",
                 "P4s$word");
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/users")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -79,7 +79,7 @@ public class UserControllerIT {
                 "Silva", "marcus_silva", "marcus@email.com",
                 "P4s$word");
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/users/create")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/users/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -95,7 +95,7 @@ public class UserControllerIT {
                 "Silva", "marcus_silva", "marcus@email.com",
                 "P4s$word");
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/users/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/users/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -112,7 +112,7 @@ public class UserControllerIT {
                 "", "marcus_silva", "marcus@email.com",
                 "P4s$word");
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/users/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/users/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -129,7 +129,7 @@ public class UserControllerIT {
                 "Silva", "", "marcus@email.com",
                 "P4s$word");
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/users/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/users/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -146,7 +146,7 @@ public class UserControllerIT {
                 "Silva", "marcus_silva", "",
                 "P4s$word");
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/users/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/users/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -163,7 +163,7 @@ public class UserControllerIT {
                 "Silva", "marcus_silva", "marcus@email.com",
                 null);
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/users/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/users/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -180,7 +180,7 @@ public class UserControllerIT {
                 "Silva", "marcus_silva", "marcus",
                 "P4s$word");
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/users/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/users/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -197,7 +197,7 @@ public class UserControllerIT {
                 "Silva", "marcus_silva", "marcus@email.com",
                 "PA$swd");
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/users/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/users/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -215,7 +215,7 @@ public class UserControllerIT {
                 "Silva", "marcus_silva", "marcus@email.com",
                 "PA$sword_L4arg&r_Th4n_16_Char$s");
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/users/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/users/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -234,7 +234,7 @@ public class UserControllerIT {
                 "Silva", "marcus_silva", "marcus@email.com",
                 "p4$sword");
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/users/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/users/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -253,7 +253,7 @@ public class UserControllerIT {
                 "Silva", "marcus_silva", "marcus@email.com",
                 "P4$SWORD");
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/users/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/users/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -271,7 +271,7 @@ public class UserControllerIT {
                 "Silva", "marcus_silva", "marcus@email.com",
                 "Pa$sword");
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/users/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/users/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -289,7 +289,7 @@ public class UserControllerIT {
                 "Silva", "marcus_silva", "marcus@email.com",
                 "P4ssword");
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/users/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/users/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -308,7 +308,7 @@ public class UserControllerIT {
                 "Silva", "marcus_silva", "marcus@email.com",
                 "asdfgS$w0rd");
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/users/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/users/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -327,7 +327,7 @@ public class UserControllerIT {
                 "Silva", "marcus_silva", "marcus@email.com",
                 "45678$Sword");
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/users/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/users/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -346,7 +346,7 @@ public class UserControllerIT {
                 "Silva", "marcus_silva", "marcus@email.com",
                 "qwertyS$0rd");
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/users/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/users/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -370,7 +370,7 @@ public class UserControllerIT {
                 "Silva", "joe_silva", "joe@email.com",
                 "P4s$word");
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/users/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/users/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -388,7 +388,7 @@ public class UserControllerIT {
                 "Silva", "marcus_silva", "marcus@email.com",
                 "P4s$w ord");
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/users/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/users/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -407,7 +407,7 @@ public class UserControllerIT {
                 "Silva", "jose_silva", "silva@email.com",
                 "P4s$word");
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/users/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/users/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -428,7 +428,7 @@ public class UserControllerIT {
                 "Silva", "silva", "jose@email.com",
                 "P4s$word");
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/users/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/users/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -452,7 +452,7 @@ public class UserControllerIT {
                 "Silva", "jose_silva", "marcus@email.com",
                 "P4s$word");
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/users/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/users/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -473,7 +473,7 @@ public class UserControllerIT {
                 "jose_silva", "marcus@email.com",
                 "P4s$word");
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/users/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/users/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -494,7 +494,7 @@ public class UserControllerIT {
                 "UVWXYZ!@#$%", "marcus@email.com",
                 "P4s$word");
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/users/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/users/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -512,7 +512,7 @@ public class UserControllerIT {
                 "Silva", "marcus_silva", "marcus@email.com",
                 "P4s$word");
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/users/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/users/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -530,7 +530,7 @@ public class UserControllerIT {
             "user if user unauthenticated")
     @Test
     void shouldFailToRequestDetailedInfoUserIfUnauthenticated() throws Exception {
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/users/detailed-info")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/users/detailed-info")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isUnauthorized());
@@ -546,7 +546,7 @@ public class UserControllerIT {
             "user if authenticated user isn't ADM or MOD, or hasn't authority 'myuser:read'")
     @Test
     void shouldFailToRequestDetailedInfoUserIfUserHasNotSuitableAuthority() throws Exception {
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/users/detailed-info")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/users/detailed-info")
                         .with(jwt())
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -562,7 +562,7 @@ public class UserControllerIT {
             " with param different of type number, if him exists")
     @Test
     void shouldFailToRequestDetailedInfoUserIfParamDifferentOfTypeNumber() throws Exception {
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/users/detailed-info")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/users/detailed-info")
                         .queryParam("user_id", "unexpected")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "3",
@@ -583,7 +583,7 @@ public class UserControllerIT {
             "of other user or yourself with user_id param not null")
     @Test
     void shouldFailIfBasicUserToRequestDetailedInfoWithUserIdParamNotNull() throws Exception {
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/users/detailed-info")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/users/detailed-info")
                         .queryParam("user_id", "2")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "1",
@@ -604,7 +604,7 @@ public class UserControllerIT {
             "user if user authenticated and has suitable authority, but user requested not exists")
     @Test
     void shouldFailToRequestDetailedInfoUserIfHimNotExists() throws Exception {
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/users/detailed-info")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/users/detailed-info")
                         .queryParam("user_id", "5")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "3",
@@ -627,7 +627,7 @@ public class UserControllerIT {
             "has authority 'myuser:read' and user_id param is null")
     @Test
     void basicUserShouldGetDetailedInfoYourUserWithSuccessIfHasSuitableAuthority() throws Exception {
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/users/detailed-info")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/users/detailed-info")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "1",
                                         "authority", "ROLE_BASIC"))))
@@ -658,7 +658,7 @@ public class UserControllerIT {
             "user_id param is null")
     @Test
     void modUserShouldGetDetailedInfoYourUserWithSuccessIfHasSuitableAuthority() throws Exception {
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/users/detailed-info")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/users/detailed-info")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "2",
                                         "authority", "ROLE_MOD"))))
@@ -689,7 +689,7 @@ public class UserControllerIT {
             "user_id param is null")
     @Test
     void admUserShouldGetDetailedInfoYourUserWithSuccessIfHasSuitableAuthority() throws Exception {
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/users/detailed-info")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/users/detailed-info")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "3",
                                         "authority", "ROLE_ADM"))))
@@ -721,7 +721,7 @@ public class UserControllerIT {
             "user_id param isn't null")
     @Test
     void modUserShouldGetDetailedInfoOfOtherUserWithSuccessIfHasSuitableAuthority() throws Exception {
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/users/detailed-info")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/users/detailed-info")
                         .queryParam("user_id", "1")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "2",
@@ -753,7 +753,7 @@ public class UserControllerIT {
             "user_id param isn't null")
     @Test
     void admUserShouldGetDetailedInfoOfOtherUserWithSuccessIfHasSuitableAuthority() throws Exception {
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/users/detailed-info")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/users/detailed-info")
                         .queryParam("user_id", "1")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "3",
@@ -785,7 +785,7 @@ public class UserControllerIT {
             "user if user unauthenticated")
     @Test
     void shouldFailToRequestSummaryInfoUserIfUnauthenticated() throws Exception {
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/users/summary-info")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/users/summary-info")
                         .queryParam("user_id", "1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -800,7 +800,7 @@ public class UserControllerIT {
     @DisplayName("Authenticated user should be able of to request user summary info with success")
     @Test
     void AuthenticatedUserShouldToRequestSummaryInfoUserWithSuccess() throws Exception {
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/users/summary-info")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/users/summary-info")
                         .queryParam("user_id", "1")
                         .with(jwt())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -824,7 +824,7 @@ public class UserControllerIT {
             "with param different of type number, if him exists")
     @Test
     void shouldFailToRequestSummaryInfoUserIfParamDifferentOfNumber() throws Exception {
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/users/summary-info")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/users/summary-info")
                         .queryParam("user_id", "unexpected")
                         .with(jwt())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -842,7 +842,7 @@ public class UserControllerIT {
             "users if user is unauthenticated")
     @Test
     void shouldFailToRequestAllUsersIfUserIsUnauthenticated() throws Exception {
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/users/listAll")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/users/listAll")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isUnauthorized());
@@ -858,7 +858,7 @@ public class UserControllerIT {
             "if authenticated user isn't ADM or MOD or hasn't authority 'user:readAll'")
     @Test
     void shouldFailToRequestAllUsersIfUserHasNotSuitableAuthority() throws Exception {
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/users/listAll")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/users/listAll")
                         .with(jwt())
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -874,7 +874,7 @@ public class UserControllerIT {
             "same with authority 'user:readAll'")
     @Test
     void shouldFailIfBasicUserToRequestAllUsers() throws Exception {
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/users/listAll")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/users/listAll")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "1",
                                         "authority", "ROLE_BASIC"))))
@@ -895,7 +895,7 @@ public class UserControllerIT {
     @DisplayName("MOD user should be able to request all users unsorted with success")
     @Test
     void modUserShouldToRequestAllUsersUnsortedWithSuccess() throws Exception {
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/users/listAll")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/users/listAll")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "2",
                                         "authority", "ROLE_MOD"))))
@@ -922,7 +922,7 @@ public class UserControllerIT {
     @DisplayName("ADM user should be able to request all users unsorted with success")
     @Test
     void admUserShouldToRequestAllUsersUnsortedWithSuccess() throws Exception {
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/users/listAll")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/users/listAll")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "3",
                                         "authority", "ROLE_ADM"))))
@@ -950,7 +950,7 @@ public class UserControllerIT {
             "with success")
     @Test
     void modUserShouldToRequestAllUsersSortedByIdWithSuccess() throws Exception {
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/users/listAll")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/users/listAll")
                         .queryParam("sort", "id,desc")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "2",
@@ -982,7 +982,7 @@ public class UserControllerIT {
             "with success")
     @Test
     void admUserShouldToRequestAllUsersSortedByIdWithSuccess() throws Exception {
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/users/listAll")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/users/listAll")
                         .queryParam("sort", "id,desc")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "3",
@@ -1014,7 +1014,7 @@ public class UserControllerIT {
             "with success")
     @Test
     void modUserShouldToRequestAllUsersSortedByProfileWithSuccess() throws Exception {
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/users/listAll")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/users/listAll")
                         .queryParam("sort", "profile.profileName,asc")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "2",
@@ -1044,7 +1044,7 @@ public class UserControllerIT {
             "with success")
     @Test
     void admUserShouldToRequestAllUsersSortedByProfileWithSuccess() throws Exception {
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/users/listAll")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/users/listAll")
                         .queryParam("sort", "profile.profileName,asc")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "3",
@@ -1074,7 +1074,7 @@ public class UserControllerIT {
             "with success")
     @Test
     void modUserShouldToRequestTwoUsersSortedByFirstNameWithSuccess() throws Exception {
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/users/listAll")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/users/listAll")
                         .queryParam("size", "2")
                         .queryParam("sort", "firstName,asc")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
@@ -1104,7 +1104,7 @@ public class UserControllerIT {
             "with success")
     @Test
     void admUserShouldToRequestTwoUsersSortedByFirstNameWithSuccess() throws Exception {
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/users/listAll")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/users/listAll")
                         .queryParam("size", "2")
                         .queryParam("sort", "firstName,asc")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
@@ -1140,7 +1140,7 @@ public class UserControllerIT {
                 Profile.ProfileName.BASIC, true, true,
                 true, true);
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/users/edit")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(userUpdateDTO))
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -1155,7 +1155,7 @@ public class UserControllerIT {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO("newJose", "new_jose@email.com",
                 Profile.ProfileName.BASIC, true, true, true, true);
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/users/edit")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "1")))
                         .content(new ObjectMapper().writeValueAsString(userUpdateDTO))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -1178,7 +1178,7 @@ public class UserControllerIT {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO("newJose", "new_jose@email.com",
                 Profile.ProfileName.BASIC, true, true, true, true);
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/users/edit")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
                         .queryParam("user_id", "unexpected")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "3",
@@ -1207,7 +1207,7 @@ public class UserControllerIT {
                 }
                 """;
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/users/edit")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
                         .queryParam("user_id", "1")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "3",
@@ -1234,7 +1234,7 @@ public class UserControllerIT {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO("maria_silva", "maria@email.com",
                 Profile.ProfileName.MOD, true, true, true, true);
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/users/edit")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
                         .queryParam("user_id", "5")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "3",
@@ -1259,7 +1259,7 @@ public class UserControllerIT {
                 Profile.ProfileName.ADM, false, true,
                 false, true);
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/users/edit")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "1",
                                         "authority", "ROLE_BASIC"))))
@@ -1295,7 +1295,7 @@ public class UserControllerIT {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO("newJose", "new_jose@email.com",
                 Profile.ProfileName.BASIC, true, true, true, true);
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/users/edit")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "1",
                                         "authority", "ROLE_BASIC"))))
@@ -1332,7 +1332,7 @@ public class UserControllerIT {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO("newMaria", "new_maria@email.com",
                 Profile.ProfileName.MOD, true, true, true, true);
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/users/edit")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "2",
                                         "authority", "ROLE_MOD"))))
@@ -1370,7 +1370,7 @@ public class UserControllerIT {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO("newJoao", "new_joao@email.com",
                 Profile.ProfileName.ADM, true, true, true, true);
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/users/edit")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "3",
                                         "authority", "ROLE_ADM"))))
@@ -1408,7 +1408,7 @@ public class UserControllerIT {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO("maria_silva", "maria@email.com",
                 Profile.ProfileName.MOD, true, true, true, true);
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/users/edit")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
                         .queryParam("user_id", "2")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "3",
@@ -1446,7 +1446,7 @@ public class UserControllerIT {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO("newMaria", "new_maria@email.com",
                 Profile.ProfileName.MOD, true, true, true, true);
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/users/edit")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
                         .queryParam("user_id", "2")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "1",
@@ -1474,7 +1474,7 @@ public class UserControllerIT {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO("jose_silva0", "jose_silva0@email.com",
                 Profile.ProfileName.BASIC, true, true, true, true);
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/users/edit")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
                         .queryParam("user_id", "1")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "2",
@@ -1498,7 +1498,7 @@ public class UserControllerIT {
             "if user is unauthenticated")
     @Test
     void shouldFailToDeleteUserIfUnauthenticated() throws Exception {
-        this.mockMvc.perform(delete("/api-forum/v1/forumhub/users/delete")
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/users/delete")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isUnauthorized());
@@ -1515,7 +1515,7 @@ public class UserControllerIT {
             "if authenticated user isn't ADM or hasn't authority 'myuser:delete'")
     @Test
     void shouldFailIfUserHasNotSuitableAuthorityWhenDeleteUser() throws Exception {
-        this.mockMvc.perform(delete("/api-forum/v1/forumhub/users/delete")
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/users/delete")
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "1")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -1534,7 +1534,7 @@ public class UserControllerIT {
             " with param different of type number, if him exists")
     @Test
     void shouldFailIfParamDifferentOfTypeNumber() throws Exception {
-        this.mockMvc.perform(delete("/api-forum/v1/forumhub/users/delete")
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/users/delete")
                         .queryParam("user_id", "unexpected")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "3",
@@ -1550,7 +1550,7 @@ public class UserControllerIT {
             "or yourself with user_id param not null")
     @Test
     void shouldFailIfBasicUserTryToDeleteWithUserIdParamNotNull() throws Exception {
-        this.mockMvc.perform(delete("/api-forum/v1/forumhub/users/delete")
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/users/delete")
                         .queryParam("user_id", "1")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "1",
@@ -1571,7 +1571,7 @@ public class UserControllerIT {
             "or yourself with user_id param not null")
     @Test
     void shouldFailIfModUserTryToDeleteWithUserIdParamNotNull() throws Exception {
-        this.mockMvc.perform(delete("/api-forum/v1/forumhub/users/delete")
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/users/delete")
                         .queryParam("user_id", "1")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "2",
@@ -1593,7 +1593,7 @@ public class UserControllerIT {
             "user_id param isn't null")
     @Test
     void admUserShouldDeleteOtherUserWithSuccessIfUserIdParamIsNotNull() throws Exception {
-        this.mockMvc.perform(delete("/api-forum/v1/forumhub/users/delete")
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/users/delete")
                         .queryParam("user_id", "1")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "3",
@@ -1617,7 +1617,7 @@ public class UserControllerIT {
             "user_id param is null and has authority 'myuser:delete'")
     @Test
     void basicUserShouldDeleteYourUserWithSuccessIfHasSuitableAuthority() throws Exception {
-        this.mockMvc.perform(delete("/api-forum/v1/forumhub/users/delete")
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/users/delete")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "1",
                                         "authority", "ROLE_BASIC"))))
@@ -1640,7 +1640,7 @@ public class UserControllerIT {
             "user_id param is null and has authority 'myuser:delete'")
     @Test
     void modUserShouldDeleteYourUserWithSuccessIfHasSuitableAuthority() throws Exception {
-        this.mockMvc.perform(delete("/api-forum/v1/forumhub/users/delete")
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/users/delete")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "2",
                                         "authority", "ROLE_MOD"))))
@@ -1663,7 +1663,7 @@ public class UserControllerIT {
             "user_id param is null")
     @Test
     void admUserShouldDeleteYourUserWithSuccessIfUserIdParamIsNull() throws Exception {
-        this.mockMvc.perform(delete("/api-forum/v1/forumhub/users/delete")
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/users/delete")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "3",
                                         "authority", "ROLE_ADM"))))

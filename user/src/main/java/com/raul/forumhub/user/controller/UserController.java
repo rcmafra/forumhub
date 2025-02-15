@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Objects;
 
 @RestController
-@RequestMapping("/api-forum/v1/forumhub/users")
+@RequestMapping("/forumhub.io/api/v1/users")
 public class UserController {
 
     private final UserService userService;

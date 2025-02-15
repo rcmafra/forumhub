@@ -66,7 +66,7 @@ public class AnswerControllerTest {
     void shouldFailIfResourceDoesNotExistToTheSendRequest() throws Exception {
         final AnswerTopicDTO answerTopicDTO = new AnswerTopicDTO("Resposta teste");
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/{topic_id}/ans", 1)
+        this.mockMvc.perform(post("/forumhub.io/api/v1/topics/{topic_id}/ans", 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -80,7 +80,7 @@ public class AnswerControllerTest {
     void shouldFailIfMethodIsNotSupportedToTheSendRequest() throws Exception {
         final AnswerTopicDTO answerTopicDTO = new AnswerTopicDTO("Resposta teste");
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/topics/{topic_id}/answer",1)
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answer",1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -94,7 +94,7 @@ public class AnswerControllerTest {
     void shouldFailToAnswerTopicIfUnauthenticated() throws Exception {
         final AnswerTopicDTO answerTopicDTO = new AnswerTopicDTO("Resposta teste");
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/{topic_id}/answer",1)
+        this.mockMvc.perform(post("/forumhub.io/api/v1/topics/{topic_id}/answer",1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -113,7 +113,7 @@ public class AnswerControllerTest {
 
         BDDMockito.doNothing().when(this.answerService).answerTopic(1L, 1L, answerTopicDTO);
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/{topic_id}/answer",1)
+        this.mockMvc.perform(post("/forumhub.io/api/v1/topics/{topic_id}/answer",1)
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -131,7 +131,7 @@ public class AnswerControllerTest {
     @DisplayName("Should fail with status code 401 when mark answer best if user unauthenticated")
     @Test
     void shouldFailToMarkAnswerBestIfUnauthenticated() throws Exception {
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/{topic_id}/markBestAnswer",1)
+        this.mockMvc.perform(post("/forumhub.io/api/v1/topics/{topic_id}/markBestAnswer",1)
                         .queryParam("answer_id", "1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -146,7 +146,7 @@ public class AnswerControllerTest {
             "answer_id property of query param is sent empty")
     @Test
     void shouldFailIfAnswerIdPropertyOfQueryParamIsEmptyWhenMarkAnswerBest() throws Exception {
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/{topic_id}/markBestAnswer",1)
+        this.mockMvc.perform(post("/forumhub.io/api/v1/topics/{topic_id}/markBestAnswer",1)
                         .queryParam("answer_id", "")
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -161,7 +161,7 @@ public class AnswerControllerTest {
             " param different of type number")
     @Test
     void shouldFailToRequestTopicIfParamDifferentOfTypeNumber() throws Exception {
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/{topic_id}/markBestAnswer",1)
+        this.mockMvc.perform(post("/forumhub.io/api/v1/topics/{topic_id}/markBestAnswer",1)
                         .queryParam("answer_id", "unexpected")
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -176,7 +176,7 @@ public class AnswerControllerTest {
     void shouldMarkAnswerBestWithSuccessIfAuthenticated() throws Exception {
         BDDMockito.doNothing().when(this.answerService).markBestAnswer(1L, 1L, 1L);
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/topics/{topic_id}/markBestAnswer",1)
+        this.mockMvc.perform(post("/forumhub.io/api/v1/topics/{topic_id}/markBestAnswer",1)
                         .queryParam("answer_id", "1")
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -198,7 +198,7 @@ public class AnswerControllerTest {
         final AnswerUpdateDTO answerUpdateDTO =
                 new AnswerUpdateDTO("Primeiro teste de edição de uma resposta");
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/topics/{topic_id}/answers/edit",1)
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/edit",1)
                         .queryParam("answer_id", "1")
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -217,7 +217,7 @@ public class AnswerControllerTest {
         final AnswerUpdateDTO answerUpdateDTO =
                 new AnswerUpdateDTO("Primeiro teste de edição de uma resposta");
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/topics/{topic_id}/answers/edit",1)
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/edit",1)
                         .queryParam("answer_id", "unexpected")
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "2"))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_answer:edit")))
@@ -236,7 +236,7 @@ public class AnswerControllerTest {
         final AnswerUpdateDTO answerUpdateDTO =
                 new AnswerUpdateDTO("Primeiro teste de edição de uma resposta");
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/topics/{topic_id}/answers/edit",1)
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/edit",1)
                         .queryParam("answer_id", "")
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "2"))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_answer:edit")))
@@ -263,7 +263,7 @@ public class AnswerControllerTest {
         BDDMockito.given(this.answerService.updateAnswer(1L, 1L, 2L, answerUpdateDTO))
                 .willReturn(new GetAnswerDTO(answer));
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/topics/{topic_id}/answers/edit",1)
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/edit",1)
                         .queryParam("answer_id", "1")
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "2"))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_answer:edit")))
@@ -285,7 +285,7 @@ public class AnswerControllerTest {
             " when delete answer")
     @Test
     void shouldFailIfUserHasNotSuitableAuthorityWhenDeleteAnswer() throws Exception {
-        this.mockMvc.perform(delete("/api-forum/v1/forumhub/topics/{topic_id}/answers/delete",1)
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/{topic_id}/answers/delete",1)
                         .queryParam("answer_id", "1")
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -301,7 +301,7 @@ public class AnswerControllerTest {
             "of query param is sent empty")
     @Test
     void shouldFailIfAnswerIdPropertyOfQueryParamIsEmptyWhenDeleteAnswer() throws Exception {
-        this.mockMvc.perform(delete("/api-forum/v1/forumhub/topics/{topic_id}/answers/delete",1)
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/{topic_id}/answers/delete",1)
                         .queryParam("answer_id", "")
                         .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_answer:delete")))
@@ -317,7 +317,7 @@ public class AnswerControllerTest {
             " param different of type number")
     @Test
     void shouldFailToDeleteTopicIfParamDifferentOfTypeNumber() throws Exception {
-        this.mockMvc.perform(delete("/api-forum/v1/forumhub/topics/{topic_id}/answers/delete",1)
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/{topic_id}/answers/delete",1)
                         .queryParam("answer_id", "unexpected")
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "2"))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_answer:delete")))
@@ -332,7 +332,7 @@ public class AnswerControllerTest {
     void shouldDeleteAnswerWithSuccessIfUserHasSuitableAuthority() throws Exception {
         BDDMockito.doNothing().when(this.answerService).deleteAnswer(1L, 1L, 2L);
 
-        this.mockMvc.perform(delete("/api-forum/v1/forumhub/topics/{topic_id}/answers/delete",1)
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/{topic_id}/answers/delete",1)
                         .queryParam("answer_id", "1")
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "2"))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_answer:delete")))

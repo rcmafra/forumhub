@@ -62,7 +62,7 @@ public class CourseControllerIT {
         final CourseCreateDTO courseCreateDTO = new CourseCreateDTO(
                 "Conhecendo a arquitetura cliente/servidor", Course.Category.JAVA);
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/courses/creat")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/courses/creat")
                         .with(jwt().authorities(
                                 new SimpleGrantedAuthority("SCOPE_course:create"),
                                 new SimpleGrantedAuthority("ROLE_ADM")))
@@ -80,7 +80,7 @@ public class CourseControllerIT {
         final CourseCreateDTO courseCreateDTO = new CourseCreateDTO(
                 "Conhecendo a arquitetura cliente/servidor", Course.Category.JAVA);
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/courses/create")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/courses/create")
                         .with(jwt().authorities(
                                 new SimpleGrantedAuthority("SCOPE_course:create"),
                                 new SimpleGrantedAuthority("ROLE_ADM")))
@@ -98,7 +98,7 @@ public class CourseControllerIT {
         final CourseCreateDTO courseCreateDTO = new CourseCreateDTO(
                 "Conhecendo a arquitetura de microserviços", Course.Category.C);
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/courses/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/courses/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -117,7 +117,7 @@ public class CourseControllerIT {
         final CourseCreateDTO courseCreateDTO = new CourseCreateDTO(
                 "Conhecendo a arquitetura de microserviços", Course.Category.C);
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/courses/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/courses/create")
                         .with(jwt())
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -137,7 +137,7 @@ public class CourseControllerIT {
         final CourseCreateDTO courseCreateDTO = new CourseCreateDTO(
                 "Conhecendo a arquitetura de microserviços", Course.Category.C);
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/courses/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/courses/create")
                         .with(jwt().authorities(
                                 new SimpleGrantedAuthority("SCOPE_course:create")))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -161,7 +161,7 @@ public class CourseControllerIT {
                     }
                 """;
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/courses/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/courses/create")
                         .with(jwt().authorities(
                                 new SimpleGrantedAuthority("SCOPE_course:create"),
                                 new SimpleGrantedAuthority("ROLE_ADM")))
@@ -180,7 +180,7 @@ public class CourseControllerIT {
         final CourseCreateDTO courseCreateDTO = new CourseCreateDTO(
                 "", Course.Category.C);
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/courses/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/courses/create")
                         .with(jwt().authorities(
                                 new SimpleGrantedAuthority("SCOPE_course:create"),
                                 new SimpleGrantedAuthority("ROLE_ADM")))
@@ -202,7 +202,7 @@ public class CourseControllerIT {
         final CourseCreateDTO courseCreateDTO = new CourseCreateDTO(
                 "Criação de uma API Rest", Course.Category.JAVA);
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/courses/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/courses/create")
                         .with(jwt().authorities(
                                 new SimpleGrantedAuthority("SCOPE_course:create"),
                                 new SimpleGrantedAuthority("ROLE_ADM")))
@@ -226,7 +226,7 @@ public class CourseControllerIT {
         final CourseCreateDTO courseCreateDTO = new CourseCreateDTO(
                 "Conhecendo a arquitetura cliente servidor", Course.Category.JAVA);
 
-        this.mockMvc.perform(post("/api-forum/v1/forumhub/courses/create")
+        this.mockMvc.perform(post("/forumhub.io/api/v1/courses/create")
                         .with(jwt().authorities(
                                 new SimpleGrantedAuthority("SCOPE_course:create"),
                                 new SimpleGrantedAuthority("ROLE_ADM")))
@@ -246,7 +246,7 @@ public class CourseControllerIT {
     @DisplayName("Should fail with status code 401 when return all courses created if unauthenticated")
     @Test
     void shouldFailToReturnAllCoursesCreatedIfUnauthenticated() throws Exception {
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/courses/listAll")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/courses/listAll")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isUnauthorized());
@@ -259,7 +259,7 @@ public class CourseControllerIT {
     @DisplayName("Should return all courses created with successful if authenticated")
     @Test
     void shouldReturnAllCoursesCreatedWithSuccessful() throws Exception {
-        this.mockMvc.perform(get("/api-forum/v1/forumhub/courses/listAll")
+        this.mockMvc.perform(get("/forumhub.io/api/v1/courses/listAll")
                         .with(jwt())
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -274,9 +274,9 @@ public class CourseControllerIT {
     @DisplayName("Should fail with status code 401 when edit course if unauthenticated")
     @Test
     void shouldFailToEditCourseIfUnauthenticated() throws Exception {
-        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API Rest escalável");
+        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API Rest escalável", Course.Category.C);
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/courses/edit")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/courses/edit")
                         .queryParam("courseName", "Criação de uma API Rest")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -294,9 +294,9 @@ public class CourseControllerIT {
             "hasn't authority course:edit")
     @Test
     void shouldFailToEditCourseIfUserIsADMButHasNotSuitableAuthority() throws Exception {
-        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API Rest escalável");
+        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API Rest escalável", Course.Category.C);
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/courses/edit")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/courses/edit")
                         .queryParam("courseName", "Criação de uma API Rest")
                         .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_ADM")))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -315,9 +315,9 @@ public class CourseControllerIT {
             " course:edit, but isn't ADM")
     @Test
     void shouldFailToEditCourseIfUserHasSuitableAuthorityButNotIsADM() throws Exception {
-        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API Rest escalável");
+        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API Rest escalável", Course.Category.C);
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/courses/edit")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/courses/edit")
                         .queryParam("courseName", "Criação de uma API Rest")
                         .with(jwt().authorities(new SimpleGrantedAuthority("SCOPE_course:edit")))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -334,9 +334,9 @@ public class CourseControllerIT {
             "of DTO object is sent empty")
     @Test
     void shouldFailIfCourseNamePropertyOfDtoObjectIsEmptyWhenEditCourse() throws Exception {
-        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("");
+        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("", Course.Category.C);
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/courses/edit")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/courses/edit")
                         .queryParam("courseName", "Criação de uma API Rest")
                         .with(jwt().authorities(
                                 new SimpleGrantedAuthority("SCOPE_course:edit"),
@@ -356,9 +356,9 @@ public class CourseControllerIT {
             "of query param is sent empty")
     @Test
     void shouldFailIfCourseNamePropertyOfQueryParamIsEmptyWhenEditCourse() throws Exception {
-        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API Rest escalável");
+        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API Rest escalável", Course.Category.C);
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/courses/edit")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/courses/edit")
                         .queryParam("courseName", "")
                         .with(jwt().authorities(
                                 new SimpleGrantedAuthority("SCOPE_course:edit"),
@@ -378,9 +378,9 @@ public class CourseControllerIT {
     @DisplayName("Should fail to edit course if desired course not exists")
     @Test
     void shouldFailToEditCourseIfDesiredCourseNotExists() throws Exception {
-        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API Rest escalável");
+        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API Rest escalável", Course.Category.C);
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/courses/edit")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/courses/edit")
                         .queryParam("courseName", "Lidando com load balancer na AWS")
                         .with(jwt().authorities(
                                 new SimpleGrantedAuthority("SCOPE_course:edit"),
@@ -403,9 +403,9 @@ public class CourseControllerIT {
             "has authority course:edit and previous premisses are adequate")
     @Test
     void shouldEditCourseWithSuccessIfAuthenticatedAndHasSuitableAuthority() throws Exception {
-        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API Rest escalável");
+        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API Rest escalável", Course.Category.C);
 
-        this.mockMvc.perform(put("/api-forum/v1/forumhub/courses/edit")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/courses/edit")
                         .queryParam("courseName", "Criação de uma API Rest")
                         .with(jwt().authorities(
                                 new SimpleGrantedAuthority("SCOPE_course:edit"),
@@ -429,7 +429,7 @@ public class CourseControllerIT {
     @DisplayName("Should fail with status code 401 when delete course if unauthenticated")
     @Test
     void shouldFailToDeleteCourseIfUnauthenticated() throws Exception {
-        this.mockMvc.perform(delete("/api-forum/v1/forumhub/courses/delete")
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/courses/delete")
                         .queryParam("courseName", "Gerenciamento de contêiners")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -444,7 +444,7 @@ public class CourseControllerIT {
             "hasn't authority course:delete")
     @Test
     void shouldFailToDeleteCourseIfUserIsADMButHasNotSuitableAuthority() throws Exception {
-        this.mockMvc.perform(delete("/api-forum/v1/forumhub/courses/delete")
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/courses/delete")
                         .queryParam("courseName", "Gerenciamento de contêiners")
                         .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_ADM")))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -460,7 +460,7 @@ public class CourseControllerIT {
             " course:delete, but isn't ADM")
     @Test
     void shouldFailToDeleteCourseIfUserHasSuitableAuthorityButNotIsADM() throws Exception {
-        this.mockMvc.perform(delete("/api-forum/v1/forumhub/courses/delete")
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/courses/delete")
                         .queryParam("courseName", "Gerenciamento de contêiners")
                         .with(jwt().authorities(new SimpleGrantedAuthority("SCOPE_course:delete")))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -476,7 +476,7 @@ public class CourseControllerIT {
             "of query param is sent empty")
     @Test
     void shouldFailIfCourseNamePropertyOfQueryParamIsEmptyWhenDeleteCourse() throws Exception {
-        this.mockMvc.perform(delete("/api-forum/v1/forumhub/courses/delete")
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/courses/delete")
                         .queryParam("courseName", "")
                         .with(jwt().authorities(
                                 new SimpleGrantedAuthority("SCOPE_course:delete"),
@@ -495,7 +495,7 @@ public class CourseControllerIT {
     @DisplayName("Should fail to delete course if desired course not exists")
     @Test
     void shouldFailToDeleteCourseIfDesiredCourseNotExists() throws Exception {
-        this.mockMvc.perform(delete("/api-forum/v1/forumhub/courses/delete")
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/courses/delete")
                         .queryParam("courseName", "Lidando com load balancer na AWS")
                         .with(jwt().authorities(
                                 new SimpleGrantedAuthority("SCOPE_course:delete"),
@@ -519,7 +519,7 @@ public class CourseControllerIT {
             "has authority course:delete and previous premisses are adequate")
     @Test
     void shouldDeleteCourseWithSuccessIfAuthenticatedAndHasSuitableAuthority() throws Exception {
-        this.mockMvc.perform(delete("/api-forum/v1/forumhub/courses/delete")
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/courses/delete")
                         .queryParam("courseName", "Gerenciamento de contêiners")
                         .with(jwt().authorities(
                                 new SimpleGrantedAuthority("SCOPE_course:delete"),

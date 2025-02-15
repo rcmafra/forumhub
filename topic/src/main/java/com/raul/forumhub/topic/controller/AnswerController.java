@@ -15,7 +15,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api-forum/v1/forumhub/topics")
+@RequestMapping("/forumhub.io/api/v1/topics")
 public class AnswerController {
 
     private final AnswerService answerService;
