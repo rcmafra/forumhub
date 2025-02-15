@@ -2,8 +2,7 @@
 spring:
   datasource:
     url: jdbc:h2:mem:testdb;INIT=CREATE SCHEMA IF NOT EXISTS HUB
-    driver:
-      class: org.h2.Driver
+    driver-class-name: org.h2.Driver
 
   #Show formated SQL statements
   jpa:
