@@ -5,8 +5,7 @@ import com.raul.forumhub.topic.domain.Answer;
 import com.raul.forumhub.topic.domain.Author;
 import com.raul.forumhub.topic.domain.Status;
 import com.raul.forumhub.topic.domain.Topic;
-import com.raul.forumhub.topic.dto.request.AnswerTopicDTO;
-import com.raul.forumhub.topic.dto.request.AnswerUpdateDTO;
+import com.raul.forumhub.topic.dto.request.AnswerDTO;
 import com.raul.forumhub.topic.dto.response.GetAnswerDTO;
 import com.raul.forumhub.topic.exception.AnswerServiceException;
 import com.raul.forumhub.topic.exception.InstanceNotFoundException;
@@ -33,11 +32,11 @@ public class AnswerService {
         this.userClientRequest = userClientRequest;
     }
 
-    public void answerTopic(Long topic_id, Long user_id, AnswerTopicDTO answerTopicDTO) {
+    public void answerTopic(Long topic_id, Long user_id, AnswerDTO answerDTO) {
         Topic topic = topicService.getTopicById(topic_id);
         Author author = userClientRequest.getUserById(user_id);
 
-        Answer answer = new Answer(answerTopicDTO.solution());
+        Answer answer = new Answer(answerDTO.solution());
         answer.setTopic(topic);
         answer.setAuthor(author);
 
@@ -81,7 +80,7 @@ public class AnswerService {
 
     }
 
-    public GetAnswerDTO updateAnswer(Long topic_id, Long answer_id, Long user_id, AnswerUpdateDTO answerUpdateDTO) {
+    public GetAnswerDTO updateAnswer(Long topic_id, Long answer_id, Long user_id, AnswerDTO answerDTO) {
         this.topicService.getTopicById(topic_id);
         Answer answer = this.getAnswerById(answer_id);
         Author author = this.userClientRequest.getUserById(user_id);
@@ -94,7 +93,7 @@ public class AnswerService {
                     "ele não pode ser editado");
         }
 
-        answer.setSolution(answerUpdateDTO.solution());
+        answer.setSolution(answerDTO.solution());
         this.answerRepository.save(answer);
 
         return new GetAnswerDTO(answer);

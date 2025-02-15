@@ -3,8 +3,7 @@ package com.raul.forumhub.topic.service;
 import com.raul.forumhub.topic.client.UserClientRequest;
 import com.raul.forumhub.topic.domain.Answer;
 import com.raul.forumhub.topic.domain.Topic;
-import com.raul.forumhub.topic.dto.request.AnswerTopicDTO;
-import com.raul.forumhub.topic.dto.request.AnswerUpdateDTO;
+import com.raul.forumhub.topic.dto.request.AnswerDTO;
 import com.raul.forumhub.topic.exception.*;
 import com.raul.forumhub.topic.repository.AnswerRepository;
 import com.raul.forumhub.topic.util.TestsHelper;
@@ -40,7 +39,7 @@ public class AnswerServiceTest {
 
     @Test
     void shouldFailIfQuestionPropertyIsEmptyWhenAnswerTopic() {
-        final AnswerTopicDTO answerTopicDTO = new AnswerTopicDTO("");
+        final AnswerDTO answerDTO = new AnswerDTO("");
 
         BDDMockito.given(this.topicService.getTopicById(1L))
                 .willReturn(TestsHelper.TopicHelper.topicListWithAnswers().get(0));
@@ -53,7 +52,7 @@ public class AnswerServiceTest {
 
 
         Assertions.assertThrows(ConstraintViolationException.class,
-                () -> this.answerService.answerTopic(1L, 1L, answerTopicDTO));
+                () -> this.answerService.answerTopic(1L, 1L, answerDTO));
 
 
         BDDMockito.verify(this.topicService).getTopicById(1L);
@@ -68,14 +67,14 @@ public class AnswerServiceTest {
 
     @Test
     void shouldFailToAnswerTopicIfSpecifiedTopicNotExists() {
-        final AnswerTopicDTO answerTopicDTO = new AnswerTopicDTO("Resposta teste");
+        final AnswerDTO answerDTO = new AnswerDTO("Resposta teste");
 
         BDDMockito.given(this.topicService.getTopicById(1L))
                 .willThrow(new InstanceNotFoundException("O tópico informado não existe"));
 
 
         Assertions.assertThrows(InstanceNotFoundException.class,
-                () -> this.answerService.answerTopic(1L, 1L, answerTopicDTO),
+                () -> this.answerService.answerTopic(1L, 1L, answerDTO),
                 "O tópico informado não existe");
 
 
@@ -90,7 +89,7 @@ public class AnswerServiceTest {
 
     @Test
     void shouldFailToAnswerTopicIfUserServiceReturn404StatusCode() {
-        final AnswerTopicDTO answerTopicDTO = new AnswerTopicDTO("Resposta teste");
+        final AnswerDTO answerDTO = new AnswerDTO("Resposta teste");
 
         BDDMockito.given(this.topicService.getTopicById(1L))
                 .willReturn(TestsHelper.TopicHelper.topicListWithAnswers().get(0));
@@ -100,7 +99,7 @@ public class AnswerServiceTest {
 
 
         Assertions.assertThrows(RestClientException.class,
-                () -> this.answerService.answerTopic(1L, 1L, answerTopicDTO),
+                () -> this.answerService.answerTopic(1L, 1L, answerDTO),
                 "Usuário não encontrado");
 
 
@@ -116,7 +115,7 @@ public class AnswerServiceTest {
 
     @Test
     void shouldAnswerTopicWithSuccessIfEverythingIsOk() {
-        final AnswerTopicDTO answerTopicDTO = new AnswerTopicDTO("Resposta teste");
+        final AnswerDTO answerDTO = new AnswerDTO("Resposta teste");
 
         BDDMockito.given(this.topicService.getTopicById(1L))
                 .willReturn(TestsHelper.TopicHelper.topicListWithAnswers().get(0));
@@ -126,7 +125,7 @@ public class AnswerServiceTest {
 
 
         Assertions.assertDoesNotThrow(
-                () -> this.answerService.answerTopic(1L, 1L, answerTopicDTO));
+                () -> this.answerService.answerTopic(1L, 1L, answerDTO));
 
 
         BDDMockito.verify(this.topicService).getTopicById(1L);
@@ -282,7 +281,7 @@ public class AnswerServiceTest {
 
     @Test
     void shouldFailIfSolutionPropertyIsEmptyWhenEditAnswer() {
-        final AnswerUpdateDTO answerUpdateDTO = new AnswerUpdateDTO("");
+        final AnswerDTO answerUpdateDTO = new AnswerDTO("");
 
         BDDMockito.given(this.topicService.getTopicById(1L))
                 .willReturn(TestsHelper.TopicHelper.topicListWithAnswers().get(0));
@@ -315,8 +314,8 @@ public class AnswerServiceTest {
 
     @Test
     void shouldFailToEditAnswerIfTopicNotExists() {
-        final AnswerUpdateDTO answerUpdateDTO =
-                new AnswerUpdateDTO("Primeiro teste de edição de uma resposta");
+        final AnswerDTO answerUpdateDTO =
+                new AnswerDTO("Primeiro teste de edição de uma resposta");
 
         BDDMockito.given(this.topicService.getTopicById(1L))
                 .willThrow(new InstanceNotFoundException("O tópico informado não existe"));
@@ -337,8 +336,8 @@ public class AnswerServiceTest {
 
     @Test
     void shouldFailToEditAnswerIfAnswerNotExists() {
-        final AnswerUpdateDTO answerUpdateDTO =
-                new AnswerUpdateDTO("Primeiro teste de edição de uma resposta");
+        final AnswerDTO answerUpdateDTO =
+                new AnswerDTO("Primeiro teste de edição de uma resposta");
 
         BDDMockito.given(this.topicService.getTopicById(1L))
                 .willReturn(TestsHelper.TopicHelper.topicList().get(0));
@@ -363,8 +362,8 @@ public class AnswerServiceTest {
 
     @Test
     void shouldFailToEditAnswerIfUserServiceReturn404StatusCode() {
-        final AnswerUpdateDTO answerUpdateDTO =
-                new AnswerUpdateDTO("Primeiro teste de edição de uma resposta");
+        final AnswerDTO answerUpdateDTO =
+                new AnswerDTO("Primeiro teste de edição de uma resposta");
 
         BDDMockito.given(this.topicService.getTopicById(1L))
                 .willReturn(TestsHelper.TopicHelper.topicList().get(0));
@@ -393,8 +392,8 @@ public class AnswerServiceTest {
 
     @Test
     void shouldFailIfBasicUserAttemptEditAnswerOfOtherAuthor() {
-        final AnswerUpdateDTO answerUpdateDTO =
-                new AnswerUpdateDTO("Primeiro teste de edição de uma resposta");
+        final AnswerDTO answerUpdateDTO =
+                new AnswerDTO("Primeiro teste de edição de uma resposta");
 
         BDDMockito.given(this.topicService.getTopicById(1L))
                 .willReturn(TestsHelper.TopicHelper.topicList().get(0));
@@ -424,8 +423,8 @@ public class AnswerServiceTest {
     @DisplayName("Should fail with status code 422 when attempt edit a answer of unknown author")
     @Test
     void shouldFailWhenAttemptEditAnswerOfUnknownAuthor() {
-        final AnswerUpdateDTO answerUpdateDTO =
-                new AnswerUpdateDTO("Primeiro teste de edição de uma resposta");
+        final AnswerDTO answerUpdateDTO =
+                new AnswerDTO("Primeiro teste de edição de uma resposta");
 
 
         BDDMockito.given(this.topicService.getTopicById(1L))
@@ -457,8 +456,8 @@ public class AnswerServiceTest {
 
     @Test
     void answerAuthorShouldEditSpecifiedAnswerWithSuccessIfEverythingIsOk() {
-        final AnswerUpdateDTO answerUpdateDTO =
-                new AnswerUpdateDTO("Primeiro teste de edição de uma resposta");
+        final AnswerDTO answerUpdateDTO =
+                new AnswerDTO("Primeiro teste de edição de uma resposta");
 
         BDDMockito.given(this.topicService.getTopicById(1L))
                 .willReturn(TestsHelper.TopicHelper.topicList().get(0));
@@ -489,8 +488,8 @@ public class AnswerServiceTest {
 
     @Test
     void userADMShouldEditAnswerOfOtherAuthorWithSuccessIfEverythingIsOk() {
-        final AnswerUpdateDTO answerUpdateDTO =
-                new AnswerUpdateDTO("Segundo teste de edição de uma resposta");
+        final AnswerDTO answerUpdateDTO =
+                new AnswerDTO("Segundo teste de edição de uma resposta");
 
 
         BDDMockito.given(this.topicService.getTopicById(1L))
@@ -522,8 +521,8 @@ public class AnswerServiceTest {
 
     @Test
     void userMODShouldEditAnswerOfOtherAuthorWithSuccessIfEverythingIsOk() {
-        final AnswerUpdateDTO answerUpdateDTO =
-                new AnswerUpdateDTO("Terceiro teste de edição de uma resposta");
+        final AnswerDTO answerUpdateDTO =
+                new AnswerDTO("Terceiro teste de edição de uma resposta");
 
         BDDMockito.given(this.topicService.getTopicById(3L))
                 .willReturn(TestsHelper.TopicHelper.topicList().get(2));
