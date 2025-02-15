@@ -22,8 +22,11 @@ public class CourseService {
     }
 
 
-    public void createCourse(CourseCreateDTO courseCreateDTO){
-        Course course = new Course(courseCreateDTO.name(), courseCreateDTO.category());
+    public void createCourse(CourseCreateDTO courseCreateDTO) {
+        Course course = Course.builder().name(courseCreateDTO.name())
+                .category(courseCreateDTO.category())
+                .build();
+
         this.courseRepository.save(course);
     }
 
@@ -36,9 +39,11 @@ public class CourseService {
         this.courseRepository.delete(course);
     }
 
-    public GetCourseDTO updateNameCourse(String courseName, CourseUpdateDTO courseUpdateDTO){
+    public GetCourseDTO updateCourse(String courseName, CourseUpdateDTO courseUpdateDTO) {
         Course course = this.getCourseByName(courseName);
+
         course.setName(courseUpdateDTO.name());
+        course.setCategory(courseUpdateDTO.category());
 
         this.courseRepository.save(course);
         return new GetCourseDTO(course);

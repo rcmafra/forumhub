@@ -107,7 +107,7 @@ public class CourseServiceTest {
 
     @Test
     void shouldFailIfCourseNamePropertyOfDtoObjectIsEmptyWhenEditCourse() {
-        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("");
+        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("", Course.Category.C);
 
         BDDMockito.given(this.courseRepository.findCourseByName("Criação de uma API Rest"))
                 .willReturn(Optional.of(TestsHelper.CourseHelper.courseList().get(0)));
@@ -117,7 +117,7 @@ public class CourseServiceTest {
 
 
         Assertions.assertThrows(ConstraintViolationException.class,
-                () -> this.courseService.updateNameCourse(
+                () -> this.courseService.updateCourse(
                         "Criação de uma API Rest", courseUpdateDTO));
 
 
@@ -130,7 +130,7 @@ public class CourseServiceTest {
     @Test
     void shouldFailToEditCourseIfDesiredCourseNotExists() {
         final CourseUpdateDTO courseUpdateDTO =
-                new CourseUpdateDTO("Como criar uma API Rest escalável");
+                new CourseUpdateDTO("Como criar uma API Rest escalável", Course.Category.C);
 
 
         BDDMockito.given(this.courseRepository.findCourseByName(
@@ -139,7 +139,7 @@ public class CourseServiceTest {
 
 
         Assertions.assertThrows(InstanceNotFoundException.class,
-                () -> this.courseService.updateNameCourse(
+                () -> this.courseService.updateCourse(
                         "Aprendendo sobre microserviços", courseUpdateDTO));
 
 
@@ -153,14 +153,14 @@ public class CourseServiceTest {
     @Test
     void shouldEditCourseWithSuccessIfEverythingIsOk() {
         final CourseUpdateDTO courseUpdateDTO =
-                new CourseUpdateDTO("Como criar uma API Rest escalável");
+                new CourseUpdateDTO("Como criar uma API Rest escalável", Course.Category.C);
 
         BDDMockito.given(this.courseRepository.findCourseByName(
                         "Criação de uma API Rest"))
                 .willReturn(Optional.of(TestsHelper.CourseHelper.courseList().get(0)));
 
 
-        Assertions.assertDoesNotThrow(() -> this.courseService.updateNameCourse(
+        Assertions.assertDoesNotThrow(() -> this.courseService.updateCourse(
                 "Criação de uma API Rest", courseUpdateDTO));
 
 

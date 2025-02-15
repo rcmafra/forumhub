@@ -231,7 +231,7 @@ public class CourseControllerTest {
     @DisplayName("Should fail with status code 401 when edit course if unauthenticated")
     @Test
     void shouldFailToEditCourseIfUnauthenticated() throws Exception {
-        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API Rest escalável");
+        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API Rest escalável", Course.Category.C);
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/courses/edit")
                         .queryParam("courseName", "Criação de uma API Rest")
@@ -250,7 +250,7 @@ public class CourseControllerTest {
             "hasn't authority course:edit")
     @Test
     void shouldFailToEditCourseIfUserIsADMButHasNotSuitableAuthority() throws Exception {
-        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API Rest escalável");
+        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API Rest escalável", Course.Category.C);
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/courses/edit")
                         .queryParam("courseName", "Criação de uma API Rest")
@@ -270,7 +270,7 @@ public class CourseControllerTest {
             " course:edit, but isn't ADM")
     @Test
     void shouldFailToEditCourseIfUserHasSuitableAuthorityButNotIsADM() throws Exception {
-        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API Rest escalável");
+        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API Rest escalável", Course.Category.C);
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/courses/edit")
                         .queryParam("courseName", "Criação de uma API Rest")
@@ -290,7 +290,7 @@ public class CourseControllerTest {
             "of query param is sent empty")
     @Test
     void shouldFailIfCourseNamePropertyOfQueryParamIsEmptyWhenEditCourse() throws Exception {
-        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API Rest escalável");
+        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API Rest escalável", Course.Category.C);
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/courses/edit")
                         .queryParam("courseName", "")
@@ -312,12 +312,12 @@ public class CourseControllerTest {
     @DisplayName("Should edit course with success if user ADM authenticated has authority 'course:edit'")
     @Test
     void shouldEditCourseWithSuccessIfAuthenticatedAndHasSuitableAuthority() throws Exception {
-        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API Rest escalável");
+        final CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Como criar uma API Rest escalável", Course.Category.C);
 
         Course course = TestsHelper.CourseHelper.courseList().get(0);
         course.setName("Como criar uma API Rest escalável");
 
-        BDDMockito.given(this.courseService.updateNameCourse("Criação de uma API Rest", courseUpdateDTO))
+        BDDMockito.given(this.courseService.updateCourse("Criação de uma API Rest", courseUpdateDTO))
                 .willReturn(new GetCourseDTO(course));
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/courses/edit")
@@ -332,7 +332,7 @@ public class CourseControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.course.name", is("Como criar uma API Rest escalável")));
 
-        BDDMockito.verify(this.courseService).updateNameCourse("Criação de uma API Rest", courseUpdateDTO);
+        BDDMockito.verify(this.courseService).updateCourse("Criação de uma API Rest", courseUpdateDTO);
         BDDMockito.verifyNoMoreInteractions(this.courseService);
 
     }
