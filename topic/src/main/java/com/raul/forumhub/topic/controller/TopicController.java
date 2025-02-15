@@ -3,7 +3,7 @@ package com.raul.forumhub.topic.controller;
 import com.raul.forumhub.topic.dto.request.TopicCreateRequestDTO;
 import com.raul.forumhub.topic.dto.request.TopicUpdateRequestDTO;
 import com.raul.forumhub.topic.dto.response.TopicResponseDTO;
-import com.raul.forumhub.topic.dto.response.HttpMessage;
+import com.raul.forumhub.topic.dto.response.HttpStatusMessage;
 import com.raul.forumhub.topic.security.IsAuthenticated;
 import com.raul.forumhub.topic.service.TopicService;
 import jakarta.validation.Valid;
@@ -31,8 +31,8 @@ public class TopicController {
 
     @IsAuthenticated
     @PostMapping("/create")
-    public ResponseEntity<HttpMessage> createTopic(@Valid @RequestBody TopicCreateRequestDTO topicCreateRequestDTO,
-                                                   @AuthenticationPrincipal Jwt jwt){
+    public ResponseEntity<HttpStatusMessage> createTopic(@Valid @RequestBody TopicCreateRequestDTO topicCreateRequestDTO,
+                                                         @AuthenticationPrincipal Jwt jwt){
 
         Long user_id = Long.parseLong(jwt.getClaim("user_id"));
         this.topicService.createTopic(topicCreateRequestDTO, user_id);
@@ -66,12 +66,12 @@ public class TopicController {
 
     @PreAuthorize("hasAuthority('SCOPE_topic:delete')")
     @DeleteMapping("/delete")
-    public ResponseEntity<HttpMessage> deleteTopic(@RequestParam Long topic_id, @AuthenticationPrincipal Jwt jwt){
+    public ResponseEntity<HttpStatusMessage> deleteTopic(@RequestParam Long topic_id, @AuthenticationPrincipal Jwt jwt){
 
         Long user_id = Long.parseLong(jwt.getClaim("user_id"));
         topicService.deleteTopic(topic_id, user_id);
 
-        return ResponseEntity.ok(new HttpMessage("HttpStatusCode OK"));
+        return ResponseEntity.ok(new HttpStatusMessage("HttpStatusCode OK"));
     }
 
 }

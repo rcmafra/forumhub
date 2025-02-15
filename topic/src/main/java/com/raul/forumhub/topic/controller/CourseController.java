@@ -3,7 +3,7 @@ package com.raul.forumhub.topic.controller;
 import com.raul.forumhub.topic.dto.request.CourseRequestDTO;
 import com.raul.forumhub.topic.dto.response.CourseResponseCollection;
 import com.raul.forumhub.topic.dto.response.CourseResponseDTO;
-import com.raul.forumhub.topic.dto.response.HttpMessage;
+import com.raul.forumhub.topic.dto.response.HttpStatusMessage;
 import com.raul.forumhub.topic.security.IsAuthenticated;
 import com.raul.forumhub.topic.service.CourseService;
 import jakarta.validation.Valid;
@@ -27,10 +27,10 @@ public class CourseController {
 
     @PreAuthorize("hasRole('ADM') and hasAuthority('SCOPE_course:create')")
     @PostMapping("/create")
-    public ResponseEntity<HttpMessage> createCourse(@Valid @RequestBody CourseRequestDTO courseRequestDTO) {
+    public ResponseEntity<HttpStatusMessage> createCourse(@Valid @RequestBody CourseRequestDTO courseRequestDTO) {
 
         this.courseService.createCourse(courseRequestDTO);
-        return new ResponseEntity<>(new HttpMessage("HttpStatusCode OK"), HttpStatus.CREATED);
+        return new ResponseEntity<>(new HttpStatusMessage("HttpStatusCode OK"), HttpStatus.CREATED);
     }
 
     @IsAuthenticated
@@ -53,11 +53,11 @@ public class CourseController {
 
     @PreAuthorize("hasRole('ADM') and hasAuthority('SCOPE_course:delete')")
     @DeleteMapping("/delete")
-    public ResponseEntity<HttpMessage> deleteCourse(@RequestParam String courseName) {
+    public ResponseEntity<HttpStatusMessage> deleteCourse(@RequestParam String courseName) {
         Assert.hasText(courseName, "O nome do curso não pode ser vazio");
 
         this.courseService.deleteCourse(courseName);
-        return ResponseEntity.ok(new HttpMessage("HttpStatusCode OK"));
+        return ResponseEntity.ok(new HttpStatusMessage("HttpStatusCode OK"));
 
     }
 
