@@ -35,8 +35,8 @@ public class AnswerController {
     }
 
     @IsAuthenticated
-    @PostMapping("/{topic_id}/markBestAnswer")
-    public ResponseEntity<HttpStatusMessage> markBestAnswer(@PathVariable Long topic_id, @RequestParam Long answer_id,
+    @PostMapping("/{topic_id}/markBestAnswer/{answer_id}")
+    public ResponseEntity<HttpStatusMessage> markBestAnswer(@PathVariable Long topic_id, @PathVariable Long answer_id,
                                                             @AuthenticationPrincipal Jwt jwt) {
 
         Long user_id = Long.parseLong(jwt.getClaim("user_id"));
@@ -46,8 +46,8 @@ public class AnswerController {
     }
 
     @PreAuthorize("hasAuthority('SCOPE_answer:edit')")
-    @PutMapping("/{topic_id}/answers/edit")
-    public ResponseEntity<AnswerResponseDTO> updateAnswer(@PathVariable Long topic_id, @RequestParam Long answer_id,
+    @PutMapping("/{topic_id}/answers/edit/{answer_id}")
+    public ResponseEntity<AnswerResponseDTO> updateAnswer(@PathVariable Long topic_id, @PathVariable Long answer_id,
                                                           @AuthenticationPrincipal Jwt jwt, @Valid @RequestBody AnswerRequestDTO answerRequestDTO) {
 
         Long user_id = Long.parseLong(jwt.getClaim("user_id"));
@@ -57,8 +57,8 @@ public class AnswerController {
     }
 
     @PreAuthorize("hasAuthority('SCOPE_answer:delete')")
-    @DeleteMapping("/{topic_id}/answers/delete")
-    public ResponseEntity<HttpStatusMessage> deleteAnswer(@PathVariable Long topic_id, @RequestParam Long answer_id,
+    @DeleteMapping("/{topic_id}/answers/delete/{answer_id}")
+    public ResponseEntity<HttpStatusMessage> deleteAnswer(@PathVariable Long topic_id, @PathVariable Long answer_id,
                                                           @AuthenticationPrincipal Jwt jwt) {
 
         Long user_id = Long.parseLong(jwt.getClaim("user_id"));

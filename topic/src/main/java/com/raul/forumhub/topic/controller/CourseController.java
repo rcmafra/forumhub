@@ -42,8 +42,8 @@ public class CourseController {
     }
 
     @PreAuthorize("hasRole('ADM') and hasAuthority('SCOPE_course:edit')")
-    @PutMapping("/edit")
-    public ResponseEntity<CourseResponseDTO> updateCourse(@RequestParam String courseName,
+    @PutMapping("/edit/{courseName}")
+    public ResponseEntity<CourseResponseDTO> updateCourse(@PathVariable String courseName,
                                                           @Valid @RequestBody CourseRequestDTO courseUpdateDTO) {
         Assert.hasText(courseName, "O nome do curso não pode ser vazio");
 
@@ -52,8 +52,8 @@ public class CourseController {
     }
 
     @PreAuthorize("hasRole('ADM') and hasAuthority('SCOPE_course:delete')")
-    @DeleteMapping("/delete")
-    public ResponseEntity<HttpStatusMessage> deleteCourse(@RequestParam String courseName) {
+    @DeleteMapping("/delete/{courseName}")
+    public ResponseEntity<HttpStatusMessage> deleteCourse(@PathVariable String courseName) {
         Assert.hasText(courseName, "O nome do curso não pode ser vazio");
 
         this.courseService.deleteCourse(courseName);

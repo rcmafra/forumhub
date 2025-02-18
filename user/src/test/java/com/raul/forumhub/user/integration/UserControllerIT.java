@@ -1136,9 +1136,9 @@ public class UserControllerIT {
             "if user is unauthenticated")
     @Test
     void shouldFailToEditUserIfUnauthenticated() throws Exception {
-        UserUpdateDTO userUpdateDTO = new UserUpdateDTO("newJose", "new_jose@email.com",
-                Profile.ProfileName.BASIC, true, true,
-                true, true);
+        UserUpdateDTO userUpdateDTO = new UserUpdateDTO("Jose", "Silva",
+                "newJose", "new_jose@email.com", Profile.ProfileName.BASIC,
+                true, true, true, true);
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -1152,8 +1152,9 @@ public class UserControllerIT {
             "if authenticated user isn't ADM or hasn't authority 'myuser:edit'")
     @Test
     void shouldFailIfUserHasNotSuitableAuthorityWhenEditUser() throws Exception {
-        UserUpdateDTO userUpdateDTO = new UserUpdateDTO("newJose", "new_jose@email.com",
-                Profile.ProfileName.BASIC, true, true, true, true);
+        UserUpdateDTO userUpdateDTO = new UserUpdateDTO("Jose", "Silva",
+                "newJose", "new_jose@email.com", Profile.ProfileName.BASIC,
+                true, true, true, true);
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "1")))
@@ -1175,8 +1176,9 @@ public class UserControllerIT {
             " with param different of type number")
     @Test
     void shouldFailToEditUserIfParamDifferentOfTypeNumber() throws Exception {
-        UserUpdateDTO userUpdateDTO = new UserUpdateDTO("newJose", "new_jose@email.com",
-                Profile.ProfileName.BASIC, true, true, true, true);
+        UserUpdateDTO userUpdateDTO = new UserUpdateDTO("Jose", "Silva",
+                "newJose", "new_jose@email.com", Profile.ProfileName.BASIC,
+                true, true, true, true);
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
                         .queryParam("user_id", "unexpected")
@@ -1231,8 +1233,9 @@ public class UserControllerIT {
             "of other user and this one not exists")
     @Test
     void shouldFailToEditUserIfInformedUserNotExists() throws Exception {
-        UserUpdateDTO userUpdateDTO = new UserUpdateDTO("maria_silva", "maria@email.com",
-                Profile.ProfileName.MOD, true, true, true, true);
+        UserUpdateDTO userUpdateDTO = new UserUpdateDTO("Maria", "Silva", "maria_silva",
+                "maria@email.com", Profile.ProfileName.MOD,
+                true, true, true, true);
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
                         .queryParam("user_id", "5")
@@ -1255,9 +1258,9 @@ public class UserControllerIT {
             "locked account, expired credentials and enabled account")
     @Test
     void shouldNotEditExtraInformationIfEditRequestUserIsNotADM() throws Exception {
-        UserUpdateDTO userUpdateDTO = new UserUpdateDTO("jose_silva0", "silva@email.com",
-                Profile.ProfileName.ADM, false, true,
-                false, true);
+        UserUpdateDTO userUpdateDTO = new UserUpdateDTO("Joao", "Silva", "jose_silva0",
+                "silva@email.com", Profile.ProfileName.ADM,
+                false, true, false, true);
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
@@ -1268,6 +1271,8 @@ public class UserControllerIT {
                         .content(new ObjectMapper().writeValueAsString(userUpdateDTO))
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.user.firstName", is("Jose")))
+                .andExpect(jsonPath("$.user.lastName", is("Silva")))
                 .andExpect(jsonPath("$.user.username", is("jose_silva0")))
                 .andExpect(jsonPath("$.user.email", is("silva@email.com")))
                 .andExpect(jsonPath("$.user.profile.profileName", is("BASIC")))
@@ -1292,8 +1297,9 @@ public class UserControllerIT {
             "user_id param is null and has authority 'myuser:edit'")
     @Test
     void basicUserShouldEditYourUserWithSuccessIfHasSuitableAuthority() throws Exception {
-        UserUpdateDTO userUpdateDTO = new UserUpdateDTO("newJose", "new_jose@email.com",
-                Profile.ProfileName.BASIC, true, true, true, true);
+        UserUpdateDTO userUpdateDTO = new UserUpdateDTO("Joao", "Silva", "newJose",
+                "new_jose@email.com", Profile.ProfileName.BASIC,
+                true, true, true, true);
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
@@ -1329,8 +1335,9 @@ public class UserControllerIT {
             "user_id param is null and has authority 'myuser:edit'")
     @Test
     void modUserShouldEditYourUserWithSuccessIfHasSuitableAuthority() throws Exception {
-        UserUpdateDTO userUpdateDTO = new UserUpdateDTO("newMaria", "new_maria@email.com",
-                Profile.ProfileName.MOD, true, true, true, true);
+        UserUpdateDTO userUpdateDTO = new UserUpdateDTO("Maria", "Silva", "newMaria",
+                "new_maria@email.com", Profile.ProfileName.MOD,
+                true, true, true, true);
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
@@ -1367,8 +1374,9 @@ public class UserControllerIT {
             "user_id param is null")
     @Test
     void admUserShouldEditYourUserWithSuccessIfUserIdParamIsNull() throws Exception {
-        UserUpdateDTO userUpdateDTO = new UserUpdateDTO("newJoao", "new_joao@email.com",
-                Profile.ProfileName.ADM, true, true, true, true);
+        UserUpdateDTO userUpdateDTO = new UserUpdateDTO("Joao", "Silva", "newJoao",
+                "new_joao@email.com", Profile.ProfileName.ADM,
+                true, true, true, true);
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
@@ -1405,8 +1413,9 @@ public class UserControllerIT {
             "user_id param isn't null")
     @Test
     void admUserShouldEditOtherUserWithSuccessIfUserIdParamIsNotNull() throws Exception {
-        UserUpdateDTO userUpdateDTO = new UserUpdateDTO("maria_silva", "maria@email.com",
-                Profile.ProfileName.MOD, true, true, true, true);
+        UserUpdateDTO userUpdateDTO = new UserUpdateDTO("Maria", "Silva", "maria_silva",
+                "maria@email.com", Profile.ProfileName.MOD,
+                true, true, true, true);
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
                         .queryParam("user_id", "2")
@@ -1443,8 +1452,9 @@ public class UserControllerIT {
             "or yourself with user_id param not null")
     @Test
     void shouldFailIfBasicUserTryEditWithUserIdParamNotNull() throws Exception {
-        UserUpdateDTO userUpdateDTO = new UserUpdateDTO("newMaria", "new_maria@email.com",
-                Profile.ProfileName.MOD, true, true, true, true);
+        UserUpdateDTO userUpdateDTO = new UserUpdateDTO("Maria", "Silva", "newMaria",
+                "new_maria@email.com", Profile.ProfileName.MOD,
+                true, true, true, true);
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
                         .queryParam("user_id", "2")
@@ -1471,8 +1481,9 @@ public class UserControllerIT {
             "or yourself with user_id param not null")
     @Test
     void shouldFailIfModUserTryEditWithUserIdParamNotNull() throws Exception {
-        UserUpdateDTO userUpdateDTO = new UserUpdateDTO("jose_silva0", "jose_silva0@email.com",
-                Profile.ProfileName.BASIC, true, true, true, true);
+        UserUpdateDTO userUpdateDTO = new UserUpdateDTO("Jose", "Silva", "jose_silva0",
+                "jose_silva0@email.com", Profile.ProfileName.BASIC, true, true,
+                true, true);
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
                         .queryParam("user_id", "1")

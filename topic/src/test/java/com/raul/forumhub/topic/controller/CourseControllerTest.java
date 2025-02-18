@@ -232,8 +232,8 @@ public class CourseControllerTest {
     void shouldFailToEditCourseIfUnauthenticated() throws Exception {
         final CourseRequestDTO courseUpdateDTO = new CourseRequestDTO("Como criar uma API Rest escalável", Course.Category.C);
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/courses/edit")
-                        .queryParam("courseName", "Criação de uma API Rest")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/courses/edit/{courseName}",
+                        "Criação de uma API Rest")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
@@ -251,8 +251,8 @@ public class CourseControllerTest {
     void shouldFailToEditCourseIfUserIsADMButHasNotSuitableAuthority() throws Exception {
         final CourseRequestDTO courseUpdateDTO = new CourseRequestDTO("Como criar uma API Rest escalável", Course.Category.C);
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/courses/edit")
-                        .queryParam("courseName", "Criação de uma API Rest")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/courses/edit/{courseName}",
+                        "Criação de uma API Rest")
                         .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_ADM")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -271,8 +271,8 @@ public class CourseControllerTest {
     void shouldFailToEditCourseIfUserHasSuitableAuthorityButNotIsADM() throws Exception {
         final CourseRequestDTO courseUpdateDTO = new CourseRequestDTO("Como criar uma API Rest escalável", Course.Category.C);
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/courses/edit")
-                        .queryParam("courseName", "Criação de uma API Rest")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/courses/edit/{courseName}",
+                        "Criação de uma API Rest")
                         .with(jwt().authorities(new SimpleGrantedAuthority("SCOPE_course:edit")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -283,30 +283,6 @@ public class CourseControllerTest {
         BDDMockito.verifyNoInteractions(this.courseService);
 
     }
-
-
-    @DisplayName("Should fail with status code 400 when attempt edit course if course name property " +
-            "of query param is sent empty")
-    @Test
-    void shouldFailIfCourseNamePropertyOfQueryParamIsEmptyWhenEditCourse() throws Exception {
-        final CourseRequestDTO courseUpdateDTO = new CourseRequestDTO("Como criar uma API Rest escalável", Course.Category.C);
-
-        this.mockMvc.perform(put("/forumhub.io/api/v1/courses/edit")
-                        .queryParam("courseName", "")
-                        .with(jwt().authorities(
-                                new SimpleGrantedAuthority("SCOPE_course:edit"),
-                                new SimpleGrantedAuthority("ROLE_ADM")))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .content(new ObjectMapper()
-                                .writeValueAsString(courseUpdateDTO)))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.detail", is("O nome do curso não pode ser vazio")));
-
-        BDDMockito.verifyNoInteractions(this.courseService);
-
-    }
-
 
     @DisplayName("Should edit course with success if user ADM authenticated has authority 'course:edit'")
     @Test
@@ -319,8 +295,8 @@ public class CourseControllerTest {
         BDDMockito.given(this.courseService.updateCourse("Criação de uma API Rest", courseUpdateDTO))
                 .willReturn(new CourseResponseDTO(course));
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/courses/edit")
-                        .queryParam("courseName", "Criação de uma API Rest")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/courses/edit/{courseName}",
+                        "Criação de uma API Rest")
                         .with(jwt().authorities(
                                 new SimpleGrantedAuthority("SCOPE_course:edit"),
                                 new SimpleGrantedAuthority("ROLE_ADM")))
@@ -340,8 +316,8 @@ public class CourseControllerTest {
     @DisplayName("Should fail with status code 401 when delete course if unauthenticated")
     @Test
     void shouldFailToDeleteCourseIfUnauthenticated() throws Exception {
-        this.mockMvc.perform(delete("/forumhub.io/api/v1/courses/delete")
-                        .queryParam("courseName", "Gerenciamento de contêiners")
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/courses/delete/{courseName}",
+                        "Gerenciamento de contêiners")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isUnauthorized());
@@ -355,8 +331,8 @@ public class CourseControllerTest {
             "hasn't authority course:delete")
     @Test
     void shouldFailToDeleteCourseIfUserIsADMButHasNotSuitableAuthority() throws Exception {
-        this.mockMvc.perform(delete("/forumhub.io/api/v1/courses/delete")
-                        .queryParam("courseName", "Gerenciamento de contêiners")
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/courses/delete/{courseName}",
+                        "Gerenciamento de contêiners")
                         .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_ADM")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -371,8 +347,8 @@ public class CourseControllerTest {
             " course:delete, but isn't ADM")
     @Test
     void shouldFailToDeleteCourseIfUserHasSuitableAuthorityButNotIsADM() throws Exception {
-        this.mockMvc.perform(delete("/forumhub.io/api/v1/courses/delete")
-                        .queryParam("courseName", "Gerenciamento de contêiners")
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/courses/delete/{courseName}",
+                        "Gerenciamento de contêiners")
                         .with(jwt().authorities(new SimpleGrantedAuthority("SCOPE_course:delete")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -382,34 +358,14 @@ public class CourseControllerTest {
 
     }
 
-
-    @DisplayName("Should fail with status code 400 when attempt delete course if course name property " +
-            "of query param is sent empty")
-    @Test
-    void shouldFailIfCourseNamePropertyOfQueryParamIsEmptyWhenDeleteCourse() throws Exception {
-        this.mockMvc.perform(delete("/forumhub.io/api/v1/courses/delete")
-                        .queryParam("courseName", "")
-                        .with(jwt().authorities(
-                                new SimpleGrantedAuthority("SCOPE_course:delete"),
-                                new SimpleGrantedAuthority("ROLE_ADM")))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .characterEncoding(StandardCharsets.UTF_8))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.detail", is("O nome do curso não pode ser vazio")));
-
-        BDDMockito.verifyNoInteractions(this.courseService);
-
-
-    }
-
     @DisplayName("Should delete course with success if user ADM authenticated and " +
             "has authority 'course:delete'")
     @Test
     void shouldDeleteCourseWithSuccessIfAuthenticatedAndHasSuitableAuthority() throws Exception {
         BDDMockito.doNothing().when(this.courseService).deleteCourse("renciamento de contêiners");
 
-        this.mockMvc.perform(delete("/forumhub.io/api/v1/courses/delete")
-                        .queryParam("courseName", "Gerenciamento de contêiners")
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/courses/delete/{courseName}",
+                        "Gerenciamento de contêiners")
                         .with(jwt().authorities(
                                 new SimpleGrantedAuthority("SCOPE_course:delete"),
                                 new SimpleGrantedAuthority("ROLE_ADM")))

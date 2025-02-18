@@ -54,8 +54,8 @@ public class TopicController {
     }
 
     @PreAuthorize("hasAuthority('SCOPE_topic:edit')")
-    @PutMapping("/edit")
-    public ResponseEntity<TopicResponseDTO> updateTopic(@RequestParam Long topic_id, @Valid @RequestBody TopicUpdateRequestDTO topicUpdateRequestDTO,
+    @PutMapping("/edit/{topic_id}")
+    public ResponseEntity<TopicResponseDTO> updateTopic(@PathVariable Long topic_id, @Valid @RequestBody TopicUpdateRequestDTO topicUpdateRequestDTO,
                                                         @AuthenticationPrincipal Jwt jwt){
 
         Long user_id = Long.parseLong(jwt.getClaim("user_id"));
@@ -65,8 +65,8 @@ public class TopicController {
     }
 
     @PreAuthorize("hasAuthority('SCOPE_topic:delete')")
-    @DeleteMapping("/delete")
-    public ResponseEntity<HttpStatusMessage> deleteTopic(@RequestParam Long topic_id, @AuthenticationPrincipal Jwt jwt){
+    @DeleteMapping("/delete/{topic_id}")
+    public ResponseEntity<HttpStatusMessage> deleteTopic(@PathVariable Long topic_id, @AuthenticationPrincipal Jwt jwt){
 
         Long user_id = Long.parseLong(jwt.getClaim("user_id"));
         topicService.deleteTopic(topic_id, user_id);

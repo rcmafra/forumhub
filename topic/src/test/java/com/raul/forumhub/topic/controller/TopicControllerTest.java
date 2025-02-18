@@ -157,7 +157,7 @@ class TopicControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$..getTopicDTOList.length()", is(3)))
+                .andExpect(jsonPath("$..topicResponseDTOList.length()", is(3)))
                 .andExpect(jsonPath("$..page.[?(@.number == 0)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.size == 3)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.totalElements == 3)]").exists())
@@ -192,10 +192,10 @@ class TopicControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$..getTopicDTOList[0].[?(@.topic.id == 3)]").exists())
-                .andExpect(jsonPath("$..getTopicDTOList[1].[?(@.topic.id == 1)]").exists())
-                .andExpect(jsonPath("$..getTopicDTOList[2].[?(@.topic.id == 2)]").exists())
-                .andExpect(jsonPath("$..getTopicDTOList.length()", is(3)))
+                .andExpect(jsonPath("$..topicResponseDTOList[0].[?(@.topic.id == 3)]").exists())
+                .andExpect(jsonPath("$..topicResponseDTOList[1].[?(@.topic.id == 1)]").exists())
+                .andExpect(jsonPath("$..topicResponseDTOList[2].[?(@.topic.id == 2)]").exists())
+                .andExpect(jsonPath("$..topicResponseDTOList.length()", is(3)))
                 .andExpect(jsonPath("$..page.[?(@.number == 0)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.size == 10)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.totalElements == 3)]").exists())
@@ -232,11 +232,11 @@ class TopicControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$..getTopicDTOList[0].[?(@.topic.id == 3)]").exists())
-                .andExpect(jsonPath("$..getTopicDTOList[0].[?(@.topic.status == \"SOLVED\")]").exists())
-                .andExpect(jsonPath("$..getTopicDTOList[1].[?(@.topic.id == 2)]").exists())
-                .andExpect(jsonPath("$..getTopicDTOList[1].[?(@.topic.status == \"UNSOLVED\")]").exists())
-                .andExpect(jsonPath("$..getTopicDTOList.length()", is(2)))
+                .andExpect(jsonPath("$..topicResponseDTOList[0].[?(@.topic.id == 3)]").exists())
+                .andExpect(jsonPath("$..topicResponseDTOList[0].[?(@.topic.status == \"SOLVED\")]").exists())
+                .andExpect(jsonPath("$..topicResponseDTOList[1].[?(@.topic.id == 2)]").exists())
+                .andExpect(jsonPath("$..topicResponseDTOList[1].[?(@.topic.status == \"UNSOLVED\")]").exists())
+                .andExpect(jsonPath("$..topicResponseDTOList.length()", is(2)))
                 .andExpect(jsonPath("$..page.[?(@.number == 0)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.size == 2)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.totalElements == 2)]").exists())
@@ -270,10 +270,10 @@ class TopicControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$..getTopicDTOList[0].[?(@.topic.id == 3)]").exists())
-                .andExpect(jsonPath("$..getTopicDTOList[1].[?(@.topic.id == 1)]").exists())
-                .andExpect(jsonPath("$..getTopicDTOList[2].[?(@.topic.id == 2)]").exists())
-                .andExpect(jsonPath("$..getTopicDTOList.length()", is(3)))
+                .andExpect(jsonPath("$..topicResponseDTOList[0].[?(@.topic.id == 3)]").exists())
+                .andExpect(jsonPath("$..topicResponseDTOList[1].[?(@.topic.id == 1)]").exists())
+                .andExpect(jsonPath("$..topicResponseDTOList[2].[?(@.topic.id == 2)]").exists())
+                .andExpect(jsonPath("$..topicResponseDTOList.length()", is(3)))
                 .andExpect(jsonPath("$..page.[?(@.number == 0)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.size == 10)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.totalElements == 3)]").exists())
@@ -345,8 +345,7 @@ class TopicControllerTest {
                 Status.UNSOLVED, 1L
         );
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/edit")
-                        .queryParam("topic_id", "1")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/edit/{topic_id}", 1)
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -368,8 +367,7 @@ class TopicControllerTest {
                 Status.UNSOLVED, 1L
         );
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/edit")
-                        .queryParam("topic_id", "unexpected")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/edit/{topic_id}", "unexpected")
                         .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:edit")))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -424,8 +422,7 @@ class TopicControllerTest {
         BDDMockito.given(this.topicService.updateTopic(1L, 1L, topicUpdateRequestDTO))
                 .willReturn(new TopicResponseDTO(topic));
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/edit")
-                        .queryParam("topic_id", "1")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/edit/{topic_id}", 1)
                         .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:edit")))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -449,8 +446,7 @@ class TopicControllerTest {
             " when delete topic")
     @Test
     void shouldFailIfUserHasNotSuitableAuthorityWhenDeleteTopic() throws Exception {
-        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/delete")
-                        .queryParam("topic_id", "1")
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/delete/{topic_id}", 1)
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -459,29 +455,11 @@ class TopicControllerTest {
         BDDMockito.verifyNoInteractions(this.topicService);
     }
 
-
-    @DisplayName("Should fail with status code 400 when attempt delete topic if topic_id property " +
-            "of query param is sent empty")
-    @Test
-    void shouldFailIfTopicIdPropertyOfQueryParamIsEmptyWhenDeleteTopic() throws Exception {
-        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics")
-                        .queryParam("topic_id", "")
-                        .with(jwt().jwt(JWT)
-                                .authorities(new SimpleGrantedAuthority("SCOPE_topic:delete")))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .characterEncoding(StandardCharsets.UTF_8))
-                .andExpect(status().isBadRequest());
-
-        BDDMockito.verifyNoInteractions(this.topicService);
-
-    }
-
     @DisplayName("Should fail with status code 400 when delete topic with" +
             " param different of type number")
     @Test
     void shouldFailToDeleteTopicIfParamDifferentOfTypeNumber() throws Exception {
-        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/delete")
-                        .queryParam("topic_id", "unexpected")
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/delete/{topic_id}", "unexpected")
                         .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:delete")))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -498,8 +476,7 @@ class TopicControllerTest {
     void shouldDeleteTopicWithSuccessIfUserHasSuitableAuthority() throws Exception {
         BDDMockito.doNothing().when(this.topicService).deleteTopic(1L, 1L);
 
-        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/delete")
-                        .queryParam("topic_id", "1")
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/delete/{topic_id}", 1)
                         .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:delete")))
                         .contentType(MediaType.APPLICATION_JSON)

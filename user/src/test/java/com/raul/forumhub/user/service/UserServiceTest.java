@@ -401,8 +401,9 @@ public class UserServiceTest {
     void shouldFailToEditUserIfInformedUserNotExists() {
         BDDMockito.given(this.userRepository.findById(4L)).willThrow(InstanceNotFoundException.class);
 
-        UserUpdateDTO userUpdateDTO = new UserUpdateDTO("marcus_silva", "marcus@email.com",
-                Profile.ProfileName.BASIC, true, true, true, true);
+        UserUpdateDTO userUpdateDTO = new UserUpdateDTO("Marcus", "Silva", "marcus_silva",
+                "marcus@email.com", Profile.ProfileName.BASIC, true, true,
+                true, true);
 
         assertThrows(InstanceNotFoundException.class,
                 () -> this.userService.updateUser(4L, Profile.ProfileName.BASIC, userUpdateDTO),
@@ -424,8 +425,9 @@ public class UserServiceTest {
         BDDMockito.given(this.profileRepository.findByProfileName(Profile.ProfileName.BASIC))
                 .willThrow(InstanceNotFoundException.class);
 
-        UserUpdateDTO userUpdateDTO = new UserUpdateDTO("marcus_silva", "marcus@email.com",
-                Profile.ProfileName.BASIC, true, true, true, true);
+        UserUpdateDTO userUpdateDTO = new UserUpdateDTO("Marcus", "Silva", "marcus_silva",
+                "marcus@email.com", Profile.ProfileName.BASIC, true, true,
+                true, true);
 
         assertThrows(InstanceNotFoundException.class,
                 () -> this.userService.updateUser(1L, Profile.ProfileName.BASIC, userUpdateDTO),
@@ -450,12 +452,15 @@ public class UserServiceTest {
         BDDMockito.given(this.profileRepository.findByProfileName(Profile.ProfileName.ADM))
                 .willReturn(Optional.ofNullable(TestsHelper.ProfileHelper.profileList().get(2)));
 
-        UserUpdateDTO userUpdateDTO = new UserUpdateDTO("marcus_silva", "marcus@email.com",
-                Profile.ProfileName.ADM, false, true, false, true);
+        UserUpdateDTO userUpdateDTO = new UserUpdateDTO("Marcus", "Silva", "marcus_silva",
+                "marcus@email.com", Profile.ProfileName.ADM, false, true,
+                true, false);
 
 
         assertAll(
                 () -> assertDoesNotThrow(() -> this.userService.updateUser(1L, Profile.ProfileName.BASIC, userUpdateDTO)),
+                () -> assertEquals("Jose", user.getFirstName()),
+                () -> assertEquals("Silva", user.getLastName()),
                 () -> assertEquals("marcus_silva", user.getUsername()),
                 () -> assertEquals("marcus@email.com", user.getEmail()),
                 () -> assertEquals(Profile.ProfileName.BASIC, user.getProfile().getProfileName()),
@@ -485,18 +490,21 @@ public class UserServiceTest {
         BDDMockito.given(this.profileRepository.findByProfileName(Profile.ProfileName.ADM))
                 .willReturn(Optional.ofNullable(TestsHelper.ProfileHelper.profileList().get(2)));
 
-        UserUpdateDTO userUpdateDTO = new UserUpdateDTO("marcus_silva", "marcus@email.com",
-                Profile.ProfileName.ADM, false, true, false, true);
+        UserUpdateDTO userUpdateDTO = new UserUpdateDTO("Marcus", "Silva", "marcus_silva",
+                "marcus@email.com", Profile.ProfileName.ADM, false, true,
+                true, false);
 
         assertAll(
                 () -> assertDoesNotThrow(() -> this.userService.updateUser(1L, Profile.ProfileName.ADM, userUpdateDTO)),
+                () -> assertEquals("Marcus", user.getFirstName()),
+                () -> assertEquals("Silva", user.getLastName()),
                 () -> assertEquals("marcus_silva", user.getUsername()),
                 () -> assertEquals("marcus@email.com", user.getEmail()),
                 () -> assertEquals(Profile.ProfileName.ADM, user.getProfile().getProfileName()),
                 () -> assertFalse(user.isAccountNonExpired()),
                 () -> assertTrue(user.isAccountNonLocked()),
-                () -> assertFalse(user.isCredentialsNonExpired()),
-                () -> assertTrue(user.isEnabled())
+                () -> assertTrue(user.isCredentialsNonExpired()),
+                () -> assertFalse(user.isEnabled())
         );
 
 
