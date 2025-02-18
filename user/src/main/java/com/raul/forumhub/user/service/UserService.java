@@ -66,6 +66,8 @@ public class UserService {
         user.setEmail(userUpdateDTO.email());
 
         if (claimUserRole.equals(Profile.ProfileName.ADM)) {
+            user.setFirstName(userUpdateDTO.firstName());
+            user.setLastName(userUpdateDTO.lastName());
             user.setProfile(profile);
             user.setAccountNonExpired(userUpdateDTO.accountNonExpired());
             user.setAccountNonLocked(userUpdateDTO.accountNonLocked());
