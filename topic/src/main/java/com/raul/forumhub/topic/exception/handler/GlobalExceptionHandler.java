@@ -8,6 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.hibernate.exception.DataException;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -42,19 +43,26 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(entity, headers(), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(PropertyReferenceException.class)
+    private ResponseEntity<ExceptionEntity> propertyPathExceptionResolver(PropertyReferenceException ex, HttpServletRequest request) {
+        String detail = String.format("A propriedade '%s' não existe", ex.getPropertyName());
+        ExceptionEntity entity = new ExceptionEntity(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(),
+                "Falha de validação", detail, request.getRequestURI());
+        return new ResponseEntity<>(entity, headers(), HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(DataAccessException.class)
     private ResponseEntity<ExceptionEntity> dataAccessExceptionResolver(DataAccessException ex, HttpServletRequest request) {
-        ResponseEntity<ExceptionEntity> response = null;
         if (ex.getCause() instanceof org.hibernate.exception.ConstraintViolationException) {
-            response = new ResponseEntity<>(new ExceptionEntity(LocalDateTime.now(), HttpStatus.CONFLICT.value(),
+            return new ResponseEntity<>(new ExceptionEntity(LocalDateTime.now(), HttpStatus.CONFLICT.value(),
                     "Solicitação não processada", "Payload conflitante", request.getRequestURI()),
                     headers(), HttpStatus.CONFLICT);
-        } else if ((ex.getCause() instanceof DataException && ((DataException) ex.getCause()).getErrorCode() == 22001)) {
-            response = new ResponseEntity<>(new ExceptionEntity(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(),
+        } else if ((ex.getCause() instanceof DataException && ((DataException) ex.getCause()).getSQLException().getSQLState().equals("22001"))) {
+            return new ResponseEntity<>(new ExceptionEntity(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(),
                     "Solicitação não processada", "Payload com valor muito grande", request.getRequestURI()),
                     headers(), HttpStatus.BAD_REQUEST);
         }
-        return response;
+        return notExpectedExceptionResolver(request);
     }
 
     @ExceptionHandler({HttpMessageNotReadableException.class, IllegalArgumentException.class,
@@ -115,7 +123,7 @@ public class GlobalExceptionHandler {
     }
 
 
-    @ExceptionHandler(Exception.class)
+    //    @ExceptionHandler(Exception.class)
     private ResponseEntity<ExceptionEntity> notExpectedExceptionResolver(HttpServletRequest request) {
         ExceptionEntity entity = new ExceptionEntity(LocalDateTime.now(), HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 "Solicitação não processada", "Erro inesperado no servidor", request.getRequestURI());
