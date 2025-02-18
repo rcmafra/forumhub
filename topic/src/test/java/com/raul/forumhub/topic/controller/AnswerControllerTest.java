@@ -130,7 +130,7 @@ public class AnswerControllerTest {
     @DisplayName("Should fail with status code 401 when mark answer best if user unauthenticated")
     @Test
     void shouldFailToMarkAnswerBestIfUnauthenticated() throws Exception {
-        this.mockMvc.perform(post("/forumhub.io/api/v1/topics/{topic_id}/markBestAnswer/{answer_id}",
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/markBestAnswer/{answer_id}",
                         1, 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -159,7 +159,7 @@ public class AnswerControllerTest {
     void shouldMarkAnswerBestWithSuccessIfAuthenticated() throws Exception {
         BDDMockito.doNothing().when(this.answerService).markBestAnswer(1L, 1L, 1L);
 
-        this.mockMvc.perform(post("/forumhub.io/api/v1/topics/{topic_id}/markBestAnswer/{answer_id}", 
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/markBestAnswer/{answer_id}",
                         1, 1)
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)

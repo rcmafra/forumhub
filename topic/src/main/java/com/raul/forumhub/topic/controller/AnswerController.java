@@ -35,7 +35,7 @@ public class AnswerController {
     }
 
     @IsAuthenticated
-    @PostMapping("/{topic_id}/markBestAnswer/{answer_id}")
+    @PutMapping("/{topic_id}/markBestAnswer/{answer_id}")
     public ResponseEntity<HttpStatusMessage> markBestAnswer(@PathVariable Long topic_id, @PathVariable Long answer_id,
                                                             @AuthenticationPrincipal Jwt jwt) {
 
