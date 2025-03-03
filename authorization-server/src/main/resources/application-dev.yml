@@ -30,11 +30,13 @@ registered:
     topic:
       name: forumhub-topic
       client-id: hub-topic
-      password: topic123456
+      password: aHViLXRvcGljOmNmZjM3MWJmLWFhNDYtNDNjOC04ODdlLTI4MmJjZDM3ZjEzNw==
+      topicUrl: http://localhost:8080
     user:
       name: forumhub-user
       client-id: hub-user
-      password: user123456
+      password: aHViLXVzZXI6ZWJjNTFlNGItMjQxOC00MTNkLTlhNWUtNDU2Yzk1YjQ3Yzcz
+      userUrl: http://localhost:8081
 
 #Auth-Server port
 server:
