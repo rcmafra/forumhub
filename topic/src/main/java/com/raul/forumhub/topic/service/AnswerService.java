@@ -64,10 +64,11 @@ public class AnswerService {
         Answer alreadyHasBestAnswers = answersOfTheTopic.stream().filter(Answer::isBestAnswer)
                 .findFirst().orElse(null);
 
-        if (alreadyHasBestAnswers != null)
+        if (alreadyHasBestAnswers != null) {
             throw new AnswerServiceException("Este tópico já possui a resposta [ID: "
                     .concat(alreadyHasBestAnswers.getId().toString())
                     .concat("] como melhor resposta"));
+        }
 
         Answer answer = this.getAnswerById(answer_id);
 
