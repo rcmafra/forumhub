@@ -10,7 +10,6 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,7 +24,7 @@ public class CourseController {
         this.courseService = courseService;
     }
 
-    @PreAuthorize("hasRole('ADM') and hasAuthority('SCOPE_course:create')")
+    @PreAuthorize("hasRole('ADM') and hasAuthority('SCOPE_course:write')")
     @PostMapping("/create")
     public ResponseEntity<HttpStatusMessage> createCourse(@Valid @RequestBody CourseRequestDTO courseRequestDTO) {
 
@@ -45,7 +44,6 @@ public class CourseController {
     @PutMapping("/edit/{courseName}")
     public ResponseEntity<CourseResponseDTO> updateCourse(@PathVariable String courseName,
                                                           @Valid @RequestBody CourseRequestDTO courseUpdateDTO) {
-        Assert.hasText(courseName, "O nome do curso não pode ser vazio");
 
         CourseResponseDTO courseResponseDTO = this.courseService.updateCourse(courseName, courseUpdateDTO);
         return ResponseEntity.ok(courseResponseDTO);
@@ -54,7 +52,6 @@ public class CourseController {
     @PreAuthorize("hasRole('ADM') and hasAuthority('SCOPE_course:delete')")
     @DeleteMapping("/delete/{courseName}")
     public ResponseEntity<HttpStatusMessage> deleteCourse(@PathVariable String courseName) {
-        Assert.hasText(courseName, "O nome do curso não pode ser vazio");
 
         this.courseService.deleteCourse(courseName);
         return ResponseEntity.ok(new HttpStatusMessage("HttpStatusCode OK"));
