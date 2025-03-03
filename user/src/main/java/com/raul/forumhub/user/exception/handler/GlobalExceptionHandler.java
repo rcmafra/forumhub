@@ -50,9 +50,9 @@ public class GlobalExceptionHandler {
                     "Solicitação não processada", "Payload conflitante", request.getRequestURI()),
                     headers(), HttpStatus.CONFLICT);
         } else if ((ex.getCause() instanceof DataException && ((DataException) ex.getCause()).getErrorCode() == 22001)) {
-            return new ResponseEntity<>(new ExceptionEntity(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(),
+            return new ResponseEntity<>(new ExceptionEntity(LocalDateTime.now(), HttpStatus.PAYLOAD_TOO_LARGE.value(),
                     "Solicitação não processada", "Payload com valor muito grande", request.getRequestURI()),
-                    headers(), HttpStatus.BAD_REQUEST);
+                    headers(), HttpStatus.PAYLOAD_TOO_LARGE);
         }
         return this.notExpectedExceptionResolver(request);
     }

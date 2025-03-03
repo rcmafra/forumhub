@@ -58,9 +58,9 @@ public class GlobalExceptionHandler {
                     "Solicitação não processada", "Payload conflitante", request.getRequestURI()),
                     headers(), HttpStatus.CONFLICT);
         } else if ((ex.getCause() instanceof DataException && ((DataException) ex.getCause()).getSQLException().getSQLState().equals("22001"))) {
-            return new ResponseEntity<>(new ExceptionEntity(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(),
+            return new ResponseEntity<>(new ExceptionEntity(LocalDateTime.now(), HttpStatus.PAYLOAD_TOO_LARGE.value(),
                     "Solicitação não processada", "Payload com valor muito grande", request.getRequestURI()),
-                    headers(), HttpStatus.BAD_REQUEST);
+                    headers(), HttpStatus.PAYLOAD_TOO_LARGE);
         }
         return notExpectedExceptionResolver(request);
     }
@@ -123,7 +123,7 @@ public class GlobalExceptionHandler {
     }
 
 
-    //    @ExceptionHandler(Exception.class)
+        @ExceptionHandler(Exception.class)
     private ResponseEntity<ExceptionEntity> notExpectedExceptionResolver(HttpServletRequest request) {
         ExceptionEntity entity = new ExceptionEntity(LocalDateTime.now(), HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 "Solicitação não processada", "Erro inesperado no servidor", request.getRequestURI());
