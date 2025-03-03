@@ -16,10 +16,14 @@ public class RegisteredClientProperties {
     String topicClientID;
     @Value("${registered.client.topic.password}")
     String topicPassword;
+    @Value("${registered.client.topic.topicUrl}")
+    String topicUrl;
     @Value("${registered.client.user.name}")
     String userName;
     @Value("${registered.client.user.client-id}")
     String userClientID;
     @Value("${registered.client.user.password}")
     String userPassword;
+    @Value("${registered.client.user.userUrl}")
+    String userUrl;
 }
