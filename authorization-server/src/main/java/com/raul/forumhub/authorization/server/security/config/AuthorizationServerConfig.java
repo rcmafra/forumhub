@@ -4,7 +4,6 @@ import com.raul.forumhub.authorization.server.domain.UserEntity;
 import com.raul.forumhub.authorization.server.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -46,9 +45,11 @@ import java.util.UUID;
 public class AuthorizationServerConfig {
 
     private final RegisteredClientProperties clientProperties;
+    private final CorsConfig corsConfig;
 
-    public AuthorizationServerConfig(RegisteredClientProperties clientProperties) {
+    public AuthorizationServerConfig(RegisteredClientProperties clientProperties, CorsConfig corsConfig) {
         this.clientProperties = clientProperties;
+        this.corsConfig = corsConfig;
     }
 
     @Bean
@@ -56,7 +57,8 @@ public class AuthorizationServerConfig {
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
         http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
                 .oidc(Customizer.withDefaults());
-        http.exceptionHandling((exceptions) -> exceptions
+        http.cors((cors) -> cors.configurationSource(corsConfig))
+                .exceptionHandling((exceptions) -> exceptions
                         .defaultAuthenticationEntryPointFor(
                                 new LoginUrlAuthenticationEntryPoint("/login"),
                                 new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
@@ -71,9 +73,9 @@ public class AuthorizationServerConfig {
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests((authorize) ->
                         authorize.anyRequest().authenticated())
+                .cors((cors) -> cors.configurationSource(corsConfig))
                 .formLogin(Customizer.withDefaults()).build();
     }
-
 
     @Bean
     public OAuth2TokenCustomizer<JwtEncodingContext> tokenCustomizer(UserRepository userRepository) {
@@ -104,10 +106,10 @@ public class AuthorizationServerConfig {
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
                 .redirectUri("https://oauth.pstmn.io/v1/callback")
                 .redirectUri("https://oidcdebugger.com/debug")
-                .redirectUri("http://localhost:8082/authorized")
+                .redirectUri("http://localhost:8080/forumhub.io/api/v1/swagger-ui/oauth2-redirect.html")
                 .scopes((scp) -> scp.addAll(Set.of(
                         "topic:delete", "topic:edit",
-                        "course:create", "course:delete", "course:edit",
+                        "course:write", "course:delete", "course:edit",
                         "answer:delete", "answer:edit")
                 ))
                 .clientSettings(ClientSettings.builder()
@@ -148,7 +150,6 @@ public class AuthorizationServerConfig {
         return clientRepository;
     }
 
-    @Profile("prod")
     private void saveRegisteredClient(List<RegisteredClient> clients, JdbcRegisteredClientRepository repository) {
         clients.forEach(client -> {
             if (Objects.isNull(repository.findByClientId(client.getClientId()))) {
