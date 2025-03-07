@@ -75,8 +75,6 @@ public class AnswerService {
         answer.setBestAnswer(true);
 
         this.topicService.saveTopic(topic);
-        this.saveAnswer(answer);
-
 
     }
 
