@@ -40,7 +40,7 @@ public class AnswerService {
         answer.setTopic(topic);
         answer.setAuthor(author);
 
-        answerRepository.save(answer);
+        this.saveAnswer(answer);
     }
 
 
