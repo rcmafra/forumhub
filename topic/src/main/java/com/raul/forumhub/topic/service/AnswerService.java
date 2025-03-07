@@ -65,9 +65,8 @@ public class AnswerService {
                 .findFirst().orElse(null);
 
         if (alreadyHasBestAnswers != null) {
-            throw new AnswerServiceException("Este tópico já possui a resposta [ID: "
-                    .concat(alreadyHasBestAnswers.getId().toString())
-                    .concat("] como melhor resposta"));
+            throw new AnswerServiceException(String.format("Este tópico já possui a resposta [ID: %d] como melhor resposta",
+                    alreadyHasBestAnswers.getId()));
         }
 
         Answer answer = this.getAnswerById(answer_id);
