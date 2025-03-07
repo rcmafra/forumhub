@@ -46,7 +46,7 @@ public class AnswerController {
     }
 
     @PreAuthorize("hasAuthority('SCOPE_answer:edit')")
-    @PutMapping("/{topic_id}/answers/edit/{answer_id}")
+    @PutMapping("/{topic_id}/answers/{answer_id}/edit")
     public ResponseEntity<AnswerResponseDTO> updateAnswer(@PathVariable Long topic_id, @PathVariable Long answer_id,
                                                           @AuthenticationPrincipal Jwt jwt, @Valid @RequestBody AnswerRequestDTO answerRequestDTO) {
 
@@ -57,7 +57,7 @@ public class AnswerController {
     }
 
     @PreAuthorize("hasAuthority('SCOPE_answer:delete')")
-    @DeleteMapping("/{topic_id}/answers/delete/{answer_id}")
+    @DeleteMapping("/{topic_id}/answers/{answer_id}/delete")
     public ResponseEntity<HttpStatusMessage> deleteAnswer(@PathVariable Long topic_id, @PathVariable Long answer_id,
                                                           @AuthenticationPrincipal Jwt jwt) {
 
