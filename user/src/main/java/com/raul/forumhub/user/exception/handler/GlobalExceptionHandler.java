@@ -1,10 +1,12 @@
 package com.raul.forumhub.user.exception.handler;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.raul.forumhub.user.exception.InstanceNotFoundException;
 import com.raul.forumhub.user.exception.MalFormatedParamUserException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ValidationException;
+import org.hibernate.exception.ConstraintViolationException;
 import org.hibernate.exception.DataException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpHeaders;
@@ -45,11 +47,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DataAccessException.class)
     private ResponseEntity<ExceptionEntity> dataAccessExceptionResolver(DataAccessException ex, HttpServletRequest request) {
-        if (ex.getCause() instanceof org.hibernate.exception.ConstraintViolationException) {
+        if (ex.getCause() instanceof ConstraintViolationException && ((ConstraintViolationException) ex.getCause())
+                .getSQLException().getSQLState().equals("23505")) {
             return new ResponseEntity<>(new ExceptionEntity(LocalDateTime.now(), HttpStatus.CONFLICT.value(),
                     "Solicitação não processada", "Payload conflitante", request.getRequestURI()),
                     headers(), HttpStatus.CONFLICT);
-        } else if ((ex.getCause() instanceof DataException && ((DataException) ex.getCause()).getErrorCode() == 22001)) {
+        } else if ((ex.getCause() instanceof DataException && ((DataException) ex.getCause()).getSQLException().getSQLState().equals("22001"))) {
             return new ResponseEntity<>(new ExceptionEntity(LocalDateTime.now(), HttpStatus.PAYLOAD_TOO_LARGE.value(),
                     "Solicitação não processada", "Payload com valor muito grande", request.getRequestURI()),
                     headers(), HttpStatus.PAYLOAD_TOO_LARGE);
@@ -57,14 +60,25 @@ public class GlobalExceptionHandler {
         return this.notExpectedExceptionResolver(request);
     }
 
-    @ExceptionHandler({HttpMessageNotReadableException.class, MethodArgumentTypeMismatchException.class})
-    private ResponseEntity<ExceptionEntity> notReadableExceptionResolver(RuntimeException ex, HttpServletRequest request) {
-        return ex instanceof MethodArgumentTypeMismatchException ?
+    @ExceptionHandler({IllegalArgumentException.class, MethodArgumentTypeMismatchException.class})
+    private ResponseEntity<ExceptionEntity> illegalArgExceptionResolver(RuntimeException ex, HttpServletRequest request) {
+        return ex instanceof IllegalArgumentException ?
                 new ResponseEntity<>(new ExceptionEntity(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(),
                         "Solicitação não processada", ex.getMessage(), request.getRequestURI()), headers(), HttpStatus.BAD_REQUEST) :
-                new ResponseEntity<>(new ExceptionEntity(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(),
-                        "Solicitação não processada", "Solicitação com valor ilegível", request.getRequestURI()),
-                        headers(), HttpStatus.BAD_REQUEST);
+                ex instanceof MethodArgumentTypeMismatchException ?
+                        new ResponseEntity<>(new ExceptionEntity(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(),
+                                "Solicitação não processada", ex.getMessage(), request.getRequestURI()), headers(), HttpStatus.BAD_REQUEST) :
+                        new ResponseEntity<>(new ExceptionEntity(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(),
+                                "Solicitação não processada", "Solicitação com valor ilegível", request.getRequestURI()),
+                                headers(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    private ResponseEntity<ExceptionEntity> notReadableExceptionResolver(HttpMessageNotReadableException ex, HttpServletRequest request) {
+        InvalidFormatException invalidEx = (InvalidFormatException) ex.getCause();
+        return new ResponseEntity<>(new ExceptionEntity(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(),
+                "Solicitação não processada", String.format("A propriedade '%s' é inválida", invalidEx.getValue()), request.getRequestURI()),
+                headers(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(InstanceNotFoundException.class)
