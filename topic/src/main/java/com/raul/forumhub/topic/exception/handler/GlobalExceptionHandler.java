@@ -1,11 +1,13 @@
 package com.raul.forumhub.topic.exception.handler;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.raul.forumhub.topic.exception.AbstractServiceException;
 import com.raul.forumhub.topic.exception.InstanceNotFoundException;
 import com.raul.forumhub.topic.exception.RestClientException;
 import com.raul.forumhub.topic.exception.ValidationException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
+import org.hibernate.exception.ConstraintViolationException;
 import org.hibernate.exception.DataException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.mapping.PropertyReferenceException;
@@ -53,7 +55,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DataAccessException.class)
     private ResponseEntity<ExceptionEntity> dataAccessExceptionResolver(DataAccessException ex, HttpServletRequest request) {
-        if (ex.getCause() instanceof org.hibernate.exception.ConstraintViolationException) {
+        if (ex.getCause() instanceof ConstraintViolationException && ((ConstraintViolationException) ex.getCause())
+                .getSQLException().getSQLState().equals("23505")) {
             return new ResponseEntity<>(new ExceptionEntity(LocalDateTime.now(), HttpStatus.CONFLICT.value(),
                     "Solicitação não processada", "Payload conflitante", request.getRequestURI()),
                     headers(), HttpStatus.CONFLICT);
@@ -61,13 +64,17 @@ public class GlobalExceptionHandler {
             return new ResponseEntity<>(new ExceptionEntity(LocalDateTime.now(), HttpStatus.PAYLOAD_TOO_LARGE.value(),
                     "Solicitação não processada", "Payload com valor muito grande", request.getRequestURI()),
                     headers(), HttpStatus.PAYLOAD_TOO_LARGE);
+        } else if (ex.getCause() instanceof ConstraintViolationException && ((ConstraintViolationException) ex.getCause())
+                .getSQLException().getSQLState().equals("23503")) {
+            return new ResponseEntity<>(new ExceptionEntity(LocalDateTime.now(), HttpStatus.CONFLICT.value(),
+                    "Solicitação não processada", "O curso informado está associado a um tópico", request.getRequestURI()),
+                    headers(), HttpStatus.CONFLICT);
         }
         return notExpectedExceptionResolver(request);
     }
 
-    @ExceptionHandler({HttpMessageNotReadableException.class, IllegalArgumentException.class,
-            MethodArgumentTypeMismatchException.class})
-    private ResponseEntity<ExceptionEntity> notReadableExceptionResolver(RuntimeException ex, HttpServletRequest request) {
+    @ExceptionHandler({IllegalArgumentException.class, MethodArgumentTypeMismatchException.class})
+    private ResponseEntity<ExceptionEntity> illegalArgExceptionResolver(RuntimeException ex, HttpServletRequest request) {
         return ex instanceof IllegalArgumentException ?
                 new ResponseEntity<>(new ExceptionEntity(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(),
                         "Solicitação não processada", ex.getMessage(), request.getRequestURI()), headers(), HttpStatus.BAD_REQUEST) :
@@ -77,6 +84,14 @@ public class GlobalExceptionHandler {
                         new ResponseEntity<>(new ExceptionEntity(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(),
                                 "Solicitação não processada", "Solicitação com valor ilegível", request.getRequestURI()),
                                 headers(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    private ResponseEntity<ExceptionEntity> notReadableExceptionResolver(HttpMessageNotReadableException ex, HttpServletRequest request) {
+        InvalidFormatException invalidEx = (InvalidFormatException) ex.getCause();
+        return new ResponseEntity<>(new ExceptionEntity(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(),
+                "Solicitação não processada", String.format("A propriedade '%s' é inválida", invalidEx.getValue()), request.getRequestURI()),
+                headers(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(RestClientException.class)
@@ -123,7 +138,7 @@ public class GlobalExceptionHandler {
     }
 
 
-        @ExceptionHandler(Exception.class)
+    @ExceptionHandler(Exception.class)
     private ResponseEntity<ExceptionEntity> notExpectedExceptionResolver(HttpServletRequest request) {
         ExceptionEntity entity = new ExceptionEntity(LocalDateTime.now(), HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 "Solicitação não processada", "Erro inesperado no servidor", request.getRequestURI());
