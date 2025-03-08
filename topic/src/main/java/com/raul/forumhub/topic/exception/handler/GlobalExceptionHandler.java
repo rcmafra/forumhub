@@ -7,6 +7,7 @@ import com.raul.forumhub.topic.exception.RestClientException;
 import com.raul.forumhub.topic.exception.ValidationException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
 import org.hibernate.exception.DataException;
 import org.springframework.dao.DataAccessException;
@@ -27,6 +28,7 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 import java.time.LocalDateTime;
 import java.util.Locale;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -70,7 +72,7 @@ public class GlobalExceptionHandler {
                     "Solicitação não processada", "O curso informado está associado a um tópico", request.getRequestURI()),
                     headers(), HttpStatus.CONFLICT);
         }
-        return notExpectedExceptionResolver(request);
+        return notExpectedExceptionResolver(ex, request);
     }
 
     @ExceptionHandler({IllegalArgumentException.class, MethodArgumentTypeMismatchException.class})
@@ -139,7 +141,8 @@ public class GlobalExceptionHandler {
 
 
     @ExceptionHandler(Exception.class)
-    private ResponseEntity<ExceptionEntity> notExpectedExceptionResolver(HttpServletRequest request) {
+    private ResponseEntity<ExceptionEntity> notExpectedExceptionResolver(Exception ex, HttpServletRequest request) {
+        log.error("Falha inesperada: {}", ex.getCause().getMessage());
         ExceptionEntity entity = new ExceptionEntity(LocalDateTime.now(), HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 "Solicitação não processada", "Erro inesperado no servidor", request.getRequestURI());
         return new ResponseEntity<>(entity, headers(), HttpStatus.INTERNAL_SERVER_ERROR);
