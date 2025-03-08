@@ -457,7 +457,7 @@ public class UserControllerIT {
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
                                 .writeValueAsString(userCreateDTO)))
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isPayloadTooLarge())
                 .andExpect(jsonPath("$.detail", is("Payload com valor muito grande")));
 
     }
@@ -478,7 +478,7 @@ public class UserControllerIT {
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
                                 .writeValueAsString(userCreateDTO)))
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isPayloadTooLarge())
                 .andExpect(jsonPath("$.detail", is("Payload com valor muito grande")));
 
     }
@@ -499,7 +499,7 @@ public class UserControllerIT {
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
                                 .writeValueAsString(userCreateDTO)))
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isPayloadTooLarge())
                 .andExpect(jsonPath("$.detail", is("Payload com valor muito grande")));
 
     }
