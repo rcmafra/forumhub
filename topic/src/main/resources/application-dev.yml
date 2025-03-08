@@ -34,7 +34,7 @@ spring:
           forumhub-user:
             provider: auth-server
             client-id: hub-user
-            client-secret: user123456
+            client-secret: aHViLXVzZXI6ZWJjNTFlNGItMjQxOC00MTNkLTlhNWUtNDU2Yzk1YjQ3Yzcz
             client-authentication-method: client_secret_basic
             authorization-grant-type: client_credentials
             client-name: forumhub-user
@@ -55,3 +55,18 @@ forumhub:
       host: 127.0.0.1
       port: 8081
       path: /forumhub.io/api/v1/users/summary-info
+
+springdoc:
+  api-docs:
+    enabled: true
+    version: openapi_3_1
+    path: /forumhub.io/api/v1/openapi.yaml
+  swagger-ui:
+    enabled: true
+    url: openapi.yaml
+    path: /forumhub.io/api/v1/swagger-ui.html
+    oauth:
+      use-basic-authentication-with-access-code-grant: true
+      use-pkce-with-authorization-code-grant: true
+      client-id: hub-topic
+      client-secret: aHViLXRvcGljOmNmZjM3MWJmLWFhNDYtNDNjOC04ODdlLTI4MmJjZDM3ZjEzNw==
