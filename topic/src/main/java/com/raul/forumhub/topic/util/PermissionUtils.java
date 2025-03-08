@@ -22,7 +22,7 @@ public class PermissionUtils {
 
     public void validateTopicOwner(Long author_id, Long loggedUser) {
         if (!author_id.equals(loggedUser)) {
-            throw new TopicServiceException("O tópico fornecido não pertence a esse autor");
+            throw new TopicServiceException("O tópico fornecido não pertence ao autor atualmente logado");
         }
         log.info("Validate topic owner ==> Passou pela validação de autor proprietário do tópico");
     }
