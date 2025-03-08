@@ -477,6 +477,27 @@ public class TopicServiceTest {
 
     }
 
+    @Test
+    void shouldFailToEditTopicIfTopicNotExists() {
+        final TopicUpdateRequestDTO topicUpdateRequestDTO = new TopicUpdateRequestDTO(
+                "Dúvida quanto a utilização do Elasticsearch",
+                "Como posso integrar minha API com o Elasticsearch para monitoração?",
+                Status.UNSOLVED, 1L
+        );
+
+        BDDMockito.given(this.topicRepository.findById(1L))
+                .willThrow(new InstanceNotFoundException("O tópico informado não existe"));
+
+        Assertions.assertThrows(InstanceNotFoundException.class,
+                () -> this.topicService.updateTopic(1L, 1L, topicUpdateRequestDTO),
+                "O tópico informado não existe");
+
+        BDDMockito.verify(this.topicRepository).findById(1L);
+        BDDMockito.verifyNoInteractions(this.courseService);
+        BDDMockito.verifyNoInteractions(this.userClientRequest);
+        BDDMockito.verifyNoMoreInteractions(this.topicRepository);
+
+    }
 
     @Test
     void shouldFailToEditTopicIfCourseNotExists() {
@@ -703,6 +724,20 @@ public class TopicServiceTest {
 
     }
 
+    @Test
+    void shouldFailToDeleteTopicIfTopicNotExists() {
+        BDDMockito.given(this.topicRepository.findById(1L))
+                .willThrow(new InstanceNotFoundException("O tópico informado não existe"));
+
+        Assertions.assertThrows(InstanceNotFoundException.class,
+                () -> this.topicService.deleteTopic(1L, 1L),
+                "O tópico informado não existe");
+
+        BDDMockito.verify(this.topicRepository).findById(1L);
+        BDDMockito.verifyNoInteractions(this.userClientRequest);
+        BDDMockito.verifyNoMoreInteractions(this.topicRepository);
+
+    }
 
     @Test
     void shouldFailToDeleteTopicIfUserServiceReturn404StatusCode() {

@@ -345,7 +345,7 @@ class TopicControllerTest {
                 Status.UNSOLVED, 1L
         );
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/edit/{topic_id}", 1)
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/edit", 1)
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -367,7 +367,7 @@ class TopicControllerTest {
                 Status.UNSOLVED, 1L
         );
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/edit/{topic_id}", "unexpected")
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/edit", "unexpected")
                         .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:edit")))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -422,7 +422,7 @@ class TopicControllerTest {
         BDDMockito.given(this.topicService.updateTopic(1L, 1L, topicUpdateRequestDTO))
                 .willReturn(new TopicResponseDTO(topic));
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/edit/{topic_id}", 1)
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/edit", 1)
                         .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:edit")))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -446,7 +446,7 @@ class TopicControllerTest {
             " when delete topic")
     @Test
     void shouldFailIfUserHasNotSuitableAuthorityWhenDeleteTopic() throws Exception {
-        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/delete/{topic_id}", 1)
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/{topic_id}/delete", 1)
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -459,7 +459,7 @@ class TopicControllerTest {
             " param different of type number")
     @Test
     void shouldFailToDeleteTopicIfParamDifferentOfTypeNumber() throws Exception {
-        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/delete/{topic_id}", "unexpected")
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/{topic_id}/delete", "unexpected")
                         .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:delete")))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -476,7 +476,7 @@ class TopicControllerTest {
     void shouldDeleteTopicWithSuccessIfUserHasSuitableAuthority() throws Exception {
         BDDMockito.doNothing().when(this.topicService).deleteTopic(1L, 1L);
 
-        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/delete/{topic_id}", 1)
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/{topic_id}/delete", 1)
                         .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:delete")))
                         .contentType(MediaType.APPLICATION_JSON)
