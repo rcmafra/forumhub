@@ -351,7 +351,7 @@ public class AnswerControllerIT {
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.detail",
-                        is("O tópico fornecido não pertence a esse autor")));
+                        is("O tópico fornecido não pertence ao autor atualmente logado")));
 
 
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
@@ -468,7 +468,7 @@ public class AnswerControllerIT {
         final AnswerRequestDTO answerUpdateDTO =
                 new AnswerRequestDTO("Primeiro teste de edição de uma resposta");
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/edit/{answer_id}",
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/edit",
                         1, 1)
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -499,7 +499,7 @@ public class AnswerControllerIT {
         final AnswerRequestDTO answerUpdateDTO =
                 new AnswerRequestDTO("Primeiro teste de edição de uma resposta");
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/edit/{answer_id}", 
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/edit", 
                         1, "unexpected")
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "2"))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_answer:edit")))
@@ -515,7 +515,7 @@ public class AnswerControllerIT {
     void shouldFailIfSolutionPropertyIsEmptyWhenEditAnswer() throws Exception {
         final AnswerRequestDTO answerUpdateDTO = new AnswerRequestDTO("");
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/edit/{answer_id}",
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/edit",
                         1, 1)
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "2"))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_answer:edit")))
@@ -546,7 +546,7 @@ public class AnswerControllerIT {
         final AnswerRequestDTO answerUpdateDTO =
                 new AnswerRequestDTO("Primeiro teste de edição de uma resposta");
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/edit/{answer_id}",
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/edit",
                         6, 1)
                         .queryParam("answer_id", "1")
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "2"))
@@ -579,7 +579,7 @@ public class AnswerControllerIT {
         final AnswerRequestDTO answerUpdateDTO =
                 new AnswerRequestDTO("Primeiro teste de edição de uma resposta");
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/edit/{answer_id}",
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/edit",
                         1, 6)
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "2"))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_answer:edit")))
@@ -615,7 +615,7 @@ public class AnswerControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(2L))
                 .willThrow(new RestClientException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/edit/{answer_id}",
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/edit",
                         1, 1)
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "2"))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_answer:edit")))
@@ -651,7 +651,7 @@ public class AnswerControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(1L))
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/edit/{answer_id}",
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/edit",
                         1, 1)
                         .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_answer:edit")))
@@ -687,7 +687,7 @@ public class AnswerControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(3L))
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(2));
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/edit/{answer_id}",
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/edit",
                         1, 4)
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "3"))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_answer:edit")))
@@ -728,7 +728,7 @@ public class AnswerControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(2L))
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/edit/{answer_id}",
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/edit",
                         1, 1)
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "2"))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_answer:edit")))
@@ -768,7 +768,7 @@ public class AnswerControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(3L))
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(2));
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/edit/{answer_id}",
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/edit",
                         1, 1)
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "3"))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_answer:edit")))
@@ -807,7 +807,7 @@ public class AnswerControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(2L))
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/edit/{answer_id}",
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/edit",
                         3, 3)
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "2"))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_answer:edit")))
@@ -839,7 +839,7 @@ public class AnswerControllerIT {
             " when delete answer")
     @Test
     void shouldFailIfUserHasNotSuitableAuthorityWhenDeleteAnswer() throws Exception {
-        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/{topic_id}/answers/delete/{answer_id}",
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/delete",
                         1, 1)
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -863,7 +863,7 @@ public class AnswerControllerIT {
             " param different of type number")
     @Test
     void shouldFailToDeleteTopicIfParamDifferentOfTypeNumber() throws Exception {
-        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/{topic_id}/answers/delete/{answer_id}",
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/delete",
                         1, "unexpected")
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "2"))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_answer:delete")))
@@ -880,7 +880,7 @@ public class AnswerControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(1L))
                 .willThrow(new RestClientException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
 
-        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/{topic_id}/answers/delete/{answer_id}",
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/delete",
                         1, 1)
                         .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_answer:delete")))
@@ -910,7 +910,7 @@ public class AnswerControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(1L))
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
 
-        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/{topic_id}/answers/delete/{answer_id}",
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/delete",
                         1, 2)
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "2"))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_answer:delete")))
@@ -941,7 +941,7 @@ public class AnswerControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(1L))
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
 
-        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/{topic_id}/answers/delete/{answer_id}",
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/delete",
                         1, 1)
                         .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_answer:delete")))
@@ -973,7 +973,7 @@ public class AnswerControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(2L))
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
-        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/{topic_id}/answers/delete/{answer_id}",
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/delete",
                         1, 1)
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "2"))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_answer:delete")))
@@ -996,7 +996,7 @@ public class AnswerControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(3L))
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(2));
 
-        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/{topic_id}/answers/delete/{answer_id}",
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/delete",
                         2, 2)
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "3"))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_answer:delete")))
@@ -1019,7 +1019,7 @@ public class AnswerControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(2L))
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
-        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/{topic_id}/answers/delete/{answer_id}",
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/delete",
                         2, 2)
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "2"))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_answer:delete")))

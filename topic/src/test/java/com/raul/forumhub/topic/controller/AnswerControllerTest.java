@@ -181,7 +181,7 @@ public class AnswerControllerTest {
         final AnswerRequestDTO answerUpdateDTO =
                 new AnswerRequestDTO("Primeiro teste de edição de uma resposta");
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/edit/{answer_id}", 
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/edit", 
                         1, 1)
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -200,7 +200,7 @@ public class AnswerControllerTest {
         final AnswerRequestDTO answerUpdateDTO =
                 new AnswerRequestDTO("Primeiro teste de edição de uma resposta");
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/edit/{answer_id}",
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/edit",
                         1, "unexpected")
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "2"))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_answer:edit")))
@@ -223,7 +223,7 @@ public class AnswerControllerTest {
         BDDMockito.given(this.answerService.updateAnswer(1L, 1L, 2L, answerUpdateDTO))
                 .willReturn(new AnswerResponseDTO(answer));
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/edit/{answer_id}",
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/edit",
                         1, 1)
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "2"))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_answer:edit")))
@@ -245,7 +245,7 @@ public class AnswerControllerTest {
             " when delete answer")
     @Test
     void shouldFailIfUserHasNotSuitableAuthorityWhenDeleteAnswer() throws Exception {
-        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/{topic_id}/answers/delete/{answer_id}",
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/delete",
                         1, 1)
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -260,7 +260,7 @@ public class AnswerControllerTest {
             " param different of type number")
     @Test
     void shouldFailToDeleteTopicIfParamDifferentOfTypeNumber() throws Exception {
-        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/{topic_id}/answers/delete/{answer_id}",
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/delete",
                         1, "unexpected")
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "2"))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_answer:delete")))
@@ -275,7 +275,7 @@ public class AnswerControllerTest {
     void shouldDeleteAnswerWithSuccessIfUserHasSuitableAuthority() throws Exception {
         BDDMockito.doNothing().when(this.answerService).deleteAnswer(1L, 1L, 2L);
 
-        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/{topic_id}/answers/delete/{answer_id}",
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/delete",
                         1, 1)
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "2"))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_answer:delete")))

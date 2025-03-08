@@ -270,7 +270,6 @@ public class AnswerServiceTest {
         BDDMockito.verify(this.userClientRequest).getUserById(1L);
         BDDMockito.verify(this.answerRepository).findById(1L);
         BDDMockito.verify(this.topicService).saveTopic(any(Topic.class));
-        BDDMockito.verify(this.answerRepository).save(any(Answer.class));
         BDDMockito.verifyNoMoreInteractions(this.topicService);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
         BDDMockito.verifyNoMoreInteractions(this.answerRepository);
