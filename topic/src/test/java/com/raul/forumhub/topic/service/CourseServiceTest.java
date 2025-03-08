@@ -108,7 +108,7 @@ public class CourseServiceTest {
     void shouldFailIfCourseNamePropertyOfDtoObjectIsEmptyWhenEditCourse() {
         final CourseRequestDTO courseUpdateDTO = new CourseRequestDTO("", Course.Category.C);
 
-        BDDMockito.given(this.courseRepository.findCourseByName("Criação de uma API Rest"))
+        BDDMockito.given(this.courseRepository.findById(1L))
                 .willReturn(Optional.of(TestsHelper.CourseHelper.courseList().get(0)));
 
         BDDMockito.given(this.courseRepository.save(any(Course.class)))
@@ -116,11 +116,10 @@ public class CourseServiceTest {
 
 
         Assertions.assertThrows(ConstraintViolationException.class,
-                () -> this.courseService.updateCourse(
-                        "Criação de uma API Rest", courseUpdateDTO));
+                () -> this.courseService.updateCourse(1L, courseUpdateDTO));
 
 
-        BDDMockito.verify(this.courseRepository).findCourseByName("Criação de uma API Rest");
+        BDDMockito.verify(this.courseRepository).findById(1L);
         BDDMockito.verify(this.courseRepository).save(any(Course.class));
         BDDMockito.verifyNoMoreInteractions(this.courseRepository);
     }
@@ -132,18 +131,16 @@ public class CourseServiceTest {
                 new CourseRequestDTO("Como criar uma API Rest escalável", Course.Category.C);
 
 
-        BDDMockito.given(this.courseRepository.findCourseByName(
-                        "Aprendendo sobre microserviços"))
+        BDDMockito.given(this.courseRepository.findById(1L))
                 .willThrow(new InstanceNotFoundException("O curso informado não existe"));
 
 
         Assertions.assertThrows(InstanceNotFoundException.class,
-                () -> this.courseService.updateCourse(
-                        "Aprendendo sobre microserviços", courseUpdateDTO));
+                () -> this.courseService.updateCourse(1L, courseUpdateDTO));
 
 
-        BDDMockito.verify(this.courseRepository).findCourseByName(
-                "Aprendendo sobre microserviços");
+        BDDMockito.verify(this.courseRepository).findById(
+                1L);
         BDDMockito.verifyNoMoreInteractions(this.courseRepository);
 
     }
@@ -154,16 +151,14 @@ public class CourseServiceTest {
         final CourseRequestDTO courseUpdateDTO =
                 new CourseRequestDTO("Como criar uma API Rest escalável", Course.Category.C);
 
-        BDDMockito.given(this.courseRepository.findCourseByName(
-                        "Criação de uma API Rest"))
+        BDDMockito.given(this.courseRepository.findById(1L))
                 .willReturn(Optional.of(TestsHelper.CourseHelper.courseList().get(0)));
 
 
-        Assertions.assertDoesNotThrow(() -> this.courseService.updateCourse(
-                "Criação de uma API Rest", courseUpdateDTO));
+        Assertions.assertDoesNotThrow(() -> this.courseService.updateCourse(1L, courseUpdateDTO));
 
 
-        BDDMockito.verify(this.courseRepository).findCourseByName("Criação de uma API Rest");
+        BDDMockito.verify(this.courseRepository).findById(1L);
         BDDMockito.verify(this.courseRepository).save(any(Course.class));
         BDDMockito.verifyNoMoreInteractions(this.courseRepository);
 
@@ -172,17 +167,15 @@ public class CourseServiceTest {
 
     @Test
     void shouldFailToDeleteCourseIfDesiredCourseNotExists() {
-        BDDMockito.given(this.courseRepository.findCourseByName(
-                        "Aprendendo sobre microserviços"))
+        BDDMockito.given(this.courseRepository.findById(1L))
                 .willThrow(new InstanceNotFoundException("O curso informado não existe"));
 
 
         Assertions.assertThrows(InstanceNotFoundException.class,
-                () -> this.courseService.deleteCourse("Aprendendo sobre microserviços"));
+                () -> this.courseService.deleteCourse(1L));
 
 
-        BDDMockito.verify(this.courseRepository).findCourseByName(
-                "Aprendendo sobre microserviços");
+        BDDMockito.verify(this.courseRepository).findById(1L);
         BDDMockito.verifyNoMoreInteractions(this.courseRepository);
 
 
@@ -191,16 +184,14 @@ public class CourseServiceTest {
 
     @Test
     void shouldDeleteCourseWithSuccessIfEverythingIsOk() {
-        BDDMockito.given(this.courseRepository.findCourseByName(
-                        "Criação de uma API Rest"))
+        BDDMockito.given(this.courseRepository.findById(1L))
                 .willReturn(Optional.of(TestsHelper.CourseHelper.courseList().get(0)));
 
 
-        Assertions.assertDoesNotThrow(() -> this.courseService.deleteCourse(
-                "Criação de uma API Rest"));
+        Assertions.assertDoesNotThrow(() -> this.courseService.deleteCourse(1L));
 
 
-        BDDMockito.verify(this.courseRepository).findCourseByName("Criação de uma API Rest");
+        BDDMockito.verify(this.courseRepository).findById(1L);
         BDDMockito.verify(this.courseRepository).delete(any(Course.class));
         BDDMockito.verifyNoMoreInteractions(this.courseRepository);
 

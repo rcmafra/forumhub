@@ -33,23 +33,19 @@ public class CourseService {
         return List.of(new CourseResponseCollection(this.courseRepository.findAll()));
     }
 
-    public void deleteCourse(String courseName){
-        Course course = this.getCourseByName(courseName);
+    public void deleteCourse(Long course_id){
+        Course course = this.getCourseById(course_id);
         this.courseRepository.delete(course);
     }
 
-    public CourseResponseDTO updateCourse(String courseName, CourseRequestDTO courseUpdateDTO) {
-        Course course = this.getCourseByName(courseName);
+    public CourseResponseDTO updateCourse(Long course_id, CourseRequestDTO courseUpdateDTO) {
+        Course course = this.getCourseById(course_id);
 
         course.setName(courseUpdateDTO.name());
         course.setCategory(courseUpdateDTO.category());
 
         this.courseRepository.save(course);
         return new CourseResponseDTO(course);
-    }
-
-    private Course getCourseByName(String courseName){
-        return this.courseRepository.findCourseByName(courseName).orElseThrow(() -> new InstanceNotFoundException("O curso informado não existe"));
     }
 
     public Course getCourseById(Long id) {
