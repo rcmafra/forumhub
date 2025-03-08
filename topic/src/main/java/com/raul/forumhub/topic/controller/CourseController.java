@@ -1,6 +1,5 @@
 package com.raul.forumhub.topic.controller;
 
-import com.raul.forumhub.topic.domain.Course;
 import com.raul.forumhub.topic.dto.request.CourseRequestDTO;
 import com.raul.forumhub.topic.dto.response.CourseResponseCollection;
 import com.raul.forumhub.topic.dto.response.CourseResponseDTO;
@@ -43,8 +42,8 @@ public class CourseController {
 
     @IsAuthenticated
     @GetMapping
-    public ResponseEntity<Course> getCourse(@RequestParam Long course_id) {
-        return ResponseEntity.ok(this.courseService.getCourseById(course_id));
+    public ResponseEntity<CourseResponseDTO> getCourse(@RequestParam Long course_id) {
+        return ResponseEntity.ok(new CourseResponseDTO(this.courseService.getCourseById(course_id)));
     }
 
     @PreAuthorize("hasRole('ADM') and hasAuthority('SCOPE_course:edit')")
