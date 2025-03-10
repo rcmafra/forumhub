@@ -12,11 +12,8 @@ import com.raul.forumhub.topic.exception.InstanceNotFoundException;
 import com.raul.forumhub.topic.exception.TopicServiceException;
 import com.raul.forumhub.topic.repository.AnswerRepository;
 import com.raul.forumhub.topic.util.PermissionUtils;
+import com.raul.forumhub.topic.util.ValidationUtils;
 import org.springframework.stereotype.Service;
-
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class AnswerService {
@@ -50,25 +47,7 @@ public class AnswerService {
         Author author = userClientRequest.getUserById(user_id);
 
         PermissionUtils.validateTopicOwner(topic.getAuthor().getId(), author.getId());
-
-        Set<Answer> answersOfTheTopic = topic.getAnswers()
-                .stream().filter(Objects::nonNull).collect(Collectors.collectingAndThen(
-                        Collectors.toSet(),
-                        answers -> {
-                            if (answers.isEmpty()) {
-                                throw new AnswerServiceException("Ainda não existe respostas para esse tópico");
-                            }
-                            return answers;
-                        }
-                ));
-
-        Answer alreadyHasBestAnswers = answersOfTheTopic.stream().filter(Answer::isBestAnswer)
-                .findFirst().orElse(null);
-
-        if (alreadyHasBestAnswers != null) {
-            throw new AnswerServiceException(String.format("Este tópico já possui a resposta [ID: %d] como melhor resposta",
-                    alreadyHasBestAnswers.getId()));
-        }
+        ValidationUtils.hasBestAnswer(topic.getAnswers());
 
         Answer answer = this.getAnswerById(answer_id);
 
@@ -78,6 +57,7 @@ public class AnswerService {
         this.topicService.saveTopic(topic);
 
     }
+
 
     public AnswerResponseDTO updateAnswer(Long topic_id, Long answer_id, Long user_id, AnswerRequestDTO answerRequestDTO) {
         this.topicService.getTopicById(topic_id);
