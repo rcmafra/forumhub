@@ -29,7 +29,8 @@ public class Profile {
 
         ADM,
         MOD,
-        BASIC
+        BASIC,
+        ANONYMOUS
     }
 }
 
