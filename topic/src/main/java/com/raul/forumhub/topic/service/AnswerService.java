@@ -9,6 +9,7 @@ import com.raul.forumhub.topic.dto.request.AnswerRequestDTO;
 import com.raul.forumhub.topic.dto.response.AnswerResponseDTO;
 import com.raul.forumhub.topic.exception.AnswerServiceException;
 import com.raul.forumhub.topic.exception.InstanceNotFoundException;
+import com.raul.forumhub.topic.exception.TopicServiceException;
 import com.raul.forumhub.topic.repository.AnswerRepository;
 import com.raul.forumhub.topic.util.PermissionUtils;
 import org.springframework.stereotype.Service;
@@ -85,10 +86,9 @@ public class AnswerService {
 
         PermissionUtils.privilegeValidator(answer.getAuthor().getId(), author);
 
-        if (answer.getAuthor().getUsername().equals("Desconhecido") &&
-                answer.getAuthor().getEmail().equals("desconhecido@email.com")) {
-            throw new AnswerServiceException("A resposta pertence a um autor inexistente, " +
-                    "ele não pode ser editado");
+        if (answer.getAuthor().getId() == 0L) {
+            throw new TopicServiceException("A resposta pertence a um autor inexistente, " +
+                                            "ela não pode ser editada");
         }
 
         answer.setSolution(answerRequestDTO.solution());
