@@ -1,6 +1,5 @@
 package com.raul.forumhub.topic.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -19,7 +18,6 @@ public class Author {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     @NotNull(message = "O id do usuário não pode ser nulo")
-    @JsonIgnore
     private Long id;
     @NotNull(message = "O username do usuário não pode ser nulo")
     private String username;
