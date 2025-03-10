@@ -47,6 +47,15 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(entity, headers(), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(jakarta.validation.ConstraintViolationException.class)
+    private ResponseEntity<ExceptionEntity> constraintViolationExceptionResolver(jakarta.validation.ConstraintViolationException ex,
+                                                                                 HttpServletRequest request) {
+        String detail = ex.getConstraintViolations().stream().findFirst().orElseThrow().getMessageTemplate();
+        ExceptionEntity entity = new ExceptionEntity(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(),
+                "Falha de validação", detail, request.getRequestURI());
+        return new ResponseEntity<>(entity, headers(), HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(DataAccessException.class)
     private ResponseEntity<ExceptionEntity> dataAccessExceptionResolver(DataAccessException ex, HttpServletRequest request) {
         if (ex.getCause() instanceof ConstraintViolationException && ((ConstraintViolationException) ex.getCause())
