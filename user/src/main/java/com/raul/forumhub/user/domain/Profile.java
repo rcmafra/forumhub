@@ -24,7 +24,8 @@ public class Profile {
     public enum ProfileName {
         ADM,
         MOD,
-        BASIC
+        BASIC,
+        ANONYMOUS
     }
 }
 

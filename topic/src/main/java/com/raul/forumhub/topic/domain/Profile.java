@@ -1,5 +1,6 @@
 package com.raul.forumhub.topic.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,6 +17,7 @@ public class Profile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "profile_id")
+    @JsonIgnore
     private Long id;
     @Enumerated(EnumType.STRING)
     @Column(name = "profile")
@@ -24,7 +26,8 @@ public class Profile {
     public enum ProfileName {
         ADM,
         MOD,
-        BASIC
+        BASIC,
+        ANONYMOUS
     }
 
 }
