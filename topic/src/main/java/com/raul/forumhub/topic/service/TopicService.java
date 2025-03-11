@@ -57,7 +57,8 @@ public class TopicService {
 
         PermissionUtils.privilegeValidator(topic.getAuthor().getId(), author);
 
-        if (topic.getAuthor().getId() == 0L) {
+        if (topic.getAuthor().getId() == 0L || topic.getAuthor().getUsername()
+                .equalsIgnoreCase("anonymous")) {
             throw new TopicServiceException("O tópico pertence a um autor inexistente, " +
                                             "ele não pode ser editado");
         }
