@@ -18,6 +18,7 @@ public class Profile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "profile_id")
     @JsonIgnore
+    @ToString.Exclude
     private Long id;
     @Enumerated(EnumType.STRING)
     @Column(name = "profile")
