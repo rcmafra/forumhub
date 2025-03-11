@@ -170,8 +170,8 @@ public final class TestsHelper {
             );
             authorList.add(Author.builder()
                     .id(4L)
-                    .username("Desconhecido")
-                    .email("desconhecido@email.com")
+                    .username("Anonymous")
+                    .email("anonymous@email.com")
                     .profile(ProfileHelper.profileList().get(0))
                     .build()
             );
@@ -197,6 +197,11 @@ public final class TestsHelper {
             profileList.add(Profile.builder()
                     .id(3L)
                     .profileName(Profile.ProfileName.ADM)
+                    .build()
+            );
+            profileList.add(Profile.builder()
+                    .id(4L)
+                    .profileName(Profile.ProfileName.ANONYMOUS)
                     .build()
             );
             return profileList;
