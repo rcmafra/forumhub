@@ -76,7 +76,7 @@ class UserClientRequestTest {
         prepareResponse(response -> {
             response.setHeader("Content-Type", "application/json");
             response.setBody("{\"id\":1,\"username\":\"Jose\",\"email\":\"jose@email.com\"," +
-                    "\"profile\":{\"id\":1,\"profileName\":\"BASIC\"}}");
+                    "\"profile\":{\"profileName\":\"BASIC\"}}");
         });
 
         Author authorResponse = assertDoesNotThrow(() -> this.userClientRequest.getUserById(1L));
@@ -104,7 +104,7 @@ class UserClientRequestTest {
         prepareResponse(response -> {
             response.setHeader("Content-Type", "application/json");
             response.setChunkedBody("{\"id\":1,\"username\":\"Jose\",\"email\":\"jose@email.com\"," +
-                    "\"profile\":{\"id\":1,\"profileName\":\"BASIC\"}}", 5);
+                    "\"profile\":{\"profileName\":\"BASIC\"}}", 5);
         });
 
         Author authorResponse = assertDoesNotThrow(() -> this.userClientRequest.getUserById(1L));
