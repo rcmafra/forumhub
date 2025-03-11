@@ -192,7 +192,7 @@ public class AnswerControllerIT {
 
 
     @DisplayName("Should fail with status code 404 when answer topic if the user service " +
-            "return 404 not found status code")
+                 "return 404 not found status code")
     @Test
     void shouldFailToAnswerTopicIfUserServiceReturn404StatusCode() throws Exception {
         final AnswerRequestDTO answerRequestDTO = new AnswerRequestDTO("Resposta teste");
@@ -222,7 +222,7 @@ public class AnswerControllerIT {
 
     @Transactional
     @DisplayName("Should answer topic with success if user is authenticated and " +
-            "previous premisses are adequate")
+                 "previous premisses are adequate")
     @Test
     void shouldAnswerTopicWithSuccessIfAuthenticated() throws Exception {
         final AnswerRequestDTO answerRequestDTO = new AnswerRequestDTO("Resposta teste");
@@ -274,10 +274,10 @@ public class AnswerControllerIT {
     }
 
     @DisplayName("Should fail with status code 400 when mark best answer with" +
-            " param different of type number")
+                 " param different of type number")
     @Test
     void shouldFailToRequestTopicIfParamDifferentOfTypeNumber() throws Exception {
-        this.mockMvc.perform(post("/forumhub.io/api/v1/topics/{topic_id}/markBestAnswer/{answer_id}", 
+        this.mockMvc.perform(post("/forumhub.io/api/v1/topics/{topic_id}/markBestAnswer/{answer_id}",
                         1, "unexpected")
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -287,7 +287,7 @@ public class AnswerControllerIT {
     }
 
     @DisplayName("Should fail with status code 404 when mark answer best if the " +
-            "topic specified not exists")
+                 "topic specified not exists")
     @Test
     void shouldFailToMarkAnswerBestIfSpecifiedTopicNotExists() throws Exception {
         this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/markBestAnswer/{answer_id}",
@@ -309,7 +309,7 @@ public class AnswerControllerIT {
 
 
     @DisplayName("Should fail with status code 404 when mark answer best if the user service " +
-            "return 404 not found status code")
+                 "return 404 not found status code")
     @Test
     void shouldFailToMarkAnswerBestIfUserServiceReturn404StatusCode() throws Exception {
         BDDMockito.given(this.userClientRequest.getUserById(1L)).
@@ -338,7 +338,7 @@ public class AnswerControllerIT {
 
 
     @DisplayName("Should fail with status code 422 when mark answer best if the " +
-            "authenticated user isn't owner of topic")
+                 "authenticated user isn't owner of topic")
     @Test
     void shouldFailToMarkAnswerBestIfAuthenticatedUserIsNotOwnerTopic() throws Exception {
         BDDMockito.given(this.userClientRequest.getUserById(2L)).
@@ -370,7 +370,7 @@ public class AnswerControllerIT {
 
 
     @DisplayName("Should fail with status code 422 when mark answer best if " +
-            "yet not exists a answer for specified topic")
+                 "yet not exists a answer for specified topic")
     @Test
     void shouldFailToMarkAnswerBestIfYetNotExistsAnswer() throws Exception {
         BDDMockito.given(this.userClientRequest.getUserById(1L)).
@@ -400,7 +400,7 @@ public class AnswerControllerIT {
 
 
     @DisplayName("Should fail with status code 422 when mark answer best if already " +
-            "exists a best answer for specified topic")
+                 "exists a best answer for specified topic")
     @Test
     void shouldFailToMarkAnswerBestIfAlreadyExistsBestAnswer() throws Exception {
         BDDMockito.given(this.userClientRequest.getUserById(2L)).
@@ -432,7 +432,7 @@ public class AnswerControllerIT {
 
     @Transactional
     @DisplayName("Should mark answer best with success if user is authenticated and " +
-            "previous premisses are adequate")
+                 "previous premisses are adequate")
     @Test
     void shouldMarkAnswerBestWithSuccessIfAuthenticated() throws Exception {
         BDDMockito.given(this.userClientRequest.getUserById(1L)).
@@ -462,7 +462,7 @@ public class AnswerControllerIT {
 
 
     @DisplayName("Should fail with status code 403 if user authenticated hasn't authority 'answer:edit'" +
-            "when edit answer")
+                 "when edit answer")
     @Test
     void shouldFailIfUserHasNotSuitableAuthorityWhenEditAnswer() throws Exception {
         final AnswerRequestDTO answerUpdateDTO =
@@ -493,13 +493,13 @@ public class AnswerControllerIT {
 
 
     @DisplayName("Should fail with status code 400 when edit answer with" +
-            " param different of type number")
+                 " param different of type number")
     @Test
     void shouldFailToEditAnswerIfParamDifferentOfTypeNumber() throws Exception {
         final AnswerRequestDTO answerUpdateDTO =
                 new AnswerRequestDTO("Primeiro teste de edição de uma resposta");
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/edit", 
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/edit",
                         1, "unexpected")
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "2"))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_answer:edit")))
@@ -606,7 +606,7 @@ public class AnswerControllerIT {
 
 
     @DisplayName("Should fail with status code 404 when edit answer if the user service return " +
-            "404 not found status code")
+                 "404 not found status code")
     @Test
     void shouldFailToEditAnswerIfUserServiceReturn404StatusCode() throws Exception {
         final AnswerRequestDTO answerUpdateDTO =
@@ -698,7 +698,7 @@ public class AnswerControllerIT {
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.detail", is(
                         "A resposta pertence a um autor inexistente," +
-                                " ele não pode ser editado"
+                        " ela não pode ser editada"
                 )));
 
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
@@ -719,7 +719,7 @@ public class AnswerControllerIT {
 
     @Transactional
     @DisplayName("Answer author should be able edit specified answer if authenticated, " +
-            "has authority 'answer:edit' and previous premisses are adequate")
+                 "has authority 'answer:edit' and previous premisses are adequate")
     @Test
     void answerAuthorShouldEditSpecifiedAnswerWithSuccessIfHasSuitableAuthority() throws Exception {
         final AnswerRequestDTO answerUpdateDTO =
@@ -759,7 +759,7 @@ public class AnswerControllerIT {
 
     @Transactional
     @DisplayName("User ADM should be able edit answer of other author if authenticated, " +
-            "has authority 'answer:edit' and previous premisses are adequate")
+                 "has authority 'answer:edit' and previous premisses are adequate")
     @Test
     void userADMShouldEditAnswerOfOtherAuthorWithSuccessIfHasSuitableAuthority() throws Exception {
         final AnswerRequestDTO answerUpdateDTO =
@@ -798,7 +798,7 @@ public class AnswerControllerIT {
 
     @Transactional
     @DisplayName("User MOD should be able edit answer of other author if authenticated, " +
-            "has authority 'answer:edit' and previous premisses are adequate")
+                 "has authority 'answer:edit' and previous premisses are adequate")
     @Test
     void userMODShouldEditAnswerOfOtherAuthorWithSuccessIfHasSuitableAuthority() throws Exception {
         final AnswerRequestDTO answerUpdateDTO =
@@ -836,7 +836,7 @@ public class AnswerControllerIT {
 
 
     @DisplayName("Should fail with status code 403 if user authenticated hasn't authority 'answer:delete'" +
-            " when delete answer")
+                 " when delete answer")
     @Test
     void shouldFailIfUserHasNotSuitableAuthorityWhenDeleteAnswer() throws Exception {
         this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/delete",
@@ -860,7 +860,7 @@ public class AnswerControllerIT {
     }
 
     @DisplayName("Should fail with status code 400 when delete answer with" +
-            " param different of type number")
+                 " param different of type number")
     @Test
     void shouldFailToDeleteTopicIfParamDifferentOfTypeNumber() throws Exception {
         this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/delete",
@@ -874,7 +874,7 @@ public class AnswerControllerIT {
 
 
     @DisplayName("Should fail with status code 404 when delete answer if the user service " +
-            "return 404 not found status code")
+                 "return 404 not found status code")
     @Test
     void shouldFailToDeleteAnswerIfUserServiceReturn404StatusCode() throws Exception {
         BDDMockito.given(this.userClientRequest.getUserById(1L))
@@ -904,7 +904,7 @@ public class AnswerControllerIT {
 
 
     @DisplayName("Should fail with status code 422 if provided answer not belonging to the " +
-            "provided topic when delete answer")
+                 "provided topic when delete answer")
     @Test
     void shouldFailIfProvidedAnswerNotBelongingToTheProvidedTopicWhenDeleteAnswer() throws Exception {
         BDDMockito.given(this.userClientRequest.getUserById(1L))
@@ -967,7 +967,7 @@ public class AnswerControllerIT {
 
     @Transactional
     @DisplayName("Answer author should be able delete your answer if authenticated, " +
-            "has authority 'answer:delete' and previous premisses are adequate")
+                 "has authority 'answer:delete' and previous premisses are adequate")
     @Test
     void answerAuthorShouldDeleteYourAnswerWithSuccessIfHasSuitableAuthority() throws Exception {
         BDDMockito.given(this.userClientRequest.getUserById(2L))
@@ -990,7 +990,7 @@ public class AnswerControllerIT {
 
     @Transactional
     @DisplayName("User ADM should be able delete an answer of the other author " +
-            "with successful if has authority 'answer:delete'")
+                 "with successful if has authority 'answer:delete'")
     @Test
     void userADMShouldDeleteAnAnswerOfTheOtherAuthorWithSuccessful() throws Exception {
         BDDMockito.given(this.userClientRequest.getUserById(3L))
@@ -1013,7 +1013,7 @@ public class AnswerControllerIT {
 
     @Transactional
     @DisplayName("User MOD should be able delete an answer of the other author " +
-            "with successful if has authority 'answer:delete'")
+                 "with successful if has authority 'answer:delete'")
     @Test
     void userMODShouldDeleteAnAnswerOfTheOtherAuthorWithSuccessful() throws Exception {
         BDDMockito.given(this.userClientRequest.getUserById(2L))

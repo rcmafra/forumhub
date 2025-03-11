@@ -9,7 +9,6 @@ import com.raul.forumhub.topic.dto.request.AnswerRequestDTO;
 import com.raul.forumhub.topic.dto.response.AnswerResponseDTO;
 import com.raul.forumhub.topic.exception.AnswerServiceException;
 import com.raul.forumhub.topic.exception.InstanceNotFoundException;
-import com.raul.forumhub.topic.exception.TopicServiceException;
 import com.raul.forumhub.topic.repository.AnswerRepository;
 import com.raul.forumhub.topic.util.PermissionUtils;
 import com.raul.forumhub.topic.util.ValidationUtils;
@@ -66,9 +65,10 @@ public class AnswerService {
 
         PermissionUtils.privilegeValidator(answer.getAuthor().getId(), author);
 
-        if (answer.getAuthor().getId() == 0L) {
-            throw new TopicServiceException("A resposta pertence a um autor inexistente, " +
-                                            "ela não pode ser editada");
+        if (answer.getAuthor().getId() == 0L || answer.getAuthor().getUsername()
+                .equalsIgnoreCase("anonymous")) {
+            throw new AnswerServiceException("A resposta pertence a um autor inexistente, " +
+                                             "ela não pode ser editada");
         }
 
         answer.setSolution(answerRequestDTO.solution());
