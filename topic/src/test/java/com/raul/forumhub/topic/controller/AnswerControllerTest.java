@@ -127,10 +127,10 @@ public class AnswerControllerTest {
     }
 
 
-    @DisplayName("Should fail with status code 401 when mark answer best if user unauthenticated")
+    @DisplayName("Should fail with status code 401 when mark best answer if user unauthenticated")
     @Test
-    void shouldFailToMarkAnswerBestIfUnauthenticated() throws Exception {
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/markBestAnswer/{answer_id}",
+    void shouldFailToMarkBestAnswerIfUnauthenticated() throws Exception {
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/markBestAnswer",
                         1, 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -140,11 +140,11 @@ public class AnswerControllerTest {
 
     }
 
-    @DisplayName("Should fail with status code 400 when mark best answer with" +
-            " param different of type number")
+    @DisplayName("Should fail with status code 400 when mark best answer if" +
+            " param different of number type")
     @Test
-    void shouldFailToRequestTopicIfParamDifferentOfTypeNumber() throws Exception {
-        this.mockMvc.perform(post("/forumhub.io/api/v1/topics/{topic_id}/markBestAnswer/{answer_id}",
+    void shouldFailToMarkBestAnswerIfParamDifferentOfNumberType() throws Exception {
+        this.mockMvc.perform(post("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/markBestAnswer",
                         1, "unexpected")
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -154,12 +154,12 @@ public class AnswerControllerTest {
     }
 
 
-    @DisplayName("Should mark answer best with success if user is authenticated")
+    @DisplayName("Should mark best answer with success if user is authenticated")
     @Test
-    void shouldMarkAnswerBestWithSuccessIfAuthenticated() throws Exception {
+    void shouldMarkBestAnswerWithSuccessIfAuthenticated() throws Exception {
         BDDMockito.doNothing().when(this.answerService).markBestAnswer(1L, 1L, 1L);
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/markBestAnswer/{answer_id}",
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/markBestAnswer",
                         1, 1)
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -168,6 +168,52 @@ public class AnswerControllerTest {
                 .andExpect(content().string("{\"message\":\"HttpStatusCode OK\"}"));
 
         BDDMockito.verify(this.answerService).markBestAnswer(1L, 1L, 1L);
+        BDDMockito.verifyNoMoreInteractions(this.answerService);
+
+
+    }
+
+    @DisplayName("Should fail with status code 401 when unmark best answer if user unauthenticated")
+    @Test
+    void shouldFailToUnmarkBestAnswerIfUnauthenticated() throws Exception {
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/unmarkBestAnswer",
+                        1, 1)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isUnauthorized());
+
+        BDDMockito.verifyNoInteractions(this.answerService);
+
+    }
+
+    @DisplayName("Should fail with status code 400 when unmark best answer if" +
+                 " param different of number type")
+    @Test
+    void shouldFailToUnmarkBestAnswerIfParamDifferentOfNumberType() throws Exception {
+        this.mockMvc.perform(post("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/unmarkBestAnswer",
+                        1, "unexpected")
+                        .with(jwt().jwt(JWT))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isBadRequest());
+
+    }
+
+
+    @DisplayName("Should unmark best answer with success if user is authenticated")
+    @Test
+    void shouldUnmarkBestAnswerWithSuccessIfAuthenticated() throws Exception {
+        BDDMockito.doNothing().when(this.answerService).markBestAnswer(1L, 1L, 1L);
+
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/unmarkBestAnswer",
+                        1, 1)
+                        .with(jwt().jwt(JWT))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isOk())
+                .andExpect(content().string("{\"message\":\"HttpStatusCode OK\"}"));
+
+        BDDMockito.verify(this.answerService).unmarkBestAnswer(1L, 1L, 1L);
         BDDMockito.verifyNoMoreInteractions(this.answerService);
 
 

@@ -4,7 +4,10 @@ import com.raul.forumhub.topic.client.UserClientRequest;
 import com.raul.forumhub.topic.domain.Answer;
 import com.raul.forumhub.topic.domain.Topic;
 import com.raul.forumhub.topic.dto.request.AnswerRequestDTO;
-import com.raul.forumhub.topic.exception.*;
+import com.raul.forumhub.topic.exception.BusinessException;
+import com.raul.forumhub.topic.exception.InstanceNotFoundException;
+import com.raul.forumhub.topic.exception.RestClientException;
+import com.raul.forumhub.topic.exception.ValidationException;
 import com.raul.forumhub.topic.repository.AnswerRepository;
 import com.raul.forumhub.topic.util.TestsHelper;
 import jakarta.validation.ConstraintViolationException;
@@ -140,7 +143,7 @@ public class AnswerServiceTest {
 
 
     @Test
-    void shouldFailToMarkAnswerBestIfSpecifiedTopicNotExists() {
+    void shouldNotToMarkBestAnswerIfSpecifiedTopicNotExists() {
         BDDMockito.given(this.topicService.getTopicById(1L)).
                 willThrow(new InstanceNotFoundException("O tópico informado não existe"));
 
@@ -160,7 +163,7 @@ public class AnswerServiceTest {
 
 
     @Test
-    void shouldFailToMarkAnswerBestIfUserServiceReturn404StatusCode() {
+    void shouldNotToMarkBestAnswerIfUserServiceReturn404StatusCode() {
         BDDMockito.given(this.topicService.getTopicById(1L))
                 .willReturn(TestsHelper.TopicHelper.topicListWithAnswers().get(0));
 
@@ -182,16 +185,15 @@ public class AnswerServiceTest {
 
 
     @Test
-    void shouldFailToMarkAnswerBestIfAuthenticatedUserIsNotOwnerTopic() {
+    void shouldNotToMarkBestAnswerIfAuthenticatedUserIsNotOwnerTopic() {
         BDDMockito.given(this.topicService.getTopicById(1L))
                 .willReturn(TestsHelper.TopicHelper.topicListWithAnswers().get(0));
 
         BDDMockito.given(this.userClientRequest.getUserById(2L)).
                 willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
-        Assertions.assertThrows(TopicServiceException.class,
-                () -> this.answerService.markBestAnswer(1L, 1L, 2L),
-                "O tópico fornecido não pertence a esse autor");
+        Assertions.assertThrows(ValidationException.class,
+                () -> this.answerService.markBestAnswer(1L, 1L, 2L));
 
 
         BDDMockito.verify(this.topicService).getTopicById(1L);
@@ -205,7 +207,7 @@ public class AnswerServiceTest {
 
 
     @Test
-    void shouldFailToMarkAnswerBestIfYetNotExistsAnswer() {
+    void shouldNotToMarkBestAnswerIfYetNotExistsAnswer() {
         BDDMockito.given(this.topicService.getTopicById(4L))
                 .willReturn(TestsHelper.TopicHelper.topicList().get(3));
 
@@ -213,7 +215,7 @@ public class AnswerServiceTest {
                 willReturn(TestsHelper.AuthorHelper.authorList().get(0));
 
 
-        Assertions.assertThrows(AnswerServiceException.class,
+        Assertions.assertThrows(ValidationException.class,
                 () -> this.answerService.markBestAnswer(4L, 1L, 1L));
 
 
@@ -227,7 +229,7 @@ public class AnswerServiceTest {
 
 
     @Test
-    void shouldFailToMarkAnswerBestIfAlreadyExistsBestAnswer() {
+    void shouldNotToMarkBestAnswerIfAlreadyExistsBestAnswer() {
         BDDMockito.given(this.topicService.getTopicById(2L))
                 .willReturn(TestsHelper.TopicHelper.topicListWithAnswers().get(1));
 
@@ -235,9 +237,8 @@ public class AnswerServiceTest {
                 willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
 
-        Assertions.assertThrows(AnswerServiceException.class,
-                () -> this.answerService.markBestAnswer(2L, 2L, 2L),
-                "Já existe uma melhor resposta para este tópico");
+        Assertions.assertThrows(BusinessException.class,
+                () -> this.answerService.markBestAnswer(2L, 2L, 2L));
 
 
         BDDMockito.verify(this.topicService).getTopicById(2L);
@@ -251,7 +252,7 @@ public class AnswerServiceTest {
 
 
     @Test
-    void shouldMarkAnswerBestWithSuccessIfEverythingIsOk() {
+    void shouldToMarkBestAnswerWithSuccessIfEverythingIsOk() {
         BDDMockito.given(this.topicService.getTopicById(1L))
                 .willReturn(TestsHelper.TopicHelper.topicListWithAnswers().get(0));
 
@@ -269,6 +270,201 @@ public class AnswerServiceTest {
         BDDMockito.verify(this.topicService).getTopicById(1L);
         BDDMockito.verify(this.userClientRequest).getUserById(1L);
         BDDMockito.verify(this.answerRepository).findById(1L);
+        BDDMockito.verify(this.topicService).saveTopic(any(Topic.class));
+        BDDMockito.verifyNoMoreInteractions(this.topicService);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
+        BDDMockito.verifyNoMoreInteractions(this.answerRepository);
+
+
+    }
+
+
+    @Test
+    void shouldFailToUnmarkBestAnswerIfSpecifiedTopicNotExists() {
+        BDDMockito.given(this.topicService.getTopicById(6L))
+                .willThrow(new InstanceNotFoundException("O tópico informado não existe"));
+
+        Assertions.assertThrows(InstanceNotFoundException.class,
+                () -> this.answerService.unmarkBestAnswer(6L, 1L, 1L),
+                "O tópico informado não existe");
+
+        BDDMockito.verify(this.topicService).getTopicById(6L);
+        BDDMockito.verifyNoMoreInteractions(this.topicService);
+        BDDMockito.verifyNoInteractions(this.userClientRequest);
+        BDDMockito.verifyNoInteractions(this.answerRepository);
+
+    }
+
+
+    @Test
+    void shouldFailToUnmarkBestAnswerIfSpecifiedAnswerNotExists() {
+        BDDMockito.given(this.topicService.getTopicById(1L))
+                .willReturn(TestsHelper.TopicHelper.topicList().get(0));
+
+        BDDMockito.given(this.answerRepository.findById(6L))
+                .willThrow(new InstanceNotFoundException("A resposta informada não existe"));
+
+        Assertions.assertThrows(InstanceNotFoundException.class,
+                () -> this.answerService.unmarkBestAnswer(1L, 6L, 1L),
+                "A resposta informada não existe");
+
+        BDDMockito.verify(this.topicService).getTopicById(1L);
+        BDDMockito.verify(this.answerRepository).findById(6L);
+        BDDMockito.verifyNoMoreInteractions(this.topicService);
+        BDDMockito.verifyNoMoreInteractions(this.answerRepository);
+        BDDMockito.verifyNoInteractions(this.userClientRequest);
+
+    }
+
+
+    @Test
+    void shouldFailToUnmarkBestAnswerIfUserServiceReturn404StatusCode() {
+        BDDMockito.given(this.topicService.getTopicById(1L))
+                .willReturn(TestsHelper.TopicHelper.topicList().get(0));
+
+        BDDMockito.given(this.answerRepository.findById(1L))
+                .willReturn(Optional.of(TestsHelper.AnswerHelper.answerList().get(0)));
+
+        BDDMockito.given(this.userClientRequest.getUserById(1L))
+                .willThrow(new RestClientException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
+
+        Assertions.assertThrows(RestClientException.class,
+                () -> this.answerService.unmarkBestAnswer(1L, 1L, 1L),
+                "Usuário não encontrado");
+
+        BDDMockito.verify(this.topicService).getTopicById(1L);
+        BDDMockito.verify(this.answerRepository).findById(1L);
+        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verifyNoMoreInteractions(this.topicService);
+        BDDMockito.verifyNoMoreInteractions(this.answerRepository);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
+
+
+    }
+
+    @Test
+    void shouldNotToUnmarkBestAnswerIfAuthenticatedUserIsNotOwnerTopic() {
+        BDDMockito.given(this.topicService.getTopicById(2L))
+                .willReturn(TestsHelper.TopicHelper.topicListWithAnswers().get(1));
+
+        BDDMockito.given(this.answerRepository.findById(2L)).
+                willReturn(Optional.of(TestsHelper.AnswerHelper.answerList().get(1)));
+
+        BDDMockito.given(this.userClientRequest.getUserById(1L)).
+                willReturn(TestsHelper.AuthorHelper.authorList().get(0));
+
+        Assertions.assertThrows(ValidationException.class,
+                () -> this.answerService.unmarkBestAnswer(2L, 2L, 1L));
+
+
+        BDDMockito.verify(this.topicService).getTopicById(2L);
+        BDDMockito.verify(this.answerRepository).findById(2L);
+        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verifyNoMoreInteractions(this.topicService);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
+        BDDMockito.verifyNoMoreInteractions(this.answerRepository);
+
+
+    }
+
+
+    @Test
+    void shouldNotToUnmarkBestAnswerIfYetNotExistsAnswer() {
+        BDDMockito.given(this.topicService.getTopicById(4L))
+                .willReturn(TestsHelper.TopicHelper.topicList().get(3));
+
+        BDDMockito.given(this.answerRepository.findById(1L)).
+                willReturn(Optional.of(TestsHelper.AnswerHelper.answerList().get(0)));
+
+        BDDMockito.given(this.userClientRequest.getUserById(1L)).
+                willReturn(TestsHelper.AuthorHelper.authorList().get(0));
+
+
+        Assertions.assertThrows(ValidationException.class,
+                () -> this.answerService.unmarkBestAnswer(4L, 1L, 1L));
+
+
+        BDDMockito.verify(this.topicService).getTopicById(4L);
+        BDDMockito.verify(this.answerRepository).findById(1L);
+        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verifyNoMoreInteractions(this.topicService);
+        BDDMockito.verifyNoMoreInteractions(this.answerRepository);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
+
+    }
+
+
+    @Test
+    void shouldNotToUnmarkBestAnswerIfAnswerProvidedNotBelongsToTheTopicProvided() {
+        BDDMockito.given(this.topicService.getTopicById(1L))
+                .willReturn(TestsHelper.TopicHelper.topicListWithAnswers().get(0));
+
+        BDDMockito.given(this.answerRepository.findById(2L)).
+                willReturn(Optional.of(TestsHelper.AnswerHelper.answerList().get(1)));
+
+        BDDMockito.given(this.userClientRequest.getUserById(1L)).
+                willReturn(TestsHelper.AuthorHelper.authorList().get(0));
+
+
+        Assertions.assertThrows(ValidationException.class,
+                () -> this.answerService.unmarkBestAnswer(1L, 2L, 1L));
+
+
+        BDDMockito.verify(this.topicService).getTopicById(1L);
+        BDDMockito.verify(this.answerRepository).findById(2L);
+        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verifyNoMoreInteractions(this.topicService);
+        BDDMockito.verifyNoMoreInteractions(this.answerRepository);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
+
+
+    }
+
+    @Test
+    void shouldNotToUnmarkBestAnswerIfAnswerProvidedIsNotAsBestAnswer() {
+        BDDMockito.given(this.topicService.getTopicById(1L))
+                .willReturn(TestsHelper.TopicHelper.topicListWithAnswers().get(0));
+
+        BDDMockito.given(this.answerRepository.findById(1L)).
+                willReturn(Optional.of(TestsHelper.AnswerHelper.answerList().get(0)));
+
+        BDDMockito.given(this.userClientRequest.getUserById(1L)).
+                willReturn(TestsHelper.AuthorHelper.authorList().get(0));
+
+
+        Assertions.assertThrows(ValidationException.class,
+                () -> this.answerService.unmarkBestAnswer(1L, 1L, 1L));
+
+
+        BDDMockito.verify(this.topicService).getTopicById(1L);
+        BDDMockito.verify(this.answerRepository).findById(1L);
+        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verifyNoMoreInteractions(this.topicService);
+        BDDMockito.verifyNoMoreInteractions(this.answerRepository);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
+
+
+    }
+
+    @Test
+    void shouldUnmarkBestAnswerWithSuccessIfEverythingIsOk() {
+        BDDMockito.given(this.topicService.getTopicById(2L))
+                .willReturn(TestsHelper.TopicHelper.topicListWithAnswers().get(1));
+
+        BDDMockito.given(this.userClientRequest.getUserById(2L)).
+                willReturn(TestsHelper.AuthorHelper.authorList().get(1));
+
+        BDDMockito.given(this.answerRepository.findById(2L))
+                .willReturn(Optional.of(TestsHelper.AnswerHelper.answerList().get(1)));
+
+
+        Assertions.assertDoesNotThrow(
+                () -> this.answerService.unmarkBestAnswer(2L, 2L, 2L));
+
+
+        BDDMockito.verify(this.topicService).getTopicById(2L);
+        BDDMockito.verify(this.userClientRequest).getUserById(2L);
+        BDDMockito.verify(this.answerRepository).findById(2L);
         BDDMockito.verify(this.topicService).saveTopic(any(Topic.class));
         BDDMockito.verifyNoMoreInteractions(this.topicService);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
@@ -436,7 +632,7 @@ public class AnswerServiceTest {
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(2));
 
 
-        Assertions.assertThrows(AnswerServiceException.class,
+        Assertions.assertThrows(BusinessException.class,
                 () -> this.answerService.updateAnswer(1L, 4L, 3L,
                         answerUpdateDTO),
                 "O tópico pertence a um autor inexistente, ele não pode ser editado");
@@ -579,10 +775,10 @@ public class AnswerServiceTest {
                 .willReturn(Optional.of(TestsHelper.AnswerHelper.answerList().get(1)));
 
         BDDMockito.given(this.userClientRequest.getUserById(1L))
-                .willThrow(new AnswerServiceException("A resposta fornecida não pertence a esse tópico"));
+                .willThrow(new BusinessException("A resposta fornecida não pertence a esse tópico"));
 
 
-        Assertions.assertThrows(AnswerServiceException.class,
+        Assertions.assertThrows(BusinessException.class,
                 () -> this.answerService.deleteAnswer(1L, 2L, 1L),
                 "A resposta fornecida não pertence a esse tópico");
 

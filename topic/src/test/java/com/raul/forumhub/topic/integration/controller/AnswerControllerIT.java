@@ -51,15 +51,6 @@ public class AnswerControllerIT {
     @Autowired
     AnswerRepository answerRepository;
 
-    @Autowired
-    AuthorRepository authorRepository;
-
-    @Autowired
-    CourseRepository courseRepository;
-
-    @Autowired
-    ProfileRepository profileRepository;
-
     @MockBean
     ClientRegistrationRepository clientRegistrationRepository;
 
@@ -77,14 +68,18 @@ public class AnswerControllerIT {
                 .build();
     }
 
-    @BeforeEach
-    void setup() {
+    @BeforeAll
+    static void setup(@Autowired ProfileRepository profileRepository,
+                      @Autowired AuthorRepository authorRepository,
+                      @Autowired CourseRepository courseRepository,
+                      @Autowired TopicRepository topicRepository,
+                      @Autowired AnswerRepository answerRepository) {
         if (!hasBeenInitialized) {
-            this.profileRepository.saveAll(TestsHelper.ProfileHelper.profileList());
-            this.authorRepository.saveAll(TestsHelper.AuthorHelper.authorList());
-            this.courseRepository.saveAll(TestsHelper.CourseHelper.courseList());
-            this.topicRepository.saveAll(TestsHelper.TopicHelper.topicList());
-            this.answerRepository.saveAll(TestsHelper.AnswerHelper.answerList());
+            profileRepository.saveAll(TestsHelper.ProfileHelper.profileList());
+            authorRepository.saveAll(TestsHelper.AuthorHelper.authorList());
+            courseRepository.saveAll(TestsHelper.CourseHelper.courseList());
+            topicRepository.saveAll(TestsHelper.TopicHelper.topicList());
+            answerRepository.saveAll(TestsHelper.AnswerHelper.answerList());
             hasBeenInitialized = true;
         }
     }
@@ -130,10 +125,7 @@ public class AnswerControllerIT {
                                 .writeValueAsString(answerRequestDTO)))
                 .andExpect(status().isUnauthorized());
 
-        Assertions.assertAll(
-                () -> assertEquals(4, this.answerRepository.findAll().size()),
-                () -> assertEquals(2, this.topicRepository.findById(1L).orElseThrow().getAnswers().size())
-        );
+        assertEquals(2, this.topicRepository.findById(1L).orElseThrow().getAnswers().size());
 
         BDDMockito.verifyNoInteractions(this.userClientRequest);
 
@@ -181,10 +173,8 @@ public class AnswerControllerIT {
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.detail", is("O tópico informado não existe")));
 
-        Assertions.assertAll(
-                () -> assertEquals(4, this.answerRepository.findAll().size()),
-                () -> assertFalse(this.topicRepository.findById(6L).isPresent())
-        );
+
+        assertFalse(this.topicRepository.findById(6L).isPresent());
 
         BDDMockito.verifyNoInteractions(this.userClientRequest);
 
@@ -208,10 +198,8 @@ public class AnswerControllerIT {
                                 .writeValueAsString(answerRequestDTO)))
                 .andExpectAll(status().isNotFound());
 
-        Assertions.assertAll(
-                () -> assertEquals(4, this.answerRepository.findAll().size()),
-                () -> assertEquals(2, this.topicRepository.findById(1L).orElseThrow().getAnswers().size())
-        );
+
+        assertEquals(2, this.topicRepository.findById(1L).orElseThrow().getAnswers().size());
 
         BDDMockito.verify(this.userClientRequest).getUserById(1L);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
@@ -251,10 +239,10 @@ public class AnswerControllerIT {
     }
 
 
-    @DisplayName("Should fail with status code 401 when mark answer best if user unauthenticated")
+    @DisplayName("Should fail with status code 401 when mark best answer if user unauthenticated")
     @Test
-    void shouldFailToMarkAnswerBestIfUnauthenticated() throws Exception {
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/markBestAnswer/{answer_id}",
+    void shouldFailToMarkBestAnswerIfUnauthenticated() throws Exception {
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/markBestAnswer",
                         1, 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -263,7 +251,6 @@ public class AnswerControllerIT {
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
 
         Assertions.assertAll(
-                () -> assertEquals(4, this.answerRepository.findAll().size()),
                 () -> assertEquals(2, topic.getAnswers().size()),
                 () -> assertFalse(topic.getAnswers().stream().filter(answer -> answer.getId().equals(1L))
                         .findFirst().orElseThrow().isBestAnswer())
@@ -274,10 +261,10 @@ public class AnswerControllerIT {
     }
 
     @DisplayName("Should fail with status code 400 when mark best answer with" +
-                 " param different of type number")
+                 " param different of number type")
     @Test
-    void shouldFailToRequestTopicIfParamDifferentOfTypeNumber() throws Exception {
-        this.mockMvc.perform(post("/forumhub.io/api/v1/topics/{topic_id}/markBestAnswer/{answer_id}",
+    void shouldFailToMarkBestAnswerIfParamDifferentOfNumberType() throws Exception {
+        this.mockMvc.perform(post("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/markBestAnswer",
                         1, "unexpected")
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -286,11 +273,11 @@ public class AnswerControllerIT {
 
     }
 
-    @DisplayName("Should fail with status code 404 when mark answer best if the " +
+    @DisplayName("Should fail with status code 404 when mark best answer if the " +
                  "topic specified not exists")
     @Test
-    void shouldFailToMarkAnswerBestIfSpecifiedTopicNotExists() throws Exception {
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/markBestAnswer/{answer_id}",
+    void shouldFailToMarkBestAnswerIfSpecifiedTopicNotExists() throws Exception {
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/markBestAnswer",
                         6, 1)
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -308,14 +295,239 @@ public class AnswerControllerIT {
     }
 
 
-    @DisplayName("Should fail with status code 404 when mark answer best if the user service " +
+    @DisplayName("Should fail with status code 404 when mark best answer if the user service " +
                  "return 404 not found status code")
     @Test
-    void shouldFailToMarkAnswerBestIfUserServiceReturn404StatusCode() throws Exception {
+    void shouldFailToMarkBestAnswerIfUserServiceReturn404StatusCode() throws Exception {
         BDDMockito.given(this.userClientRequest.getUserById(1L)).
                 willThrow(new RestClientException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/markBestAnswer/{answer_id}",
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/markBestAnswer",
+                        1, 1)
+                        .with(jwt().jwt(JWT))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isNotFound());
+
+        Topic topic = this.topicRepository.findById(1L).orElseThrow();
+
+        Assertions.assertAll(
+                () -> assertEquals(2, topic.getAnswers().size()),
+                () -> assertFalse(topic.getAnswers().stream().filter(answer -> answer.getId().equals(1L))
+                        .findFirst().orElseThrow().isBestAnswer())
+        );
+
+        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
+
+    }
+
+
+    @DisplayName("Should fail with status code 418 when mark best answer if the " +
+                 "authenticated user isn't owner of topic")
+    @Test
+    void shouldFailToMarkBestAnswerIfAuthenticatedUserIsNotOwnerTopic() throws Exception {
+        BDDMockito.given(this.userClientRequest.getUserById(2L)).
+                willReturn(TestsHelper.AuthorHelper.authorList().get(1));
+
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/markBestAnswer",
+                        1, 1)
+                        .with(jwt().jwt(jwt -> jwt.claim("user_id", "2")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isIAmATeapot())
+                .andExpect(jsonPath("$.detail",
+                        is("O tópico fornecido não pertence ao usuário atualmente logado")));
+
+
+        Topic topic = this.topicRepository.findById(1L).orElseThrow();
+
+        Assertions.assertAll(
+                () -> assertEquals(2, topic.getAnswers().size()),
+                () -> assertFalse(topic.getAnswers().stream().filter(answer -> answer.getId().equals(1L))
+                        .findFirst().orElseThrow().isBestAnswer())
+        );
+
+        BDDMockito.verify(this.userClientRequest).getUserById(2L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
+
+    }
+
+
+    @DisplayName("Should fail with status code 418 when mark best answer if " +
+                 "yet not exists a answer for specified topic")
+    @Test
+    void shouldFailToMarkAnswerBestIfYetNotExistsAnswer() throws Exception {
+        BDDMockito.given(this.userClientRequest.getUserById(1L)).
+                willReturn(TestsHelper.AuthorHelper.authorList().get(0));
+
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/markBestAnswer",
+                        4, 1)
+                        .with(jwt().jwt(JWT))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isIAmATeapot())
+                .andExpect(jsonPath("$.detail",
+                        is("Ainda não existe respostas para esse tópico")));
+
+
+        Topic topic = this.topicRepository.findById(4L).orElseThrow();
+
+        Assertions.assertAll(
+                () -> assertEquals(4, this.answerRepository.findAll().size()),
+                () -> assertEquals(0, topic.getAnswers().size())
+        );
+
+        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
+
+    }
+
+
+    @DisplayName("Should fail with status code 422 when mark best answer if already " +
+                 "exists a best answer for specified topic")
+    @Test
+    void shouldFailToMarkBestAnswerIfAlreadyExistsBestAnswer() throws Exception {
+        BDDMockito.given(this.userClientRequest.getUserById(2L)).
+                willReturn(TestsHelper.AuthorHelper.authorList().get(1));
+
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/markBestAnswer",
+                        2, 2)
+                        .with(jwt().jwt(jwt -> jwt.claim("user_id", "2")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.detail",
+                        is("Este tópico já possui a resposta [ID: 2] como melhor resposta")));
+
+        Topic topic = this.topicRepository.findById(2L).orElseThrow();
+
+        Assertions.assertAll(
+                () -> assertEquals(1, topic.getAnswers().size()),
+                () -> assertTrue(topic.getAnswers().stream().filter(answer -> answer.getId().equals(2L))
+                        .findFirst().orElseThrow().isBestAnswer())
+        );
+
+        BDDMockito.verify(this.userClientRequest).getUserById(2L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
+
+    }
+
+
+    @Transactional
+    @DisplayName("Should mark best answer with success if user is authenticated and " +
+                 "previous premisses are adequate")
+    @Test
+    void shouldMarkBestAnswerWithSuccessIfAuthenticated() throws Exception {
+        BDDMockito.given(this.userClientRequest.getUserById(1L)).
+                willReturn(TestsHelper.AuthorHelper.authorList().get(0));
+
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/markBestAnswer",
+                        1, 1)
+                        .with(jwt().jwt(JWT))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isOk())
+                .andExpect(content().string("{\"message\":\"HttpStatusCode OK\"}"));
+
+        Topic topic = this.topicRepository.findById(1L).orElseThrow();
+
+        Assertions.assertAll(
+                () -> assertEquals(2, topic.getAnswers().size()),
+                () -> assertTrue(topic.getAnswers().stream().filter(answer -> answer.getId().equals(1L))
+                        .findFirst().orElseThrow().isBestAnswer())
+        );
+
+        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
+
+    }
+
+    @DisplayName("Should fail with status code 401 when unmark best answer if user unauthenticated")
+    @Test
+    void shouldFailToUnmarkBestAnswerIfUnauthenticated() throws Exception {
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/unmarkBestAnswer",
+                        1, 1)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isUnauthorized());
+
+        Topic topic = this.topicRepository.findById(1L).orElseThrow();
+
+        Assertions.assertAll(
+                () -> assertEquals(2, topic.getAnswers().size()),
+                () -> assertFalse(topic.getAnswers().stream().filter(answer -> answer.getId().equals(1L))
+                        .findFirst().orElseThrow().isBestAnswer())
+        );
+
+        BDDMockito.verifyNoInteractions(this.userClientRequest);
+
+    }
+
+    @DisplayName("Should fail with status code 400 when unmark best answer with" +
+                 " param different of number type")
+    @Test
+    void shouldFailToUnmarkBestAnswerIfParamDifferentOfNumberType() throws Exception {
+        this.mockMvc.perform(post("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/unmarkBestAnswer",
+                        1, "unexpected")
+                        .with(jwt().jwt(JWT))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isBadRequest());
+
+    }
+
+    @DisplayName("Should fail with status code 404 when unmark best answer if the " +
+                 "topic specified not exists")
+    @Test
+    void shouldFailToUnmarkBestAnswerIfSpecifiedTopicNotExists() throws Exception {
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/unmarkBestAnswer",
+                        6, 1)
+                        .with(jwt().jwt(JWT))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.detail", is("O tópico informado não existe")));
+
+        Assertions.assertAll(
+                () -> assertEquals(4, this.answerRepository.findAll().size()),
+                () -> assertFalse(this.topicRepository.findById(6L).isPresent())
+        );
+
+        BDDMockito.verifyNoInteractions(this.userClientRequest);
+
+    }
+
+    @DisplayName("Should fail with status code 404 when unmark best answer if the " +
+                 "answer specified not exists")
+    @Test
+    void shouldFailToUnmarkBestAnswerIfSpecifiedAnswerNotExists() throws Exception {
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/unmarkBestAnswer",
+                        1, 6)
+                        .with(jwt().jwt(JWT))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.detail", is("A resposta informada não existe")));
+
+        Assertions.assertAll(
+                () -> assertEquals(4, this.answerRepository.findAll().size()),
+                () -> assertFalse(this.answerRepository.findById(6L).isPresent())
+        );
+
+        BDDMockito.verifyNoInteractions(this.userClientRequest);
+
+    }
+
+
+    @DisplayName("Should fail with status code 404 when unmark best answer if the user service " +
+                 "return 404 not found status code")
+    @Test
+    void shouldFailToUnmarkBestAnswerIfUserServiceReturn404StatusCode() throws Exception {
+        BDDMockito.given(this.userClientRequest.getUserById(1L)).
+                willThrow(new RestClientException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
+
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/unmarkBestAnswer",
                         1, 1)
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -337,27 +549,26 @@ public class AnswerControllerIT {
     }
 
 
-    @DisplayName("Should fail with status code 422 when mark answer best if the " +
+    @DisplayName("Should fail with status code 418 when unmark best answer if the " +
                  "authenticated user isn't owner of topic")
     @Test
-    void shouldFailToMarkAnswerBestIfAuthenticatedUserIsNotOwnerTopic() throws Exception {
+    void shouldFailToUnmarkBestAnswerIfAuthenticatedUserIsNotOwnerTopic() throws Exception {
         BDDMockito.given(this.userClientRequest.getUserById(2L)).
                 willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/markBestAnswer/{answer_id}",
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/unmarkBestAnswer",
                         1, 1)
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "2")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
-                .andExpect(status().isUnprocessableEntity())
+                .andExpect(status().isIAmATeapot())
                 .andExpect(jsonPath("$.detail",
-                        is("O tópico fornecido não pertence ao autor atualmente logado")));
+                        is("O tópico fornecido não pertence ao usuário atualmente logado")));
 
 
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
 
         Assertions.assertAll(
-                () -> assertEquals(4, this.answerRepository.findAll().size()),
                 () -> assertEquals(2, topic.getAnswers().size()),
                 () -> assertFalse(topic.getAnswers().stream().filter(answer -> answer.getId().equals(1L))
                         .findFirst().orElseThrow().isBestAnswer())
@@ -369,19 +580,19 @@ public class AnswerControllerIT {
     }
 
 
-    @DisplayName("Should fail with status code 422 when mark answer best if " +
+    @DisplayName("Should fail with status code 418 when unmark best answer if " +
                  "yet not exists a answer for specified topic")
     @Test
-    void shouldFailToMarkAnswerBestIfYetNotExistsAnswer() throws Exception {
+    void shouldFailToUnmarkAnswerBestIfYetNotExistsAnswer() throws Exception {
         BDDMockito.given(this.userClientRequest.getUserById(1L)).
                 willReturn(TestsHelper.AuthorHelper.authorList().get(0));
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/markBestAnswer/{answer_id}",
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/unmarkBestAnswer",
                         4, 1)
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
-                .andExpect(status().isUnprocessableEntity())
+                .andExpect(status().isIAmATeapot())
                 .andExpect(jsonPath("$.detail",
                         is("Ainda não existe respostas para esse tópico")));
 
@@ -399,29 +610,27 @@ public class AnswerControllerIT {
     }
 
 
-    @DisplayName("Should fail with status code 422 when mark answer best if already " +
-                 "exists a best answer for specified topic")
+    @DisplayName("Should fail with status code 418 when unmark best answer if answer provided " +
+                 "not belongs to the topic provided")
     @Test
-    void shouldFailToMarkAnswerBestIfAlreadyExistsBestAnswer() throws Exception {
+    void shouldFailToUnmarkBestAnswerIfAnswerProvidedNotBelongsToTheTopicProvided() throws Exception {
         BDDMockito.given(this.userClientRequest.getUserById(2L)).
                 willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/markBestAnswer/{answer_id}",
-                        2, 2)
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/unmarkBestAnswer",
+                        2, 1)
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "2")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
-                .andExpect(status().isUnprocessableEntity())
+                .andExpect(status().isIAmATeapot())
                 .andExpect(jsonPath("$.detail",
-                        is("Este tópico já possui a resposta [ID: 2] como melhor resposta")));
+                        is("A resposta fornecida não pertence ao tópico fornecido")));
 
         Topic topic = this.topicRepository.findById(2L).orElseThrow();
 
         Assertions.assertAll(
-                () -> assertEquals(4, this.answerRepository.findAll().size()),
                 () -> assertEquals(1, topic.getAnswers().size()),
-                () -> assertTrue(topic.getAnswers().stream().filter(answer -> answer.getId().equals(2L))
-                        .findFirst().orElseThrow().isBestAnswer())
+                () -> assertTrue(topic.getAnswers().stream().noneMatch(a -> a.getId().equals(1L)))
         );
 
         BDDMockito.verify(this.userClientRequest).getUserById(2L);
@@ -429,33 +638,60 @@ public class AnswerControllerIT {
 
     }
 
-
-    @Transactional
-    @DisplayName("Should mark answer best with success if user is authenticated and " +
-                 "previous premisses are adequate")
+    @DisplayName("Should fail with status code 418 when unmark best answer if answer provided " +
+                 "isn't as best answer")
     @Test
-    void shouldMarkAnswerBestWithSuccessIfAuthenticated() throws Exception {
+    void shouldFailToUnmarkBestAnswerIfAnswerProvidedIsNotAsBestAnswer() throws Exception {
         BDDMockito.given(this.userClientRequest.getUserById(1L)).
                 willReturn(TestsHelper.AuthorHelper.authorList().get(0));
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/markBestAnswer/{answer_id}",
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/unmarkBestAnswer",
                         1, 1)
-                        .with(jwt().jwt(JWT))
+                        .with(jwt().jwt(jwt -> jwt.claim("user_id", "1")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isIAmATeapot())
+                .andExpect(jsonPath("$.detail",
+                        is("A resposta fornecida não está definida como melhor resposta")));
+
+        Topic topic = this.topicRepository.findById(1L).orElseThrow();
+
+        Assertions.assertAll(
+                () -> assertEquals(2, topic.getAnswers().size()),
+                () -> assertFalse(topic.getAnswers().stream().allMatch(Answer::isBestAnswer))
+        );
+
+        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
+
+    }
+
+
+    @Transactional
+    @DisplayName("Should unmark best answer with success if user is authenticated and " +
+                 "previous premisses are adequate")
+    @Test
+    void shouldUnmarkBestAnswerWithSuccessIfAuthenticated() throws Exception {
+        BDDMockito.given(this.userClientRequest.getUserById(2L)).
+                willReturn(TestsHelper.AuthorHelper.authorList().get(1));
+
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/unmarkBestAnswer",
+                        2, 2)
+                        .with(jwt().jwt(jwt -> jwt.claim("user_id", "2")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
                 .andExpect(content().string("{\"message\":\"HttpStatusCode OK\"}"));
 
-        Topic topic = this.topicRepository.findById(1L).orElseThrow();
+        Topic topic = this.topicRepository.findById(2L).orElseThrow();
 
         Assertions.assertAll(
-                () -> assertEquals(4, this.answerRepository.findAll().size()),
-                () -> assertEquals(2, topic.getAnswers().size()),
-                () -> assertTrue(topic.getAnswers().stream().filter(answer -> answer.getId().equals(1L))
+                () -> assertEquals(1, topic.getAnswers().size()),
+                () -> assertFalse(topic.getAnswers().stream().filter(answer -> answer.getId().equals(2L))
                         .findFirst().orElseThrow().isBestAnswer())
         );
 
-        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verify(this.userClientRequest).getUserById(2L);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
@@ -529,7 +765,6 @@ public class AnswerControllerIT {
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
 
         Assertions.assertAll(
-                () -> assertEquals(4, this.answerRepository.findAll().size()),
                 () -> assertEquals(2, topic.getAnswers().size()),
                 () -> assertEquals("Resposta do primeiro tópico", topic.getAnswers().stream()
                         .filter(answer -> answer.getId().equals(1L)).findFirst().orElseThrow()
@@ -563,7 +798,6 @@ public class AnswerControllerIT {
 
         Assertions.assertAll(
                 () -> assertFalse(this.topicRepository.findById(6L).isPresent()),
-                () -> assertEquals(4, answer.size()),
                 () -> assertTrue(answer.stream().noneMatch(answer1 -> answer1
                         .getSolution().equals("Primeiro teste de edição de uma resposta")))
         );
@@ -594,7 +828,6 @@ public class AnswerControllerIT {
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
 
         Assertions.assertAll(
-                () -> assertEquals(4, this.answerRepository.findAll().size()),
                 () -> assertEquals(2, topic.getAnswers().size()),
                 () -> assertFalse(topic.getAnswers().stream().anyMatch(answer -> answer.getSolution()
                         .equals("Primeiro teste de edição de uma resposta")))
@@ -665,7 +898,6 @@ public class AnswerControllerIT {
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
 
         Assertions.assertAll(
-                () -> assertEquals(4, this.answerRepository.findAll().size()),
                 () -> assertEquals(2, topic.getAnswers().size()),
                 () -> assertEquals("Resposta do primeiro tópico", topic.getAnswers().stream()
                         .filter(answer -> answer.getId().equals(1L)).findFirst().orElseThrow()
@@ -704,7 +936,6 @@ public class AnswerControllerIT {
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
 
         Assertions.assertAll(
-                () -> assertEquals(4, this.answerRepository.findAll().size()),
                 () -> assertEquals(2, topic.getAnswers().size()),
                 () -> assertEquals("Resposta do primeiro tópico", topic.getAnswers().stream()
                         .filter(answer -> answer.getId().equals(4L)).findFirst().orElseThrow()
@@ -744,7 +975,6 @@ public class AnswerControllerIT {
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
 
         Assertions.assertAll(
-                () -> assertEquals(4, this.answerRepository.findAll().size()),
                 () -> assertEquals(2, topic.getAnswers().size()),
                 () -> assertEquals("Primeiro teste de edição de uma resposta", topic.getAnswers().stream()
                         .filter(answer -> answer.getId().equals(1L)).findFirst().orElseThrow()
@@ -783,7 +1013,6 @@ public class AnswerControllerIT {
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
 
         Assertions.assertAll(
-                () -> assertEquals(4, this.answerRepository.findAll().size()),
                 () -> assertEquals(2, topic.getAnswers().size()),
                 () -> assertEquals("Segundo teste de edição de uma resposta", topic.getAnswers().stream()
                         .filter(answer -> answer.getId().equals(1L)).findFirst().orElseThrow()
@@ -822,7 +1051,6 @@ public class AnswerControllerIT {
         Topic topic = this.topicRepository.findById(3L).orElseThrow();
 
         Assertions.assertAll(
-                () -> assertEquals(4, this.answerRepository.findAll().size()),
                 () -> assertEquals(1, topic.getAnswers().size()),
                 () -> assertEquals("Terceiro teste de edição de uma resposta", topic.getAnswers().stream()
                         .filter(answer -> answer.getId().equals(3L)).findFirst().orElseThrow()
@@ -849,7 +1077,6 @@ public class AnswerControllerIT {
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
 
         Assertions.assertAll(
-                () -> assertEquals(4, this.answerRepository.findAll().size()),
                 () -> assertEquals(2, topic.getAnswers().size()),
                 () -> assertTrue(topic.getAnswers().stream().anyMatch(answer -> answer.getId().equals(1L)))
 
@@ -891,7 +1118,6 @@ public class AnswerControllerIT {
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
 
         Assertions.assertAll(
-                () -> assertEquals(4, this.answerRepository.findAll().size()),
                 () -> assertEquals(2, topic.getAnswers().size()),
                 () -> assertTrue(topic.getAnswers().stream().anyMatch(answer -> answer.getId().equals(1L)))
 
@@ -924,7 +1150,6 @@ public class AnswerControllerIT {
         Long[] answersId = {1L, 4L, 5L};
 
         Assertions.assertAll(
-                () -> assertEquals(4, this.answerRepository.findAll().size()),
                 () -> assertEquals(2, topic.getAnswers().size()),
                 () -> containsInAnyOrder(answersId, topic.getAnswers().stream().map(Answer::getId).toArray())
 
@@ -953,7 +1178,6 @@ public class AnswerControllerIT {
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
 
         Assertions.assertAll(
-                () -> assertEquals(4, this.answerRepository.findAll().size()),
                 () -> assertEquals(2, topic.getAnswers().size()),
                 () -> assertTrue(topic.getAnswers().stream().anyMatch(answer -> answer.getId().equals(1L)))
 

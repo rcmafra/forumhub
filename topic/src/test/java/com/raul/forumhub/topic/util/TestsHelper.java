@@ -66,7 +66,7 @@ public final class TestsHelper {
             final Topic topic3 = TestsHelper.TopicHelper.topicList().get(2);
             topic3.setAnswers(Set.of(TestsHelper.AnswerHelper.answerList().get(2)));
 
-            return new ArrayList<>(List.of(topic1, topic2, topic3));
+            return List.of(topic1, topic2, topic3);
 
         }
 
