@@ -7,8 +7,8 @@ import com.raul.forumhub.topic.domain.Topic;
 import com.raul.forumhub.topic.dto.request.TopicCreateRequestDTO;
 import com.raul.forumhub.topic.dto.request.TopicUpdateRequestDTO;
 import com.raul.forumhub.topic.dto.response.TopicResponseDTO;
+import com.raul.forumhub.topic.exception.BusinessException;
 import com.raul.forumhub.topic.exception.InstanceNotFoundException;
-import com.raul.forumhub.topic.exception.TopicServiceException;
 import com.raul.forumhub.topic.repository.TopicRepository;
 import com.raul.forumhub.topic.util.PermissionUtils;
 import org.springframework.data.domain.Page;
@@ -59,8 +59,8 @@ public class TopicService {
 
         if (topic.getAuthor().getId() == 0L || topic.getAuthor().getUsername()
                 .equalsIgnoreCase("anonymous")) {
-            throw new TopicServiceException("O tópico pertence a um autor inexistente, " +
-                                            "ele não pode ser editado");
+            throw new BusinessException("O tópico pertence a um autor inexistente, " +
+                                        "ele não pode ser editado");
         }
 
         topic.setTitle(update.title());

@@ -1,7 +1,7 @@
 package com.raul.forumhub.topic.exception.handler;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
-import com.raul.forumhub.topic.exception.AbstractServiceException;
+import com.raul.forumhub.topic.exception.BusinessException;
 import com.raul.forumhub.topic.exception.InstanceNotFoundException;
 import com.raul.forumhub.topic.exception.RestClientException;
 import com.raul.forumhub.topic.exception.ValidationException;
@@ -112,8 +112,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(entity, headers(), ex.getHttpStatusCode());
     }
 
-    @ExceptionHandler(AbstractServiceException.class)
-    private ResponseEntity<ExceptionEntity> businessServiceExceptionResolver(AbstractServiceException ex, HttpServletRequest request) {
+    @ExceptionHandler(BusinessException.class)
+    private ResponseEntity<ExceptionEntity> businessServiceExceptionResolver(BusinessException ex, HttpServletRequest request) {
         ExceptionEntity entity = new ExceptionEntity(LocalDateTime.now(), HttpStatus.UNPROCESSABLE_ENTITY.value(),
                 "Erro de business", ex.getMessage(), request.getRequestURI());
         return new ResponseEntity<>(entity, headers(), HttpStatus.UNPROCESSABLE_ENTITY);

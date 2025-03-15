@@ -6,9 +6,9 @@ import com.raul.forumhub.topic.domain.Topic;
 import com.raul.forumhub.topic.dto.request.TopicCreateRequestDTO;
 import com.raul.forumhub.topic.dto.request.TopicUpdateRequestDTO;
 import com.raul.forumhub.topic.dto.response.TopicResponseDTO;
+import com.raul.forumhub.topic.exception.BusinessException;
 import com.raul.forumhub.topic.exception.InstanceNotFoundException;
 import com.raul.forumhub.topic.exception.RestClientException;
-import com.raul.forumhub.topic.exception.TopicServiceException;
 import com.raul.forumhub.topic.exception.ValidationException;
 import com.raul.forumhub.topic.repository.TopicRepository;
 import com.raul.forumhub.topic.util.TestsHelper;
@@ -112,8 +112,8 @@ public class TopicServiceTest {
     void shouldFailToCreateTopicIfTitlePropertyIsGreaterThan150Chars() {
         final TopicCreateRequestDTO topicCreateRequestDTO = new TopicCreateRequestDTO(
                 "Qual é a diferença entre o Feign Client, RestTemplate e o WebClient no " +
-                        "Spring Framework e em que situações é mais adequado utilizá-los durante a " +
-                        "integração de um serviço?",
+                "Spring Framework e em que situações é mais adequado utilizá-los durante a " +
+                "integração de um serviço?",
                 "Diferença entre o Feign Client, RestTemplate e WebClient",
                 1L);
 
@@ -611,7 +611,7 @@ public class TopicServiceTest {
         BDDMockito.given(this.userClientRequest.getUserById(3L))
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(2));
 
-        Assertions.assertThrows(TopicServiceException.class,
+        Assertions.assertThrows(BusinessException.class,
                 () -> this.topicService.updateTopic(3L, 3L, topicUpdateRequestDTO),
                 "O tópico pertence a um autor inexistente, ele não pode ser editado");
 
