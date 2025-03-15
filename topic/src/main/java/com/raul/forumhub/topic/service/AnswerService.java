@@ -7,7 +7,7 @@ import com.raul.forumhub.topic.domain.Status;
 import com.raul.forumhub.topic.domain.Topic;
 import com.raul.forumhub.topic.dto.request.AnswerRequestDTO;
 import com.raul.forumhub.topic.dto.response.AnswerResponseDTO;
-import com.raul.forumhub.topic.exception.AnswerServiceException;
+import com.raul.forumhub.topic.exception.BusinessException;
 import com.raul.forumhub.topic.exception.InstanceNotFoundException;
 import com.raul.forumhub.topic.repository.AnswerRepository;
 import com.raul.forumhub.topic.util.PermissionUtils;
@@ -57,6 +57,22 @@ public class AnswerService {
 
     }
 
+    public void unmarkBestAnswer(Long topic_id, Long answer_id, Long user_id) {
+        Topic topic = topicService.getTopicById(topic_id);
+        Answer answer = this.getAnswerById(answer_id);
+        Author author = userClientRequest.getUserById(user_id);
+
+        PermissionUtils.validateTopicOwner(topic.getAuthor().getId(), author.getId());
+        ValidationUtils.validateProvidedAnswer(topic.getAnswers(), answer.getId());
+
+
+        topic.setStatus(Status.UNSOLVED);
+        answer.setBestAnswer(false);
+
+        this.topicService.saveTopic(topic);
+
+    }
+
 
     public AnswerResponseDTO updateAnswer(Long topic_id, Long answer_id, Long user_id, AnswerRequestDTO answerRequestDTO) {
         this.topicService.getTopicById(topic_id);
@@ -67,8 +83,8 @@ public class AnswerService {
 
         if (answer.getAuthor().getId() == 0L || answer.getAuthor().getUsername()
                 .equalsIgnoreCase("anonymous")) {
-            throw new AnswerServiceException("A resposta pertence a um autor inexistente, " +
-                                             "ela não pode ser editada");
+            throw new BusinessException("A resposta pertence a um autor inexistente, " +
+                                        "ela não pode ser editada");
         }
 
         answer.setSolution(answerRequestDTO.solution());
@@ -82,7 +98,7 @@ public class AnswerService {
         Author author = this.userClientRequest.getUserById(user_id);
 
         if (!answer.getTopic().getId().equals(topic_id)) {
-            throw new AnswerServiceException("A resposta fornecida não pertence a esse tópico");
+            throw new BusinessException("A resposta fornecida não pertence a esse tópico");
         }
 
         PermissionUtils.privilegeValidator(answer.getAuthor().getId(), author);

@@ -35,12 +35,23 @@ public class AnswerController {
     }
 
     @IsAuthenticated
-    @PutMapping("/{topic_id}/markBestAnswer/{answer_id}")
+    @PutMapping("/{topic_id}/answers/{answer_id}/markBestAnswer")
     public ResponseEntity<HttpStatusMessage> markBestAnswer(@PathVariable Long topic_id, @PathVariable Long answer_id,
                                                             @AuthenticationPrincipal Jwt jwt) {
 
         Long user_id = Long.parseLong(jwt.getClaim("user_id"));
         this.answerService.markBestAnswer(topic_id, answer_id, user_id);
+
+        return ResponseEntity.ok(new HttpStatusMessage("HttpStatusCode OK"));
+    }
+
+    @IsAuthenticated
+    @PutMapping("/{topic_id}/answers/{answer_id}/unmarkBestAnswer")
+    public ResponseEntity<HttpStatusMessage> unmarkBestAnswer(@PathVariable Long topic_id, @PathVariable Long answer_id,
+                                                            @AuthenticationPrincipal Jwt jwt) {
+
+        Long user_id = Long.parseLong(jwt.getClaim("user_id"));
+        this.answerService.unmarkBestAnswer(topic_id, answer_id, user_id);
 
         return ResponseEntity.ok(new HttpStatusMessage("HttpStatusCode OK"));
     }
