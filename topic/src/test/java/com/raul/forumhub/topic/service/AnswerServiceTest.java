@@ -167,6 +167,9 @@ public class AnswerServiceTest {
         BDDMockito.given(this.topicService.getTopicById(1L))
                 .willReturn(TestsHelper.TopicHelper.topicListWithAnswers().get(0));
 
+        BDDMockito.given(this.answerRepository.findById(1L))
+                .willReturn(Optional.of(TestsHelper.AnswerHelper.answerList().get(0)));
+
         BDDMockito.given(this.userClientRequest.getUserById(1L)).
                 willThrow(new RestClientException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
 
@@ -177,9 +180,10 @@ public class AnswerServiceTest {
 
         BDDMockito.verify(this.topicService).getTopicById(1L);
         BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verify(this.answerRepository).findById(1L);
         BDDMockito.verifyNoMoreInteractions(this.topicService);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
-        BDDMockito.verifyNoInteractions(this.answerRepository);
+        BDDMockito.verifyNoMoreInteractions(this.answerRepository);
 
     }
 
@@ -188,6 +192,9 @@ public class AnswerServiceTest {
     void shouldNotToMarkBestAnswerIfAuthenticatedUserIsNotOwnerTopic() {
         BDDMockito.given(this.topicService.getTopicById(1L))
                 .willReturn(TestsHelper.TopicHelper.topicListWithAnswers().get(0));
+
+        BDDMockito.given(this.answerRepository.findById(1L))
+                .willReturn(Optional.of(TestsHelper.AnswerHelper.answerList().get(0)));
 
         BDDMockito.given(this.userClientRequest.getUserById(2L)).
                 willReturn(TestsHelper.AuthorHelper.authorList().get(1));
@@ -198,9 +205,10 @@ public class AnswerServiceTest {
 
         BDDMockito.verify(this.topicService).getTopicById(1L);
         BDDMockito.verify(this.userClientRequest).getUserById(2L);
+        BDDMockito.verify(this.answerRepository).findById(1L);
         BDDMockito.verifyNoMoreInteractions(this.topicService);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
-        BDDMockito.verifyNoInteractions(this.answerRepository);
+        BDDMockito.verifyNoMoreInteractions(this.answerRepository);
 
 
     }
@@ -210,6 +218,9 @@ public class AnswerServiceTest {
     void shouldNotToMarkBestAnswerIfYetNotExistsAnswer() {
         BDDMockito.given(this.topicService.getTopicById(4L))
                 .willReturn(TestsHelper.TopicHelper.topicList().get(3));
+
+        BDDMockito.given(this.answerRepository.findById(1L))
+                .willReturn(Optional.of(TestsHelper.AnswerHelper.answerList().get(0)));
 
         BDDMockito.given(this.userClientRequest.getUserById(1L)).
                 willReturn(TestsHelper.AuthorHelper.authorList().get(0));
@@ -221,9 +232,10 @@ public class AnswerServiceTest {
 
         BDDMockito.verify(this.topicService).getTopicById(4L);
         BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verify(this.answerRepository).findById(1L);
         BDDMockito.verifyNoMoreInteractions(this.topicService);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
-        BDDMockito.verifyNoInteractions(this.answerRepository);
+        BDDMockito.verifyNoMoreInteractions(this.answerRepository);
 
     }
 
@@ -232,6 +244,9 @@ public class AnswerServiceTest {
     void shouldNotToMarkBestAnswerIfAlreadyExistsBestAnswer() {
         BDDMockito.given(this.topicService.getTopicById(2L))
                 .willReturn(TestsHelper.TopicHelper.topicListWithAnswers().get(1));
+
+        BDDMockito.given(this.answerRepository.findById(2L))
+                .willReturn(Optional.of(TestsHelper.AnswerHelper.answerList().get(1)));
 
         BDDMockito.given(this.userClientRequest.getUserById(2L)).
                 willReturn(TestsHelper.AuthorHelper.authorList().get(1));
@@ -243,9 +258,10 @@ public class AnswerServiceTest {
 
         BDDMockito.verify(this.topicService).getTopicById(2L);
         BDDMockito.verify(this.userClientRequest).getUserById(2L);
+        BDDMockito.verify(this.answerRepository).findById(2L);
         BDDMockito.verifyNoMoreInteractions(this.topicService);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
-        BDDMockito.verifyNoInteractions(this.answerRepository);
+        BDDMockito.verifyNoMoreInteractions(this.answerRepository);
 
 
     }
