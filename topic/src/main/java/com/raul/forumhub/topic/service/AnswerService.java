@@ -43,12 +43,12 @@ public class AnswerService {
 
     public void markBestAnswer(Long topic_id, Long answer_id, Long user_id) {
         Topic topic = topicService.getTopicById(topic_id);
+        Answer answer = this.getAnswerById(answer_id);
         Author author = userClientRequest.getUserById(user_id);
 
         PermissionUtils.validateTopicOwner(topic.getAuthor().getId(), author.getId());
-        ValidationUtils.hasBestAnswer(topic.getAnswers());
+        ValidationUtils.validateMarkBestAnswer(topic, answer_id);
 
-        Answer answer = this.getAnswerById(answer_id);
 
         topic.setStatus(Status.SOLVED);
         answer.setBestAnswer(true);
@@ -63,7 +63,7 @@ public class AnswerService {
         Author author = userClientRequest.getUserById(user_id);
 
         PermissionUtils.validateTopicOwner(topic.getAuthor().getId(), author.getId());
-        ValidationUtils.validateProvidedAnswer(topic.getAnswers(), answer.getId());
+        ValidationUtils.validateUnmarkBestAnswer(topic, answer.getId());
 
 
         topic.setStatus(Status.UNSOLVED);

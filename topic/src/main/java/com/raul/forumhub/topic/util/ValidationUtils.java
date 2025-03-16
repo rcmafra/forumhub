@@ -1,6 +1,7 @@
 package com.raul.forumhub.topic.util;
 
 import com.raul.forumhub.topic.domain.Answer;
+import com.raul.forumhub.topic.domain.Topic;
 import com.raul.forumhub.topic.exception.BusinessException;
 import com.raul.forumhub.topic.exception.ValidationException;
 import lombok.experimental.UtilityClass;
@@ -10,39 +11,45 @@ import java.util.Set;
 @UtilityClass
 public class ValidationUtils {
 
+    public void validateMarkBestAnswer(Topic topic, Long answer_id) {
+        hasAnswerInTopic(topic);
 
-    public void validateProvidedAnswer(Set<Answer> answers, Long answer_id) {
-        if (!hasAnswer(answers)) {
-            throw raiseValidationException("Ainda não existe respostas para esse tópico");
-        } else {
-            answers.stream().filter(ans -> ans.getId().equals(answer_id))
-                    .findFirst().or(() -> {
-                        throw raiseValidationException("A resposta fornecida não pertence ao tópico fornecido");
-                    }).map(ans -> {
-                        if (!isBestAnswer(ans)) {
-                            throw raiseValidationException("A resposta fornecida não está definida como melhor resposta");
+        topic.getAnswers().stream().filter(ans -> ans.getId().equals(answer_id))
+                .findFirst().or(() -> {
+                            throw raiseValidationException("A resposta fornecida não pertence ao tópico fornecido");
                         }
-                        return ans;
-                    });
-        }
+                );
+
+        topic.getAnswers().stream().filter(Answer::isBestAnswer)
+                .findFirst().ifPresent(ans -> {
+                    throw new BusinessException(String.format("Este tópico já possui a resposta [ID: %d] como melhor resposta",
+                            ans.getId()));
+                });
 
     }
 
-    public void hasBestAnswer(Set<Answer> answers) {
-        if (!hasAnswer(answers)) {
+
+    public void validateUnmarkBestAnswer(Topic topic, Long answer_id) {
+        hasAnswerInTopic(topic);
+
+        topic.getAnswers().stream().filter(ans -> ans.getId().equals(answer_id))
+                .findFirst().or(() -> {
+                    throw raiseValidationException("A resposta fornecida não pertence ao tópico fornecido");
+                }).ifPresent(ans -> {
+                    if (!ans.isBestAnswer()) {
+                        throw raiseValidationException("A resposta fornecida não está definida como melhor resposta");
+                    }
+                });
+
+    }
+
+    private void hasAnswerInTopic(Topic topic) {
+        if (!hasAnswer(topic.getAnswers())) {
             throw raiseValidationException("Ainda não existe respostas para esse tópico");
-        } else {
-            answers.stream().filter(Answer::isBestAnswer)
-                    .findFirst().ifPresent(a -> {
-                        throw new BusinessException(String.format("Este tópico já possui a resposta [ID: %d] como melhor resposta",
-                                a.getId()));
-                    });
         }
+
     }
 
-    private boolean isBestAnswer(Answer answer) {
-        return answer.isBestAnswer();
-    }
 
     private boolean hasAnswer(Set<Answer> answers) {
         return !answers.isEmpty();
