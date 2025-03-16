@@ -66,13 +66,14 @@ public class UserService {
         user.setEmail(userUpdateDTO.email());
 
         if (claimUserRole.equals(Profile.ProfileName.ADM)) {
-            user.setFirstName(userUpdateDTO.firstName());
-            user.setLastName(userUpdateDTO.lastName());
-            user.setProfile(profile);
-            user.setAccountNonExpired(userUpdateDTO.accountNonExpired());
-            user.setAccountNonLocked(userUpdateDTO.accountNonLocked());
-            user.setCredentialsNonExpired(userUpdateDTO.credentialsNonExpired());
-            user.setEnabled(userUpdateDTO.enabled());
+            User.builder().firstName(userUpdateDTO.firstName())
+                    .lastName(userUpdateDTO.lastName())
+                    .profile(profile)
+                    .isAccountNonExpired(userUpdateDTO.accountNonExpired())
+                    .isAccountNonLocked(userUpdateDTO.accountNonLocked())
+                    .isCredentialsNonExpired(userUpdateDTO.credentialsNonExpired())
+                    .isEnabled(userUpdateDTO.enabled())
+                    .build();
         }
 
         userRepository.save(user);
