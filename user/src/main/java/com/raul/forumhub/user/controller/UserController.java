@@ -47,8 +47,7 @@ public class UserController {
     @GetMapping("/detailed-info")
     public ResponseEntity<UserDetailedInfo> getDetailedInfoUser(@RequestParam(required = false) Long user_id, @AuthenticationPrincipal Jwt jwt) {
 
-        Profile.ProfileName claimUserRole =
-                Enum.valueOf(Profile.ProfileName.class, jwt.getClaim("authority").toString().substring(5));
+        Profile.ProfileName claimUserRole = this.extractUserRoleClaim(jwt);
 
         Long claimUserId = Long.parseLong(jwt.getClaim("user_id"));
 
@@ -85,8 +84,7 @@ public class UserController {
     public ResponseEntity<UserDetailedInfo> updateUser(@RequestParam(required = false) Long user_id, @Valid @RequestBody UserUpdateDTO userUpdateDTO,
                                                        @AuthenticationPrincipal Jwt jwt) {
 
-        Profile.ProfileName claimUserRole =
-                Enum.valueOf(Profile.ProfileName.class, jwt.getClaim("authority").toString().substring(5));
+        Profile.ProfileName claimUserRole = this.extractUserRoleClaim(jwt);
 
         Long claimUserId = Long.parseLong(jwt.getClaim("user_id"));
 
@@ -108,9 +106,7 @@ public class UserController {
     @DeleteMapping("/delete")
     public ResponseEntity<HttpMessageDefault> deleteUser(@RequestParam(required = false) Long user_id, @AuthenticationPrincipal Jwt jwt) {
 
-        Profile.ProfileName claimUserRole =
-                Enum.valueOf(Profile.ProfileName.class, jwt.getClaim("authority")
-                        .toString().substring(5));
+        Profile.ProfileName claimUserRole = this.extractUserRoleClaim(jwt);
 
         Long claimUserId = Long.parseLong(jwt.getClaim("user_id"));
 
@@ -129,6 +125,10 @@ public class UserController {
         throw new MalFormatedParamUserException("Parâmetros fornecidos não esperado");
 
 
+    }
+
+    private Profile.ProfileName extractUserRoleClaim(Jwt jwt) {
+        return Enum.valueOf(Profile.ProfileName.class, jwt.getClaim("authority").toString().substring(5));
     }
 
 
