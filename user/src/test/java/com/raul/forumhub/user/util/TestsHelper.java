@@ -10,8 +10,8 @@ public class TestsHelper {
 
     public static final class UserHelper {
         public static List<User> userList() {
-            final List<User> authorList = new ArrayList<>();
-            authorList.add(User.builder()
+            final List<User> userList = new ArrayList<>();
+            userList.add(User.builder()
                     .id(1L)
                     .firstName("Jose")
                     .lastName("Silva")
@@ -25,7 +25,7 @@ public class TestsHelper {
                     .isEnabled(true)
                     .build()
             );
-            authorList.add(User.builder()
+            userList.add(User.builder()
                     .id(2L)
                     .firstName("Maria")
                     .lastName("Silva")
@@ -39,7 +39,7 @@ public class TestsHelper {
                     .isEnabled(true)
                     .build()
             );
-            authorList.add(User.builder()
+            userList.add(User.builder()
                     .id(3L)
                     .firstName("Joao")
                     .lastName("Silva")
@@ -53,7 +53,7 @@ public class TestsHelper {
                     .isEnabled(true)
                     .build()
             );
-            return authorList;
+            return userList;
         }
 
 
