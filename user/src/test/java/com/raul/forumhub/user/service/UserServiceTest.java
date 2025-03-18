@@ -348,9 +348,9 @@ public class UserServiceTest {
 
 
         Assertions.assertAll(
-                () -> assertEquals(Profile.ProfileName.ADM, userSummaryInfoPage.getContent().get(2).profile().getProfileName()),
-                () -> assertEquals(Profile.ProfileName.BASIC, userSummaryInfoPage.getContent().get(0).profile().getProfileName()),
-                () -> assertEquals(Profile.ProfileName.MOD, userSummaryInfoPage.getContent().get(1).profile().getProfileName()),
+                () -> assertEquals(Profile.ProfileName.ADM, userSummaryInfoPage.getContent().get(2).profile()),
+                () -> assertEquals(Profile.ProfileName.BASIC, userSummaryInfoPage.getContent().get(0).profile()),
+                () -> assertEquals(Profile.ProfileName.MOD, userSummaryInfoPage.getContent().get(1).profile()),
                 () -> assertEquals(3, userSummaryInfoPage.getContent().size()),
                 () -> assertEquals(10, userSummaryInfoPage.getSize()),
                 () -> assertEquals(3, userSummaryInfoPage.getTotalElements()),

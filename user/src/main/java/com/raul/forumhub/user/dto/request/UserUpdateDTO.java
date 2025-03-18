@@ -7,6 +7,6 @@ public record UserUpdateDTO(@NotBlank(message = "O primeiro nome não pode ser v
                             @NotBlank(message = "O sobrenome não pode ser vazio") String lastName,
                             @NotBlank(message = "O username não pode ser vazio") String username,
                             @NotBlank(message = "O email não pode ser vazio") String email,
-                            Profile.ProfileName profileName, boolean accountNonExpired, boolean accountNonLocked,
+                            Profile.ProfileName profile, boolean accountNonExpired, boolean accountNonLocked,
                             boolean credentialsNonExpired, boolean enabled) {
 }

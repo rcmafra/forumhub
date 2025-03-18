@@ -132,7 +132,7 @@ public class UserControllerTest {
     }
 
     @DisplayName("Should fail if password hasn't at least one character " +
-            "uppercase when create user")
+                 "uppercase when create user")
     @Test
     void shouldFailIfPasswordHasNotCharUppercaseWhenCreateUser() throws Exception {
         final UserCreateDTO userCreateDTO = new UserCreateDTO("Marcus",
@@ -154,7 +154,7 @@ public class UserControllerTest {
     }
 
     @DisplayName("Should fail if password hasn't at least one character " +
-            "lowercase when create user")
+                 "lowercase when create user")
     @Test
     void shouldFailIfPasswordHasNotCharLowercaseWhenCreateUser() throws Exception {
         final UserCreateDTO userCreateDTO = new UserCreateDTO("Marcus",
@@ -218,7 +218,7 @@ public class UserControllerTest {
     }
 
     @DisplayName("Should fail if exists five sequence alphabetic in the password " +
-            "when create user (e.g.: abcde)")
+                 "when create user (e.g.: abcde)")
     @Test
     void shouldFailIfPasswordHasSequenceAlphabeticWhenCreateUser() throws Exception {
         final UserCreateDTO userCreateDTO = new UserCreateDTO("Marcus",
@@ -240,7 +240,7 @@ public class UserControllerTest {
     }
 
     @DisplayName("Should fail if exists five sequence numerical in the password " +
-            "when create user (e.g.: 12345)")
+                 "when create user (e.g.: 12345)")
     @Test
     void shouldFailIfPasswordHasSequenceNumericalWhenCreateUser() throws Exception {
         final UserCreateDTO userCreateDTO = new UserCreateDTO("Marcus",
@@ -262,7 +262,7 @@ public class UserControllerTest {
     }
 
     @DisplayName("Should fail if exists 'qwerty' sequence in the password " +
-            "when create user")
+                 "when create user")
     @Test
     void shouldFailIfPasswordHasSequenceQWERTYWhenCreateUser() throws Exception {
         final UserCreateDTO userCreateDTO = new UserCreateDTO("Marcus",
@@ -284,7 +284,7 @@ public class UserControllerTest {
     }
 
     @DisplayName("Should fail if exists whitespace in the password " +
-            "when create user")
+                 "when create user")
     @Test
     void shouldFailIfPasswordHasWhitespaceWhenCreateUser() throws Exception {
         final UserCreateDTO userCreateDTO = new UserCreateDTO("Marcus",
@@ -311,7 +311,8 @@ public class UserControllerTest {
         final UserCreateDTO userCreateDTO = new UserCreateDTO("Jose", "Silva",
                 "jose_silva", "jose_silva@email.com", "P4s$word");
 
-        BDDMockito.doNothing().when(this.userService).registerUser(userCreateDTO);
+        BDDMockito.given(this.userService.registerUser(userCreateDTO))
+                .willReturn(TestsHelper.UserHelper.userList().get(0));
 
         this.mockMvc.perform(post("/forumhub.io/api/v1/users/create")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -326,7 +327,7 @@ public class UserControllerTest {
     }
 
     @DisplayName("Should fail with status code 401 when to request detailed info " +
-            "user if user unauthenticated")
+                 "user if user unauthenticated")
     @Test
     void shouldFailToRequestDetailedInfoUserIfUnauthenticated() throws Exception {
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/detailed-info")
@@ -339,7 +340,7 @@ public class UserControllerTest {
     }
 
     @DisplayName("Should fail with status code 403 when to request detailed info " +
-            "user if authenticated user isn't ADM or MOD, or hasn't authority 'myuser:read'")
+                 "user if authenticated user isn't ADM or MOD, or hasn't authority 'myuser:read'")
     @Test
     void shouldFailToRequestDetailedInfoUserIfUserHasNotSuitableAuthority() throws Exception {
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/detailed-info")
@@ -353,7 +354,7 @@ public class UserControllerTest {
     }
 
     @DisplayName("Should fail with status code 400 when request detailed info user" +
-            " with param different of type number, if him exists")
+                 " with param different of type number, if him exists")
     @Test
     void shouldFailToRequestDetailedInfoUserIfParamDifferentOfTypeNumber() throws Exception {
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/detailed-info")
@@ -370,7 +371,7 @@ public class UserControllerTest {
     }
 
     @DisplayName("BASIC user should be able get detailed info your user with success if " +
-            "has authority 'myuser:read' and user_id param is null")
+                 "has authority 'myuser:read' and user_id param is null")
     @Test
     void basicUserShouldGetDetailedInfoYourUserWithSuccessIfHasSuitableAuthority() throws Exception {
         BDDMockito.given(this.userService.getDetailedInfoUser(1L))
@@ -384,16 +385,16 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.user.id", is(1)))
-                .andExpect(jsonPath("$.user.firstName", is("Jose")))
-                .andExpect(jsonPath("$.user.lastName", is("Silva")))
-                .andExpect(jsonPath("$.user.username", is("jose_silva")))
-                .andExpect(jsonPath("$.user.email", is("jose@email.com")))
-                .andExpect(jsonPath("$.user.accountNonExpired", is(true)))
-                .andExpect(jsonPath("$.user.accountNonLocked", is(true)))
-                .andExpect(jsonPath("$.user.credentialsNonExpired", is(true)))
-                .andExpect(jsonPath("$.user.enabled", is(true)))
-                .andExpect(jsonPath("$.user.profile.profileName", is("BASIC")));
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.firstName", is("Jose")))
+                .andExpect(jsonPath("$.lastName", is("Silva")))
+                .andExpect(jsonPath("$.username", is("jose_silva")))
+                .andExpect(jsonPath("$.email", is("jose@email.com")))
+                .andExpect(jsonPath("$.profile", is("BASIC")))
+                .andExpect(jsonPath("$.accountNonExpired", is(true)))
+                .andExpect(jsonPath("$.accountNonLocked", is(true)))
+                .andExpect(jsonPath("$.credentialsNonExpired", is(true)))
+                .andExpect(jsonPath("$.enabled", is(true)));
 
 
         BDDMockito.verify(this.userService).getDetailedInfoUser(1L);
@@ -402,7 +403,7 @@ public class UserControllerTest {
     }
 
     @DisplayName("MOD user should be able get detailed info your user with success if " +
-            "user_id param is null")
+                 "user_id param is null")
     @Test
     void modUserShouldGetDetailedInfoYourUserWithSuccessIfHasSuitableAuthority() throws Exception {
         BDDMockito.given(this.userService.getDetailedInfoUser(2L))
@@ -416,16 +417,16 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.user.id", is(2)))
-                .andExpect(jsonPath("$.user.firstName", is("Maria")))
-                .andExpect(jsonPath("$.user.lastName", is("Silva")))
-                .andExpect(jsonPath("$.user.username", is("maria_silva")))
-                .andExpect(jsonPath("$.user.email", is("maria@email.com")))
-                .andExpect(jsonPath("$.user.accountNonExpired", is(true)))
-                .andExpect(jsonPath("$.user.accountNonLocked", is(true)))
-                .andExpect(jsonPath("$.user.credentialsNonExpired", is(true)))
-                .andExpect(jsonPath("$.user.enabled", is(true)))
-                .andExpect(jsonPath("$.user.profile.profileName", is("MOD")));
+                .andExpect(jsonPath("$.id", is(2)))
+                .andExpect(jsonPath("$.firstName", is("Maria")))
+                .andExpect(jsonPath("$.lastName", is("Silva")))
+                .andExpect(jsonPath("$.username", is("maria_silva")))
+                .andExpect(jsonPath("$.email", is("maria@email.com")))
+                .andExpect(jsonPath("$.profile", is("MOD")))
+                .andExpect(jsonPath("$.accountNonExpired", is(true)))
+                .andExpect(jsonPath("$.accountNonLocked", is(true)))
+                .andExpect(jsonPath("$.credentialsNonExpired", is(true)))
+                .andExpect(jsonPath("$.enabled", is(true)));
 
 
         BDDMockito.verify(this.userService).getDetailedInfoUser(2L);
@@ -434,7 +435,7 @@ public class UserControllerTest {
     }
 
     @DisplayName("ADM user should be able get detailed info your user with success if " +
-            "user_id param is null")
+                 "user_id param is null")
     @Test
     void admUserShouldGetDetailedInfoYourUserWithSuccessIfHasSuitableAuthority() throws Exception {
         BDDMockito.given(this.userService.getDetailedInfoUser(3L))
@@ -448,16 +449,16 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.user.id", is(3)))
-                .andExpect(jsonPath("$.user.firstName", is("Joao")))
-                .andExpect(jsonPath("$.user.lastName", is("Silva")))
-                .andExpect(jsonPath("$.user.username", is("joao_silva")))
-                .andExpect(jsonPath("$.user.email", is("joao@email.com")))
-                .andExpect(jsonPath("$.user.accountNonExpired", is(true)))
-                .andExpect(jsonPath("$.user.accountNonLocked", is(true)))
-                .andExpect(jsonPath("$.user.credentialsNonExpired", is(true)))
-                .andExpect(jsonPath("$.user.enabled", is(true)))
-                .andExpect(jsonPath("$.user.profile.profileName", is("ADM")));
+                .andExpect(jsonPath("$.id", is(3)))
+                .andExpect(jsonPath("$.firstName", is("Joao")))
+                .andExpect(jsonPath("$.lastName", is("Silva")))
+                .andExpect(jsonPath("$.username", is("joao_silva")))
+                .andExpect(jsonPath("$.email", is("joao@email.com")))
+                .andExpect(jsonPath("$.profile", is("ADM")))
+                .andExpect(jsonPath("$.accountNonExpired", is(true)))
+                .andExpect(jsonPath("$.accountNonLocked", is(true)))
+                .andExpect(jsonPath("$.credentialsNonExpired", is(true)))
+                .andExpect(jsonPath("$.enabled", is(true)));
 
 
         BDDMockito.verify(this.userService).getDetailedInfoUser(3L);
@@ -466,7 +467,7 @@ public class UserControllerTest {
     }
 
     @DisplayName("MOD user should be able get detailed info of other user with success if " +
-            "user_id param isn't null")
+                 "user_id param isn't null")
     @Test
     void modUserShouldGetDetailedInfoOfOtherUserWithSuccessIfHasSuitableAuthority() throws Exception {
         BDDMockito.given(this.userService.getDetailedInfoUser(1L))
@@ -481,16 +482,16 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.user.id", is(1)))
-                .andExpect(jsonPath("$.user.firstName", is("Jose")))
-                .andExpect(jsonPath("$.user.lastName", is("Silva")))
-                .andExpect(jsonPath("$.user.username", is("jose_silva")))
-                .andExpect(jsonPath("$.user.email", is("jose@email.com")))
-                .andExpect(jsonPath("$.user.accountNonExpired", is(true)))
-                .andExpect(jsonPath("$.user.accountNonLocked", is(true)))
-                .andExpect(jsonPath("$.user.credentialsNonExpired", is(true)))
-                .andExpect(jsonPath("$.user.enabled", is(true)))
-                .andExpect(jsonPath("$.user.profile.profileName", is("BASIC")));
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.firstName", is("Jose")))
+                .andExpect(jsonPath("$.lastName", is("Silva")))
+                .andExpect(jsonPath("$.username", is("jose_silva")))
+                .andExpect(jsonPath("$.email", is("jose@email.com")))
+                .andExpect(jsonPath("$.profile", is("BASIC")))
+                .andExpect(jsonPath("$.accountNonExpired", is(true)))
+                .andExpect(jsonPath("$.accountNonLocked", is(true)))
+                .andExpect(jsonPath("$.credentialsNonExpired", is(true)))
+                .andExpect(jsonPath("$.enabled", is(true)));
 
 
         BDDMockito.verify(this.userService).getDetailedInfoUser(1L);
@@ -499,7 +500,7 @@ public class UserControllerTest {
     }
 
     @DisplayName("ADM user should be able get detailed info of other user with success if " +
-            "user_id param isn't null")
+                 "user_id param isn't null")
     @Test
     void admUserShouldGetDetailedInfoOfOtherUserWithSuccessIfHasSuitableAuthority() throws Exception {
         BDDMockito.given(this.userService.getDetailedInfoUser(1L))
@@ -514,16 +515,16 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.user.id", is(1)))
-                .andExpect(jsonPath("$.user.firstName", is("Jose")))
-                .andExpect(jsonPath("$.user.lastName", is("Silva")))
-                .andExpect(jsonPath("$.user.username", is("jose_silva")))
-                .andExpect(jsonPath("$.user.email", is("jose@email.com")))
-                .andExpect(jsonPath("$.user.accountNonExpired", is(true)))
-                .andExpect(jsonPath("$.user.accountNonLocked", is(true)))
-                .andExpect(jsonPath("$.user.credentialsNonExpired", is(true)))
-                .andExpect(jsonPath("$.user.enabled", is(true)))
-                .andExpect(jsonPath("$.user.profile.profileName", is("BASIC")));
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.firstName", is("Jose")))
+                .andExpect(jsonPath("$.lastName", is("Silva")))
+                .andExpect(jsonPath("$.username", is("jose_silva")))
+                .andExpect(jsonPath("$.email", is("jose@email.com")))
+                .andExpect(jsonPath("$.profile", is("BASIC")))
+                .andExpect(jsonPath("$.accountNonExpired", is(true)))
+                .andExpect(jsonPath("$.accountNonLocked", is(true)))
+                .andExpect(jsonPath("$.credentialsNonExpired", is(true)))
+                .andExpect(jsonPath("$.enabled", is(true)));
 
 
         BDDMockito.verify(this.userService).getDetailedInfoUser(1L);
@@ -533,7 +534,7 @@ public class UserControllerTest {
 
 
     @DisplayName("Should raise exception if BASIC user to request detailed info of other user " +
-            "or yourself with user_id param not null")
+                 "or yourself with user_id param not null")
     @Test
     void shouldFailIfBasicUserToRequestDetailedInfoWithUserIdParamNotNull() throws Exception {
         BDDMockito.given(this.userService.getDetailedInfoUser(1L))
@@ -555,7 +556,7 @@ public class UserControllerTest {
 
 
     @DisplayName("Should fail with status code 401 when to request summary info " +
-            "user if user unauthenticated")
+                 "user if user unauthenticated")
     @Test
     void shouldFailToRequestSummaryInfoUserIfUnauthenticated() throws Exception {
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/summary-info")
@@ -586,7 +587,7 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.lastName", is("Silva")))
                 .andExpect(jsonPath("$.username", is("jose_silva")))
                 .andExpect(jsonPath("$.email", is("jose@email.com")))
-                .andExpect(jsonPath("$.profile.profileName", is("BASIC")));
+                .andExpect(jsonPath("$.profile", is("BASIC")));
 
         BDDMockito.verify(this.userService).getDetailedInfoUser(1L);
         BDDMockito.verifyNoMoreInteractions(this.userService);
@@ -594,7 +595,7 @@ public class UserControllerTest {
     }
 
     @DisplayName("Should fail with status code 400 if request user summary info " +
-            "with param different of type number, if him exists")
+                 "with param different of type number, if him exists")
     @Test
     void shouldFailToRequestSummaryInfoUserIfParamDifferentOfNumber() throws Exception {
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/summary-info")
@@ -610,7 +611,7 @@ public class UserControllerTest {
 
 
     @DisplayName("Should fail with status code 401 when to request all " +
-            "users if user is unauthenticated")
+                 "users if user is unauthenticated")
     @Test
     void shouldFailToRequestAllUsersIfUserIsUnauthenticated() throws Exception {
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/listAll")
@@ -624,7 +625,7 @@ public class UserControllerTest {
 
 
     @DisplayName("Should fail with status code 403 when to request all users " +
-            "if authenticated user isn't ADM or MOD or hasn't authority 'user:readAll'")
+                 "if authenticated user isn't ADM or MOD or hasn't authority 'user:readAll'")
     @Test
     void shouldFailToRequestAllUsersIfUserHasNotSuitableAuthority() throws Exception {
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/listAll")
@@ -639,7 +640,7 @@ public class UserControllerTest {
 
 
     @DisplayName("Should raise exception if BASIC user to request all users" +
-            "same with authority 'user:readAll'")
+                 "same with authority 'user:readAll'")
     @Test
     void shouldFailIfBasicUserToRequestAllUsers() throws Exception {
         Page<UserSummaryInfo> userDetailedInfoPage =
@@ -736,7 +737,7 @@ public class UserControllerTest {
 
 
     @DisplayName("MOD user should be able to request all users sorted descendant by id " +
-            "with success")
+                 "with success")
     @Test
     void modUserShouldToRequestAllUsersSortedByIdWithSuccess() throws Exception {
         Pageable pageable = PageRequest.of(0, 10,
@@ -780,7 +781,7 @@ public class UserControllerTest {
 
 
     @DisplayName("ADM user should be able to request all users sorted descendant by id " +
-            "with success")
+                 "with success")
     @Test
     void admUserShouldToRequestAllUsersSortedByIdWithSuccess() throws Exception {
         Pageable pageable = PageRequest.of(0, 10,
@@ -824,7 +825,7 @@ public class UserControllerTest {
 
 
     @DisplayName("MOD user should be able to request two users sorted ascendant by firstName " +
-            "with success")
+                 "with success")
     @Test
     void modUserShouldToRequestTwoUsersSortedByFirstNameWithSuccess() throws Exception {
         Pageable pageable = PageRequest.of(0, 2,
@@ -867,7 +868,7 @@ public class UserControllerTest {
 
 
     @DisplayName("ADM user should be able to request two users sorted descendant by firstName " +
-            "with success")
+                 "with success")
     @Test
     void admUserShouldToRequestTwoUsersSortedByFirstNameWithSuccess() throws Exception {
         Pageable pageable = PageRequest.of(0, 2,
@@ -912,7 +913,7 @@ public class UserControllerTest {
 
 
     @DisplayName("Should fail with status code 401 when to edit user " +
-            "if user is unauthenticated")
+                 "if user is unauthenticated")
     @Test
     void shouldFailToEditUserIfUnauthenticated() throws Exception {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO("Jose", "Silva", "newJose",
@@ -931,7 +932,7 @@ public class UserControllerTest {
 
 
     @DisplayName("Should fail with status code 403 when to edit user " +
-            "if authenticated user isn't ADM or hasn't authority 'myuser:edit'")
+                 "if authenticated user isn't ADM or hasn't authority 'myuser:edit'")
     @Test
     void shouldFailIfUserHasNotSuitableAuthorityWhenEditUser() throws Exception {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO("Jose", "Silva", "newJose",
@@ -950,7 +951,7 @@ public class UserControllerTest {
     }
 
     @DisplayName("Should fail with status code 400 when ADM user edit other user" +
-            " with param different of type number")
+                 " with param different of type number")
     @Test
     void shouldFailToEditUserIfParamDifferentOfTypeNumber() throws Exception {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO("Jose", "Silva", "newJose",
@@ -973,7 +974,7 @@ public class UserControllerTest {
     }
 
     @DisplayName("Should fail with status code 400 when edit user if profile sent is" +
-            "different of the enum types available")
+                 "different of the enum types available")
     @Test
     void shouldFailToEditUserIfEnumTypeSentNonExists() throws Exception {
         String request = """
@@ -1005,7 +1006,7 @@ public class UserControllerTest {
 
 
     @DisplayName("BASIC user should be able of edit your user with success if " +
-            "user_id param is null and has authority 'myuser:edit'")
+                 "user_id param is null and has authority 'myuser:edit'")
     @Test
     void basicUserShouldEditYourUserWithSuccessIfHasSuitableAuthority() throws Exception {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO("Jose", "Silva", "newJose",
@@ -1028,16 +1029,16 @@ public class UserControllerTest {
                         .content(new ObjectMapper().writeValueAsString(userUpdateDTO))
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.user.id", is(1)))
-                .andExpect(jsonPath("$.user.firstName", is("Jose")))
-                .andExpect(jsonPath("$.user.lastName", is("Silva")))
-                .andExpect(jsonPath("$.user.username", is("newJose")))
-                .andExpect(jsonPath("$.user.email", is("new_jose@email.com")))
-                .andExpect(jsonPath("$.user.accountNonExpired", is(true)))
-                .andExpect(jsonPath("$.user.accountNonLocked", is(true)))
-                .andExpect(jsonPath("$.user.credentialsNonExpired", is(true)))
-                .andExpect(jsonPath("$.user.enabled", is(true)))
-                .andExpect(jsonPath("$.user.profile.profileName", is("BASIC")));
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.firstName", is("Jose")))
+                .andExpect(jsonPath("$.lastName", is("Silva")))
+                .andExpect(jsonPath("$.username", is("newJose")))
+                .andExpect(jsonPath("$.email", is("new_jose@email.com")))
+                .andExpect(jsonPath("$.profile", is("BASIC")))
+                .andExpect(jsonPath("$.accountNonExpired", is(true)))
+                .andExpect(jsonPath("$.accountNonLocked", is(true)))
+                .andExpect(jsonPath("$.credentialsNonExpired", is(true)))
+                .andExpect(jsonPath("$.enabled", is(true)));
 
 
         BDDMockito.verify(this.userService).updateUser(1L, Profile.ProfileName.BASIC, userUpdateDTO);
@@ -1047,7 +1048,7 @@ public class UserControllerTest {
 
 
     @DisplayName("MOD user should be able of edit your user with success if " +
-            "user_id param is null and has authority 'myuser:edit'")
+                 "user_id param is null and has authority 'myuser:edit'")
     @Test
     void modUserShouldEditYourUserWithSuccessIfHasSuitableAuthority() throws Exception {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO("Maria", "Silva", "newMaria",
@@ -1070,16 +1071,16 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.user.id", is(2)))
-                .andExpect(jsonPath("$.user.firstName", is("Maria")))
-                .andExpect(jsonPath("$.user.lastName", is("Silva")))
-                .andExpect(jsonPath("$.user.username", is("newMaria")))
-                .andExpect(jsonPath("$.user.email", is("new_maria@email.com")))
-                .andExpect(jsonPath("$.user.accountNonExpired", is(true)))
-                .andExpect(jsonPath("$.user.accountNonLocked", is(true)))
-                .andExpect(jsonPath("$.user.credentialsNonExpired", is(true)))
-                .andExpect(jsonPath("$.user.enabled", is(true)))
-                .andExpect(jsonPath("$.user.profile.profileName", is("MOD")));
+                .andExpect(jsonPath("$.id", is(2)))
+                .andExpect(jsonPath("$.firstName", is("Maria")))
+                .andExpect(jsonPath("$.lastName", is("Silva")))
+                .andExpect(jsonPath("$.username", is("newMaria")))
+                .andExpect(jsonPath("$.email", is("new_maria@email.com")))
+                .andExpect(jsonPath("$.profile", is("MOD")))
+                .andExpect(jsonPath("$.accountNonExpired", is(true)))
+                .andExpect(jsonPath("$.accountNonLocked", is(true)))
+                .andExpect(jsonPath("$.credentialsNonExpired", is(true)))
+                .andExpect(jsonPath("$.enabled", is(true)));
 
 
         BDDMockito.verify(this.userService).updateUser(2L, Profile.ProfileName.MOD, userUpdateDTO);
@@ -1089,7 +1090,7 @@ public class UserControllerTest {
 
 
     @DisplayName("ADM user should be able of edit your user with success if " +
-            "user_id param is null")
+                 "user_id param is null")
     @Test
     void admUserShouldEditYourUserWithSuccessIfUserIdParamIsNull() throws Exception {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO("Joao", "Silva", "newJoao",
@@ -1112,16 +1113,16 @@ public class UserControllerTest {
                         .content(new ObjectMapper().writeValueAsString(userUpdateDTO))
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.user.id", is(3)))
-                .andExpect(jsonPath("$.user.firstName", is("Joao")))
-                .andExpect(jsonPath("$.user.lastName", is("Silva")))
-                .andExpect(jsonPath("$.user.username", is("newJoao")))
-                .andExpect(jsonPath("$.user.email", is("new_joao@email.com")))
-                .andExpect(jsonPath("$.user.accountNonExpired", is(true)))
-                .andExpect(jsonPath("$.user.accountNonLocked", is(true)))
-                .andExpect(jsonPath("$.user.credentialsNonExpired", is(true)))
-                .andExpect(jsonPath("$.user.enabled", is(true)))
-                .andExpect(jsonPath("$.user.profile.profileName", is("ADM")));
+                .andExpect(jsonPath("$.id", is(3)))
+                .andExpect(jsonPath("$.firstName", is("Joao")))
+                .andExpect(jsonPath("$.lastName", is("Silva")))
+                .andExpect(jsonPath("$.username", is("newJoao")))
+                .andExpect(jsonPath("$.email", is("new_joao@email.com")))
+                .andExpect(jsonPath("$.profile", is("ADM")))
+                .andExpect(jsonPath("$.accountNonExpired", is(true)))
+                .andExpect(jsonPath("$.accountNonLocked", is(true)))
+                .andExpect(jsonPath("$.credentialsNonExpired", is(true)))
+                .andExpect(jsonPath("$.enabled", is(true)));
 
 
         BDDMockito.verify(this.userService).updateUser(3L, Profile.ProfileName.ADM, userUpdateDTO);
@@ -1131,7 +1132,7 @@ public class UserControllerTest {
 
 
     @DisplayName("ADM user should be able of edit other user with success if " +
-            "user_id param isn't null")
+                 "user_id param isn't null")
     @Test
     void admUserShouldEditOtherUserWithSuccessIfUserIdParamIsNotNull() throws Exception {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO("Maria", "Silva", "maria_silva",
@@ -1155,16 +1156,16 @@ public class UserControllerTest {
                         .content(new ObjectMapper().writeValueAsString(userUpdateDTO))
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.user.id", is(2)))
-                .andExpect(jsonPath("$.user.firstName", is("Maria")))
-                .andExpect(jsonPath("$.user.lastName", is("Silva")))
-                .andExpect(jsonPath("$.user.username", is("maria_silva")))
-                .andExpect(jsonPath("$.user.email", is("maria@email.com")))
-                .andExpect(jsonPath("$.user.accountNonExpired", is(true)))
-                .andExpect(jsonPath("$.user.accountNonLocked", is(true)))
-                .andExpect(jsonPath("$.user.credentialsNonExpired", is(true)))
-                .andExpect(jsonPath("$.user.enabled", is(true)))
-                .andExpect(jsonPath("$.user.profile.profileName", is("MOD")));
+                .andExpect(jsonPath("$.id", is(2)))
+                .andExpect(jsonPath("$.firstName", is("Maria")))
+                .andExpect(jsonPath("$.lastName", is("Silva")))
+                .andExpect(jsonPath("$.username", is("maria_silva")))
+                .andExpect(jsonPath("$.email", is("maria@email.com")))
+                .andExpect(jsonPath("$.profile", is("MOD")))
+                .andExpect(jsonPath("$.accountNonExpired", is(true)))
+                .andExpect(jsonPath("$.accountNonLocked", is(true)))
+                .andExpect(jsonPath("$.credentialsNonExpired", is(true)))
+                .andExpect(jsonPath("$.enabled", is(true)));
 
 
         BDDMockito.verify(this.userService).updateUser(2L, Profile.ProfileName.ADM, userUpdateDTO);
@@ -1174,7 +1175,7 @@ public class UserControllerTest {
 
 
     @DisplayName("Should raise exception if BASIC user to try edit other user " +
-            "or yourself with user_id param not null")
+                 "or yourself with user_id param not null")
     @Test
     void shouldFailIfBasicUserTryEditWithUserIdParamNotNull() throws Exception {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO("Maria", "Silva", "newMaria",
@@ -1200,7 +1201,7 @@ public class UserControllerTest {
 
 
     @DisplayName("Should raise exception if MOD user to try edit other user " +
-            "or yourself with user_id param not null")
+                 "or yourself with user_id param not null")
     @Test
     void shouldFailIfModUserTryEditWithUserIdParamNotNull() throws Exception {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO("Jose", "Silva", "newJose",
@@ -1226,7 +1227,7 @@ public class UserControllerTest {
 
 
     @DisplayName("Should fail with status code 401 when to delete user " +
-            "if user is unauthenticated")
+                 "if user is unauthenticated")
     @Test
     void shouldFailToDeleteUserIfUnauthenticated() throws Exception {
         this.mockMvc.perform(delete("/forumhub.io/api/v1/users/delete")
@@ -1240,7 +1241,7 @@ public class UserControllerTest {
 
 
     @DisplayName("Should fail with status code 403 when to delete user " +
-            "if authenticated user isn't ADM or hasn't authority 'myuser:delete'")
+                 "if authenticated user isn't ADM or hasn't authority 'myuser:delete'")
     @Test
     void shouldFailIfUserHasNotSuitableAuthorityWhenDeleteUser() throws Exception {
         this.mockMvc.perform(delete("/forumhub.io/api/v1/users/delete")
@@ -1254,7 +1255,7 @@ public class UserControllerTest {
     }
 
     @DisplayName("Should fail with status code 400 when ADM user delete other user" +
-            " with param different of type number, if him exists")
+                 " with param different of type number, if him exists")
     @Test
     void shouldFailIfParamDifferentOfTypeNumber() throws Exception {
         this.mockMvc.perform(delete("/forumhub.io/api/v1/users/delete")
@@ -1273,7 +1274,7 @@ public class UserControllerTest {
 
 
     @DisplayName("BASIC user should be able of delete your user with success if " +
-            "user_id param is null and has authority 'myuser:delete'")
+                 "user_id param is null and has authority 'myuser:delete'")
     @Test
     void basicUserShouldDeleteYourUserWithSuccessIfHasSuitableAuthority() throws Exception {
         BDDMockito.doNothing().when(this.userService).deleteUser(1L);
@@ -1296,7 +1297,7 @@ public class UserControllerTest {
 
 
     @DisplayName("MOD user should be able of delete your user with success if " +
-            "user_id param is null and has authority 'myuser:delete'")
+                 "user_id param is null and has authority 'myuser:delete'")
     @Test
     void modUserShouldDeleteYourUserWithSuccessIfHasSuitableAuthority() throws Exception {
         BDDMockito.doNothing().when(this.userService).deleteUser(2L);
@@ -1319,7 +1320,7 @@ public class UserControllerTest {
 
 
     @DisplayName("ADM user should be able of delete your user with success if " +
-            "user_id param is null")
+                 "user_id param is null")
     @Test
     void admUserShouldDeleteYourUserWithSuccessIfUserIdParamIsNull() throws Exception {
         BDDMockito.doNothing().when(this.userService).deleteUser(3L);
@@ -1342,7 +1343,7 @@ public class UserControllerTest {
 
 
     @DisplayName("ADM user should be able of delete other user with success if " +
-            "user_id param isn't null")
+                 "user_id param isn't null")
     @Test
     void admUserShouldDeleteOtherUserWithSuccessIfUserIdParamIsNotNull() throws Exception {
         BDDMockito.doNothing().when(this.userService).deleteUser(3L);
@@ -1366,7 +1367,7 @@ public class UserControllerTest {
 
 
     @DisplayName("Should raise exception if BASIC user to try delete other user " +
-            "or yourself with user_id param not null")
+                 "or yourself with user_id param not null")
     @Test
     void shouldFailIfBasicUserTryToDeleteWithUserIdParamNotNull() throws Exception {
         BDDMockito.doNothing().when(this.userService).deleteUser(2L);
@@ -1386,7 +1387,7 @@ public class UserControllerTest {
 
 
     @DisplayName("Should raise exception if MOD user to try delete other user " +
-            "or yourself with user_id param not null")
+                 "or yourself with user_id param not null")
     @Test
     void shouldFailIfModUserTryToDeleteWithUserIdParamNotNull() throws Exception {
         BDDMockito.doNothing().when(this.userService).deleteUser(1L);
