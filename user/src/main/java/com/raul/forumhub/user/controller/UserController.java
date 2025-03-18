@@ -23,6 +23,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/forumhub.io/api/v1/users")
@@ -37,8 +38,7 @@ public class UserController {
     @PostMapping("/create")
     public ResponseEntity<UserDetailedInfo> registerUser(@Valid @RequestBody UserCreateDTO userCreateDTO) {
 
-        UserDetailedInfo userDetailedInfo =
-                new UserDetailedInfo(this.userService.registerUser(userCreateDTO));
+        UserDetailedInfo userDetailedInfo = this.userService.registerUser(userCreateDTO);
 
         return new ResponseEntity<>(userDetailedInfo, HttpStatus.CREATED);
     }
@@ -56,18 +56,23 @@ public class UserController {
         boolean isMOD = claimUserRole.equals(Profile.ProfileName.MOD);
         boolean isBASIC = claimUserRole.equals(Profile.ProfileName.BASIC);
 
-        if (isADM || isMOD) {
-            return ResponseEntity.ok(new UserDetailedInfo(this.userService.getDetailedInfoUser(Objects.requireNonNullElse(user_id, claimUserId))));
-        } else if (isBASIC && Objects.isNull(user_id)) {
-            return ResponseEntity.ok(new UserDetailedInfo(this.userService.getDetailedInfoUser(claimUserId)));
+        Optional<UserDetailedInfo> userDetailedInfo =
+                isADM || isMOD ? Optional.of(this.userService.getDetailedInfoUser(Objects.requireNonNullElse(user_id, claimUserId))) :
+                        isBASIC && user_id == null ? Optional.of(this.userService.getDetailedInfoUser(claimUserId)) :
+                                Optional.empty();
+
+        if (userDetailedInfo.isPresent()) {
+            return ResponseEntity.ok(userDetailedInfo.get());
         }
-        throw new MalFormatedParamUserException("Parâmetros fornecidos não esperado");
+        throw raiseMalFormatedParamUserException();
+
+
     }
 
     @IsAuthenticated
     @GetMapping("/summary-info")
     public ResponseEntity<UserSummaryInfo> getSummaryInfoUser(@RequestParam Long user_id) {
-        return ResponseEntity.ok(new UserSummaryInfo(this.userService.getDetailedInfoUser(user_id)));
+        return ResponseEntity.ok(new UserSummaryInfo(this.userService.getUserById(user_id)));
     }
 
 
@@ -94,12 +99,16 @@ public class UserController {
         boolean isBASIC = claimUserRole.equals(Profile.ProfileName.BASIC);
 
 
-        if (isADM) {
-            return ResponseEntity.ok(this.userService.updateUser(Objects.requireNonNullElse(user_id, claimUserId), claimUserRole, userUpdateDTO));
-        } else if ((isBASIC || isMOD) && Objects.isNull(user_id)) {
-            return ResponseEntity.ok(this.userService.updateUser(claimUserId, claimUserRole, userUpdateDTO));
+        Optional<UserDetailedInfo> userDetailedInfo =
+                isADM ? Optional.of(this.userService.updateUser(Objects.requireNonNullElse(user_id, claimUserId),
+                        claimUserRole, userUpdateDTO)) :
+                        (isBASIC || isMOD) && user_id == null ? Optional.of(this.userService.updateUser(claimUserId,
+                                claimUserRole, userUpdateDTO)) : Optional.empty();
+
+        if (userDetailedInfo.isPresent()) {
+            return ResponseEntity.ok(userDetailedInfo.get());
         }
-        throw new MalFormatedParamUserException("Parâmetros fornecidos não esperado");
+        throw raiseMalFormatedParamUserException();
     }
 
 
@@ -123,7 +132,7 @@ public class UserController {
             this.userService.deleteUser(claimUserId);
             return ResponseEntity.ok(new HttpStatusMessage("HttpStatusCode OK"));
         }
-        throw new MalFormatedParamUserException("Parâmetros fornecidos não esperado");
+        throw this.raiseMalFormatedParamUserException();
 
 
     }
@@ -132,5 +141,8 @@ public class UserController {
         return Enum.valueOf(Profile.ProfileName.class, jwt.getClaim("authority").toString().substring(5));
     }
 
+    private MalFormatedParamUserException raiseMalFormatedParamUserException() {
+        return new MalFormatedParamUserException("Parâmetro fornecido não esperado");
+    }
 
 }
