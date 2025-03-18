@@ -18,6 +18,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -53,6 +54,15 @@ public class GlobalExceptionHandler {
         String detail = ex.getConstraintViolations().stream().findFirst().orElseThrow().getMessageTemplate();
         ExceptionEntity entity = new ExceptionEntity(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(),
                 "Falha de validação", detail, request.getRequestURI());
+        return new ResponseEntity<>(entity, headers(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    private ResponseEntity<ExceptionEntity> missingRequestParamExceptionResolver(MissingServletRequestParameterException ex,
+                                                                                 HttpServletRequest request) {
+        String detail = String.format("A propriedade '%s' não foi informada", ex.getParameterName());
+        ExceptionEntity entity = new ExceptionEntity(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(),
+                "Solicitação não processada", detail, request.getRequestURI());
         return new ResponseEntity<>(entity, headers(), HttpStatus.BAD_REQUEST);
     }
 
