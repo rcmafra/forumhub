@@ -30,7 +30,7 @@ public class UserService {
     }
 
 
-    public User registerUser(UserCreateDTO userCreateDTO) {
+    public UserDetailedInfo registerUser(UserCreateDTO userCreateDTO) {
         Profile profile = this.findProfileByName(Profile.ProfileName.BASIC);
         User user = User.builder()
                 .firstName(userCreateDTO.firstName())
@@ -46,11 +46,11 @@ public class UserService {
                 .build();
 
         this.userRepository.save(user);
-        return user;
+        return new UserDetailedInfo(user);
     }
 
-    public User getDetailedInfoUser(Long user_id) {
-        return this.getUserById(user_id);
+    public UserDetailedInfo getDetailedInfoUser(Long user_id) {
+        return new UserDetailedInfo(this.getUserById(user_id));
     }
 
     public Page<UserSummaryInfo> usersList(Pageable pageable) {
@@ -83,7 +83,7 @@ public class UserService {
         this.userRepository.delete(user);
     }
 
-    private User getUserById(Long user_id) {
+    public User getUserById(Long user_id) {
         return this.userRepository.findById(user_id).orElseThrow(() -> new InstanceNotFoundException("Usuário não encontrado"));
     }
 
