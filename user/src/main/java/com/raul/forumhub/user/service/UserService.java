@@ -30,24 +30,23 @@ public class UserService {
     }
 
 
-    public void registerUser(UserCreateDTO userCreateDTO) {
+    public User registerUser(UserCreateDTO userCreateDTO) {
         Profile profile = this.findProfileByName(Profile.ProfileName.BASIC);
         User user = User.builder()
                 .firstName(userCreateDTO.firstName())
                 .lastName(userCreateDTO.lastName())
                 .username(userCreateDTO.username())
+                .profile(profile)
                 .email(userCreateDTO.email().toLowerCase())
-                .password(userCreateDTO.password())
+                .password(passwordEncoder.encode(userCreateDTO.password()))
                 .isAccountNonExpired(true)
                 .isAccountNonLocked(true)
                 .isCredentialsNonExpired(true)
                 .isEnabled(true)
                 .build();
 
-        user.setProfile(profile);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-
         this.userRepository.save(user);
+        return user;
     }
 
     public User getDetailedInfoUser(Long user_id) {
@@ -60,7 +59,7 @@ public class UserService {
 
     public UserDetailedInfo updateUser(Long user_id, Profile.ProfileName claimUserRole, UserUpdateDTO userUpdateDTO) {
         User user = this.getUserById(user_id);
-        Profile profile = this.findProfileByName(userUpdateDTO.profileName());
+        Profile profile = this.findProfileByName(userUpdateDTO.profile());
 
         user.setUsername(userUpdateDTO.username());
         user.setEmail(userUpdateDTO.email());

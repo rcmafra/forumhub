@@ -3,7 +3,7 @@ package com.raul.forumhub.user.controller;
 import com.raul.forumhub.user.domain.Profile;
 import com.raul.forumhub.user.dto.request.UserCreateDTO;
 import com.raul.forumhub.user.dto.request.UserUpdateDTO;
-import com.raul.forumhub.user.dto.response.HttpMessageDefault;
+import com.raul.forumhub.user.dto.response.HttpStatusMessage;
 import com.raul.forumhub.user.dto.response.UserDetailedInfo;
 import com.raul.forumhub.user.dto.response.UserSummaryInfo;
 import com.raul.forumhub.user.exception.MalFormatedParamUserException;
@@ -35,11 +35,12 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<HttpMessageDefault> registerUser(@Valid @RequestBody UserCreateDTO userCreateDTO) {
+    public ResponseEntity<UserDetailedInfo> registerUser(@Valid @RequestBody UserCreateDTO userCreateDTO) {
 
-        this.userService.registerUser(userCreateDTO);
+        UserDetailedInfo userDetailedInfo =
+                new UserDetailedInfo(this.userService.registerUser(userCreateDTO));
 
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(userDetailedInfo, HttpStatus.CREATED);
     }
 
 
@@ -104,7 +105,7 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADM') or hasAuthority('SCOPE_myuser:delete')")
     @DeleteMapping("/delete")
-    public ResponseEntity<HttpMessageDefault> deleteUser(@RequestParam(required = false) Long user_id, @AuthenticationPrincipal Jwt jwt) {
+    public ResponseEntity<HttpStatusMessage> deleteUser(@RequestParam(required = false) Long user_id, @AuthenticationPrincipal Jwt jwt) {
 
         Profile.ProfileName claimUserRole = this.extractUserRoleClaim(jwt);
 
@@ -117,10 +118,10 @@ public class UserController {
 
         if (isADM) {
             this.userService.deleteUser(Objects.requireNonNullElse(user_id, claimUserId));
-            return ResponseEntity.ok(new HttpMessageDefault("HttpStatusCode OK"));
+            return ResponseEntity.ok(new HttpStatusMessage("HttpStatusCode OK"));
         } else if ((isBASIC || isMOD) && Objects.isNull(user_id)) {
             this.userService.deleteUser(claimUserId);
-            return ResponseEntity.ok(new HttpMessageDefault("HttpStatusCode OK"));
+            return ResponseEntity.ok(new HttpStatusMessage("HttpStatusCode OK"));
         }
         throw new MalFormatedParamUserException("Parâmetros fornecidos não esperado");
 
