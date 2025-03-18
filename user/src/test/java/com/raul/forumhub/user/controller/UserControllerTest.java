@@ -312,7 +312,7 @@ public class UserControllerTest {
                 "jose_silva", "jose_silva@email.com", "P4s$word");
 
         BDDMockito.given(this.userService.registerUser(userCreateDTO))
-                .willReturn(TestsHelper.UserHelper.userList().get(0));
+                .willReturn(new UserDetailedInfo(TestsHelper.UserHelper.userList().get(0)));
 
         this.mockMvc.perform(post("/forumhub.io/api/v1/users/create")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -375,7 +375,7 @@ public class UserControllerTest {
     @Test
     void basicUserShouldGetDetailedInfoYourUserWithSuccessIfHasSuitableAuthority() throws Exception {
         BDDMockito.given(this.userService.getDetailedInfoUser(1L))
-                .willReturn(TestsHelper.UserHelper.userList().get(0));
+                .willReturn(new UserDetailedInfo(TestsHelper.UserHelper.userList().get(0)));
 
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/detailed-info")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
@@ -407,7 +407,7 @@ public class UserControllerTest {
     @Test
     void modUserShouldGetDetailedInfoYourUserWithSuccessIfHasSuitableAuthority() throws Exception {
         BDDMockito.given(this.userService.getDetailedInfoUser(2L))
-                .willReturn(TestsHelper.UserHelper.userList().get(1));
+                .willReturn(new UserDetailedInfo(TestsHelper.UserHelper.userList().get(1)));
 
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/detailed-info")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
@@ -439,7 +439,7 @@ public class UserControllerTest {
     @Test
     void admUserShouldGetDetailedInfoYourUserWithSuccessIfHasSuitableAuthority() throws Exception {
         BDDMockito.given(this.userService.getDetailedInfoUser(3L))
-                .willReturn(TestsHelper.UserHelper.userList().get(2));
+                .willReturn(new UserDetailedInfo(TestsHelper.UserHelper.userList().get(2)));
 
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/detailed-info")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
@@ -471,7 +471,7 @@ public class UserControllerTest {
     @Test
     void modUserShouldGetDetailedInfoOfOtherUserWithSuccessIfHasSuitableAuthority() throws Exception {
         BDDMockito.given(this.userService.getDetailedInfoUser(1L))
-                .willReturn(TestsHelper.UserHelper.userList().get(0));
+                .willReturn(new UserDetailedInfo(TestsHelper.UserHelper.userList().get(0)));
 
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/detailed-info")
                         .queryParam("user_id", "1")
@@ -504,7 +504,7 @@ public class UserControllerTest {
     @Test
     void admUserShouldGetDetailedInfoOfOtherUserWithSuccessIfHasSuitableAuthority() throws Exception {
         BDDMockito.given(this.userService.getDetailedInfoUser(1L))
-                .willReturn(TestsHelper.UserHelper.userList().get(0));
+                .willReturn(new UserDetailedInfo(TestsHelper.UserHelper.userList().get(0)));
 
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/detailed-info")
                         .queryParam("user_id", "1")
@@ -538,7 +538,7 @@ public class UserControllerTest {
     @Test
     void shouldFailIfBasicUserToRequestDetailedInfoWithUserIdParamNotNull() throws Exception {
         BDDMockito.given(this.userService.getDetailedInfoUser(1L))
-                .willReturn(TestsHelper.UserHelper.userList().get(0));
+                .willReturn(new UserDetailedInfo(TestsHelper.UserHelper.userList().get(0)));
 
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/detailed-info")
                         .queryParam("user_id", "2")
@@ -573,7 +573,7 @@ public class UserControllerTest {
     @DisplayName("Authenticated user should be able of to request user summary info with success")
     @Test
     void AuthenticatedUserShouldToRequestSummaryInfoUserWithSuccess() throws Exception {
-        BDDMockito.given(this.userService.getDetailedInfoUser(1L))
+        BDDMockito.given(this.userService.getUserById(1L))
                 .willReturn(TestsHelper.UserHelper.userList().get(0));
 
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/summary-info")
@@ -589,7 +589,7 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.email", is("jose@email.com")))
                 .andExpect(jsonPath("$.profile", is("BASIC")));
 
-        BDDMockito.verify(this.userService).getDetailedInfoUser(1L);
+        BDDMockito.verify(this.userService).getUserById(1L);
         BDDMockito.verifyNoMoreInteractions(this.userService);
 
     }
