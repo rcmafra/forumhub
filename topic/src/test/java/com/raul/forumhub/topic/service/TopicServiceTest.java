@@ -227,20 +227,20 @@ public class TopicServiceTest {
         List<Topic> topicList = TestsHelper.TopicHelper.topicListWithAnswers();
 
         Page<TopicResponseDTO> topicPage =
-                new PageImpl<>(topicList, pageable, 3)
+                new PageImpl<>(topicList, pageable, 4)
                         .map(TopicResponseDTO::new);
 
         BDDMockito.given(this.topicRepository.findAll(pageable))
-                .willReturn(new PageImpl<>(topicList, Pageable.unpaged(), 3));
+                .willReturn(new PageImpl<>(topicList, Pageable.unpaged(), 4));
 
 
         Assertions.assertDoesNotThrow(() -> this.topicService.topicList(pageable));
 
 
         Assertions.assertAll(
-                () -> assertEquals(3, topicPage.getContent().size()),
+                () -> assertEquals(4, topicPage.getContent().size()),
                 () -> assertEquals(10, topicPage.getSize()),
-                () -> assertEquals(3, topicPage.getTotalElements()),
+                () -> assertEquals(4, topicPage.getTotalElements()),
                 () -> assertEquals(1, topicPage.getTotalPages())
         );
 
@@ -252,19 +252,19 @@ public class TopicServiceTest {
 
     @Test
     void shouldReturnAllTopicsSortedDescendantByCreateDateWithSuccessful() {
-        Pageable pageable = PageRequest.of(0, 10,
-                Sort.by(Sort.Direction.DESC, "createdAt"));
-
         List<Topic> sortedTopicByCreatedAt = TestsHelper.TopicHelper.topicListWithAnswers()
                 .stream().sorted(Comparator.comparing(Topic::getCreatedAt).reversed())
                 .toList();
 
+        Pageable pageable = PageRequest.of(0, 10,
+                Sort.by(Sort.Direction.DESC, "createdAt"));
+
         Page<TopicResponseDTO> topicPage =
-                new PageImpl<>(sortedTopicByCreatedAt, pageable, 3)
+                new PageImpl<>(sortedTopicByCreatedAt, pageable, 4)
                         .map(TopicResponseDTO::new);
 
         BDDMockito.given(this.topicRepository.findAll(pageable))
-                .willReturn(new PageImpl<>(sortedTopicByCreatedAt, pageable, 3));
+                .willReturn(new PageImpl<>(sortedTopicByCreatedAt, pageable, 4));
 
 
         Assertions.assertDoesNotThrow(() -> this.topicService.topicList(pageable));
@@ -274,10 +274,11 @@ public class TopicServiceTest {
                 () -> Assertions.assertEquals(3L, topicPage.getContent().get(0).topic().getId()),
                 () -> Assertions.assertEquals(1L, topicPage.getContent().get(1).topic().getId()),
                 () -> Assertions.assertEquals(2L, topicPage.getContent().get(2).topic().getId()),
+                () -> Assertions.assertEquals(4L, topicPage.getContent().get(3).topic().getId()),
                 () -> Assertions.assertEquals(0, topicPage.getNumber()),
-                () -> Assertions.assertEquals(3, topicPage.getContent().size()),
+                () -> Assertions.assertEquals(4, topicPage.getContent().size()),
                 () -> Assertions.assertEquals(10, topicPage.getSize()),
-                () -> Assertions.assertEquals(3, topicPage.getTotalElements()),
+                () -> Assertions.assertEquals(4, topicPage.getTotalElements()),
                 () -> Assertions.assertEquals(1, topicPage.getTotalPages())
         );
 
@@ -289,13 +290,13 @@ public class TopicServiceTest {
 
     @Test
     void shouldReturnTwoTopicsSortedAscendantByStatusWithSuccessful() {
-        Pageable pageable = PageRequest.of(0, 2,
-                Sort.by(Sort.Direction.ASC, "status"));
-
         List<Topic> sortedTopicByStatus = TestsHelper.TopicHelper.topicListWithAnswers()
                 .stream().filter(topic -> topic.getId().equals(2L) || topic.getId().equals(3L))
                 .sorted(Comparator.comparing(Topic::getStatus))
                 .toList();
+
+        Pageable pageable = PageRequest.of(0, 2,
+                Sort.by(Sort.Direction.ASC, "status"));
 
         Page<TopicResponseDTO> topicPage =
                 new PageImpl<>(sortedTopicByStatus, pageable, 2)
@@ -328,19 +329,19 @@ public class TopicServiceTest {
 
     @Test
     void shouldReturnAllTopicsSortedAscendantByTitleWithSuccessful() {
+        List<Topic> sortedTopicByTitle = TestsHelper.TopicHelper.topicListWithAnswers()
+                .stream().sorted(Comparator.comparing(Topic::getTitle))
+                .toList();
+
         Pageable pageable = PageRequest.of(0, 10,
                 Sort.by(Sort.Direction.ASC, "title"));
 
-        List<Topic> sortedTopicByStatus = TestsHelper.TopicHelper.topicListWithAnswers()
-                .stream().sorted(Comparator.comparing(Topic::getCreatedAt).reversed())
-                .toList();
-
         Page<TopicResponseDTO> topicPage =
-                new PageImpl<>(sortedTopicByStatus, pageable, 3)
+                new PageImpl<>(sortedTopicByTitle, pageable, 4)
                         .map(TopicResponseDTO::new);
 
         BDDMockito.given(this.topicRepository.findAll(pageable))
-                .willReturn(new PageImpl<>(sortedTopicByStatus, pageable, 3));
+                .willReturn(new PageImpl<>(sortedTopicByTitle, pageable, 4));
 
 
         Assertions.assertDoesNotThrow(() -> this.topicService.topicList(pageable));
@@ -350,14 +351,190 @@ public class TopicServiceTest {
                 () -> Assertions.assertEquals(3L, topicPage.getContent().get(0).topic().getId()),
                 () -> Assertions.assertEquals(1L, topicPage.getContent().get(1).topic().getId()),
                 () -> Assertions.assertEquals(2L, topicPage.getContent().get(2).topic().getId()),
+                () -> Assertions.assertEquals(4L, topicPage.getContent().get(3).topic().getId()),
                 () -> Assertions.assertEquals(0, topicPage.getNumber()),
-                () -> Assertions.assertEquals(3, topicPage.getContent().size()),
+                () -> Assertions.assertEquals(4, topicPage.getContent().size()),
                 () -> Assertions.assertEquals(10, topicPage.getSize()),
-                () -> Assertions.assertEquals(3, topicPage.getTotalElements()),
+                () -> Assertions.assertEquals(4, topicPage.getTotalElements()),
                 () -> Assertions.assertEquals(1, topicPage.getTotalPages())
         );
 
         BDDMockito.verify(this.topicRepository).findAll(pageable);
+        BDDMockito.verifyNoMoreInteractions(this.topicRepository);
+
+    }
+
+    @Test
+    void shouldReturnPageWithoutContentWhenIsNotExistNoneTopicAssociatedToTheCourse() {
+        List<Topic> topicsListByCourse = TestsHelper.TopicHelper.topicListWithAnswers()
+                .stream().filter(topic -> topic.getCourse().getId().equals(4L))
+                .toList();
+
+        Pageable pageable = PageRequest.of(0, 10, Sort.unsorted());
+
+        Page<TopicResponseDTO> topicPage =
+                new PageImpl<>(topicsListByCourse, pageable, 0)
+                        .map(TopicResponseDTO::new);
+
+        BDDMockito.given(this.topicRepository.findTopicsByCourseId(4L, pageable))
+                .willReturn(new PageImpl<>(topicsListByCourse, Pageable.unpaged(), 0));
+
+
+        Assertions.assertDoesNotThrow(() -> this.topicService.topicsListByCourse(4L, pageable));
+
+
+        Assertions.assertAll(
+                () -> assertEquals(0, topicPage.getContent().size()),
+                () -> assertEquals(10, topicPage.getSize()),
+                () -> assertEquals(0, topicPage.getTotalElements()),
+                () -> assertEquals(0, topicPage.getTotalPages())
+        );
+
+        BDDMockito.verify(this.topicRepository).findTopicsByCourseId(4L, pageable);
+        BDDMockito.verifyNoMoreInteractions(this.topicRepository);
+
+
+    }
+
+    @Test
+    void shouldReturnTopicsByCourseUnsortedWithSuccessful() {
+        List<Topic> topicsListByCourse = TestsHelper.TopicHelper.topicListWithAnswers()
+                .stream().filter(topic -> topic.getCourse().getId().equals(1L))
+                .toList();
+
+        Pageable pageable = PageRequest.of(0, 10, Sort.unsorted());
+
+        Page<TopicResponseDTO> topicPage =
+                new PageImpl<>(topicsListByCourse, pageable, 2)
+                        .map(TopicResponseDTO::new);
+
+        BDDMockito.given(this.topicRepository.findTopicsByCourseId(1L, pageable))
+                .willReturn(new PageImpl<>(topicsListByCourse, pageable, 2));
+
+
+        Assertions.assertDoesNotThrow(() -> this.topicService.topicsListByCourse(1L, pageable));
+
+
+        Assertions.assertAll(
+                () -> assertEquals(2, topicPage.getContent().size()),
+                () -> assertEquals(10, topicPage.getSize()),
+                () -> assertEquals(2, topicPage.getTotalElements()),
+                () -> assertEquals(1, topicPage.getTotalPages())
+        );
+
+        BDDMockito.verify(this.topicRepository).findTopicsByCourseId(1L, pageable);
+        BDDMockito.verifyNoMoreInteractions(this.topicRepository);
+
+    }
+
+
+    @Test
+    void shouldReturnTopicsByCourseSortedDescendantByCreateDateWithSuccessful() {
+        List<Topic> sortedTopicByCreatedAt = TestsHelper.TopicHelper.topicListWithAnswers()
+                .stream().filter(topic -> topic.getCourse().getId().equals(1L))
+                .sorted(Comparator.comparing(Topic::getCreatedAt).reversed())
+                .toList();
+
+
+        Pageable pageable = PageRequest.of(0, 10,
+                Sort.by(Sort.Direction.DESC, "createdAt"));
+
+
+        Page<TopicResponseDTO> topicPage =
+                new PageImpl<>(sortedTopicByCreatedAt, pageable, 2)
+                        .map(TopicResponseDTO::new);
+
+        BDDMockito.given(this.topicRepository.findTopicsByCourseId(1L, pageable))
+                .willReturn(new PageImpl<>(sortedTopicByCreatedAt, pageable, 2));
+
+
+        Assertions.assertDoesNotThrow(() -> this.topicService.topicsListByCourse(1L, pageable));
+
+
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(1L, topicPage.getContent().get(0).topic().getId()),
+                () -> Assertions.assertEquals(4L, topicPage.getContent().get(1).topic().getId()),
+                () -> Assertions.assertEquals(0, topicPage.getNumber()),
+                () -> Assertions.assertEquals(2, topicPage.getContent().size()),
+                () -> Assertions.assertEquals(10, topicPage.getSize()),
+                () -> Assertions.assertEquals(2, topicPage.getTotalElements()),
+                () -> Assertions.assertEquals(1, topicPage.getTotalPages())
+        );
+
+        BDDMockito.verify(this.topicRepository).findTopicsByCourseId(1L, pageable);
+        BDDMockito.verifyNoMoreInteractions(this.topicRepository);
+
+    }
+
+
+    @Test
+    void shouldReturnOneTopicByCourseSortedAscendantByStatusWithSuccessful() {
+        List<Topic> sortedTopicByStatus = TestsHelper.TopicHelper.topicListWithAnswers()
+                .stream().filter(topic -> topic.getId().equals(1L))
+                .sorted(Comparator.comparing(Topic::getStatus))
+                .toList();
+
+        Pageable pageable = PageRequest.of(0, 1,
+                Sort.by(Sort.Direction.ASC, "status"));
+
+        Page<TopicResponseDTO> topicPage =
+                new PageImpl<>(sortedTopicByStatus, pageable, 1)
+                        .map(TopicResponseDTO::new);
+
+        BDDMockito.given(this.topicRepository.findTopicsByCourseId(1L, pageable))
+                .willReturn(new PageImpl<>(sortedTopicByStatus, pageable, 1));
+
+
+        Assertions.assertDoesNotThrow(() -> this.topicService.topicsListByCourse(1L, pageable));
+
+
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(Status.UNSOLVED, topicPage.getContent().get(0).topic().getStatus()),
+                () -> Assertions.assertEquals(0, topicPage.getNumber()),
+                () -> Assertions.assertEquals(1, topicPage.getContent().size()),
+                () -> Assertions.assertEquals(1, topicPage.getSize()),
+                () -> Assertions.assertEquals(1, topicPage.getTotalElements()),
+                () -> Assertions.assertEquals(1, topicPage.getTotalPages())
+        );
+
+        BDDMockito.verify(this.topicRepository).findTopicsByCourseId(1L, pageable);
+        BDDMockito.verifyNoMoreInteractions(this.topicRepository);
+
+    }
+
+
+    @Test
+    void shouldReturnTopicsByCourseSortedAscendantByTitleWithSuccessful() {
+        List<Topic> sortedTopicByTitle = TestsHelper.TopicHelper.topicListWithAnswers()
+                .stream().filter(topic -> topic.getCourse().getId().equals(1L))
+                .sorted(Comparator.comparing(Topic::getTitle))
+                .toList();
+
+        Pageable pageable = PageRequest.of(0, 10,
+                Sort.by(Sort.Direction.ASC, "title"));
+
+        Page<TopicResponseDTO> topicPage =
+                new PageImpl<>(sortedTopicByTitle, pageable, 2)
+                        .map(TopicResponseDTO::new);
+
+        BDDMockito.given(this.topicRepository.findTopicsByCourseId(1L, pageable))
+                .willReturn(new PageImpl<>(sortedTopicByTitle, pageable, 2));
+
+
+        Assertions.assertDoesNotThrow(() -> this.topicService.topicsListByCourse(1L, pageable));
+
+
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(1L, topicPage.getContent().get(0).topic().getId()),
+                () -> Assertions.assertEquals(4L, topicPage.getContent().get(1).topic().getId()),
+                () -> Assertions.assertEquals(0, topicPage.getNumber()),
+                () -> Assertions.assertEquals(2, topicPage.getContent().size()),
+                () -> Assertions.assertEquals(10, topicPage.getSize()),
+                () -> Assertions.assertEquals(2, topicPage.getTotalElements()),
+                () -> Assertions.assertEquals(1, topicPage.getTotalPages())
+        );
+
+        BDDMockito.verify(this.topicRepository).findTopicsByCourseId(1L, pageable);
         BDDMockito.verifyNoMoreInteractions(this.topicRepository);
 
     }

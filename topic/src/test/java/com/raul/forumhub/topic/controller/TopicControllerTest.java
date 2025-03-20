@@ -10,10 +10,7 @@ import com.raul.forumhub.topic.exception.handler.GlobalExceptionHandler;
 import com.raul.forumhub.topic.security.TopicSecurityConfig;
 import com.raul.forumhub.topic.service.TopicService;
 import com.raul.forumhub.topic.util.TestsHelper;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -147,7 +144,7 @@ class TopicControllerTest {
     void shouldReturnAllTopicsUnsortedWithSuccessful() throws Exception {
         Page<TopicResponseDTO> topicPage =
                 new PageImpl<>(TestsHelper.TopicHelper.topicListWithAnswers(),
-                        Pageable.unpaged(), 3)
+                        Pageable.unpaged(), 4)
                         .map(TopicResponseDTO::new);
 
         BDDMockito.given(this.topicService.topicList(any(Pageable.class)))
@@ -157,10 +154,10 @@ class TopicControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$..topicResponseDTOList.length()", is(3)))
+                .andExpect(jsonPath("$..topicResponseDTOList.length()", is(4)))
                 .andExpect(jsonPath("$..page.[?(@.number == 0)]").exists())
-                .andExpect(jsonPath("$..page.[?(@.size == 3)]").exists())
-                .andExpect(jsonPath("$..page.[?(@.totalElements == 3)]").exists())
+                .andExpect(jsonPath("$..page.[?(@.size == 4)]").exists())
+                .andExpect(jsonPath("$..page.[?(@.totalElements == 4)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.totalPages == 1)]").exists());
 
         BDDMockito.verify(this.topicService).topicList(any(Pageable.class));
@@ -173,15 +170,15 @@ class TopicControllerTest {
     @DisplayName("Should return all topics sorted descendants by created date with successful")
     @Test
     void shouldReturnAllTopicsSortedDescendantByCreateDateWithSuccessful() throws Exception {
-        Pageable pageable = PageRequest.of(0, 10,
-                Sort.by(Sort.Direction.DESC, "createdAt"));
-
         List<Topic> sortedTopicByCreatedAt = TestsHelper.TopicHelper.topicListWithAnswers()
                 .stream().sorted(Comparator.comparing(Topic::getCreatedAt).reversed())
                 .toList();
 
+        Pageable pageable = PageRequest.of(0, 10,
+                Sort.by(Sort.Direction.DESC, "createdAt"));
+
         Page<TopicResponseDTO> topicPage =
-                new PageImpl<>(sortedTopicByCreatedAt, pageable, 3)
+                new PageImpl<>(sortedTopicByCreatedAt, pageable, 4)
                         .map(TopicResponseDTO::new);
 
         BDDMockito.given(this.topicService.topicList(pageable))
@@ -195,10 +192,11 @@ class TopicControllerTest {
                 .andExpect(jsonPath("$..topicResponseDTOList[0].[?(@.topic.id == 3)]").exists())
                 .andExpect(jsonPath("$..topicResponseDTOList[1].[?(@.topic.id == 1)]").exists())
                 .andExpect(jsonPath("$..topicResponseDTOList[2].[?(@.topic.id == 2)]").exists())
-                .andExpect(jsonPath("$..topicResponseDTOList.length()", is(3)))
+                .andExpect(jsonPath("$..topicResponseDTOList[3].[?(@.topic.id == 4)]").exists())
+                .andExpect(jsonPath("$..topicResponseDTOList.length()", is(4)))
                 .andExpect(jsonPath("$..page.[?(@.number == 0)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.size == 10)]").exists())
-                .andExpect(jsonPath("$..page.[?(@.totalElements == 3)]").exists())
+                .andExpect(jsonPath("$..page.[?(@.totalElements == 4)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.totalPages == 1)]").exists());
 
         BDDMockito.verify(this.topicService).topicList(pageable);
@@ -211,13 +209,13 @@ class TopicControllerTest {
     @DisplayName("Should return only two topics sorted in ascendant by status with successful")
     @Test
     void shouldReturnTwoTopicsSortedAscendantByStatusWithSuccessful() throws Exception {
-        Pageable pageable = PageRequest.of(0, 2,
-                Sort.by(Sort.Direction.ASC, "status"));
-
         List<Topic> sortedTopicByStatus = TestsHelper.TopicHelper.topicListWithAnswers()
                 .stream().filter(topic -> topic.getId().equals(2L) || topic.getId().equals(3L))
                 .sorted(Comparator.comparing(Topic::getStatus))
                 .toList();
+
+        Pageable pageable = PageRequest.of(0, 2,
+                Sort.by(Sort.Direction.ASC, "status"));
 
         Page<TopicResponseDTO> topicPage =
                 new PageImpl<>(sortedTopicByStatus, pageable, 2)
@@ -251,15 +249,15 @@ class TopicControllerTest {
     @DisplayName("Should return all topics sorted ascendants by title with successful")
     @Test
     void shouldReturnAllTopicsSortedAscendantByTitleWithSuccessful() throws Exception {
-        Pageable pageable = PageRequest.of(0, 10,
-                Sort.by(Sort.Direction.ASC, "title"));
-
         List<Topic> sortedTopicByTitle = TestsHelper.TopicHelper.topicListWithAnswers()
                 .stream().sorted(Comparator.comparing(Topic::getTitle))
                 .toList();
 
+        Pageable pageable = PageRequest.of(0, 10,
+                Sort.by(Sort.Direction.ASC, "title"));
+
         Page<TopicResponseDTO> topicPage =
-                new PageImpl<>(sortedTopicByTitle, pageable, 3)
+                new PageImpl<>(sortedTopicByTitle, pageable, 4)
                         .map(TopicResponseDTO::new);
 
         BDDMockito.given(this.topicService.topicList(pageable))
@@ -273,10 +271,11 @@ class TopicControllerTest {
                 .andExpect(jsonPath("$..topicResponseDTOList[0].[?(@.topic.id == 3)]").exists())
                 .andExpect(jsonPath("$..topicResponseDTOList[1].[?(@.topic.id == 1)]").exists())
                 .andExpect(jsonPath("$..topicResponseDTOList[2].[?(@.topic.id == 2)]").exists())
-                .andExpect(jsonPath("$..topicResponseDTOList.length()", is(3)))
+                .andExpect(jsonPath("$..topicResponseDTOList[3].[?(@.topic.id == 4)]").exists())
+                .andExpect(jsonPath("$..topicResponseDTOList.length()", is(4)))
                 .andExpect(jsonPath("$..page.[?(@.number == 0)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.size == 10)]").exists())
-                .andExpect(jsonPath("$..page.[?(@.totalElements == 3)]").exists())
+                .andExpect(jsonPath("$..page.[?(@.totalElements == 4)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.totalPages == 1)]").exists());
 
         BDDMockito.verify(this.topicService).topicList(pageable);
@@ -285,9 +284,190 @@ class TopicControllerTest {
 
     }
 
+    @DisplayName("Should return page without content when to request topics by course id and" +
+                 " isn't exist none topics associate with course")
+    @Test
+    void shouldReturnPageWithoutContentWhenIsNotExistNoneTopicAssociatedToTheCourse() throws Exception {
+        List<Topic> topicsListByCourse = TestsHelper.TopicHelper.topicListWithAnswers()
+                .stream().filter(topic -> topic.getCourse().getId().equals(4L))
+                .toList();
+
+        Pageable pageable = PageRequest.of(0, 10, Sort.unsorted());
+
+        Page<TopicResponseDTO> topicPage =
+                new PageImpl<>(topicsListByCourse, pageable, 0)
+                        .map(TopicResponseDTO::new);
+
+        BDDMockito.given(this.topicService.topicsListByCourse(4L, pageable))
+                .willReturn(topicPage);
+
+        this.mockMvc.perform(get("/forumhub.io/api/v1/topics/searchTopicsByCourse")
+                        .queryParam("course_id", "4")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$..topicResponseDTOList.length()", is(0)))
+                .andExpect(jsonPath("$..page.[?(@.size == 10)]").exists())
+                .andExpect(jsonPath("$..page.[?(@.totalElements == 0)]").exists())
+                .andExpect(jsonPath("$..page.[?(@.totalPages == 0)]").exists());
+
+        BDDMockito.verify(this.topicService).topicsListByCourse(4L, pageable);
+        BDDMockito.verifyNoMoreInteractions(this.topicService);
+
+
+    }
+
+    @DisplayName("Should return topics by course id unsorted with successful")
+    @Test
+    void shouldReturnTopicsByCourseUnsortedWithSuccessful() throws Exception {
+        List<Topic> topicsListByCourse = TestsHelper.TopicHelper.topicListWithAnswers()
+                .stream().filter(topic -> topic.getCourse().getId().equals(1L))
+                .toList();
+
+        Pageable pageable = PageRequest.of(0, 10, Sort.unsorted());
+
+        Page<TopicResponseDTO> topicPage =
+                new PageImpl<>(topicsListByCourse, pageable, 2)
+                        .map(TopicResponseDTO::new);
+
+        BDDMockito.given(this.topicService.topicsListByCourse(1L, pageable))
+                .willReturn(topicPage);
+
+        this.mockMvc.perform(get("/forumhub.io/api/v1/topics/searchTopicsByCourse")
+                        .queryParam("course_id", "1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isOk())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$..topicResponseDTOList.length()", is(2)))
+                .andExpect(jsonPath("$..page.[?(@.size == 10)]").exists())
+                .andExpect(jsonPath("$..page.[?(@.totalElements == 2)]").exists())
+                .andExpect(jsonPath("$..page.[?(@.totalPages == 1)]").exists());
+
+        BDDMockito.verify(this.topicService).topicsListByCourse(1L, pageable);
+        BDDMockito.verifyNoMoreInteractions(this.topicService);
+
+
+    }
+
+
+    @DisplayName("Should return topics by course id sorted descendants by created date with successful")
+    @Test
+    void shouldReturnTopicsByCourseSortedDescendantByCreateDateWithSuccessful() throws Exception {
+        List<Topic> sortedTopicByCreatedAt = TestsHelper.TopicHelper.topicListWithAnswers()
+                .stream().filter(topic -> topic.getCourse().getId().equals(1L))
+                .sorted(Comparator.comparing(Topic::getCreatedAt).reversed())
+                .toList();
+
+        Pageable pageable = PageRequest.of(0, 10,
+                Sort.by(Sort.Direction.DESC, "createdAt"));
+
+        Page<TopicResponseDTO> topicPage =
+                new PageImpl<>(sortedTopicByCreatedAt, pageable, 2)
+                        .map(TopicResponseDTO::new);
+
+        BDDMockito.given(this.topicService.topicsListByCourse(1L, pageable))
+                .willReturn(topicPage);
+
+        this.mockMvc.perform(get("/forumhub.io/api/v1/topics/searchTopicsByCourse")
+                        .queryParam("course_id", "1")
+                        .queryParam("sort", "createdAt,desc")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$..topicResponseDTOList[0].[?(@.topic.id == 1)]").exists())
+                .andExpect(jsonPath("$..topicResponseDTOList[1].[?(@.topic.id == 4)]").exists())
+                .andExpect(jsonPath("$..topicResponseDTOList.length()", is(2)))
+                .andExpect(jsonPath("$..page.[?(@.size == 10)]").exists())
+                .andExpect(jsonPath("$..page.[?(@.totalElements == 2)]").exists())
+                .andExpect(jsonPath("$..page.[?(@.totalPages == 1)]").exists());
+
+        BDDMockito.verify(this.topicService).topicsListByCourse(1L, pageable);
+        BDDMockito.verifyNoMoreInteractions(this.topicService);
+
+
+    }
+
+
+    @DisplayName("Should return only one topic by course id sorted in ascendant by status with successful")
+    @Test
+    void shouldReturnOneTopicByCourseSortedAscendantByStatusWithSuccessful() throws Exception {
+        List<Topic> sortedTopicByStatus = TestsHelper.TopicHelper.topicListWithAnswers()
+                .stream().filter(topic -> topic.getId().equals(1L))
+                .sorted(Comparator.comparing(Topic::getStatus))
+                .toList();
+
+        Pageable pageable = PageRequest.of(0, 1,
+                Sort.by(Sort.Direction.ASC, "status"));
+
+        Page<TopicResponseDTO> topicPage =
+                new PageImpl<>(sortedTopicByStatus, pageable, 1)
+                        .map(TopicResponseDTO::new);
+
+        BDDMockito.given(this.topicService.topicsListByCourse(1L, pageable))
+                .willReturn(topicPage);
+
+        this.mockMvc.perform(get("/forumhub.io/api/v1/topics/searchTopicsByCourse")
+                        .queryParam("course_id", "1")
+                        .queryParam("size", "1")
+                        .queryParam("sort", "status,asc")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$..topicResponseDTOList[0].[?(@.topic.status == \"UNSOLVED\")]").exists())
+                .andExpect(jsonPath("$..page.[?(@.number == 0)]").exists())
+                .andExpect(jsonPath("$..topicResponseDTOList.length()", is(1)))
+                .andExpect(jsonPath("$..page.[?(@.size == 1)]").exists())
+                .andExpect(jsonPath("$..page.[?(@.totalElements == 1)]").exists())
+                .andExpect(jsonPath("$..page.[?(@.totalPages == 1)]").exists());
+
+        BDDMockito.verify(this.topicService).topicsListByCourse(1L, pageable);
+        BDDMockito.verifyNoMoreInteractions(this.topicService);
+
+    }
+
+
+    @DisplayName("Should return topics by course id sorted ascendants by title with successful")
+    @Test
+    void shouldReturnTopicsByCourseSortedAscendantByTitleWithSuccessful() throws Exception {
+        List<Topic> sortedTopicByTitle = TestsHelper.TopicHelper.topicListWithAnswers()
+                .stream().filter(topic -> topic.getCourse().getId().equals(1L))
+                .sorted(Comparator.comparing(Topic::getTitle))
+                .toList();
+
+        Pageable pageable = PageRequest.of(0, 10,
+                Sort.by(Sort.Direction.ASC, "title"));
+
+        Page<TopicResponseDTO> topicPage =
+                new PageImpl<>(sortedTopicByTitle, pageable, 2)
+                        .map(TopicResponseDTO::new);
+
+        BDDMockito.given(this.topicService.topicsListByCourse(1L, pageable))
+                .willReturn(topicPage);
+
+        this.mockMvc.perform(get("/forumhub.io/api/v1/topics/searchTopicsByCourse")
+                        .queryParam("course_id", "1")
+                        .queryParam("sort", "title,asc")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$..topicResponseDTOList[0].[?(@.topic.id == 1)]").exists())
+                .andExpect(jsonPath("$..topicResponseDTOList[1].[?(@.topic.id == 4)]").exists())
+                .andExpect(jsonPath("$..page.[?(@.number == 0)]").exists())
+                .andExpect(jsonPath("$..topicResponseDTOList.length()", is(2)))
+                .andExpect(jsonPath("$..page.[?(@.size == 10)]").exists())
+                .andExpect(jsonPath("$..page.[?(@.totalElements == 2)]").exists())
+                .andExpect(jsonPath("$..page.[?(@.totalPages == 1)]").exists());
+
+        BDDMockito.verify(this.topicService).topicsListByCourse(1L, pageable);
+        BDDMockito.verifyNoMoreInteractions(this.topicService);
+
+
+    }
+
 
     @DisplayName("Should fail with status code 400 when attempt get topic if topic_id property " +
-            "of query param is sent empty")
+                 "of query param is sent empty")
     @Test
     void shouldFailIfTopicIdPropertyOfQueryParamIsEmptyWhenGetTopic() throws Exception {
         this.mockMvc.perform(get("/forumhub.io/api/v1/topics")
@@ -301,7 +481,7 @@ class TopicControllerTest {
     }
 
     @DisplayName("Should fail with status code 400 when request topic with" +
-            " param different of type number")
+                 " param different of type number")
     @Test
     void shouldFailToRequestTopicIfParamDifferentOfTypeNumber() throws Exception {
         this.mockMvc.perform(get("/forumhub.io/api/v1/topics")
@@ -336,7 +516,7 @@ class TopicControllerTest {
 
 
     @DisplayName("Should fail with status code 403 if user authenticated hasn't authority 'topic:edit'" +
-            "when edit topic")
+                 "when edit topic")
     @Test
     void shouldFailIfUserHasNotSuitableAuthorityWhenEditTopic() throws Exception {
         final TopicUpdateRequestDTO topicUpdateRequestDTO = new TopicUpdateRequestDTO(
@@ -358,7 +538,7 @@ class TopicControllerTest {
     }
 
     @DisplayName("Should fail with status code 400 when edit topic with" +
-            " param different of type number")
+                 " param different of type number")
     @Test
     void shouldFailToEditTopicIfParamDifferentOfTypeNumber() throws Exception {
         final TopicUpdateRequestDTO topicUpdateRequestDTO = new TopicUpdateRequestDTO(
@@ -382,7 +562,7 @@ class TopicControllerTest {
 
 
     @DisplayName("Should fail with status code 400 when attempt update topic if topic_id property " +
-            "of query param is sent empty")
+                 "of query param is sent empty")
     @Test
     void shouldFailIfTopicIdPropertyOfQueryParamIsEmptyWhenUpdateTopic() throws Exception {
         TopicUpdateRequestDTO topicUpdateRequestDTO = new TopicUpdateRequestDTO(
@@ -432,7 +612,7 @@ class TopicControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.topic.title", is("Dúvida na utilização do WebClient")))
                 .andExpect(jsonPath("$.topic.question", is("Como utilizar o WebClient para " +
-                        "integração do serviço x?")));
+                                                           "integração do serviço x?")));
 
 
         BDDMockito.verify(this.topicService).updateTopic(1L, 1L, topicUpdateRequestDTO);
@@ -443,7 +623,7 @@ class TopicControllerTest {
 
 
     @DisplayName("Should fail with status code 403 if user authenticated hasn't authority 'topic:delete'" +
-            " when delete topic")
+                 " when delete topic")
     @Test
     void shouldFailIfUserHasNotSuitableAuthorityWhenDeleteTopic() throws Exception {
         this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/{topic_id}/delete", 1)
@@ -456,7 +636,7 @@ class TopicControllerTest {
     }
 
     @DisplayName("Should fail with status code 400 when delete topic with" +
-            " param different of type number")
+                 " param different of type number")
     @Test
     void shouldFailToDeleteTopicIfParamDifferentOfTypeNumber() throws Exception {
         this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/{topic_id}/delete", "unexpected")
