@@ -10,7 +10,6 @@ import com.raul.forumhub.topic.dto.request.TopicUpdateRequestDTO;
 import com.raul.forumhub.topic.exception.RestClientException;
 import com.raul.forumhub.topic.repository.*;
 import com.raul.forumhub.topic.util.TestsHelper;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.*;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +40,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestClassOrder(ClassOrderer.ClassName.class)
 @Order(2)
-@Slf4j
 public class TopicControllerIT {
 
     @Autowired
