@@ -10,6 +10,7 @@ import com.raul.forumhub.topic.dto.request.TopicUpdateRequestDTO;
 import com.raul.forumhub.topic.exception.RestClientException;
 import com.raul.forumhub.topic.repository.*;
 import com.raul.forumhub.topic.util.TestsHelper;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.*;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestClassOrder(ClassOrderer.ClassName.class)
 @Order(2)
+@Slf4j
 public class TopicControllerIT {
 
     @Autowired
@@ -197,13 +199,13 @@ public class TopicControllerIT {
 
 
     @DisplayName("Should fail with status code 400 when create topic if the title " +
-            "property is greater than 150 chars")
+                 "property is greater than 150 chars")
     @Test
     void shouldFailToCreateTopicIfTitlePropertyExceedsLimit() throws Exception {
         final TopicCreateRequestDTO topicCreateRequestDTO = new TopicCreateRequestDTO(
                 "Qual é a diferença entre o Feign Client, RestTemplate e o WebClient no " +
-                        "Spring Framework e em que situações é mais adequado utilizá-los durante a " +
-                        "integração de um serviço?",
+                "Spring Framework e em que situações é mais adequado utilizá-los durante a " +
+                "integração de um serviço?",
                 "Diferença entre o Feign Client, RestTemplate e WebClient",
                 1L);
 
@@ -230,7 +232,7 @@ public class TopicControllerIT {
     void shouldFailToCreateTopicIfCourseNotExists() throws Exception {
         final TopicCreateRequestDTO topicCreateRequestDTO = new TopicCreateRequestDTO("Dúvida na utilização do Feign Client",
                 "Como utilizar o Feign Client para integração do serviço x?",
-                4L);
+                5L);
 
         BDDMockito.given(this.userClientRequest.getUserById(1L))
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
@@ -252,7 +254,7 @@ public class TopicControllerIT {
 
 
     @DisplayName("Should fail with status code 404 when create topic if the user service " +
-            "return 404 not found status code")
+                 "return 404 not found status code")
     @Test
     void shouldFailToCreateTopicIfUserServiceReturn404StatusCode() throws Exception {
         final TopicCreateRequestDTO topicCreateRequestDTO = new TopicCreateRequestDTO("Dúvida na utilização do Feign Client",
@@ -280,7 +282,7 @@ public class TopicControllerIT {
 
     @Transactional
     @DisplayName("Should create topic with success if user is authenticated and " +
-            "previous premisses are adequate")
+                 "previous premisses are adequate")
     @Test
     void shouldCreateTopicWithSuccessIfAuthenticated() throws Exception {
         final TopicCreateRequestDTO topicCreateRequestDTO = new TopicCreateRequestDTO("Dúvida na utilização do Feign Client",
@@ -392,9 +394,118 @@ public class TopicControllerIT {
 
     }
 
+    @DisplayName("Should return page without content when to request topics by course id and" +
+                 " isn't exist none topics associate with course")
+    @Test
+    void shouldReturnPageWithoutContentWhenIsNotExistNoneTopicAssociatedToTheCourse() throws Exception {
+        this.mockMvc.perform(get("/forumhub.io/api/v1/topics/searchTopicsByCourse")
+                        .queryParam("course_id", "4")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$..topicResponseDTOList.length()", is(0)))
+                .andExpect(jsonPath("$..page.[?(@.size == 10)]").exists())
+                .andExpect(jsonPath("$..page.[?(@.totalElements == 0)]").exists())
+                .andExpect(jsonPath("$..page.[?(@.totalPages == 0)]").exists());
+
+        Assertions.assertEquals(0, this.topicRepository.findAll().stream()
+                .filter(topic -> topic.getCourse().getId().equals(4L)).toList().size());
+
+
+    }
+
+    @DisplayName("Should return topics by course id unsorted with successful")
+    @Test
+    void shouldReturnTopicsByCourseUnsortedWithSuccessful() throws Exception {
+        this.mockMvc.perform(get("/forumhub.io/api/v1/topics/searchTopicsByCourse")
+                        .queryParam("course_id", "1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$..topicResponseDTOList.length()", is(2)))
+                .andExpect(jsonPath("$..page.[?(@.size == 10)]").exists())
+                .andExpect(jsonPath("$..page.[?(@.totalElements == 2)]").exists())
+                .andExpect(jsonPath("$..page.[?(@.totalPages == 1)]").exists());
+
+        Assertions.assertEquals(2, this.topicRepository.findAll().stream()
+                .filter(topic -> topic.getCourse().getId().equals(1L)).toList().size());
+
+
+    }
+
+
+    @DisplayName("Should return topics by course id sorted descendants by created date with successful")
+    @Test
+    void shouldReturnTopicsByCourseSortedDescendantByCreateDateWithSuccessful() throws Exception {
+        this.mockMvc.perform(get("/forumhub.io/api/v1/topics/searchTopicsByCourse")
+                        .queryParam("course_id", "1")
+                        .queryParam("sort", "createdAt,desc")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$..topicResponseDTOList[0].[?(@.topic.id == 1)]").exists())
+                .andExpect(jsonPath("$..topicResponseDTOList[1].[?(@.topic.id == 4)]").exists())
+                .andExpect(jsonPath("$..topicResponseDTOList.length()", is(2)))
+                .andExpect(jsonPath("$..page.[?(@.size == 10)]").exists())
+                .andExpect(jsonPath("$..page.[?(@.totalElements == 2)]").exists())
+                .andExpect(jsonPath("$..page.[?(@.totalPages == 1)]").exists());
+
+        Assertions.assertEquals(2, this.topicRepository.findAll().stream()
+                .filter(topic -> topic.getCourse().getId().equals(1L)).toList().size());
+
+
+    }
+
+
+    @DisplayName("Should return only one topic by course id sorted in ascendant by status with successful")
+    @Test
+    void shouldReturnOneTopicByCourseSortedAscendantByStatusWithSuccessful() throws Exception {
+        this.mockMvc.perform(get("/forumhub.io/api/v1/topics/searchTopicsByCourse")
+                        .queryParam("course_id", "1")
+                        .queryParam("size", "1")
+                        .queryParam("sort", "status,asc")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$..topicResponseDTOList[0].[?(@.topic.status == \"UNSOLVED\")]").exists())
+                .andExpect(jsonPath("$..page.[?(@.number == 0)]").exists())
+                .andExpect(jsonPath("$..topicResponseDTOList.length()", is(1)))
+                .andExpect(jsonPath("$..page.[?(@.size == 1)]").exists())
+                .andExpect(jsonPath("$..page.[?(@.totalElements == 2)]").exists())
+                .andExpect(jsonPath("$..page.[?(@.totalPages == 2)]").exists());
+
+        Assertions.assertEquals(2, this.topicRepository.findAll().stream()
+                .filter(topic -> topic.getCourse().getId().equals(1L)).toList().size());
+
+    }
+
+
+    @DisplayName("Should return topics by course id sorted ascendants by title with successful")
+    @Test
+    void shouldReturnTopicsByCourseSortedAscendantByTitleWithSuccessful() throws Exception {
+        this.mockMvc.perform(get("/forumhub.io/api/v1/topics/searchTopicsByCourse")
+                        .queryParam("course_id", "1")
+                        .queryParam("sort", "title,asc")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$..topicResponseDTOList[0].[?(@.topic.id == 1)]").exists())
+                .andExpect(jsonPath("$..topicResponseDTOList[1].[?(@.topic.id == 4)]").exists())
+                .andExpect(jsonPath("$..page.[?(@.number == 0)]").exists())
+                .andExpect(jsonPath("$..topicResponseDTOList.length()", is(2)))
+                .andExpect(jsonPath("$..page.[?(@.size == 10)]").exists())
+                .andExpect(jsonPath("$..page.[?(@.totalElements == 2)]").exists())
+                .andExpect(jsonPath("$..page.[?(@.totalPages == 1)]").exists());
+
+        Assertions.assertEquals(2, this.topicRepository.findAll().stream()
+                .filter(topic -> topic.getCourse().getId().equals(1L)).toList().size());
+
+
+    }
+
 
     @DisplayName("Should fail with status code 400 when attempt get topic if topic_id property " +
-            "of query param is sent empty")
+                 "of query param is sent empty")
     @Test
     void shouldFailIfTopicIdPropertyOfQueryParamIsEmptyWhenGetTopic() throws Exception {
         this.mockMvc.perform(get("/forumhub.io/api/v1/topics")
@@ -408,7 +519,7 @@ public class TopicControllerIT {
     }
 
     @DisplayName("Should fail with status code 400 when request topic with" +
-            " param different of type number")
+                 " param different of type number")
     @Test
     void shouldFailToRequestTopicIfParamDifferentOfTypeNumber() throws Exception {
         this.mockMvc.perform(get("/forumhub.io/api/v1/topics")
@@ -459,7 +570,7 @@ public class TopicControllerIT {
 
 
     @DisplayName("Should fail with status code 403 if user authenticated hasn't authority 'topic:edit'" +
-            "when edit topic")
+                 "when edit topic")
     @Test
     void shouldFailIfUserHasNotSuitableAuthorityWhenEditTopic() throws Exception {
         final TopicUpdateRequestDTO topicUpdateRequestDTO = new TopicUpdateRequestDTO(
@@ -488,7 +599,7 @@ public class TopicControllerIT {
     }
 
     @DisplayName("Should fail with status code 400 when edit topic with" +
-            " param different of type number")
+                 " param different of type number")
     @Test
     void shouldFailToEditTopicIfParamDifferentOfTypeNumber() throws Exception {
         final TopicUpdateRequestDTO topicUpdateRequestDTO = new TopicUpdateRequestDTO(
@@ -613,7 +724,7 @@ public class TopicControllerIT {
         final TopicUpdateRequestDTO topicUpdateRequestDTO = new TopicUpdateRequestDTO(
                 "Dúvida quanto a utilização do Elasticsearch",
                 "Como posso integrar minha API com o Elasticsearch para monitoração?",
-                Status.UNSOLVED, 4L
+                Status.UNSOLVED, 5L
         );
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/edit", 1)
@@ -638,7 +749,7 @@ public class TopicControllerIT {
 
 
     @DisplayName("Should fail with status code 404 when edit topic if the user service return " +
-            "404 not found status code")
+                 "404 not found status code")
     @Test
     void shouldFailToEditTopicIfUserServiceReturn404StatusCode() throws Exception {
         final TopicUpdateRequestDTO topicUpdateRequestDTO = new TopicUpdateRequestDTO(
@@ -729,7 +840,7 @@ public class TopicControllerIT {
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.detail", is(
                         "O tópico pertence a um autor inexistente," +
-                                " ele não pode ser editado"
+                        " ele não pode ser editado"
                 )));
 
         Topic topic = this.topicRepository.findById(3L).orElseThrow();
@@ -746,7 +857,7 @@ public class TopicControllerIT {
 
     @Transactional
     @DisplayName("Topic author should be able edit specified topic if authenticated, " +
-            "has authority 'topic:edit' and previous premisses are adequate")
+                 "has authority 'topic:edit' and previous premisses are adequate")
     @Test
     void topicAuthorShouldEditSpecifiedTopicWithSuccessIfHasSuitableAuthority() throws Exception {
         final TopicUpdateRequestDTO topicUpdateRequestDTO = new TopicUpdateRequestDTO(
@@ -768,7 +879,7 @@ public class TopicControllerIT {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.topic.title", is("Dúvida na utilização do WebClient")))
                 .andExpect(jsonPath("$.topic.question", is("Como utilizar o WebClient para " +
-                        "integração do serviço x?")));
+                                                           "integração do serviço x?")));
 
 
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
@@ -785,7 +896,7 @@ public class TopicControllerIT {
 
     @Transactional
     @DisplayName("User ADM should be able edit topic of other author if authenticated, " +
-            "has authority 'topic:edit' and previous premisses are adequate")
+                 "has authority 'topic:edit' and previous premisses are adequate")
     @Test
     void userADMShouldEditTopicOfOtherAuthorWithSuccessIfHasSuitableAuthority() throws Exception {
         final TopicUpdateRequestDTO topicUpdateRequestDTO = new TopicUpdateRequestDTO(
@@ -807,7 +918,7 @@ public class TopicControllerIT {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.topic.title", is("Dúvida na utilização do RestTemplate")))
                 .andExpect(jsonPath("$.topic.question", is("Como utilizar o RestTemplate para " +
-                        "integração do serviço x?")));
+                                                           "integração do serviço x?")));
 
 
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
@@ -824,7 +935,7 @@ public class TopicControllerIT {
 
     @Transactional
     @DisplayName("User MOD should be able edit topic of other author if authenticated, " +
-            "has authority 'topic:edit' and previous premisses are adequate")
+                 "has authority 'topic:edit' and previous premisses are adequate")
     @Test
     void userMODShouldEditTopicOfOtherAuthorWithSuccessIfHasSuitableAuthority() throws Exception {
         final TopicUpdateRequestDTO topicUpdateRequestDTO = new TopicUpdateRequestDTO(
@@ -845,9 +956,9 @@ public class TopicControllerIT {
                                 .writeValueAsString(topicUpdateRequestDTO)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.topic.title", is("Dúvida na utilização da API de " +
-                        "validação do Spring")))
+                                                        "validação do Spring")))
                 .andExpect(jsonPath("$.topic.question", is("Quais são as anotações da API de " +
-                        "validação do Spring?")));
+                                                           "validação do Spring?")));
 
 
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
@@ -864,7 +975,7 @@ public class TopicControllerIT {
 
 
     @DisplayName("Should fail with status code 403 if user authenticated hasn't authority 'topic:delete'" +
-            " when delete topic")
+                 " when delete topic")
     @Test
     void shouldFailIfUserHasNotSuitableAuthorityWhenDeleteTopic() throws Exception {
         this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/{topic_id}/delete", 1)
@@ -880,7 +991,7 @@ public class TopicControllerIT {
     }
 
     @DisplayName("Should fail with status code 400 when delete topic with" +
-            " param different of type number")
+                 " param different of type number")
     @Test
     void shouldFailToDeleteTopicIfParamDifferentOfTypeNumber() throws Exception {
         BDDMockito.given(this.userClientRequest.getUserById(1L))
@@ -914,7 +1025,7 @@ public class TopicControllerIT {
     }
 
     @DisplayName("Should fail with status code 404 when delete topic if the user service " +
-            "return 404 not found status code")
+                 "return 404 not found status code")
     @Test
     void shouldFailToDeleteTopicIfUserServiceReturn404StatusCode() throws Exception {
         BDDMockito.given(this.userClientRequest.getUserById(1L))
@@ -958,7 +1069,7 @@ public class TopicControllerIT {
 
     @Transactional
     @DisplayName("Topic author should be able delete specified topic if authenticated, " +
-            "has authority 'topic:delete' and previous premisses are adequate")
+                 "has authority 'topic:delete' and previous premisses are adequate")
     @Test
     void topicAuthorShouldDeleteSpecifiedTopicWithSuccessIfHasSuitableAuthority() throws Exception {
         BDDMockito.given(this.userClientRequest.getUserById(1L))
@@ -981,7 +1092,7 @@ public class TopicControllerIT {
 
     @Transactional
     @DisplayName("User ADM should be able delete topic of other author if authenticated, " +
-            "has authority 'topic:delete' and previous premisses are adequate")
+                 "has authority 'topic:delete' and previous premisses are adequate")
     @Test
     void userADMShouldDeleteTopicOfOtherAuthorWithSuccessIfHasSuitableAuthority() throws Exception {
         BDDMockito.given(this.userClientRequest.getUserById(3L))
@@ -1004,7 +1115,7 @@ public class TopicControllerIT {
 
     @Transactional
     @DisplayName("User MOD should be able delete topic of other author if authenticated, " +
-            "has authority 'topic:delete' and previous premisses are adequate")
+                 "has authority 'topic:delete' and previous premisses are adequate")
     @Test
     void userMODShouldDeleteTopicOfOtherAuthorWithSuccessIfHasSuitableAuthority() throws Exception {
         BDDMockito.given(this.userClientRequest.getUserById(2L))
