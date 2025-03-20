@@ -110,7 +110,7 @@ public class CourseControllerIT {
 
 
     @DisplayName("Should fail with status code 403 when attempt create course if user is ADM, but " +
-            "hasn't authority course:create")
+                 "hasn't authority course:create")
     @Test
     void shouldFailToCreateCourseIfUserIsADMButHasNotSuitableAuthority() throws Exception {
         final CourseRequestDTO courseRequestDTO = new CourseRequestDTO(
@@ -130,7 +130,7 @@ public class CourseControllerIT {
 
 
     @DisplayName("Should fail with status code 403 when attempt create course if user has authority" +
-            " course:create, but isn't ADM")
+                 " course:create, but isn't ADM")
     @Test
     void shouldFailToCreateCourseIfUserHasSuitableAuthorityButNotIsADM() throws Exception {
         final CourseRequestDTO courseRequestDTO = new CourseRequestDTO(
@@ -150,7 +150,7 @@ public class CourseControllerIT {
     }
 
     @DisplayName("Should fail with status code 400 when create course if category sent is" +
-            " different of the enum types available")
+                 " different of the enum types available")
     @Test
     void shouldFailToCreateCourseIfEnumTypeSentNonExists() throws Exception {
         String request = """
@@ -219,7 +219,7 @@ public class CourseControllerIT {
 
     @Transactional
     @DisplayName("Should create course with success if user ADM authenticated, " +
-            "has authority course:create and previous premisses are adequate")
+                 "has authority course:create and previous premisses are adequate")
     @Test
     void shouldCreateCourseWithSuccessIfAuthenticatedAndHasSuitableAuthority() throws Exception {
         final CourseRequestDTO courseRequestDTO = new CourseRequestDTO(
@@ -289,7 +289,7 @@ public class CourseControllerIT {
 
 
     @DisplayName("Should fail with status code 403 when attempt edit course if user is ADM, but " +
-            "hasn't authority course:edit")
+                 "hasn't authority course:edit")
     @Test
     void shouldFailToEditCourseIfUserIsADMButHasNotSuitableAuthority() throws Exception {
         final CourseRequestDTO courseUpdateDTO = new CourseRequestDTO("Como criar uma API Rest escalável", Course.Category.C);
@@ -309,7 +309,7 @@ public class CourseControllerIT {
 
 
     @DisplayName("Should fail with status code 403 when attempt edit course if user has authority" +
-            " course:edit, but isn't ADM")
+                 " course:edit, but isn't ADM")
     @Test
     void shouldFailToEditCourseIfUserHasSuitableAuthorityButNotIsADM() throws Exception {
         final CourseRequestDTO courseUpdateDTO = new CourseRequestDTO("Como criar uma API Rest escalável", Course.Category.C);
@@ -327,7 +327,7 @@ public class CourseControllerIT {
     }
 
     @DisplayName("Should fail with status code 400 when attempt edit course if course name property " +
-            "of DTO object is sent empty")
+                 "of DTO object is sent empty")
     @Test
     void shouldFailIfCourseNamePropertyOfDtoObjectIsEmptyWhenEditCourse() throws Exception {
         final CourseRequestDTO courseUpdateDTO = new CourseRequestDTO("", Course.Category.C);
@@ -369,7 +369,7 @@ public class CourseControllerIT {
 
     @Transactional
     @DisplayName("Should edit course with success if user ADM authenticated, " +
-            "has authority course:edit and previous premisses are adequate")
+                 "has authority course:edit and previous premisses are adequate")
     @Test
     void shouldEditCourseWithSuccessIfAuthenticatedAndHasSuitableAuthority() throws Exception {
         final CourseRequestDTO courseUpdateDTO = new CourseRequestDTO("Como criar uma API Rest escalável", Course.Category.C);
@@ -404,7 +404,7 @@ public class CourseControllerIT {
 
 
     @DisplayName("Should fail with status code 403 when attempt delete course if user is ADM, but " +
-            "hasn't authority course:delete")
+                 "hasn't authority course:delete")
     @Test
     void shouldFailToDeleteCourseIfUserIsADMButHasNotSuitableAuthority() throws Exception {
         this.mockMvc.perform(delete("/forumhub.io/api/v1/courses/{course_id}/delete", 2L)
@@ -419,7 +419,7 @@ public class CourseControllerIT {
 
 
     @DisplayName("Should fail with status code 403 when attempt delete course if user has authority" +
-            " course:delete, but isn't ADM")
+                 " course:delete, but isn't ADM")
     @Test
     void shouldFailToDeleteCourseIfUserHasSuitableAuthorityButNotIsADM() throws Exception {
         this.mockMvc.perform(delete("/forumhub.io/api/v1/courses/{course_id}/delete", 2L)
@@ -454,7 +454,7 @@ public class CourseControllerIT {
 
     @Transactional
     @DisplayName("Should delete course with success if user ADM authenticated, " +
-            "has authority course:delete and previous premisses are adequate")
+                 "has authority course:delete and previous premisses are adequate")
     @Test
     void shouldDeleteCourseWithSuccessIfAuthenticatedAndHasSuitableAuthority() throws Exception {
         this.mockMvc.perform(delete("/forumhub.io/api/v1/courses/{course_id}/delete", 2L)
