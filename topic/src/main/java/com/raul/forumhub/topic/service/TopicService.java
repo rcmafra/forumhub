@@ -43,6 +43,10 @@ public class TopicService {
         return this.topicRepository.findAll(pageable).map(TopicResponseDTO::new);
     }
 
+    public Page<TopicResponseDTO> topicsListByCourse(Long course_id, Pageable pageable) {
+        return this.topicRepository.findTopicsByCourseId(course_id, pageable)
+                .map(TopicResponseDTO::new);
+    }
 
     public Topic getTopicById(Long topic_id) {
         return topicRepository.findById(topic_id).orElseThrow(() ->

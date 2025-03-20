@@ -2,8 +2,8 @@ package com.raul.forumhub.topic.controller;
 
 import com.raul.forumhub.topic.dto.request.TopicCreateRequestDTO;
 import com.raul.forumhub.topic.dto.request.TopicUpdateRequestDTO;
-import com.raul.forumhub.topic.dto.response.TopicResponseDTO;
 import com.raul.forumhub.topic.dto.response.HttpStatusMessage;
+import com.raul.forumhub.topic.dto.response.TopicResponseDTO;
 import com.raul.forumhub.topic.security.IsAuthenticated;
 import com.raul.forumhub.topic.service.TopicService;
 import jakarta.validation.Valid;
@@ -25,14 +25,14 @@ public class TopicController {
 
     private final TopicService topicService;
 
-    public TopicController(TopicService topicService){
+    public TopicController(TopicService topicService) {
         this.topicService = topicService;
     }
 
     @IsAuthenticated
     @PostMapping("/create")
     public ResponseEntity<HttpStatusMessage> createTopic(@Valid @RequestBody TopicCreateRequestDTO topicCreateRequestDTO,
-                                                         @AuthenticationPrincipal Jwt jwt){
+                                                         @AuthenticationPrincipal Jwt jwt) {
 
         Long user_id = Long.parseLong(jwt.getClaim("user_id"));
         this.topicService.createTopic(topicCreateRequestDTO, user_id);
@@ -47,8 +47,14 @@ public class TopicController {
         return assembler.toModel(topicService.topicList(pageable));
     }
 
+    @GetMapping("/searchTopicsByCourse")
+    public PagedModel<EntityModel<TopicResponseDTO>> topicsListByCourse(Long course_id, @PageableDefault Pageable pageable,
+                                                                        PagedResourcesAssembler<TopicResponseDTO> assembler) {
+        return assembler.toModel(topicService.topicsListByCourse(course_id, pageable));
+    }
+
     @GetMapping
-    public ResponseEntity<TopicResponseDTO> getTopic(@RequestParam Long topic_id){
+    public ResponseEntity<TopicResponseDTO> getTopic(@RequestParam Long topic_id) {
 
         return ResponseEntity.ok(new TopicResponseDTO(topicService.getTopicById(topic_id)));
     }
@@ -56,7 +62,7 @@ public class TopicController {
     @PreAuthorize("hasAuthority('SCOPE_topic:edit')")
     @PutMapping("/{topic_id}/edit")
     public ResponseEntity<TopicResponseDTO> updateTopic(@PathVariable Long topic_id, @Valid @RequestBody TopicUpdateRequestDTO topicUpdateRequestDTO,
-                                                        @AuthenticationPrincipal Jwt jwt){
+                                                        @AuthenticationPrincipal Jwt jwt) {
 
         Long user_id = Long.parseLong(jwt.getClaim("user_id"));
         TopicResponseDTO topicResponseDTO = this.topicService.updateTopic(topic_id, user_id, topicUpdateRequestDTO);
@@ -66,7 +72,7 @@ public class TopicController {
 
     @PreAuthorize("hasAuthority('SCOPE_topic:delete')")
     @DeleteMapping("/{topic_id}/delete")
-    public ResponseEntity<HttpStatusMessage> deleteTopic(@PathVariable Long topic_id, @AuthenticationPrincipal Jwt jwt){
+    public ResponseEntity<HttpStatusMessage> deleteTopic(@PathVariable Long topic_id, @AuthenticationPrincipal Jwt jwt) {
 
         Long user_id = Long.parseLong(jwt.getClaim("user_id"));
         topicService.deleteTopic(topic_id, user_id);
