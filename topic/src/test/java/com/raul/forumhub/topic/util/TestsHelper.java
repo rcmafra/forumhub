@@ -65,8 +65,10 @@ public final class TestsHelper {
             topic2.setAnswers(Set.of(TestsHelper.AnswerHelper.answerList().get(1)));
             final Topic topic3 = TestsHelper.TopicHelper.topicList().get(2);
             topic3.setAnswers(Set.of(TestsHelper.AnswerHelper.answerList().get(2)));
+            final Topic topic4 = TestsHelper.TopicHelper.topicList().get(3);
+            topic4.setAnswers(Set.of(TestsHelper.AnswerHelper.answerList().get(3)));
 
-            return List.of(topic1, topic2, topic3);
+            return List.of(topic1, topic2, topic3, topic4);
 
         }
 
@@ -136,6 +138,12 @@ public final class TestsHelper {
             courseList.add(Course.builder()
                     .id(3L)
                     .name("Lidando com testes")
+                    .category(Course.Category.QA)
+                    .build()
+            );
+            courseList.add(Course.builder()
+                    .id(4L)
+                    .name("Explorando o Docker para conteinerização de aplicações")
                     .category(Course.Category.QA)
                     .build()
             );

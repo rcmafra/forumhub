@@ -219,7 +219,7 @@ public class CourseControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$..course.length()", is(3)));
+                .andExpect(jsonPath("$..course.length()", is(4)));
 
         BDDMockito.verify(this.courseService).getAllCourse();
         BDDMockito.verifyNoMoreInteractions(this.courseService);

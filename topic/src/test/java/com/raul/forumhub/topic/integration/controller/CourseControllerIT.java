@@ -104,7 +104,7 @@ public class CourseControllerIT {
                                 .writeValueAsString(courseRequestDTO)))
                 .andExpectAll(status().isUnauthorized());
 
-        assertEquals(3, this.courseRepository.findAll().size());
+        assertEquals(4, this.courseRepository.findAll().size());
 
     }
 
@@ -124,7 +124,7 @@ public class CourseControllerIT {
                                 .writeValueAsString(courseRequestDTO)))
                 .andExpectAll(status().isForbidden());
 
-        assertEquals(3, this.courseRepository.findAll().size());
+        assertEquals(4, this.courseRepository.findAll().size());
 
     }
 
@@ -145,7 +145,7 @@ public class CourseControllerIT {
                                 .writeValueAsString(courseRequestDTO)))
                 .andExpectAll(status().isForbidden());
 
-        assertEquals(3, this.courseRepository.findAll().size());
+        assertEquals(4, this.courseRepository.findAll().size());
 
     }
 
@@ -169,7 +169,7 @@ public class CourseControllerIT {
                         .content(request))
                 .andExpect(status().isBadRequest());
 
-        assertEquals(3, this.courseRepository.findAll().size());
+        assertEquals(4, this.courseRepository.findAll().size());
     }
 
 
@@ -190,7 +190,7 @@ public class CourseControllerIT {
                 .andExpectAll(status().isBadRequest())
                 .andExpect(jsonPath("$.detail", is("O nome do curso não pode ser vazio")));
 
-        assertEquals(3, this.courseRepository.findAll().size());
+        assertEquals(4, this.courseRepository.findAll().size());
 
     }
 
@@ -212,7 +212,7 @@ public class CourseControllerIT {
                 .andExpectAll(status().isConflict())
                 .andExpect(jsonPath("$.detail", is("Payload conflitante")));
 
-        assertEquals(3, this.courseRepository.findAll().size());
+        assertEquals(4, this.courseRepository.findAll().size());
 
     }
 
@@ -236,7 +236,7 @@ public class CourseControllerIT {
                 .andExpect(status().isCreated())
                 .andExpect(content().string("{\"message\":\"HttpStatusCode OK\"}"));
 
-        assertEquals(4, this.courseRepository.findAll().size());
+        assertEquals(5, this.courseRepository.findAll().size());
 
 
     }
@@ -250,7 +250,7 @@ public class CourseControllerIT {
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isUnauthorized());
 
-        assertEquals(3, this.courseRepository.findAll().size());
+        assertEquals(4, this.courseRepository.findAll().size());
 
     }
 
@@ -263,9 +263,9 @@ public class CourseControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$..course.length()", is(3)));
+                .andExpect(jsonPath("$..course.length()", is(4)));
 
-        assertEquals(3, this.courseRepository.findAll().size());
+        assertEquals(4, this.courseRepository.findAll().size());
 
     }
 
@@ -351,7 +351,7 @@ public class CourseControllerIT {
     void shouldFailToEditCourseIfDesiredCourseNotExists() throws Exception {
         final CourseRequestDTO courseUpdateDTO = new CourseRequestDTO("Como criar uma API Rest escalável", Course.Category.C);
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/courses/{course_id}/edit", 4L)
+        this.mockMvc.perform(put("/forumhub.io/api/v1/courses/{course_id}/edit", 5L)
                         .with(jwt().authorities(
                                 new SimpleGrantedAuthority("SCOPE_course:edit"),
                                 new SimpleGrantedAuthority("ROLE_ADM")))
@@ -362,7 +362,7 @@ public class CourseControllerIT {
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.detail", is("O curso informado não existe")));
 
-        assertFalse(this.courseRepository.findById(4L).isPresent());
+        assertFalse(this.courseRepository.findById(5L).isPresent());
 
     }
 
@@ -398,7 +398,7 @@ public class CourseControllerIT {
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isUnauthorized());
 
-        assertEquals(3, this.courseRepository.findAll().size());
+        assertEquals(4, this.courseRepository.findAll().size());
 
     }
 
@@ -413,7 +413,7 @@ public class CourseControllerIT {
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isForbidden());
 
-        assertEquals(3, this.courseRepository.findAll().size());
+        assertEquals(4, this.courseRepository.findAll().size());
 
     }
 
@@ -428,14 +428,14 @@ public class CourseControllerIT {
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isForbidden());
 
-        assertEquals(3, this.courseRepository.findAll().size());
+        assertEquals(4, this.courseRepository.findAll().size());
 
     }
 
     @DisplayName("Should fail to delete course if desired course not exists")
     @Test
     void shouldFailToDeleteCourseIfDesiredCourseNotExists() throws Exception {
-        this.mockMvc.perform(delete("/forumhub.io/api/v1/courses/{course_id}/delete", 4L)
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/courses/{course_id}/delete", 5L)
                         .with(jwt().authorities(
                                 new SimpleGrantedAuthority("SCOPE_course:delete"),
                                 new SimpleGrantedAuthority("ROLE_ADM")))
@@ -445,8 +445,8 @@ public class CourseControllerIT {
                 .andExpect(jsonPath("$.detail", is("O curso informado não existe")));
 
         Assertions.assertAll(
-                () -> assertEquals(3, this.courseRepository.findAll().size()),
-                () -> assertFalse(this.courseRepository.findById(4L).isPresent())
+                () -> assertEquals(4, this.courseRepository.findAll().size()),
+                () -> assertFalse(this.courseRepository.findById(5L).isPresent())
         );
 
     }
@@ -466,7 +466,7 @@ public class CourseControllerIT {
                 .andExpect(status().isOk())
                 .andExpect(content().string("{\"message\":\"HttpStatusCode OK\"}"));
 
-        assertEquals(2, this.courseRepository.findAll().size());
+        assertEquals(3, this.courseRepository.findAll().size());
 
     }
 
