@@ -13,7 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationConsentService;
@@ -61,8 +61,7 @@ public class AuthorizationServerConfig {
                 .exceptionHandling((exceptions) -> exceptions
                         .defaultAuthenticationEntryPointFor(
                                 new LoginUrlAuthenticationEntryPoint("/login"),
-                                new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
-                        ))
+                                new MediaTypeRequestMatcher(MediaType.TEXT_HTML)))
                 .oauth2ResourceServer((resource) ->
                         resource.jwt(Customizer.withDefaults()));
         return http.build();
@@ -94,13 +93,13 @@ public class AuthorizationServerConfig {
     }
 
     @Bean
-    public RegisteredClientRepository registeredClientRepository(BCryptPasswordEncoder bCryptPasswordEncoder,
+    public RegisteredClientRepository registeredClientRepository(PasswordEncoder passwordEncoder,
                                                                  JdbcTemplate jdbcTemplate) {
         RegisteredClient topicApiClient = RegisteredClient
                 .withId(UUID.randomUUID().toString())
                 .clientName(this.clientProperties.topicName)
                 .clientId(this.clientProperties.topicClientID)
-                .clientSecret(bCryptPasswordEncoder.encode(this.clientProperties.topicPassword))
+                .clientSecret(passwordEncoder.encode(this.clientProperties.topicPassword))
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
@@ -125,13 +124,14 @@ public class AuthorizationServerConfig {
                 .withId(UUID.randomUUID().toString())
                 .clientName(this.clientProperties.userName)
                 .clientId(this.clientProperties.userClientID)
-                .clientSecret(bCryptPasswordEncoder.encode(this.clientProperties.userPassword))
+                .clientSecret(passwordEncoder.encode(this.clientProperties.userPassword))
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
                 .redirectUri("https://oauth.pstmn.io/v1/callback")
                 .redirectUri("https://oidcdebugger.com/debug")
+                .redirectUri("http://localhost:8081/forumhub.io/api/v1/swagger-ui/oauth2-redirect.html")
                 .scopes((scp) -> scp.addAll(Set.of(
                         "myuser:read", "user:readAll", "myuser:delete", "myuser:edit")
                 ))
