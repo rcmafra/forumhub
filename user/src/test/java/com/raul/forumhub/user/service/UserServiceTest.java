@@ -120,8 +120,8 @@ public class UserServiceTest {
     void shouldFailToCreateUserIfFirstNameLengthOvertake255Chars() {
         final UserCreateDTO userCreateDTO = new UserCreateDTO(
                 "User1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+-=[]{}|;:,." +
-                        "<>?~User1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+-=[]{}|;:," +
-                        ".<>?~User1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^",
+                "<>?~User1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+-=[]{}|;:," +
+                ".<>?~User1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^",
                 "Silva", "jose_silva", "marcus@email.com",
                 "P4s$word");
 
@@ -148,8 +148,8 @@ public class UserServiceTest {
     void shouldFailToCreateUserIfLastNameLengthOvertake255Chars() {
         final UserCreateDTO userCreateDTO = new UserCreateDTO("Marcus",
                 "User1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+-=[]{}|;:,." +
-                        "<>?~User1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+-=[]{}|;:,." +
-                        "<>?~User1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^",
+                "<>?~User1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+-=[]{}|;:,." +
+                "<>?~User1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^",
                 "jose_silva", "marcus@email.com",
                 "P4s$word");
 
@@ -176,9 +176,9 @@ public class UserServiceTest {
     void shouldFailToCreateUserIfUsernameLengthOvertake255Chars() {
         final UserCreateDTO userCreateDTO = new UserCreateDTO("Marcus",
                 "Silva", "User1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUV" +
-                "WXYZ!@#$%^&*()_+-=[]{}|;:,.<>?~User1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRST" +
-                "UVWXYZ!@#$%^&*()_+-=[]{}|;:,.<>?~User1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRST" +
-                "UVWXYZ!@#$%", "marcus@email.com",
+                         "WXYZ!@#$%^&*()_+-=[]{}|;:,.<>?~User1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRST" +
+                         "UVWXYZ!@#$%^&*()_+-=[]{}|;:,.<>?~User1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRST" +
+                         "UVWXYZ!@#$%", "marcus@email.com",
                 "P4s$word");
 
         BDDMockito.given(this.profileRepository.findByProfileName(Profile.ProfileName.BASIC))
@@ -329,11 +329,13 @@ public class UserServiceTest {
     }
 
     @Test
-    void shouldToReturnAllUsersSortedAscendantByProfileWithSuccess() {
+    void shouldToReturnAllUsersSortedAscendantByProfileNameWithSuccess() {
         Pageable pageable = PageRequest.of(0, 10,
-                Sort.by(Sort.Direction.DESC, "profile"));
+                Sort.by(Sort.Direction.ASC, "profile.profileName"));
 
-        List<User> userList = TestsHelper.UserHelper.userList();
+        List<User> userList = TestsHelper.UserHelper.userList()
+                .stream().sorted(Comparator.comparing(u -> u.getProfile().getProfileName().name()))
+                .toList();
 
         Page<UserSummaryInfo> userSummaryInfoPage =
                 new PageImpl<>(userList, pageable, 3)
@@ -348,9 +350,9 @@ public class UserServiceTest {
 
 
         Assertions.assertAll(
-                () -> assertEquals(Profile.ProfileName.ADM, userSummaryInfoPage.getContent().get(2).profile()),
-                () -> assertEquals(Profile.ProfileName.BASIC, userSummaryInfoPage.getContent().get(0).profile()),
-                () -> assertEquals(Profile.ProfileName.MOD, userSummaryInfoPage.getContent().get(1).profile()),
+                () -> assertEquals(Profile.ProfileName.ADM, userSummaryInfoPage.getContent().get(0).profile().getProfileName()),
+                () -> assertEquals(Profile.ProfileName.BASIC, userSummaryInfoPage.getContent().get(1).profile().getProfileName()),
+                () -> assertEquals(Profile.ProfileName.MOD, userSummaryInfoPage.getContent().get(2).profile().getProfileName()),
                 () -> assertEquals(3, userSummaryInfoPage.getContent().size()),
                 () -> assertEquals(10, userSummaryInfoPage.getSize()),
                 () -> assertEquals(3, userSummaryInfoPage.getTotalElements()),
@@ -368,7 +370,7 @@ public class UserServiceTest {
 
         List<User> userList = TestsHelper.UserHelper.userList()
                 .stream().filter(user -> user.getFirstName().equals("Joao") ||
-                        user.getFirstName().equals("Jose"))
+                                         user.getFirstName().equals("Jose"))
                 .sorted(Comparator.comparing(User::getFirstName))
                 .toList();
 

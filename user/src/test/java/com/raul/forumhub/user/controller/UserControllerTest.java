@@ -587,7 +587,7 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.lastName", is("Silva")))
                 .andExpect(jsonPath("$.username", is("jose_silva")))
                 .andExpect(jsonPath("$.email", is("jose@email.com")))
-                .andExpect(jsonPath("$.profile", is("BASIC")));
+                .andExpect(jsonPath("$.profile.profileName", is("BASIC")));
 
         BDDMockito.verify(this.userService).getUserById(1L);
         BDDMockito.verifyNoMoreInteractions(this.userService);

@@ -814,7 +814,7 @@ public class UserControllerIT {
                 .andExpect(jsonPath("$.lastName", is("Silva")))
                 .andExpect(jsonPath("$.username", is("jose_silva")))
                 .andExpect(jsonPath("$.email", is("jose@email.com")))
-                .andExpect(jsonPath("$.profile", is("BASIC")));
+                .andExpect(jsonPath("$.profile.profileName", is("BASIC")));
 
         assertAll(
                 () -> assertEquals(3, this.userRepository.findAll().size()),
@@ -1013,10 +1013,10 @@ public class UserControllerIT {
 
     }
 
-    @DisplayName("MOD user should be able to request all users sorted ascendant by profile " +
+    @DisplayName("MOD user should be able to request all users sorted ascendant by profile name " +
             "with success")
     @Test
-    void modUserShouldToRequestAllUsersSortedByProfileWithSuccess() throws Exception {
+    void modUserShouldToRequestAllUsersSortedByProfileNameWithSuccess() throws Exception {
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/listAll")
                         .queryParam("sort", "profile.profileName,asc")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
@@ -1028,9 +1028,9 @@ public class UserControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$..userSummaryInfoList[0].[?(@.profile == \"ADM\")])").exists())
-                .andExpect(jsonPath("$..userSummaryInfoList[1].[?(@.profile == \"BASIC\")])").exists())
-                .andExpect(jsonPath("$..userSummaryInfoList[2].[?(@.profile == \"MOD\")])").exists())
+                .andExpect(jsonPath("$..userSummaryInfoList[0].[?(@.profile.profileName == \"ADM\")])").exists())
+                .andExpect(jsonPath("$..userSummaryInfoList[1].[?(@.profile.profileName == \"BASIC\")])").exists())
+                .andExpect(jsonPath("$..userSummaryInfoList[2].[?(@.profile.profileName == \"MOD\")])").exists())
                 .andExpect(jsonPath("$..userSummaryInfoList.length()", is(3)))
                 .andExpect(jsonPath("$..page.[?(@.number == 0)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.size == 10)]").exists())
@@ -1058,9 +1058,9 @@ public class UserControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$..userSummaryInfoList[0].[?(@.profile == \"ADM\")])").exists())
-                .andExpect(jsonPath("$..userSummaryInfoList[1].[?(@.profile == \"BASIC\")])").exists())
-                .andExpect(jsonPath("$..userSummaryInfoList[2].[?(@.profile == \"MOD\")])").exists())
+                .andExpect(jsonPath("$..userSummaryInfoList[0].[?(@.profile.profileName == \"ADM\")])").exists())
+                .andExpect(jsonPath("$..userSummaryInfoList[1].[?(@.profile.profileName == \"BASIC\")])").exists())
+                .andExpect(jsonPath("$..userSummaryInfoList[2].[?(@.profile.profileName == \"MOD\")])").exists())
                 .andExpect(jsonPath("$..userSummaryInfoList.length()", is(3)))
                 .andExpect(jsonPath("$..page.[?(@.number == 0)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.size == 10)]").exists())
