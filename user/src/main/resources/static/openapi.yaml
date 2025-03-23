@@ -1,0 +1,427 @@
+openapi: 3.1.1
+info:
+  title: Forumhub - User Service
+  description: |-
+    **Forumhub** é um SaaS robusto projetado para facilitar a interação e troca de conhecimentos. Com Forumhub, os usuários podem criar perguntas 
+    sobre diversos tópicos e responder a questões levantadas por outros membros. A aplicação oferece uma plataforma eficiente e organizada para gerenciar 
+    essas interações, promovendo um ambiente colaborativo e de aprendizado contínuo. 
+
+    Alguns links úteis:
+    - [Repositório do Forumhub](https://github.com/rcmafra/forumhub)
+    - [A definição do módulo User do projeto Forumhub](https://github.com/rcmafra/forumhub/blob/main/user/src/main/resources/static/openapi.yml)
+  contact:
+    email: raulcesar.sm@gmail.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+  - url: http://localhost:8081/forumhub.io/api/v1/
+    description: URL do serviço de usuários.
+tags:
+  - name: user
+    description: Operações sobre algum usuário.
+paths:
+  /users/create:
+    post:
+      tags:
+        - user
+      summary: Adiciona um novo usuário no forum.
+      description: Adiciona um novo usuário para interagir no forum.
+      operationId: registerUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreateDTO'
+      responses:
+        '201':
+          description: Usuário criado com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/UserDetailedInfo'
+        '400':
+          description: Erro no lado do cliente.
+        '500':
+          description: Erro interno no serviço.
+  /users/detailed-info:
+    get:
+      tags:
+        - user
+      summary: Obtém as informações detalhadas de um usuário.
+      description: Obtém as informações detalhadas de um usuário pertencente ao forum.
+      operationId: getDetailedInfoUser
+      parameters:
+        - in: query
+          name: user_id
+          required: false
+          schema:
+            type: integer
+            format: int64
+          description: |
+            O id do usuário desejado. Se não informado, será retornado as informações do usuário que enviou a solicitação.
+      responses:
+        '200':
+          description: Informações detalhadas do usuário obtidas com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDetailedInfo'
+        '400':
+          description: Erro no lado do cliente.
+        '401':
+          description: Usuário não autenticado.
+        '403':
+          description: Usuário sem permissão.
+        '500':
+          description: Erro interno no serviço.
+      security:
+        - forumhub_auth: [ myuser:read ]
+  /users/summary-info:
+    get:
+      tags:
+        - user
+      summary: Obtém as informações resumidas de um usuário.
+      description: Obtém as informações resumidas de um usuário pertencente ao forum.
+      operationId: getSummaryInfoUser
+      parameters:
+        - in: query
+          name: user_id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: O id do usuário desejado.
+      responses:
+        '200':
+          description: Informações detalhadas do usuário obtidas com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSummaryInfo'
+        '400':
+          description: Erro no lado do cliente.
+        '401':
+          description: Usuário não autenticado.
+        '500':
+          description: Erro interno no serviço.
+      security:
+        - forumhub_auth: [ ]
+  /users/listAll:
+    get:
+      tags:
+        - user
+      summary: Obtém uma lista de usuários paginados do forum.
+      description: Obtém uma lista de usuários do forum com seus dados resumidos.
+      operationId: usersList
+      parameters:
+        - in: query
+          name: sort
+          required: false
+          schema:
+            type: string
+          description: |
+            A direção de ordenação dos usuários retornados com base em uma propriedade. Se vazio `sort` será igual a `UNSORTED`. E.g.:
+            * `sort=id,desc` **::** ordem descendente pelo id do usuário.
+            * `sort=firstName,asc` **::** ordem ascendente pelo primeiro nome do usuário.
+            * `sort=profile.profileName,desc` **::** ordem descendente pelo perfil do usuário.
+        - in: query
+          name: size
+          required: false
+          schema:
+            type: integer
+            format: int32
+          description: |
+            A quantidade de usuários por página. Se vazio `size` será igual a `10`. E.g.:
+            * `size=10` **::** 10 usuários por página.
+        - in: query
+          name: page
+          required: false
+          schema:
+            type: integer
+            format: int32
+          description: |
+            O número da pagina que se deseja obter. Se vazio `page` será igual a `0`. E.g.:
+            * `page=0` **::** primeira página.
+      responses:
+        '200':
+          description: Lista de usuários paginados obtidos com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSummaryInfo'
+        '400':
+          description: Erro no lado do cliente.
+        '500':
+          description: Erro interno no serviço.
+      security:
+        - forumhub_auth: [ user:readAll ]
+  /users/edit:
+    put:
+      tags:
+        - user
+      summary: Edita alguma informação desejada do usuário.
+      description: Edita alguma informação desejada do usuário pertencente ao forum.
+      operationId: updateUser
+      parameters:
+        - in: query
+          name: user_id
+          required: false
+          schema:
+            type: integer
+            format: int64
+          description: |
+            O id do usuário desejado. Se não informado, será editado as informações do usuário que enviou a solicitação.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdateDTO'
+      responses:
+        '200':
+          description: Usuário editado com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/UserDetailedInfo'
+        '400':
+          description: Erro no lado do cliente.
+        '401':
+          description: Usuário não autenticado.
+        '403':
+          description: Usuário sem permissão.
+        '500':
+          description: Erro interno no serviço.
+      security:
+        - forumhub_auth: [ myuser:edit ]
+  /users/delete:
+    delete:
+      tags:
+        - user
+      summary: Remove um usuário desejado.
+      description: Remove algum usuário pertencente ao forum.
+      operationId: deleteUser
+      parameters:
+        - in: query
+          name: user_id
+          required: false
+          schema:
+            type: integer
+            format: int64
+          description: |
+            O id do usuário desejado. Se não informado, será removido o usuário que enviou a solicitação.
+      responses:
+        '200':
+          description: Usuário removido com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/HttpStatusMessage'
+        '400':
+          description: Erro no lado do cliente.
+        '401':
+          description: Usuário não autenticado.
+        '403':
+          description: Usuário sem permissão.
+        '500':
+          description: Erro interno no serviço.
+      security:
+        - forumhub_auth: [ myuser:delete ]
+components:
+  schemas:
+    UserCreateDTO:
+      required:
+        - firstName
+        - lastName
+        - username
+        - email
+        - password
+      type: object
+      properties:
+        firstName:
+          type: string
+          description: o primeiro nome do usuário
+          examples: [ "John" ]
+        lastName:
+          type: string
+          description: o sobrenome do usuário
+          examples: [ "Doe" ]
+        username:
+          type: string
+          description: o nome de usuário do usuário
+          examples: [ "john_doe" ]
+        email:
+          type: string
+          format: email
+          description: o email do usuário
+          examples: [ "doe@email.com" ]
+        password:
+          type: string
+          format: password
+          description: a senha do usuário
+          examples: [ "Johndoe@123" ]
+    UserUpdateDTO:
+      type: object
+      required:
+        - firstName
+        - lastName
+        - username
+        - email
+      properties:
+        firstName:
+          type: string
+          description: o primeiro nome do usuário
+          examples: [ "John" ]
+        lastName:
+          type: string
+          description: o sobrenome do usuário
+          examples: [ "Doe" ]
+        username:
+          type: string
+          description: o nome de usuário do usuário
+          examples: [ "john_doe" ]
+        email:
+          type: string
+          format: email
+          description: o email do usuário
+          examples: [ "doe@email.com" ]
+        profile:
+          type: string
+          minimum: 3
+          maximum: 3
+          enum:
+            - ADM
+            - MOD
+            - BASIC
+          description: o nome do perfil do autor
+          examples: [ "BASIC" ]
+        accountNonExpired:
+          type: boolean
+          description: indica se a conta do usuário expirou.
+          examples: [ true ]
+        accountNonLocked:
+          type: boolean
+          description: indica se a conta do usuário está bloqueada.
+          examples: [ true ]
+        credentialsNonExpired:
+          type: boolean
+          description: indica se a credencial do usuário expirou.
+          examples: [ true ]
+        enabled:
+          type: boolean
+          description: indica se a conta do usuário está habilitada.
+          examples: [ true ]
+    UserDetailedInfo:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: o id do autor
+          examples: [ "1" ]
+        firstName:
+          type: string
+          description: o primeiro nome do usuário
+          examples: [ "John" ]
+        lastName:
+          type: string
+          description: o sobrenome do usuário
+          examples: [ "Doe" ]
+        username:
+          type: string
+          description: o username do autor
+          examples: [ "john_doe" ]
+        email:
+          type: string
+          format: email
+          description: o email do autor
+          examples: [ "doe@email.com" ]
+        profile:
+          type: object
+          minimum: 3
+          maximum: 3
+          enum:
+            - ADM
+            - MOD
+            - BASIC
+          examples: [ "BASIC" ]
+          description: o perfil do usuário/autor
+        isAccountNonExpired:
+          type: boolean
+          description: indica se a conta do usuário expirou.
+          examples: [ true ]
+        isAccountNonLocked:
+          type: boolean
+          description: indica se a conta do usuário está bloqueada.
+          examples: [ true ]
+        isCredentialsNonExpired:
+          type: boolean
+          description: indica se a credencial do usuário expirou.
+          examples: [ true ]
+        isEnabled:
+          type: boolean
+          description: indica se a conta do usuário está habilitada.
+          examples: [ true ]
+    UserSummaryInfo:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: o id do autor
+          examples: [ "1" ]
+        firstName:
+          type: string
+          description: o primeiro nome do usuário
+          examples: [ "John" ]
+        lastName:
+          type: string
+          description: o sobrenome do usuário
+          examples: [ "Doe" ]
+        username:
+          type: string
+          description: o username do autor
+          examples: [ "john_doe" ]
+        email:
+          type: string
+          format: email
+          description: o email do autor
+          examples: [ "doe@email.com" ]
+        profile:
+          type: object
+          minimum: 3
+          maximum: 3
+          enum:
+            - ADM
+            - MOD
+            - BASIC
+          examples: [ "BASIC" ]
+          description: o perfil do usuário/autor
+    HttpStatusMessage:
+      type: object
+      properties:
+        message:
+          type: string
+          description: código de status da resposta de requisição
+          examples: [ "HttpStatusCode OK" ]
+  securitySchemes:
+    forumhub_auth:
+      type: oauth2
+      description: Essa API utiliza o protocolo OAuth2 com o fluxo ```authorization_code``` para conceder autorização aos recursos.
+      flows:
+        authorizationCode:
+          authorizationUrl: http://localhost:8082/oauth2/authorize
+          tokenUrl: http://localhost:8082/oauth2/token
+          refreshUrl: http://localhost:8082/oauth2/token
+          scopes:
+            myuser:read: ler um usuário do forum
+            user:readAll: ler todos os usuários do forum
+            myuser:edit: edita um usuário do forum
+            myuser:delete: remove um usuário do forum
+

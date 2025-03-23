@@ -1,0 +1,931 @@
+openapi: 3.1.1
+info:
+  title: Forumhub - Topic Service
+  description: |-
+    **Forumhub** é um SaaS robusto projetado para facilitar a interação e troca de conhecimentos. Com Forumhub, os usuários podem criar perguntas 
+    sobre diversos tópicos e responder a questões levantadas por outros membros. A aplicação oferece uma plataforma eficiente e organizada para gerenciar 
+    essas interações, promovendo um ambiente colaborativo e de aprendizado contínuo. 
+
+    Alguns links úteis:
+    - [Repositório do Forumhub](https://github.com/rcmafra/forumhub)
+    - [A definição do módulo Topic do projeto Forumhub](https://github.com/rcmafra/forumhub/blob/main/topic/src/main/resources/static/openapi.yml)
+  contact:
+    email: raulcesar.sm@gmail.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/forumhub.io/api/v1/
+    description: URL do serviço de tópicos.
+  - url: http://localhost:8081/forumhub.io/api/v1/
+    description: URL do serviço de usuários.
+tags:
+  - name: topic
+    description: Operações sobre algum tópico.
+  - name: answer
+    description: Operações sobre alguma resposta referente a algum tópico.
+  - name: course
+    description: Operações sobre algum curso associado a algum tópico.
+paths:
+  /topics/create:
+    post:
+      tags:
+        - topic
+      summary: Adiciona um novo tópico no forum.
+      description: Adiciona um novo tópico de pergunta no forum para receber respostas.
+      operationId: createTopic
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TopicCreateRequestDTO'
+      responses:
+        '201':
+          description: Tópico criado com sucesso.
+        '400':
+          description: Erro no lado do cliente.
+        '401':
+          description: Usuário não autenticado.
+        '404':
+          description: |
+            Um dos seguintes objetos não existem:
+              - o curso informado;
+              - o usuário que enviou a solicitação;
+        '500':
+          description: Erro interno no serviço.
+        '503':
+          description: Serviço de usuário indisponível.
+      security:
+        - forumhub_auth: [ ]
+  /topics:
+    get:
+      tags:
+        - topic
+      summary: Obtém o tópico especificado.
+      description: Obtém o tópico especificado pertencente ao forum.
+      operationId: getTopic
+      parameters:
+        - in: query
+          name: topic_id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: O id do tópico desejado.
+      responses:
+        '200':
+          description: Tópico obtido com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/TopicResponseDTO'
+        '400':
+          description: Erro no lado do cliente.
+        '404':
+          description: O tópico informado não existe.
+        '500':
+          description: Erro interno no serviço.
+  /topics/listAll:
+    get:
+      tags:
+        - topic
+      summary: Obtém uma lista de tópicos paginados do forum.
+      description: Obtém uma lista de tópicos do forum que receberam ou não uma resposta.
+      operationId: topicsList
+      parameters:
+        - in: query
+          name: sort
+          required: false
+          schema:
+            type: string
+          description: |
+            A direção de ordenação dos tópicos retornados com base em uma propriedade. Se vazio `sort` será igual a `UNSORTED`. E.g.:
+            * `sort=createdAt,desc` **::** ordem descendente pela data de criação.
+            * `sort=title,asc` **::** ordem ascendente pelo título.
+            * `sort=author,desc` **::** ordem descendente pelo autor.
+            * `sort=author.profile.profileName,desc` **::** ordem descendente pelo nome do
+            perfil.
+        - in: query
+          name: size
+          required: false
+          schema:
+            type: integer
+            format: int32
+          description: |
+            A quantidade de tópicos por página. Se vazio `size` será igual a `10`. E.g.:
+            * `size=10` **::** 10 usuários por página.
+        - in: query
+          name: page
+          required: false
+          schema:
+            type: integer
+            format: int32
+          description: |
+            O número da pagina que se deseja obter. Se vazio `page` será igual a `0`. E.g.:
+            * `page=0` **::** primeira página.
+      responses:
+        '200':
+          description: Lista de tópicos paginados obtida com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TopicResponseDTOList'
+        '400':
+          description: Erro no lado do cliente.
+        '500':
+          description: Erro interno no serviço.
+  /topics/searchTopicsByCourse:
+    get:
+      tags:
+        - topic
+      summary: Obtém uma lista de tópicos paginados por curso.
+      description: Obtém uma lista de tópicos do forum que receberam ou não uma resposta através de um curso.
+      operationId: topicsListByCourse
+      parameters:
+        - in: query
+          name: course_id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: O id do curso desejado.
+        - in: query
+          name: sort
+          required: false
+          schema:
+            type: string
+          description: |
+            A direção de ordenação dos tópicos retornados com base em uma propriedade. Se vazio `sort` será igual a `UNSORTED`. E.g.:
+            * `sort=createdAt,desc` **::** ordem descendente pela data de criação.
+            * `sort=title,asc` **::** ordem ascendente pelo título.
+            * `sort=author,desc` **::** ordem descendente pelo autor.
+            * `sort=author.profile.profileName,desc` **::** ordem descendente pelo nome do
+            perfil.
+        - in: query
+          name: size
+          required: false
+          schema:
+            type: integer
+            format: int32
+          description: |
+            A quantidade de tópicos por página. Se vazio `size` será igual a `10`. E.g.:
+            * `size=10` **::** 10 usuários por página.
+        - in: query
+          name: page
+          required: false
+          schema:
+            type: integer
+            format: int32
+          description: |
+            O número da pagina que se deseja obter. Se vazio `page` será igual a `0`. E.g.:
+            * `page=0` **::** primeira página.
+      responses:
+        '200':
+          description: Lista de tópicos paginados obtida com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TopicResponseDTOList'
+        '400':
+          description: Erro no lado do cliente.
+        '500':
+          description: Erro interno no serviço.
+  /topics/{topic_id}/edit:
+    put:
+      tags:
+        - topic
+      summary: Edita um tópico desejado.
+      description: Edita um determinado tópico existente no forum.
+      operationId: updateTopic
+      parameters:
+        - in: path
+          name: topic_id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: O id do tópico desejado.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TopicUpdateRequestDTO'
+      responses:
+        '200':
+          description: Tópico editado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/TopicResponseDTO'
+        '400':
+          description: Erro no lado do cliente.
+        '401':
+          description: Usuário não autenticado.
+        '403':
+          description: Usuário sem permissão.
+        '404':
+          description: |
+            Um dos seguintes objetos não existem:
+             - o curso informado;
+             - o tópico informado;
+             - o usuário que enviou a solicitação;
+        '418':
+          description: Erro referente a falta de privilégio. Os detalhes serão fornecidos na response.
+        '422':
+          description: Erro de business. Os detalhes serão fornecidos na response.
+        '500':
+          description: Erro interno no serviço.
+        '503':
+          description: Serviço de usuário indisponível.
+      security:
+        - forumhub_auth: [ topic:edit ]
+  /topics/{topic_id}/delete:
+    delete:
+      tags:
+        - topic
+      summary: Remove um tópico desejado.
+      description: Remove um determinado tópico existente no forum.
+      operationId: deleteTopic
+      parameters:
+        - in: path
+          name: topic_id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: O id do tópico desejado.
+      responses:
+        '200':
+          description: Tópico removido com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpStatusMessage'
+        '400':
+          description: Erro no lado do cliente.
+        '401':
+          description: Usuário não autenticado.
+        '403':
+          description: Usuário sem permissão.
+        '404':
+          description: |
+            Um dos seguintes objetos não existem:
+             - o tópico informado;
+             - o usuário que enviou a solicitação;
+        '418':
+          description: Erro referente a falta de privilégio. Os detalhes serão fornecidos na response.
+        '500':
+          description: Erro interno no serviço.
+        '503':
+          description: Serviço de usuário indisponível.
+      security:
+        - forumhub_auth: [ topic:delete ]
+  /topics/{topic_id}/answer:
+    post:
+      tags:
+        - answer
+      summary: Responde um tópico no forum.
+      description: Responde um determinado tópico no forum.
+      operationId: answerTopic
+      parameters:
+        - in: path
+          name: topic_id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: O id do tópico desejado.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnswerRequestDTO'
+      responses:
+        '201':
+          description: Resposta criada com sucesso.
+        '400':
+          description: Erro no lado do cliente.
+        '401':
+          description: Usuário não autenticado.
+        '404':
+          description: |
+            Um dos seguintes objetos não existem:
+              - o tópico informado;
+              - o usuário que enviou a solicitação;
+        '500':
+          description: Erro interno no serviço.
+        '503':
+          description: Serviço de usuário indisponível.
+      security:
+        - forumhub_auth: [ ]
+  /topics/{topic_id}/answers/{answer_id}/markBestAnswer:
+    put:
+      tags:
+        - answer
+      summary: Marca uma resposta como melhor.
+      description: Marca uma determinada resposta como a mais aderente aquela pergunta.
+      operationId: markBestAnswer
+      parameters:
+        - in: path
+          name: topic_id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: O id do tópico desejado.
+        - in: path
+          name: answer_id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: O id da resposta desejada.
+      responses:
+        '200':
+          description: Resposta marcada como melhor com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/HttpStatusMessage'
+        '400':
+          description: Erro no lado do cliente.
+        '401':
+          description: Usuário não autenticado.
+        '404':
+          description: |
+            Um dos seguintes objetos não existem:
+              - o tópico informado;
+              - a resposta informada;
+              - o usuário que enviou a solicitação;
+        '418':
+          description: Erro referente a falta de privilégio. Os detalhes serão fornecidos na response.
+        '422':
+          description: Erro de business. Os detalhes serão fornecidos na response.
+        '500':
+          description: Erro interno no serviço.
+        '503':
+          description: Serviço de usuário indisponível.
+      security:
+        - forumhub_auth: [ ]
+  /topics/{topic_id}/answers/{answer_id}/unmarkBestAnswer:
+    put:
+      tags:
+        - answer
+      summary: Desmarca uma resposta como melhor.
+      description: Desmarca uma determinada resposta como a mais aderente aquela pergunta.
+      operationId: unmarkBestAnswer
+      parameters:
+        - in: path
+          name: topic_id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: O id do tópico desejado.
+        - in: path
+          name: answer_id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: O id da resposta desejada.
+      responses:
+        '200':
+          description: Resposta desmarcada como melhor com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/HttpStatusMessage'
+        '400':
+          description: Erro no lado do cliente.
+        '401':
+          description: Usuário não autenticado.
+        '404':
+          description: |
+            Um dos seguintes objetos não existem:
+              - o tópico informado;
+              - a resposta informada;
+              - o usuário que enviou a solicitação;
+        '418':
+          description: Erro referente a falta de privilégio. Os detalhes serão fornecidos na response.
+        '422':
+          description: Erro de business. Os detalhes serão fornecidos na response.
+        '500':
+          description: Erro interno no serviço.
+        '503':
+          description: Serviço de usuário indisponível.
+      security:
+        - forumhub_auth: [ ]
+  /topics/{topic_id}/answers/{answer_id}/edit:
+    put:
+      tags:
+        - answer
+      summary: Edita uma resposta desejado.
+      description: Edita uma resposta de um tópico existente no forum.
+      operationId: updateAnswer
+      parameters:
+        - in: path
+          name: topic_id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: O id do tópico desejado.
+        - in: path
+          name: answer_id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: O id da resposta desejada.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnswerRequestDTO'
+      responses:
+        '200':
+          description: Resposta editada com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/AnswerResponseDTO'
+        '400':
+          description: Erro no lado do cliente.
+        '401':
+          description: Usuário não autenticado.
+        '403':
+          description: Usuário sem permissão.
+        '404':
+          description: |
+            Um dos seguintes objetos não existem:
+              - o tópico informado;
+              - a resposta infomada;
+              - o usuário que enviou a solicitação;
+        '418':
+          description: Erro referente a falta de privilégio. Os detalhes serão fornecidos na response.
+        '422':
+          description: Erro de business. Os detalhes serão fornecidos na response.
+        '500':
+          description: Erro interno no serviço.
+        '503':
+          description: Serviço de usuário indisponível.
+      security:
+        - forumhub_auth: [ answer:edit ]
+  /topics/{topic_id}/answers/{answer_id}/delete:
+    delete:
+      tags:
+        - answer
+      summary: Remove uma resposta desejada.
+      description: Remove uma resposta de um tópico existente no forum.
+      operationId: deleteAnswer
+      parameters:
+        - in: path
+          name: topic_id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: O id do tópico desejado.
+        - in: path
+          name: answer_id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: O id da resposta desejada.
+      responses:
+        '200':
+          description: Resposa removida com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpStatusMessage'
+        '400':
+          description: Erro no lado do cliente.
+        '401':
+          description: Usuário não autenticado.
+        '403':
+          description: Usuário sem permissão.
+        '404':
+          description: |
+            Um dos seguintes objetos não existem:
+              - a resposta informada;
+              - o usuário que enviou a solicitação;
+        '418':
+          description: Erro referente a falta de privilégio. Os detalhes serão fornecidos na response.
+        '500':
+          description: Erro interno no serviço.
+        '503':
+          description: Serviço de usuário indisponível.
+      security:
+        - forumhub_auth: [ answer:delete ]
+  /courses/create:
+    post:
+      tags:
+        - course
+      summary: Adiciona um novo curso no forum.
+      description: Adiciona um novo curso no forum para ser associado com um tópico.
+      operationId: createCourse
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourseRequestDTO'
+      responses:
+        '201':
+          description: Curso criado com sucesso.
+        '400':
+          description: Erro no lado do cliente.
+        '401':
+          description: Usuário não autenticado.
+        '403':
+          description: Usuário sem permissão.
+        '409':
+          description: Payload conflitante com outro curso.
+        '413':
+          description: Payload com valor muito grande.
+        '500':
+          description: Erro interno no serviço.
+      security:
+        - forumhub_auth: [ course:write ]
+  /courses:
+    get:
+      tags:
+        - course
+      summary: Obtém o curso especificado.
+      description: Obtém o curso especificado pertencente ao forum.
+      operationId: getCourse
+      parameters:
+        - in: query
+          name: course_id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: O id do curso desejado.
+      responses:
+        '200':
+          description: Curso obtido com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/CourseResponseDTO'
+        '400':
+          description: Erro no lado do cliente.
+        '401':
+          description: Usuário não autenticado.
+        '404':
+          description: O curso informado não existe.
+        '500':
+          description: Erro interno no serviço.
+      security:
+        - forumhub_auth: [ ]
+  /courses/listAll:
+    get:
+      tags:
+        - course
+      summary: Obtém uma lista de cursos do forum.
+      description: Obtém uma lista de cursos do forum que estão ou não associados a algum tópico.
+      operationId: getAllCourse
+      responses:
+        '200':
+          description: Lista de cursos obtidos com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseResponseCollection'
+        '400':
+          description: Erro no lado do cliente.
+        '401':
+          description: Usuário não autenticado.
+        '500':
+          description: Erro interno no serviço.
+      security:
+        - forumhub_auth: [ ]
+  /courses/{course_id}/edit:
+    put:
+      tags:
+        - course
+      summary: Edita um curso desejado.
+      description: Edita um determinado curso existente no forum.
+      operationId: updateCourse
+      parameters:
+        - in: path
+          name: course_id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: O id do curso desejado.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourseRequestDTO'
+      responses:
+        '200':
+          description: Curso editado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/CourseResponseDTO'
+        '400':
+          description: Erro no lado do cliente.
+        '401':
+          description: Usuário não autenticado.
+        '403':
+          description: Usuário sem permissão.
+        '404':
+          description: O curso informado não existe.
+        '500':
+          description: Erro interno no serviço.
+      security:
+        - forumhub_auth: [ course:edit ]
+  /courses/{course_id}/delete:
+    delete:
+      tags:
+        - course
+      summary: Remove um curso desejado.
+      description: Remove um determinado curso existente no forum.
+      operationId: deleteCourse
+      parameters:
+        - in: path
+          name: course_id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: O id do curso desejado.
+      responses:
+        '200':
+          description: Curso removido com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpStatusMessage'
+        '400':
+          description: Erro no lado do cliente.
+        '401':
+          description: Usuário não autenticado.
+        '403':
+          description: Usuário sem permissão.
+        '404':
+          description: O curso informado não existe.
+        '409':
+          description: O curso informado está associado a um tópico.
+        '500':
+          description: Erro interno no serviço.
+      security:
+        - forumhub_auth: [ course:delete ]
+components:
+  schemas:
+    Status:
+      type: string
+      minimum: 2
+      maximum: 2
+      enum:
+        - UNSOLVED
+        - SOLVED
+      description: o status do tópico
+      examples: [ "SOLVED" ]
+    Category:
+      type: string
+      enum:
+        - JAVA
+        - C
+        - CPLUSPLUS
+        - CSHARP
+        - GOLANG
+        - COMPUTATION
+        - QA
+      description: a categoria do curso que o tópico está associado
+      examples: [ CSHARP ]
+    Author:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: o id do autor
+          examples: [ 15 ]
+        username:
+          type: string
+          description: o username do autor
+          examples: [ john_doe ]
+        email:
+          type: string
+          format: email
+          description: o email do autor
+          examples: [ doe@email.com ]
+        profile:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int32
+              description: o id do perfil do autor
+              examples: [ 3 ]
+            profileName:
+              type: string
+              minimum: 3
+              maximum: 3
+              enum:
+                - ADM
+                - MOD
+                - BASIC
+              description: o nome do perfil do autor
+              examples: [ ADM ]
+          description: o perfil do autor
+      description: o autor do tópico ou da resposta
+    Course:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: o id do curso.
+          examples: [ 2 ]
+        name:
+          type: string
+          description: o nome do curso.
+          examples: [ "Aprofundando em testes de software" ]
+        category:
+          type: object
+          $ref: '#/components/schemas/Category'
+      description: o curso que o tópico está associado.
+    Topic:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: o id do tópico
+          exampes: [ "2" ]
+        title:
+          type: string
+          description: o título do tópico
+          examples: [ "Dúvida quanto a utilização do @Builder" ]
+        question:
+          type: string
+          description: a pergunta desse tópico
+          examples: [ "Como e onde posso utilizar a anotação @Builder do lombok?" ]
+        createdAt:
+          type: string
+          format: date-time
+          description: o timestamp de criação do tópico
+          examples: [ "1999-01-01T02:00:34.843034" ]
+        status:
+          type: string
+          $ref: '#/components/schemas/Status'
+        author:
+          type: object
+          $ref: '#/components/schemas/Author'
+        course:
+          type: object
+          $ref: '#/components/schemas/Course'
+        answer:
+          type: array
+          items:
+            type: object
+            $ref: '#/components/schemas/Answer'
+    Answer:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: o id da resposta de um tópico
+          examples: [ 15 ]
+        topic:
+          type: object
+          $ref: '#/components/schemas/Topic'
+        solution:
+          type: string
+          description: a solução para o tópico
+          examples: [ "A anotação @Builder do Lombok é utilizada para facilitar a instanciação de objetos, fornecendo os parâmetros para as 
+          respectivas propriedades declaradas na classe." ]
+        bestAnswer:
+          type: boolean
+          description: indica se essa foi a melhor solução para tópico
+          examples: [ true ]
+        author:
+          type: object
+          $ref: '#/components/schemas/Author'
+    CourseRequestDTO:
+      required:
+        - name
+      type: object
+      properties:
+        name:
+          type: string
+          description: o nome do curso
+          examples: [ "Aprendendo Java do zero ao avançado" ]
+        category:
+          type: object
+          $ref: '#/components/schemas/Category'
+    CourseResponseDTO:
+      type: object
+      $ref: '#/components/schemas/Course'
+    CourseResponseCollection:
+      type: array
+      items:
+        type: object
+        $ref: '#/components/schemas/Course'
+    TopicCreateRequestDTO:
+      required:
+        - title
+        - question
+        - course_id
+      type: object
+      properties:
+        title:
+          type: string
+          description: o título do tópico
+          examples: [ "Dúvida quanto a utilização do @Builder" ]
+        question:
+          type: string
+          description: a pergunta desse tópico
+          examples: [ "Como e onde posso utilizar a anotação @Builder do lombok?" ]
+        course_id:
+          type: integer
+          format: int32
+          description: o id do curso que o tópico pertence
+          examples: [ 1 ]
+    TopicUpdateRequestDTO:
+      type: object
+      properties:
+        title:
+          type: string
+          description: o novo título do tópico
+          examples: [ "Dúvida quanto a utilização de uma anotação do Lombok" ]
+        question:
+          type: string
+          description: a nova pergunta desse tópico
+          examples: [ "Como funciona a anotação @Data do Lombok?" ]
+        status:
+          type: object
+          $ref: '#/components/schemas/Status'
+        course_id:
+          type: integer
+          format: int32
+          description: o id do curso que o tópico pertence
+          examples: [ 1 ]
+    TopicResponseDTO:
+      type: object
+      $ref: '#/components/schemas/Topic'
+    TopicResponseDTOList:
+      type: array
+      items:
+        type: object
+        $ref: '#/components/schemas/Topic'
+    AnswerRequestDTO:
+      type: object
+      properties:
+        solution:
+          type: string
+          description: a solução para o tópico
+          examples: [ "A anotação @Builder do Lombok é utilizada para facilitar a instanciação de objetos, fornecendo os parâmetros para as respectivas 
+          propriedades declaradas na classe." ]
+    AnswerResponseDTO:
+      type: object
+      $ref: '#/components/schemas/Answer'
+    HttpStatusMessage:
+      type: object
+      properties:
+        message:
+          type: string
+          description: código de status da resposta de requisição
+          examples: [ "HttpStatusCode OK" ]
+  securitySchemes:
+    forumhub_auth:
+      type: oauth2
+      description: Essa API utiliza o protocolo OAuth2 com o fluxo ```authorization_code``` para conceder autorização aos recursos.
+      flows:
+        authorizationCode:
+          authorizationUrl: http://localhost:8082/oauth2/authorize
+          tokenUrl: http://localhost:8082/oauth2/token
+          refreshUrl: http://localhost:8082/oauth2/token
+          scopes:
+            topic:edit: edita um tópico no forum
+            topic:delete: remove um tópico no forum
+            course:write: cria um curso no forum
+            course:edit: edita um curso no forum
+            course:delete: remove um curso no forum
+            answer:edit: edita uma resposta no forum
+            answer:delete: remove uma resposta no forum
+
