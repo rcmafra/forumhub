@@ -23,3 +23,18 @@ spring:
 #User API port
 server:
   port: 8081
+
+springdoc:
+  api-docs:
+    enabled: true
+    version: openapi_3_1
+    path: /forumhub.io/api/v1/openapi.yaml
+  swagger-ui:
+    enabled: true
+    url: openapi.yaml
+    path: /forumhub.io/api/v1/swagger-ui.html
+    oauth:
+      use-basic-authentication-with-access-code-grant: true
+      use-pkce-with-authorization-code-grant: true
+      client-id: hub-user
+      client-secret: aHViLXVzZXI6ZWJjNTFlNGItMjQxOC00MTNkLTlhNWUtNDU2Yzk1YjQ3Yzcz
