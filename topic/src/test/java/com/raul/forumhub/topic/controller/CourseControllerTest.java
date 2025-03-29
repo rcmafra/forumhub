@@ -184,8 +184,7 @@ public class CourseControllerTest {
                         .characterEncoding(StandardCharsets.UTF_8)
                         .content(new ObjectMapper()
                                 .writeValueAsString(courseRequestDTO)))
-                .andExpect(status().isCreated())
-                .andExpect(content().string("{\"message\":\"HttpStatusCode OK\"}"));
+                .andExpect(status().isCreated());
 
         BDDMockito.verify(this.courseService).createCourse(courseRequestDTO);
         BDDMockito.verifyNoMoreInteractions(this.courseService);

@@ -29,7 +29,7 @@ public class CourseController {
     public ResponseEntity<HttpStatusMessage> createCourse(@Valid @RequestBody CourseRequestDTO courseRequestDTO) {
 
         this.courseService.createCourse(courseRequestDTO);
-        return new ResponseEntity<>(new HttpStatusMessage("HttpStatusCode OK"), HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @IsAuthenticated
