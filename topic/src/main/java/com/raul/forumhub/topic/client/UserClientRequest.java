@@ -46,7 +46,7 @@ public class UserClientRequest {
                     .toEntity(Author.class)
                     .timeout(Duration.ofMillis(10000))
                     .onErrorResume(WebClientRequestException.class, ex ->
-                            Mono.error(new RestClientException(HttpStatus.SERVICE_UNAVAILABLE, "Serviço de usuário indisponível")))
+                            Mono.error(new RestClientException(HttpStatus.SERVICE_UNAVAILABLE, "Serviço de usuário indisponível. Tente novamente.")))
                     .onErrorResume(WebClientResponseException.class, ex ->
                             Mono.error(new RestClientException(ex.getStatusCode(), ex.getResponseBodyAsString())))
                     .onErrorResume(TimeoutException.class, ex ->
