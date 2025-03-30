@@ -54,3 +54,19 @@ forumhub:
       schema: ${USER_SERVER_PROTOCOL}
       host: ${USER_SERVER_HOST}
       port: ${USER_SERVER_PORT}
+
+#SpringDoc configuration
+springdoc:
+  api-docs:
+    enabled: true
+    version: openapi_3_1
+    path: /forumhub.io/api/v1/openapi.yaml
+  swagger-ui:
+    enabled: true
+    url: openapi.yaml
+    path: /forumhub.io/api/v1/swagger-ui.html
+    oauth:
+      use-basic-authentication-with-access-code-grant: true
+      use-pkce-with-authorization-code-grant: true
+      client-id: hub-topic
+      client-secret: aHViLXRvcGljOmNmZjM3MWJmLWFhNDYtNDNjOC04ODdlLTI4MmJjZDM3ZjEzNw==
