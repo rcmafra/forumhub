@@ -664,6 +664,20 @@ components:
               profile:
                 id: 1
                 profileName: BASIC
+        _links:
+          first:
+            href: http://localhost:8081/forumhub.io/api/v1/users/listAll?page=0&size=1
+          self:
+            href: http://localhost:8081/forumhub.io/api/v1/users/listAll?page=0&size=1
+          next:
+            href: http://localhost:8081/forumhub.io/api/v1/users/listAll?page=1&size=1
+          last:
+            href: http://localhost:8081/forumhub.io/api/v1/users/listAll?page=1&size=1
+        page:
+          size: 1
+          totalElements: 1
+          totalPages: 1
+          number: 0
     ExampleHttpStatusMessage:
       value:
         message: HttpStatusCode OK

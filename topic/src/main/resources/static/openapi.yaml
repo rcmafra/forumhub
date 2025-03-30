@@ -1871,7 +1871,7 @@ components:
           next:
             href: http://localhost:8080/forumhub.io/api/v1/topics/listAll?page=1&size=1
           last:
-            href: http://localhost:8080/forumhub.io/api/v1/topics/listAll?page=16&size=1
+            href: http://localhost:8080/forumhub.io/api/v1/topics/listAll?page=1&size=1
         page:
           size: 1
           totalElements: 1
