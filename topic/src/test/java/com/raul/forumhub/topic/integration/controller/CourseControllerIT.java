@@ -210,7 +210,7 @@ public class CourseControllerIT {
                         .content(new ObjectMapper()
                                 .writeValueAsString(courseRequestDTO)))
                 .andExpectAll(status().isConflict())
-                .andExpect(jsonPath("$.detail", is("Payload conflitante")));
+                .andExpect(jsonPath("$.detail", is("Payload conflitante com outro registro")));
 
         assertEquals(4, this.courseRepository.findAll().size());
 

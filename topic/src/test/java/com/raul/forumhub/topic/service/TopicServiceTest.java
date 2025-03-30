@@ -6,10 +6,7 @@ import com.raul.forumhub.topic.domain.Topic;
 import com.raul.forumhub.topic.dto.request.TopicCreateRequestDTO;
 import com.raul.forumhub.topic.dto.request.TopicUpdateRequestDTO;
 import com.raul.forumhub.topic.dto.response.TopicResponseDTO;
-import com.raul.forumhub.topic.exception.BusinessException;
-import com.raul.forumhub.topic.exception.InstanceNotFoundException;
-import com.raul.forumhub.topic.exception.RestClientException;
-import com.raul.forumhub.topic.exception.ValidationException;
+import com.raul.forumhub.topic.exception.*;
 import com.raul.forumhub.topic.repository.TopicRepository;
 import com.raul.forumhub.topic.util.TestsHelper;
 import jakarta.validation.ConstraintViolationException;
@@ -755,9 +752,9 @@ public class TopicServiceTest {
         BDDMockito.given(this.userClientRequest.getUserById(1L))
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
 
-        Assertions.assertThrows(ValidationException.class,
+        Assertions.assertThrows(PrivilegeValidationException.class,
                 () -> this.topicService.updateTopic(2L, 1L, topicUpdateRequestDTO),
-                "Privilégio insuficiente");
+                "Usuário com privilégios insuficientes para realizar esta operação!");
 
 
         BDDMockito.verify(this.topicRepository).findById(2L);
@@ -948,9 +945,9 @@ public class TopicServiceTest {
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
 
 
-        Assertions.assertThrows(ValidationException.class,
+        Assertions.assertThrows(PrivilegeValidationException.class,
                 () -> this.topicService.deleteTopic(2L, 1L),
-                "Privilégio insuficiente");
+                "Usuário com privilégios insuficientes para realizar esta operação!");
 
 
         BDDMockito.verify(this.topicRepository).findById(2L);

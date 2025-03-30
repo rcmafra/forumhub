@@ -4,10 +4,7 @@ import com.raul.forumhub.topic.client.UserClientRequest;
 import com.raul.forumhub.topic.domain.Answer;
 import com.raul.forumhub.topic.domain.Topic;
 import com.raul.forumhub.topic.dto.request.AnswerRequestDTO;
-import com.raul.forumhub.topic.exception.BusinessException;
-import com.raul.forumhub.topic.exception.InstanceNotFoundException;
-import com.raul.forumhub.topic.exception.RestClientException;
-import com.raul.forumhub.topic.exception.ValidationException;
+import com.raul.forumhub.topic.exception.*;
 import com.raul.forumhub.topic.repository.AnswerRepository;
 import com.raul.forumhub.topic.util.TestsHelper;
 import jakarta.validation.ConstraintViolationException;
@@ -199,7 +196,7 @@ public class AnswerServiceTest {
         BDDMockito.given(this.userClientRequest.getUserById(2L)).
                 willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
-        Assertions.assertThrows(ValidationException.class,
+        Assertions.assertThrows(PrivilegeValidationException.class,
                 () -> this.answerService.markBestAnswer(1L, 1L, 2L));
 
 
@@ -369,7 +366,7 @@ public class AnswerServiceTest {
         BDDMockito.given(this.userClientRequest.getUserById(1L)).
                 willReturn(TestsHelper.AuthorHelper.authorList().get(0));
 
-        Assertions.assertThrows(ValidationException.class,
+        Assertions.assertThrows(PrivilegeValidationException.class,
                 () -> this.answerService.unmarkBestAnswer(2L, 2L, 1L));
 
 
@@ -616,9 +613,9 @@ public class AnswerServiceTest {
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
 
 
-        Assertions.assertThrows(ValidationException.class,
+        Assertions.assertThrows(PrivilegeValidationException.class,
                 () -> this.answerService.updateAnswer(1L, 1L, 1L,
-                        answerUpdateDTO), "Privilégio insuficiente");
+                        answerUpdateDTO), "Usuário com privilégios insuficientes para realizar esta operação!");
 
 
         BDDMockito.verify(this.topicService).getTopicById(1L);
@@ -817,9 +814,9 @@ public class AnswerServiceTest {
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
 
 
-        Assertions.assertThrows(ValidationException.class,
+        Assertions.assertThrows(PrivilegeValidationException.class,
                 () -> this.answerService.deleteAnswer(1L, 1L, 1L),
-                "Privilégio insuficiente");
+                "Usuário com privilégios insuficientes para realizar esta operação!");
 
 
         BDDMockito.verify(this.answerRepository).findById(1L);

@@ -893,7 +893,7 @@ public class AnswerControllerIT {
                         .content(new ObjectMapper()
                                 .writeValueAsString(answerUpdateDTO)))
                 .andExpect(status().isIAmATeapot())
-                .andExpect(jsonPath("$.detail", is("Privilégio insuficiente")));
+                .andExpect(jsonPath("$.detail", is("Usuário com privilégios insuficientes para realizar esta operação!")));
 
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
 
@@ -1173,7 +1173,7 @@ public class AnswerControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isIAmATeapot())
-                .andExpect(jsonPath("$.detail", is("Privilégio insuficiente")));
+                .andExpect(jsonPath("$.detail", is("Usuário com privilégios insuficientes para realizar esta operação!")));
 
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
 

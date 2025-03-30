@@ -1094,8 +1094,8 @@ public class UserControllerIT {
                 .andExpect(jsonPath("$..userSummaryInfoList.length()", is(2)))
                 .andExpect(jsonPath("$..page.[?(@.number == 0)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.size == 2)]").exists())
-                .andExpect(jsonPath("$..page.[?(@.totalElements == 3)]").exists())
-                .andExpect(jsonPath("$..page.[?(@.totalPages == 2)]").exists());
+                .andExpect(jsonPath("$..page.[?(@.totalElements == 2)]").exists())
+                .andExpect(jsonPath("$..page.[?(@.totalPages == 1)]").exists());
 
         assertAll(
                 () -> assertEquals(3, this.userRepository.findAll().size()),
@@ -1124,8 +1124,8 @@ public class UserControllerIT {
                 .andExpect(jsonPath("$..userSummaryInfoList.length()", is(2)))
                 .andExpect(jsonPath("$..page.[?(@.number == 0)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.size == 2)]").exists())
-                .andExpect(jsonPath("$..page.[?(@.totalElements == 3)]").exists())
-                .andExpect(jsonPath("$..page.[?(@.totalPages == 2)]").exists());
+                .andExpect(jsonPath("$..page.[?(@.totalElements == 2)]").exists())
+                .andExpect(jsonPath("$..page.[?(@.totalPages == 1)]").exists());
 
         assertAll(
                 () -> assertEquals(3, this.userRepository.findAll().size()),
