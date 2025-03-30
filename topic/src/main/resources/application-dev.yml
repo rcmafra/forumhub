@@ -56,6 +56,7 @@ forumhub:
       port: 8081
       path: /forumhub.io/api/v1/users/summary-info
 
+#SpringDoc configuration
 springdoc:
   api-docs:
     enabled: true
