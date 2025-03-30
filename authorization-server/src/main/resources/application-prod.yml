@@ -31,10 +31,12 @@ registered:
       name: ${REGISTERED_CLIENT_TOPIC_NAME}
       client-id: ${REGISTERED_CLIENT_TOPIC_CLIENT_ID}
       password: ${REGISTERED_CLIENT_TOPIC_PASSWORD}
+      topicUrl: ${REGISTERED_CLIENT_TOPIC_URL}
     user:
       name: ${REGISTERED_CLIENT_USER_NAME}
       client-id: ${REGISTERED_CLIENT_USER_CLIENT_ID}
       password: ${REGISTERED_CLIENT_USER_PASSWORD}
+      userUrl: ${REGISTERED_CLIENT_USER_URL}
 
 #Auth-Server port
 server:
