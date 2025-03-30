@@ -10,9 +10,12 @@ import com.raul.forumhub.user.exception.InstanceNotFoundException;
 import com.raul.forumhub.user.respository.ProfileRepository;
 import com.raul.forumhub.user.respository.UserRepository;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -54,7 +57,12 @@ public class UserService {
     }
 
     public Page<UserSummaryInfo> usersList(Pageable pageable) {
-        return this.userRepository.findAll(pageable).map(UserSummaryInfo::new);
+        return this.userRepository.findAll(pageable)
+                .stream().filter(user -> !user.getId().equals(0L))
+                .collect(Collectors.collectingAndThen(Collectors.toList(), user ->
+                        new PageImpl<>(user.stream()
+                                .map(UserSummaryInfo::new)
+                                .collect(Collectors.toList()), pageable, user.size())));
     }
 
     public UserDetailedInfo updateUser(Long user_id, Profile.ProfileName claimUserRole, UserUpdateDTO userUpdateDTO) {
@@ -84,7 +92,9 @@ public class UserService {
     }
 
     public User getUserById(Long user_id) {
-        return this.userRepository.findById(user_id).orElseThrow(() -> new InstanceNotFoundException("Usuário não encontrado"));
+        return this.userRepository.findById(user_id)
+                .filter(user -> !user.getId().equals(0L))
+                .orElseThrow(() -> new InstanceNotFoundException("Usuário não encontrado"));
     }
 
 
