@@ -635,16 +635,16 @@ public class UserControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(1)))
-                .andExpect(jsonPath("$.firstName", is("Jose")))
-                .andExpect(jsonPath("$.lastName", is("Silva")))
-                .andExpect(jsonPath("$.username", is("jose_silva")))
-                .andExpect(jsonPath("$.email", is("jose@email.com")))
-                .andExpect(jsonPath("$.profile", is("BASIC")))
-                .andExpect(jsonPath("$.accountNonExpired", is(true)))
-                .andExpect(jsonPath("$.accountNonLocked", is(true)))
-                .andExpect(jsonPath("$.credentialsNonExpired", is(true)))
-                .andExpect(jsonPath("$.enabled", is(true)));
+                .andExpect(jsonPath("$.user.id", is(1)))
+                .andExpect(jsonPath("$.user.firstName", is("Jose")))
+                .andExpect(jsonPath("$.user.lastName", is("Silva")))
+                .andExpect(jsonPath("$.user.username", is("jose_silva")))
+                .andExpect(jsonPath("$.user.email", is("jose@email.com")))
+                .andExpect(jsonPath("$.user.profile.profileName", is("BASIC")))
+                .andExpect(jsonPath("$.user.accountNonExpired", is(true)))
+                .andExpect(jsonPath("$.user.accountNonLocked", is(true)))
+                .andExpect(jsonPath("$.user.credentialsNonExpired", is(true)))
+                .andExpect(jsonPath("$.user.enabled", is(true)));
 
 
         assertAll(
@@ -667,16 +667,16 @@ public class UserControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(2)))
-                .andExpect(jsonPath("$.firstName", is("Maria")))
-                .andExpect(jsonPath("$.lastName", is("Silva")))
-                .andExpect(jsonPath("$.username", is("maria_silva")))
-                .andExpect(jsonPath("$.email", is("maria@email.com")))
-                .andExpect(jsonPath("$.profile", is("MOD")))
-                .andExpect(jsonPath("$.accountNonExpired", is(true)))
-                .andExpect(jsonPath("$.accountNonLocked", is(true)))
-                .andExpect(jsonPath("$.credentialsNonExpired", is(true)))
-                .andExpect(jsonPath("$.enabled", is(true)));
+                .andExpect(jsonPath("$.user.id", is(2)))
+                .andExpect(jsonPath("$.user.firstName", is("Maria")))
+                .andExpect(jsonPath("$.user.lastName", is("Silva")))
+                .andExpect(jsonPath("$.user.username", is("maria_silva")))
+                .andExpect(jsonPath("$.user.email", is("maria@email.com")))
+                .andExpect(jsonPath("$.user.profile.profileName", is("MOD")))
+                .andExpect(jsonPath("$.user.accountNonExpired", is(true)))
+                .andExpect(jsonPath("$.user.accountNonLocked", is(true)))
+                .andExpect(jsonPath("$.user.credentialsNonExpired", is(true)))
+                .andExpect(jsonPath("$.user.enabled", is(true)));
 
 
         assertAll(
@@ -699,16 +699,16 @@ public class UserControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(3)))
-                .andExpect(jsonPath("$.firstName", is("Joao")))
-                .andExpect(jsonPath("$.lastName", is("Silva")))
-                .andExpect(jsonPath("$.username", is("joao_silva")))
-                .andExpect(jsonPath("$.email", is("joao@email.com")))
-                .andExpect(jsonPath("$.profile", is("ADM")))
-                .andExpect(jsonPath("$.accountNonExpired", is(true)))
-                .andExpect(jsonPath("$.accountNonLocked", is(true)))
-                .andExpect(jsonPath("$.credentialsNonExpired", is(true)))
-                .andExpect(jsonPath("$.enabled", is(true)));
+                .andExpect(jsonPath("$.user.id", is(3)))
+                .andExpect(jsonPath("$.user.firstName", is("Joao")))
+                .andExpect(jsonPath("$.user.lastName", is("Silva")))
+                .andExpect(jsonPath("$.user.username", is("joao_silva")))
+                .andExpect(jsonPath("$.user.email", is("joao@email.com")))
+                .andExpect(jsonPath("$.user.profile.profileName", is("ADM")))
+                .andExpect(jsonPath("$.user.accountNonExpired", is(true)))
+                .andExpect(jsonPath("$.user.accountNonLocked", is(true)))
+                .andExpect(jsonPath("$.user.credentialsNonExpired", is(true)))
+                .andExpect(jsonPath("$.user.enabled", is(true)));
 
 
 
@@ -733,16 +733,16 @@ public class UserControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(1)))
-                .andExpect(jsonPath("$.firstName", is("Jose")))
-                .andExpect(jsonPath("$.lastName", is("Silva")))
-                .andExpect(jsonPath("$.username", is("jose_silva")))
-                .andExpect(jsonPath("$.email", is("jose@email.com")))
-                .andExpect(jsonPath("$.profile", is("BASIC")))
-                .andExpect(jsonPath("$.accountNonExpired", is(true)))
-                .andExpect(jsonPath("$.accountNonLocked", is(true)))
-                .andExpect(jsonPath("$.credentialsNonExpired", is(true)))
-                .andExpect(jsonPath("$.enabled", is(true)));
+                .andExpect(jsonPath("$.user.id", is(1)))
+                .andExpect(jsonPath("$.user.firstName", is("Jose")))
+                .andExpect(jsonPath("$.user.lastName", is("Silva")))
+                .andExpect(jsonPath("$.user.username", is("jose_silva")))
+                .andExpect(jsonPath("$.user.email", is("jose@email.com")))
+                .andExpect(jsonPath("$.user.profile.profileName", is("BASIC")))
+                .andExpect(jsonPath("$.user.accountNonExpired", is(true)))
+                .andExpect(jsonPath("$.user.accountNonLocked", is(true)))
+                .andExpect(jsonPath("$.user.credentialsNonExpired", is(true)))
+                .andExpect(jsonPath("$.user.enabled", is(true)));
 
         assertAll(
                 () -> assertEquals(3, this.userRepository.findAll().size()),
@@ -765,16 +765,16 @@ public class UserControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(1)))
-                .andExpect(jsonPath("$.firstName", is("Jose")))
-                .andExpect(jsonPath("$.lastName", is("Silva")))
-                .andExpect(jsonPath("$.username", is("jose_silva")))
-                .andExpect(jsonPath("$.email", is("jose@email.com")))
-                .andExpect(jsonPath("$.profile", is("BASIC")))
-                .andExpect(jsonPath("$.accountNonExpired", is(true)))
-                .andExpect(jsonPath("$.accountNonLocked", is(true)))
-                .andExpect(jsonPath("$.credentialsNonExpired", is(true)))
-                .andExpect(jsonPath("$.enabled", is(true)));
+                .andExpect(jsonPath("$.user.id", is(1)))
+                .andExpect(jsonPath("$.user.firstName", is("Jose")))
+                .andExpect(jsonPath("$.user.lastName", is("Silva")))
+                .andExpect(jsonPath("$.user.username", is("jose_silva")))
+                .andExpect(jsonPath("$.user.email", is("jose@email.com")))
+                .andExpect(jsonPath("$.user.profile.profileName", is("BASIC")))
+                .andExpect(jsonPath("$.user.accountNonExpired", is(true)))
+                .andExpect(jsonPath("$.user.accountNonLocked", is(true)))
+                .andExpect(jsonPath("$.user.credentialsNonExpired", is(true)))
+                .andExpect(jsonPath("$.user.enabled", is(true)));
 
         assertAll(
                 () -> assertEquals(3, this.userRepository.findAll().size()),
@@ -1274,15 +1274,15 @@ public class UserControllerIT {
                         .content(new ObjectMapper().writeValueAsString(userUpdateDTO))
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.firstName", is("Jose")))
-                .andExpect(jsonPath("$.lastName", is("Silva")))
-                .andExpect(jsonPath("$.username", is("jose_silva0")))
-                .andExpect(jsonPath("$.email", is("silva@email.com")))
-                .andExpect(jsonPath("$.profile", is("BASIC")))
-                .andExpect(jsonPath("$.accountNonExpired", is(true)))
-                .andExpect(jsonPath("$.accountNonLocked", is(true)))
-                .andExpect(jsonPath("$.credentialsNonExpired", is(true)))
-                .andExpect(jsonPath("$.enabled", is(true)));
+                .andExpect(jsonPath("$.user.firstName", is("Jose")))
+                .andExpect(jsonPath("$.user.lastName", is("Silva")))
+                .andExpect(jsonPath("$.user.username", is("jose_silva0")))
+                .andExpect(jsonPath("$.user.email", is("silva@email.com")))
+                .andExpect(jsonPath("$.user.profile.profileName", is("BASIC")))
+                .andExpect(jsonPath("$.user.accountNonExpired", is(true)))
+                .andExpect(jsonPath("$.user.accountNonLocked", is(true)))
+                .andExpect(jsonPath("$.user.credentialsNonExpired", is(true)))
+                .andExpect(jsonPath("$.user.enabled", is(true)));
 
 
         User user = this.userRepository.findById(1L).orElseThrow();
@@ -1313,16 +1313,16 @@ public class UserControllerIT {
                         .content(new ObjectMapper().writeValueAsString(userUpdateDTO))
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(1)))
-                .andExpect(jsonPath("$.firstName", is("Jose")))
-                .andExpect(jsonPath("$.lastName", is("Silva")))
-                .andExpect(jsonPath("$.username", is("newJose")))
-                .andExpect(jsonPath("$.email", is("new_jose@email.com")))
-                .andExpect(jsonPath("$.profile", is("BASIC")))
-                .andExpect(jsonPath("$.accountNonExpired", is(true)))
-                .andExpect(jsonPath("$.accountNonLocked", is(true)))
-                .andExpect(jsonPath("$.credentialsNonExpired", is(true)))
-                .andExpect(jsonPath("$.enabled", is(true)));
+                .andExpect(jsonPath("$.user.id", is(1)))
+                .andExpect(jsonPath("$.user.firstName", is("Jose")))
+                .andExpect(jsonPath("$.user.lastName", is("Silva")))
+                .andExpect(jsonPath("$.user.username", is("newJose")))
+                .andExpect(jsonPath("$.user.email", is("new_jose@email.com")))
+                .andExpect(jsonPath("$.user.profile.profileName", is("BASIC")))
+                .andExpect(jsonPath("$.user.accountNonExpired", is(true)))
+                .andExpect(jsonPath("$.user.accountNonLocked", is(true)))
+                .andExpect(jsonPath("$.user.credentialsNonExpired", is(true)))
+                .andExpect(jsonPath("$.user.enabled", is(true)));
 
         User user = this.userRepository.findById(1L).orElseThrow();
 
@@ -1351,16 +1351,16 @@ public class UserControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(2)))
-                .andExpect(jsonPath("$.firstName", is("Maria")))
-                .andExpect(jsonPath("$.lastName", is("Silva")))
-                .andExpect(jsonPath("$.username", is("newMaria")))
-                .andExpect(jsonPath("$.email", is("new_maria@email.com")))
-                .andExpect(jsonPath("$.profile", is("MOD")))
-                .andExpect(jsonPath("$.accountNonExpired", is(true)))
-                .andExpect(jsonPath("$.accountNonLocked", is(true)))
-                .andExpect(jsonPath("$.credentialsNonExpired", is(true)))
-                .andExpect(jsonPath("$.enabled", is(true)));
+                .andExpect(jsonPath("$.user.id", is(2)))
+                .andExpect(jsonPath("$.user.firstName", is("Maria")))
+                .andExpect(jsonPath("$.user.lastName", is("Silva")))
+                .andExpect(jsonPath("$.user.username", is("newMaria")))
+                .andExpect(jsonPath("$.user.email", is("new_maria@email.com")))
+                .andExpect(jsonPath("$.user.profile.profileName", is("MOD")))
+                .andExpect(jsonPath("$.user.accountNonExpired", is(true)))
+                .andExpect(jsonPath("$.user.accountNonLocked", is(true)))
+                .andExpect(jsonPath("$.user.credentialsNonExpired", is(true)))
+                .andExpect(jsonPath("$.user.enabled", is(true)));
 
 
         User user = this.userRepository.findById(2L).orElseThrow();
@@ -1390,16 +1390,16 @@ public class UserControllerIT {
                         .content(new ObjectMapper().writeValueAsString(userUpdateDTO))
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(3)))
-                .andExpect(jsonPath("$.firstName", is("Joao")))
-                .andExpect(jsonPath("$.lastName", is("Silva")))
-                .andExpect(jsonPath("$.username", is("newJoao")))
-                .andExpect(jsonPath("$.email", is("new_joao@email.com")))
-                .andExpect(jsonPath("$.profile", is("ADM")))
-                .andExpect(jsonPath("$.accountNonExpired", is(true)))
-                .andExpect(jsonPath("$.accountNonLocked", is(true)))
-                .andExpect(jsonPath("$.credentialsNonExpired", is(true)))
-                .andExpect(jsonPath("$.enabled", is(true)));
+                .andExpect(jsonPath("$.user.id", is(3)))
+                .andExpect(jsonPath("$.user.firstName", is("Joao")))
+                .andExpect(jsonPath("$.user.lastName", is("Silva")))
+                .andExpect(jsonPath("$.user.username", is("newJoao")))
+                .andExpect(jsonPath("$.user.email", is("new_joao@email.com")))
+                .andExpect(jsonPath("$.user.profile.profileName", is("ADM")))
+                .andExpect(jsonPath("$.user.accountNonExpired", is(true)))
+                .andExpect(jsonPath("$.user.accountNonLocked", is(true)))
+                .andExpect(jsonPath("$.user.credentialsNonExpired", is(true)))
+                .andExpect(jsonPath("$.user.enabled", is(true)));
 
 
         User user = this.userRepository.findById(3L).orElseThrow();
@@ -1430,16 +1430,16 @@ public class UserControllerIT {
                         .content(new ObjectMapper().writeValueAsString(userUpdateDTO))
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(2)))
-                .andExpect(jsonPath("$.firstName", is("Maria")))
-                .andExpect(jsonPath("$.lastName", is("Silva")))
-                .andExpect(jsonPath("$.username", is("maria_silva")))
-                .andExpect(jsonPath("$.email", is("maria@email.com")))
-                .andExpect(jsonPath("$.profile", is("MOD")))
-                .andExpect(jsonPath("$.accountNonExpired", is(true)))
-                .andExpect(jsonPath("$.accountNonLocked", is(true)))
-                .andExpect(jsonPath("$.credentialsNonExpired", is(true)))
-                .andExpect(jsonPath("$.enabled", is(true)));
+                .andExpect(jsonPath("$.user.id", is(2)))
+                .andExpect(jsonPath("$.user.firstName", is("Maria")))
+                .andExpect(jsonPath("$.user.lastName", is("Silva")))
+                .andExpect(jsonPath("$.user.username", is("maria_silva")))
+                .andExpect(jsonPath("$.user.email", is("maria@email.com")))
+                .andExpect(jsonPath("$.user.profile.profileName", is("MOD")))
+                .andExpect(jsonPath("$.user.accountNonExpired", is(true)))
+                .andExpect(jsonPath("$.user.accountNonLocked", is(true)))
+                .andExpect(jsonPath("$.user.credentialsNonExpired", is(true)))
+                .andExpect(jsonPath("$.user.enabled", is(true)));
 
 
         User user = this.userRepository.findById(2L).orElseThrow();
