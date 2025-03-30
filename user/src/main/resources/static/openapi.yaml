@@ -36,17 +36,47 @@ paths:
             schema:
               $ref: '#/components/schemas/UserCreateDTO'
       responses:
-        '201':
+        201:
           description: Usuário criado com sucesso.
           content:
             application/json:
               schema:
                 type: object
                 $ref: '#/components/schemas/UserDetailedInfo'
-        '400':
+              examples:
+                ExampleUserDetailedInfo:
+                  $ref: '#/components/examples/ExampleUserDetailedInfo'
+                  summary: Exemplo de usuário criado com sucesso
+        400:
           description: Erro no lado do cliente.
-        '500':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleClientErrorWhenCreatingUser:
+                  summary: Exemplo de erro 400 na criação do usuário
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 400
+                    title: Falha de validação
+                    detail: O primeiro nome não pode ser vazio
+                    instance: /forumhub.io/api/v1/users/create
+        500:
           description: Erro interno no serviço.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleInternalErrorWhenCreatingUser:
+                  summary: Exemplo de erro 500 na criação do usuário
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 500
+                    title: Falha inesperada
+                    detail: Erro inesperado no servidor. Mais detalhes no log.
+                    instance: /forumhub.io/api/v1/users/create
   /users/detailed-info:
     get:
       tags:
@@ -62,22 +92,56 @@ paths:
             type: integer
             format: int64
           description: |
-            O id do usuário desejado. Se não informado, será retornado as informações do usuário que enviou a solicitação.
+            O id do usuário que se deseja obter as informações.
+            * Se o usuário autenticado tiver as permissões adequadas e desejar obter as informações de qualquer outro usuário do forum, 
+            é necessário informar o id do usuário desejado em `user_id`.
+            * Se o usuário autenticado desejar obter as informações de seu próprio usuário, não deve ser informado o parâmetro `user_id`, 
+            caso contrário, gerará uma falha.<br>
       responses:
-        '200':
+        200:
           description: Informações detalhadas do usuário obtidas com sucesso.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserDetailedInfo'
-        '400':
+              examples:
+                ExampleUserDetailedInfo:
+                  $ref: '#/components/examples/ExampleUserDetailedInfo'
+                  summary: Exemplo de informações detalhas do usuário obtidas com sucesso
+        400:
           description: Erro no lado do cliente.
-        '401':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleClientErrorWhenGettingDetailedInfoUser:
+                  summary: Exemplo de erro 400 na obtenção das informações detalhadas do usuário
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 400
+                    title: Falha de validação
+                    detail: Parâmetro fornecido não esperado
+                    instance: /forumhub.io/api/v1/users/detailed-info
+        401:
           description: Usuário não autenticado.
-        '403':
+        403:
           description: Usuário sem permissão.
-        '500':
+        500:
           description: Erro interno no serviço.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleInternalErrorWhenGettingDetailedInfoUser:
+                  summary: Exemplo de erro 500 na obtenção das informações detalahas do usuário
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 500
+                    title: Falha inesperada
+                    detail: Erro inesperado no servidor. Mais detalhes no log.
+                    instance: /forumhub.io/api/v1/users/detailed-info
       security:
         - forumhub_auth: [ myuser:read ]
   /users/summary-info:
@@ -94,20 +158,50 @@ paths:
           schema:
             type: integer
             format: int64
-          description: O id do usuário desejado.
+          description: O id do usuário que se deseja obter as informações.
       responses:
-        '200':
+        200:
           description: Informações detalhadas do usuário obtidas com sucesso.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserSummaryInfo'
-        '400':
+              examples:
+                ExampleUserSummaryInfo:
+                  $ref: '#/components/examples/ExampleUserSummaryInfo'
+                  summary: Exemplo de informações resumidas do usuário obtidas com sucesso
+        400:
           description: Erro no lado do cliente.
-        '401':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleClientErrorWhenGettingSummaryInfoUser:
+                  summary: Exemplo de erro 400 na obtenção das informações resumidas do usuário
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 400
+                    title: Falha de validação
+                    detail: O valor `x` enviado é inválido
+                    instance: /forumhub.io/api/v1/users/summary-info
+        401:
           description: Usuário não autenticado.
-        '500':
+        500:
           description: Erro interno no serviço.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleInternalErrorWhenGettingSummaryInfoUser:
+                  summary: Exemplo de erro 500 na obtenção das informações resumidas do usuário
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 500
+                    title: Falha inesperada
+                    detail: Erro inesperado no servidor. Mais detalhes no log.
+                    instance: /forumhub.io/api/v1/users/summary-info
       security:
         - forumhub_auth: [ ]
   /users/listAll:
@@ -147,16 +241,46 @@ paths:
             O número da pagina que se deseja obter. Se vazio `page` será igual a `0`. E.g.:
             * `page=0` **::** primeira página.
       responses:
-        '200':
+        200:
           description: Lista de usuários paginados obtidos com sucesso.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserSummaryInfo'
-        '400':
+              examples:
+                ExampleOfSuccessWhenGettingUsers:
+                  $ref: '#/components/examples/ExampleOfSuccessWhenGettingAllUsers'
+                  summary: Exemplo de lista de usuários paginados obtida com sucesso
+        400:
           description: Erro no lado do cliente.
-        '500':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleClientErrorWhenGettingPaginatedUsers:
+                  summary: Exemplo de erro 400 na obtenção de usuários paginados
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 400
+                    title: Falha de validação
+                    detail: A propriedade `x` enviada não existe
+                    instance: /forumhub.io/api/v1/users/listAll
+        500:
           description: Erro interno no serviço.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleInternalErrorWhenGettingPaginatedUsers:
+                  summary: Exemplo de erro 500 na obtenção de usuários paginados
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 500
+                    title: Falha inesperada
+                    detail: Erro inesperado no servidor. Mais detalhes no log.
+                    instance: /forumhub.io/api/v1/users/listAll
       security:
         - forumhub_auth: [ user:readAll ]
   /users/edit:
@@ -174,7 +298,11 @@ paths:
             type: integer
             format: int64
           description: |
-            O id do usuário desejado. Se não informado, será editado as informações do usuário que enviou a solicitação.
+            O id do usuário que se deseja editar.
+            * Se o usuário autenticado tiver as permissões adequadas e desejar editar as informações de qualquer outro usuário do forum, 
+            é necessário informar o id do usuário desejado em `user_id`.
+            * Se o usuário autenticado desejar editar as informações de seu próprio usuário, não deve ser informado o parâmetro `user_id`, 
+            caso contrário, gerará uma falha.<br>
       requestBody:
         required: true
         content:
@@ -182,21 +310,51 @@ paths:
             schema:
               $ref: '#/components/schemas/UserUpdateDTO'
       responses:
-        '200':
+        200:
           description: Usuário editado com sucesso.
           content:
             application/json:
               schema:
                 type: object
                 $ref: '#/components/schemas/UserDetailedInfo'
-        '400':
+              examples:
+                ExampleSuccessWhenEditingTopic:
+                  $ref: '#/components/examples/ExampleUserDetailedInfo'
+                  summary: Exemplo de usuário editado com sucesso
+        400:
           description: Erro no lado do cliente.
-        '401':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleClientErrorWhenEditingUser:
+                  summary: Exemplo de erro 400 na edição do usuário
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 400
+                    title: Falha de validação
+                    detail: O primeiro nome não pode ser vazio
+                    instance: /forumhub.io/api/v1/users/edit
+        401:
           description: Usuário não autenticado.
-        '403':
+        403:
           description: Usuário sem permissão.
-        '500':
+        500:
           description: Erro interno no serviço.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleInternalErrorWhenEditingUser:
+                  summary: Exemplo de erro 500 na edição do usuário
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 500
+                    title: Falha inesperada
+                    detail: Erro inesperado no servidor. Mais detalhes no log.
+                    instance: /forumhub.io/api/v1/users/edit
       security:
         - forumhub_auth: [ myuser:edit ]
   /users/delete:
@@ -214,23 +372,57 @@ paths:
             type: integer
             format: int64
           description: |
-            O id do usuário desejado. Se não informado, será removido o usuário que enviou a solicitação.
+            O id do usuário que se deseja remover.
+            * Se o usuário autenticado tiver as permissões adequadas e desejar remover qualquer outro usuário do forum, 
+            é necessário informar o id do usuário desejado em `user_id`.
+            * Se o usuário autenticado desejar remover seu próprio usuário, não deve ser informado o parâmetro `user_id`, 
+            caso contrário, gerará uma falha.<br>
       responses:
-        '200':
+        200:
           description: Usuário removido com sucesso.
           content:
             application/json:
               schema:
                 type: object
                 $ref: '#/components/schemas/HttpStatusMessage'
-        '400':
+              examples:
+                ExampleHttpStatusMessage:
+                  $ref: '#/components/examples/ExampleHttpStatusMessage'
+                  summary: Exemplo de usuário removido com sucesso
+        400:
           description: Erro no lado do cliente.
-        '401':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleClientErrorWhenDeletingUser:
+                  summary: Exemplo de erro 400 na deleção do usuário
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 400
+                    title: Falha de validação
+                    detail: O valor `x` enviado é inválido
+                    instance: /forumhub.io/api/v1/users/delete
+        401:
           description: Usuário não autenticado.
-        '403':
+        403:
           description: Usuário sem permissão.
-        '500':
+        500:
           description: Erro interno no serviço.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleInternalErrorWhenDeletingUser:
+                  summary: Exemplo de erro 500 na deleção do usuário
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 500
+                    title: Falha inesperada
+                    detail: Erro inesperado no servidor. Mais detalhes no log.
+                    instance: /forumhub.io/api/v1/users/delete
       security:
         - forumhub_auth: [ myuser:delete ]
 components:
@@ -247,25 +439,25 @@ components:
         firstName:
           type: string
           description: o primeiro nome do usuário
-          examples: [ "John" ]
+          examples: [ John ]
         lastName:
           type: string
           description: o sobrenome do usuário
-          examples: [ "Doe" ]
+          examples: [ Doe ]
         username:
           type: string
           description: o nome de usuário do usuário
-          examples: [ "john_doe" ]
+          examples: [ john_doe ]
         email:
           type: string
           format: email
           description: o email do usuário
-          examples: [ "doe@email.com" ]
+          examples: [ doe@email.com ]
         password:
           type: string
           format: password
           description: a senha do usuário
-          examples: [ "Johndoe@123" ]
+          examples: [ Johndoe@123 ]
     UserUpdateDTO:
       type: object
       required:
@@ -277,20 +469,20 @@ components:
         firstName:
           type: string
           description: o primeiro nome do usuário
-          examples: [ "John" ]
+          examples: [ John ]
         lastName:
           type: string
           description: o sobrenome do usuário
-          examples: [ "Doe" ]
+          examples: [ Doe ]
         username:
           type: string
           description: o nome de usuário do usuário
-          examples: [ "john_doe" ]
+          examples: [ john_doe ]
         email:
           type: string
           format: email
           description: o email do usuário
-          examples: [ "doe@email.com" ]
+          examples: [ doe@email.com ]
         profile:
           type: string
           minimum: 3
@@ -300,7 +492,7 @@ components:
             - MOD
             - BASIC
           description: o nome do perfil do autor
-          examples: [ "BASIC" ]
+          examples: [ BASIC ]
         accountNonExpired:
           type: boolean
           description: indica se a conta do usuário expirou.
@@ -324,24 +516,24 @@ components:
           type: integer
           format: int64
           description: o id do autor
-          examples: [ "1" ]
+          examples: [ 1 ]
         firstName:
           type: string
           description: o primeiro nome do usuário
-          examples: [ "John" ]
+          examples: [ John ]
         lastName:
           type: string
           description: o sobrenome do usuário
-          examples: [ "Doe" ]
+          examples: [ Doe ]
         username:
           type: string
           description: o username do autor
-          examples: [ "john_doe" ]
+          examples: [ john_doe ]
         email:
           type: string
           format: email
           description: o email do autor
-          examples: [ "doe@email.com" ]
+          examples: [ doe@email.com ]
         profile:
           type: object
           minimum: 3
@@ -375,24 +567,24 @@ components:
           type: integer
           format: int64
           description: o id do autor
-          examples: [ "1" ]
+          examples: [ 1 ]
         firstName:
           type: string
           description: o primeiro nome do usuário
-          examples: [ "John" ]
+          examples: [ John ]
         lastName:
           type: string
           description: o sobrenome do usuário
-          examples: [ "Doe" ]
+          examples: [ Doe ]
         username:
           type: string
           description: o username do autor
-          examples: [ "john_doe" ]
+          examples: [ john_doe ]
         email:
           type: string
           format: email
           description: o email do autor
-          examples: [ "doe@email.com" ]
+          examples: [ doe@email.com ]
         profile:
           type: object
           minimum: 3
@@ -401,7 +593,7 @@ components:
             - ADM
             - MOD
             - BASIC
-          examples: [ "BASIC" ]
+          examples: [ BASIC ]
           description: o perfil do usuário/autor
     HttpStatusMessage:
       type: object
@@ -409,11 +601,76 @@ components:
         message:
           type: string
           description: código de status da resposta de requisição
-          examples: [ "HttpStatusCode OK" ]
+          examples: [ HttpStatusCode OK ]
+    Problem:
+      type: string
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: o timestamp do erro.
+          examples: [ 1999-01-01T02:00:34.843034 ]
+        status:
+          type: int
+          format: int32
+          description: o status do erro.
+          examples: [ 404 ]
+        title:
+          type: string
+          description: descrição resumida do erro.
+          examples: [ Não encontrado. ]
+        detail:
+          type: string
+          description: descrição detalhada do erro.
+          examples: [ O tópico informado não existe. ]
+        instance:
+          type: string
+          description: a rota da requisição que causou o erro.
+          examples: [ /forumhub.io/api/v1/topics ]
+  examples:
+    ExampleUserDetailedInfo:
+      value:
+        user:
+          id: 1
+          firstName: John
+          lastName: Doe
+          username: john_doe
+          email: doe@email.com
+          profile:
+            id: 1
+            profileName: BASIC
+          isAccountNonExpired: true
+          isAccountNonLocked: true
+          isCredentialsNonExpired: true
+          isEnabled: true
+    ExampleUserSummaryInfo:
+      id: 1
+      firstName: John
+      lastName: Doe
+      username: john_doe
+      email: doe@email.com
+      profile:
+        id: 1
+        profileName: BASIC
+    ExampleOfSuccessWhenGettingAllUsers:
+      value:
+        _embedded:
+          userSummaryInfoList:
+            - id: 1
+              firstName: John
+              lastName: Doe
+              username: john_doe
+              email: doe@email.com
+              profile:
+                id: 1
+                profileName: BASIC
+    ExampleHttpStatusMessage:
+      value:
+        message: HttpStatusCode OK
   securitySchemes:
     forumhub_auth:
       type: oauth2
-      description: Essa API utiliza o protocolo OAuth2 com o fluxo ```authorization_code``` para conceder autorização aos recursos.
+      description: Essa API utiliza o protocolo OAuth2 com o fluxo `authorization_code` para conceder autorização aos recursos.
       flows:
         authorizationCode:
           authorizationUrl: http://localhost:8082/oauth2/authorize
