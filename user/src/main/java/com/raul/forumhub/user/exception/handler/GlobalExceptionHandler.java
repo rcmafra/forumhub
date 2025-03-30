@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
 import org.hibernate.exception.DataException;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -52,6 +53,14 @@ public class GlobalExceptionHandler {
     private ResponseEntity<ExceptionEntity> constraintViolationExceptionResolver(jakarta.validation.ConstraintViolationException ex,
                                                                                  HttpServletRequest request) {
         String detail = ex.getConstraintViolations().stream().findFirst().orElseThrow().getMessageTemplate();
+        ExceptionEntity entity = new ExceptionEntity(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(),
+                "Falha de validação", detail, request.getRequestURI());
+        return new ResponseEntity<>(entity, headers(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(PropertyReferenceException.class)
+    private ResponseEntity<ExceptionEntity> propertyPathExceptionResolver(PropertyReferenceException ex, HttpServletRequest request) {
+        String detail = String.format("A propriedade '%s' enviada não existe", ex.getPropertyName());
         ExceptionEntity entity = new ExceptionEntity(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(),
                 "Falha de validação", detail, request.getRequestURI());
         return new ResponseEntity<>(entity, headers(), HttpStatus.BAD_REQUEST);
