@@ -152,7 +152,7 @@ public class GlobalExceptionHandler {
     private ResponseEntity<ExceptionEntity> noResourceExceptionResolver(ServletException ex, HttpServletRequest request) {
         HttpStatus status = ex instanceof NoResourceFoundException ? HttpStatus.NOT_FOUND : HttpStatus.BAD_REQUEST;
         ExceptionEntity entity = new ExceptionEntity(LocalDateTime.now(), status.value(),
-                "Falha na solicitação", ex.getMessage(), request.getRequestURI());
+                "Falha no processamento", ex.getMessage(), request.getRequestURI());
         return new ResponseEntity<>(entity, headers(), status);
     }
 
