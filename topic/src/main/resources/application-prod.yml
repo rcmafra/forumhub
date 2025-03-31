@@ -45,7 +45,7 @@ spring:
 
 #Topic API port
 server:
-  port: 8080
+  port: ${PORT}
 
 #User client URL
 forumhub:
@@ -60,13 +60,13 @@ springdoc:
   api-docs:
     enabled: true
     version: openapi_3_1
-    path: /forumhub.io/api/v1/openapi.yaml
+    path: ${PATH_OPEN_API}
   swagger-ui:
     enabled: true
     url: openapi.yaml
-    path: /forumhub.io/api/v1/swagger-ui.html
+    path: ${PATH_SWAGGER_UI}
     oauth:
       use-basic-authentication-with-access-code-grant: true
       use-pkce-with-authorization-code-grant: true
-      client-id: hub-topic
-      client-secret: aHViLXRvcGljOmNmZjM3MWJmLWFhNDYtNDNjOC04ODdlLTI4MmJjZDM3ZjEzNw==
+      client-id: ${OAUTH2_TOPIC_CLIENT_ID}
+      client-secret: ${OAUTH2_TOPIC_PASSWORD}

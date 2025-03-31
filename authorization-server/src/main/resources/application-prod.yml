@@ -40,7 +40,7 @@ registered:
 
 #Auth-Server port
 server:
-   port: 8082
+   port: ${PORT}
 
 logging:
   level:
