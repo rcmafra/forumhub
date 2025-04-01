@@ -2,6 +2,7 @@ package com.raul.forumhub.authorization.server.security.config;
 
 import com.raul.forumhub.authorization.server.domain.UserEntity;
 import com.raul.forumhub.authorization.server.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -105,7 +106,8 @@ public class AuthorizationServerConfig {
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
                 .redirectUri("https://oauth.pstmn.io/v1/callback")
                 .redirectUri("https://oidcdebugger.com/debug")
-                .redirectUri("http://localhost:8080/forumhub.io/api/v1/swagger-ui/oauth2-redirect.html")
+                .redirectUri(this.clientProperties.topicUrl
+                        .concat("/forumhub.io/api/v1/swagger-ui/oauth2-redirect.html"))
                 .scopes((scp) -> scp.addAll(Set.of(
                         "topic:delete", "topic:edit",
                         "course:write", "course:delete", "course:edit",
@@ -131,7 +133,8 @@ public class AuthorizationServerConfig {
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
                 .redirectUri("https://oauth.pstmn.io/v1/callback")
                 .redirectUri("https://oidcdebugger.com/debug")
-                .redirectUri("http://localhost:8081/forumhub.io/api/v1/swagger-ui/oauth2-redirect.html")
+                .redirectUri(this.clientProperties.getUserUrl()
+                        .concat("/forumhub.io/api/v1/swagger-ui/oauth2-redirect.html"))
                 .scopes((scp) -> scp.addAll(Set.of(
                         "myuser:read", "user:readAll", "myuser:delete", "myuser:edit")
                 ))
@@ -175,8 +178,9 @@ public class AuthorizationServerConfig {
 
 
     @Bean
-    public AuthorizationServerSettings authorizationServerSettings() {
-        return AuthorizationServerSettings.builder().issuer("http://127.0.0.1:8082").build();
+    public AuthorizationServerSettings authorizationServerSettings(@Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
+                                                                   String issuer_uri) {
+        return AuthorizationServerSettings.builder().issuer(issuer_uri).build();
     }
 
 
