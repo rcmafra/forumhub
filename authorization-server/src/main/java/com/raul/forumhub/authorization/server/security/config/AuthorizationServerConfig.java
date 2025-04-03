@@ -72,7 +72,7 @@ public class AuthorizationServerConfig {
     @Bean
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests((authorize) ->
-                        authorize.requestMatchers("/actuator/health").permitAll()
+                        authorize.requestMatchers("/actuator/health", "/favicon.ico").permitAll()
                                 .anyRequest().authenticated())
                 .cors((cors) -> cors.configurationSource(corsConfig))
                 .formLogin(Customizer.withDefaults()).build();
