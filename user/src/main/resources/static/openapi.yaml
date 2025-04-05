@@ -69,7 +69,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Problem'
               examples:
-                ExampleConflictWhenCreatingCourse:
+                ExampleConflictWhenCreatingUser:
                   summary: Exemplo de erro 409 na criação de um usuário
                   value:
                     timestamp: 1999-01-01T02:00:34.843034
@@ -142,6 +142,21 @@ paths:
           description: Usuário não autenticado.
         '403':
           description: Usuário sem permissão.
+        '404':
+          description: O usuário informado não existe.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleResourceNotFoundWhenGettingDetailedInfoUser:
+                  summary: Exemplo de erro 404 na obtenção das informações detalhadas do usuário
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 404
+                    title: Recurso não encontrado
+                    detail: Usuário não encontrado
+                    instance: /forumhub.io/api/v1/users/detailed-info
         '500':
           description: Erro interno no serviço.
           content:
@@ -202,6 +217,21 @@ paths:
                     instance: /forumhub.io/api/v1/users/summary-info
         '401':
           description: Usuário não autenticado.
+        '404':
+          description: O usuário informado não existe.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleResourceNotFoundWhenGettingSummaryInfoUser:
+                  summary: Exemplo de erro 404 na obtenção das informações resumidas do usuário
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 404
+                    title: Recurso não encontrado
+                    detail: Usuário não encontrado
+                    instance: /forumhub.io/api/v1/users/summary-info
         '500':
           description: Erro interno no serviço.
           content:
@@ -359,6 +389,21 @@ paths:
           description: Usuário não autenticado.
         '403':
           description: Usuário sem permissão.
+        '404':
+          description: O usuário informado não existe.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleResourceNotFoundWhenEditingUser:
+                  summary: Exemplo de erro 404 na edição do usuário
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 404
+                    title: Recurso não encontrado
+                    detail: Usuário não encontrado
+                    instance: /forumhub.io/api/v1/users/edit
         '409':
           description: Payload conflitante com outro usuário.
           content:
@@ -366,7 +411,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Problem'
               examples:
-                ExampleConflictWhenCreatingCourse:
+                ExampleConflictWhenEditingUser:
                   summary: Exemplo de erro 409 na edição de um usuário
                   value:
                     timestamp: 1999-01-01T02:00:34.843034
@@ -442,6 +487,21 @@ paths:
           description: Usuário não autenticado.
         '403':
           description: Usuário sem permissão.
+        '404':
+          description: O usuário informado não existe.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleResourceNotFoundWhenDeletingUser:
+                  summary: Exemplo de erro 404 na deleção do usuário
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 404
+                    title: Recurso não encontrado
+                    detail: Usuário não encontrado
+                    instance: /forumhub.io/api/v1/users/delete
         '500':
           description: Erro interno no serviço.
           content:
