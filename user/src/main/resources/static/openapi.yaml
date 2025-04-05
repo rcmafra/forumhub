@@ -16,8 +16,8 @@ info:
     url: https://www.apache.org/licenses/LICENSE-2.0.html
   version: 1.0.0
 servers:
-  - url: http://localhost:8081/forumhub.io/api/v1/
-    description: URL do serviço de usuários.
+  - url: https://user-module-tf6y.onrender.com/forumhub.io/api/v1/
+    description: Ambiente de produção.
 tags:
   - name: user
     description: Operações sobre algum usuário.
@@ -687,9 +687,9 @@ components:
       description: Essa API utiliza o protocolo OAuth2 com o fluxo `authorization_code` para conceder autorização aos recursos.
       flows:
         authorizationCode:
-          authorizationUrl: http://localhost:8082/oauth2/authorize
-          tokenUrl: http://localhost:8082/oauth2/token
-          refreshUrl: http://localhost:8082/oauth2/token
+          authorizationUrl: https://authorization-server-module.onrender.com/oauth2/authorize
+          tokenUrl: https://authorization-server-module.onrender.com/oauth2/token
+          refreshUrl: https://authorization-server-module.onrender.com/oauth2/token
           scopes:
             myuser:read: ler um usuário do forum
             user:readAll: ler todos os usuários do forum
