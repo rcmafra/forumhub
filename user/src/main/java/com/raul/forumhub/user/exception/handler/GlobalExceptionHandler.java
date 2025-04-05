@@ -80,7 +80,7 @@ public class GlobalExceptionHandler {
         if (ex.getCause() instanceof ConstraintViolationException && ((ConstraintViolationException) ex.getCause())
                 .getSQLException().getSQLState().equals("23505")) {
             return new ResponseEntity<>(new ExceptionEntity(LocalDateTime.now(), HttpStatus.CONFLICT.value(),
-                    "Falha de restrição", "Payload conflitante", request.getRequestURI()),
+                    "Falha de restrição", "Payload conflitante com outro usuário", request.getRequestURI()),
                     headers(), HttpStatus.CONFLICT);
         } else if ((ex.getCause() instanceof DataException && ((DataException) ex.getCause()).getSQLException().getSQLState().equals("22001"))) {
             return new ResponseEntity<>(new ExceptionEntity(LocalDateTime.now(), HttpStatus.PAYLOAD_TOO_LARGE.value(),

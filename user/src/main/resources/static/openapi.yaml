@@ -36,7 +36,7 @@ paths:
             schema:
               $ref: '#/components/schemas/UserCreateDTO'
       responses:
-        201:
+        '201':
           description: Usuário criado com sucesso.
           content:
             application/json:
@@ -47,7 +47,7 @@ paths:
                 ExampleUserDetailedInfo:
                   $ref: '#/components/examples/ExampleUserDetailedInfo'
                   summary: Exemplo de usuário criado com sucesso
-        400:
+        '400':
           description: Erro no lado do cliente.
           content:
             application/problem+json:
@@ -62,7 +62,22 @@ paths:
                     title: Falha de validação
                     detail: O primeiro nome não pode ser vazio
                     instance: /forumhub.io/api/v1/users/create
-        500:
+        '409':
+          description: Payload conflitante com outro usuário.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleConflictWhenCreatingCourse:
+                  summary: Exemplo de erro 409 na criação de um usuário
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 409
+                    title: Falha de restrição
+                    detail: Payload conflitante com outro usuário
+                    instance: /forumhub.io/api/v1/users/create
+        500':
           description: Erro interno no serviço.
           content:
             application/problem+json:
@@ -98,7 +113,7 @@ paths:
             * Se o usuário autenticado desejar obter as informações de seu próprio usuário, não deve ser informado o parâmetro `user_id`, 
             caso contrário, gerará uma falha.<br>
       responses:
-        200:
+        '200':
           description: Informações detalhadas do usuário obtidas com sucesso.
           content:
             application/json:
@@ -108,7 +123,7 @@ paths:
                 ExampleUserDetailedInfo:
                   $ref: '#/components/examples/ExampleUserDetailedInfo'
                   summary: Exemplo de informações detalhas do usuário obtidas com sucesso
-        400:
+        '400':
           description: Erro no lado do cliente.
           content:
             application/problem+json:
@@ -123,11 +138,11 @@ paths:
                     title: Falha de validação
                     detail: Parâmetro fornecido não esperado
                     instance: /forumhub.io/api/v1/users/detailed-info
-        401:
+        '401':
           description: Usuário não autenticado.
-        403:
+        '403':
           description: Usuário sem permissão.
-        500:
+        '500':
           description: Erro interno no serviço.
           content:
             application/problem+json:
@@ -160,7 +175,7 @@ paths:
             format: int64
           description: O id do usuário que se deseja obter as informações.
       responses:
-        200:
+        '200':
           description: Informações detalhadas do usuário obtidas com sucesso.
           content:
             application/json:
@@ -170,7 +185,7 @@ paths:
                 ExampleUserSummaryInfo:
                   $ref: '#/components/examples/ExampleUserSummaryInfo'
                   summary: Exemplo de informações resumidas do usuário obtidas com sucesso
-        400:
+        '400':
           description: Erro no lado do cliente.
           content:
             application/problem+json:
@@ -185,9 +200,9 @@ paths:
                     title: Falha de validação
                     detail: O valor `x` enviado é inválido
                     instance: /forumhub.io/api/v1/users/summary-info
-        401:
+        '401':
           description: Usuário não autenticado.
-        500:
+        '500':
           description: Erro interno no serviço.
           content:
             application/problem+json:
@@ -241,7 +256,7 @@ paths:
             O número da pagina que se deseja obter. Se vazio `page` será igual a `0`. E.g.:
             * `page=0` **::** primeira página.
       responses:
-        200:
+        '200':
           description: Lista de usuários paginados obtidos com sucesso.
           content:
             application/json:
@@ -251,7 +266,7 @@ paths:
                 ExampleOfSuccessWhenGettingUsers:
                   $ref: '#/components/examples/ExampleOfSuccessWhenGettingAllUsers'
                   summary: Exemplo de lista de usuários paginados obtida com sucesso
-        400:
+        '400':
           description: Erro no lado do cliente.
           content:
             application/problem+json:
@@ -266,7 +281,11 @@ paths:
                     title: Falha de validação
                     detail: A propriedade `x` enviada não existe
                     instance: /forumhub.io/api/v1/users/listAll
-        500:
+        '401':
+          description: Usuário não autenticado.
+        '403':
+          description: Usuário sem permissão.
+        '500':
           description: Erro interno no serviço.
           content:
             application/problem+json:
@@ -310,7 +329,7 @@ paths:
             schema:
               $ref: '#/components/schemas/UserUpdateDTO'
       responses:
-        200:
+        '200':
           description: Usuário editado com sucesso.
           content:
             application/json:
@@ -321,7 +340,7 @@ paths:
                 ExampleSuccessWhenEditingTopic:
                   $ref: '#/components/examples/ExampleUserDetailedInfo'
                   summary: Exemplo de usuário editado com sucesso
-        400:
+        '400':
           description: Erro no lado do cliente.
           content:
             application/problem+json:
@@ -336,11 +355,26 @@ paths:
                     title: Falha de validação
                     detail: O primeiro nome não pode ser vazio
                     instance: /forumhub.io/api/v1/users/edit
-        401:
+        '401':
           description: Usuário não autenticado.
-        403:
+        '403':
           description: Usuário sem permissão.
-        500:
+        '409':
+          description: Payload conflitante com outro usuário.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleConflictWhenCreatingCourse:
+                  summary: Exemplo de erro 409 na edição de um usuário
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 409
+                    title: Falha de restrição
+                    detail: Payload conflitante com outro usuário
+                    instance: /forumhub.io/api/v1/users/create
+        '500':
           description: Erro interno no serviço.
           content:
             application/problem+json:
@@ -378,7 +412,7 @@ paths:
             * Se o usuário autenticado desejar remover seu próprio usuário, não deve ser informado o parâmetro `user_id`, 
             caso contrário, gerará uma falha.<br>
       responses:
-        200:
+        '200':
           description: Usuário removido com sucesso.
           content:
             application/json:
@@ -389,7 +423,7 @@ paths:
                 ExampleHttpStatusMessage:
                   $ref: '#/components/examples/ExampleHttpStatusMessage'
                   summary: Exemplo de usuário removido com sucesso
-        400:
+        '400':
           description: Erro no lado do cliente.
           content:
             application/problem+json:
@@ -404,11 +438,11 @@ paths:
                     title: Falha de validação
                     detail: O valor `x` enviado é inválido
                     instance: /forumhub.io/api/v1/users/delete
-        401:
+        '401':
           description: Usuário não autenticado.
-        403:
+        '403':
           description: Usuário sem permissão.
-        500:
+        '500':
           description: Erro interno no serviço.
           content:
             application/problem+json:
