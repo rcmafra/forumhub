@@ -37,5 +37,5 @@ springdoc:
     oauth:
       use-basic-authentication-with-access-code-grant: true
       use-pkce-with-authorization-code-grant: true
-      client-id: ${OAUTH2_TOPIC_CLIENT_ID}
-      client-secret: ${OAUTH2_TOPIC_PASSWORD}
+      client-id: ${OAUTH2_USER_CLIENT_ID}
+      client-secret: ${OAUTH2_USER_PASSWORD}
