@@ -54,6 +54,7 @@ forumhub:
       scheme: ${USER_SERVER_SCHEME}
       host: ${USER_SERVER_HOST}
       port: ${USER_SERVER_PORT}
+      path: ${USER_SRVER_PATH}
 
 #SpringDoc configuration
 springdoc:
