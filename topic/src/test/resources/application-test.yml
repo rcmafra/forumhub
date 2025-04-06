@@ -41,7 +41,7 @@ spring:
 forumhub:
   client:
     user:
-      schema: http
+      scheme: http
       host: 127.0.0.1
       port: 8081
       path: /forumhub.io/api/v1/users/summary-info

@@ -413,7 +413,7 @@ public class UserControllerIT {
                         .content(new ObjectMapper()
                                 .writeValueAsString(userCreateDTO)))
                 .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.detail", is("Payload conflitante")));
+                .andExpect(jsonPath("$.detail", is("Payload conflitante com outro usuário")));
 
         assertThat(this.userRepository.findById(1L).orElseThrow()
                 .getUsername(), is("jose_silva"));
@@ -434,7 +434,7 @@ public class UserControllerIT {
                         .content(new ObjectMapper()
                                 .writeValueAsString(userCreateDTO)))
                 .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.detail", is("Payload conflitante")));
+                .andExpect(jsonPath("$.detail", is("Payload conflitante com outro usuário")));
 
         assertThat(this.userRepository.findById(1L).orElseThrow()
                 .getEmail(), is("jose@email.com"));
@@ -1094,8 +1094,8 @@ public class UserControllerIT {
                 .andExpect(jsonPath("$..userSummaryInfoList.length()", is(2)))
                 .andExpect(jsonPath("$..page.[?(@.number == 0)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.size == 2)]").exists())
-                .andExpect(jsonPath("$..page.[?(@.totalElements == 2)]").exists())
-                .andExpect(jsonPath("$..page.[?(@.totalPages == 1)]").exists());
+                .andExpect(jsonPath("$..page.[?(@.totalElements == 3)]").exists())
+                .andExpect(jsonPath("$..page.[?(@.totalPages == 2)]").exists());
 
         assertAll(
                 () -> assertEquals(3, this.userRepository.findAll().size()),
@@ -1124,8 +1124,8 @@ public class UserControllerIT {
                 .andExpect(jsonPath("$..userSummaryInfoList.length()", is(2)))
                 .andExpect(jsonPath("$..page.[?(@.number == 0)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.size == 2)]").exists())
-                .andExpect(jsonPath("$..page.[?(@.totalElements == 2)]").exists())
-                .andExpect(jsonPath("$..page.[?(@.totalPages == 1)]").exists());
+                .andExpect(jsonPath("$..page.[?(@.totalElements == 3)]").exists())
+                .andExpect(jsonPath("$..page.[?(@.totalPages == 2)]").exists());
 
         assertAll(
                 () -> assertEquals(3, this.userRepository.findAll().size()),
