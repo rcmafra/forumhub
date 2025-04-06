@@ -34,7 +34,7 @@ public class UserClientRequest {
         try {
             Mono<ResponseEntity<Author>> response = this.webClient.get()
                     .uri(uriBuilder -> uriBuilder
-                            .scheme(userClientProperties.getSchema())
+                            .scheme(userClientProperties.getScheme())
                             .host(userClientProperties.getHost())
                             .port(userClientProperties.getPort())
                             .path(userClientProperties.getPath())

@@ -51,7 +51,7 @@ server:
 forumhub:
   client:
     user:
-      schema: ${USER_SERVER_PROTOCOL}
+      scheme: ${USER_SERVER_SCHEME}
       host: ${USER_SERVER_HOST}
       port: ${USER_SERVER_PORT}
 

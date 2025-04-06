@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 public class UserClientProperties {
 
     @NotNull
-    private String schema;
+    private String scheme;
     @NotNull
     private String host;
     @NotNull
