@@ -1,12 +1,3 @@
-HELP.md
-target/
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
-**/resources/application.properties
-
-
-
 ### STS ###
 .apt_generated
 .classpath
@@ -35,3 +26,12 @@ build/
 ### VS Code ###
 .vscode/
 
+
+### App Config ###
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+/src/main/resources/forumhub-user.cer
+/src/main/resources/forumhub-user-truststore.jks
