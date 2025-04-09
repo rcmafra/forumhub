@@ -477,8 +477,8 @@ paths:
                     title: Falha no serviço de usuário
                     detail: Serviço de usuário indisponível. Tente novamente.
                     instance: /forumhub.io/api/v1/topics/1/edit
-    security:
-      - forumhub_auth: [ topic:edit ]
+      security:
+        - forumhub_auth: [ topic:edit ]
   /topics/{topic_id}/delete:
     delete:
       tags:
@@ -587,8 +587,8 @@ paths:
                     title: Falha no serviço de usuário
                     detail: Serviço de usuário indisponível. Tente novamente.
                     instance: /forumhub.io/api/v1/topics/1/delete
-  security:
-    - forumhub_auth: [ topic:delete ]
+      security:
+        - forumhub_auth: [ topic:delete ]
   /topics/{topic_id}/answer:
     post:
       tags:
