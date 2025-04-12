@@ -1,37 +1,72 @@
 openapi: 3.1.1
 info:
-  title: Forumhub - Topic Service
-  description: |-
-    **Forumhub** é um SaaS robusto projetado para facilitar a interação e troca de conhecimentos. Com Forumhub, os usuários podem criar perguntas
-    sobre diversos tópicos e responder a questões levantadas por outros membros. A aplicação oferece uma plataforma eficiente e organizada para gerenciar
-    essas interações, promovendo um ambiente colaborativo e de aprendizado contínuo.
-
-    Alguns links úteis:
-    - [Repositório do Forumhub](https://github.com/rcmafra/forumhub)
-    - [A definição do módulo Topic do projeto Forumhub](https://github.com/rcmafra/forumhub/blob/main/topic/src/main/resources/static/openapi.yml)
+  title: Forumhub - Topic Module
+  version: 1.0.0
   contact:
+    name: Raul César
     email: raulcesar.sm@gmail.com
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: 1.0.0
+  description: |-
+    **Forumhub** é um SaaS robusto projetado para facilitar a interação e troca de conhecimentos. Com Forumhub, os usuários podem criar perguntas
+    sobre diversos tópicos e responder a questões levantadas por outros membros. A aplicação oferece uma plataforma eficiente e organizada para gerenciar
+    essas interações, promovendo um ambiente colaborativo e de aprendizado contínuo.
+    
+    ## Gerais
+    Esta seção apresenta uma visão geral das tags utilizadas no módulo *Topic*, essenciais para o funcionamento do Forumhub.
+    
+    ### Tag: Topic
+    Responsável pelas operações relacionadas a tópicos (perguntas) no sistema. Permite:
+    
+      - Criar um novo tópico.
+      - Listar todos os tópicos cadastrados, incluindo as respectivas respostas, se houver.
+      - Listar os tópicos associados a um curso específico, incluindo suas respostas, se houver.
+      - Obter os detalhes de um tópico específico por seu ID, incluindo as respostas, se houver.
+      - Editar um tópico existente.
+      - Remover um tópico existente.
+    
+    ### Tag: Answer
+    Responsável pelas operações relacionadas a respostas de tópicos. Permite:
+    
+      - Criar uma nova resposta para um tópico.
+      - Marcar uma resposta como a melhor (ou mais aderente) para o respectivo tópico.
+      - Desmarcar uma resposta anteriormente marcada como a melhor.
+      - Editar uma resposta existente.
+      - Remover uma resposta existente.
+    
+    ### Tag: Course
+    Responsável pelas operações relacionadas aos cursos, que servem como categorias para os tópicos. Permite:
+    
+      - Criar um novo curso.
+      - Listar todos os cursos disponíveis no Forumhub.
+      - Obter os detalhes de um curso específico por seu ID.
+      - Editar um curso existente.
+      - Remover um curso existente.
+    
+    [Repositório do Forumhub](https://github.com/rcmafra/forumhub)
 servers:
   - url: https://topic-module.onrender.com/forumhub.io/api/v1/
     description: Ambiente de produção.
 tags:
-  - name: topic
+  - name: Topic
     description: Operações sobre algum tópico.
-  - name: answer
+  - name: Answer
     description: Operações sobre alguma resposta associada a algum tópico.
-  - name: course
+  - name: Course
     description: Operações sobre algum curso associado a algum tópico.
 paths:
   /topics/create:
     post:
       tags:
-        - topic
+        - Topic
       summary: Adiciona um novo tópico no forum.
-      description: Adiciona um novo tópico de pergunta no forum para receber respostas.
+      description: |-
+        Adiciona um novo tópico de pergunta no forum para receber respostas. 
+        
+        ### Observação
+        
+        * <font size="3">Esta operação requer que o usuário esteja ao menos autenticado, não é necessário um scope ou perfil específico.</font>
       operationId: createTopic
       requestBody:
         required: true
@@ -112,7 +147,7 @@ paths:
   /topics:
     get:
       tags:
-        - topic
+        - Topic
       summary: Obtém o tópico especificado.
       description: Obtém o tópico especificado pertencente ao forum.
       operationId: getTopic
@@ -184,7 +219,7 @@ paths:
   /topics/listAll:
     get:
       tags:
-        - topic
+        - Topic
       summary: Obtém uma lista de tópicos paginados do forum.
       description: Obtém uma lista de tópicos do forum que receberam ou não uma resposta.
       operationId: topicsList
@@ -263,7 +298,7 @@ paths:
   /topics/searchTopicsByCourse:
     get:
       tags:
-        - topic
+        - Topic
       summary: Obtém uma lista de tópicos paginados por curso.
       description: Obtém uma lista de tópicos do forum que receberam ou não uma resposta através de um curso.
       operationId: topicsListByCourse
@@ -349,9 +384,16 @@ paths:
   /topics/{topic_id}/edit:
     put:
       tags:
-        - topic
+        - Topic
       summary: Edita um tópico desejado.
-      description: Edita um determinado tópico existente no forum.
+      description: |-
+        Edita um determinado tópico existente no forum.
+        
+        ### Observações
+        
+        * <font size="3">Esta operação requer que o usuário autenticado tenha o scope `topic:edit`, não é necessário um role específico.</font>
+        * <font size="3">Um usuário com o perfil de `BASIC`, só pode editar o tópico que ele mesmo criou.</font>
+        * <font size="3">Um usuário com o perfil de `ADM` ou `MOD` pode editar qualquer tópico, independente de quem o criou.</font>
       operationId: updateTopic
       parameters:
         - in: path
@@ -482,9 +524,16 @@ paths:
   /topics/{topic_id}/delete:
     delete:
       tags:
-        - topic
+        - Topic
       summary: Remove um tópico desejado.
-      description: Remove um determinado tópico existente no forum.
+      description: |-
+        Remove um determinado tópico existente no forum.
+        
+        ### Observações
+        
+        * <font size="3">Esta operação requer que o usuário autenticado tenha o scope `topic:delete`, não é necessário um role específico.</font>
+        * <font size="3">Um usuário com o perfil de `BASIC`, só pode remover o tópico que ele mesmo criou.</font>
+        * <font size="3">Um usuário com o perfil de `ADM` ou `MOD` pode remover qualquer tópico, independente de quem o criou.</font>
       operationId: deleteTopic
       parameters:
         - in: path
@@ -592,9 +641,14 @@ paths:
   /topics/{topic_id}/answer:
     post:
       tags:
-        - answer
+        - Answer
       summary: Responde um tópico no forum.
-      description: Responde um determinado tópico no forum.
+      description: |- 
+        Responde um determinado tópico no forum.
+        
+        ### Observação
+        
+        * <font size="3">Esta operação requer que o usuário esteja ao menos autenticado, não é necessário um scope ou perfil específico.</font>
       operationId: answerTopic
       parameters:
         - in: path
@@ -683,9 +737,14 @@ paths:
   /topics/{topic_id}/answers/{answer_id}/markBestAnswer:
     put:
       tags:
-        - answer
+        - Answer
       summary: Marca uma resposta como melhor.
-      description: Marca uma determinada resposta como a mais aderente aquela pergunta.
+      description: |- 
+        Marca uma determinada resposta como a mais aderente aquela pergunta.
+        
+        ### Observação
+        
+        * <font size="3">Esta operação requer que o usuário esteja ao menos autenticado, não é necessário um scope ou perfil específico.</font>
       operationId: markBestAnswer
       parameters:
         - in: path
@@ -816,9 +875,14 @@ paths:
   /topics/{topic_id}/answers/{answer_id}/unmarkBestAnswer:
     put:
       tags:
-        - answer
+        - Answer
       summary: Desmarca uma resposta como melhor.
-      description: Desmarca uma determinada resposta como a mais aderente aquela pergunta.
+      description: |- 
+        Desmarca uma determinada resposta como a mais aderente aquela pergunta.
+        
+        ### Observação
+        
+        * <font size="3">Esta operação requer que o usuário esteja ao menos autenticado, não é necessário um scope ou perfil específico.</font>
       operationId: unmarkBestAnswer
       parameters:
         - in: path
@@ -933,9 +997,16 @@ paths:
   /topics/{topic_id}/answers/{answer_id}/edit:
     put:
       tags:
-        - answer
+        - Answer
       summary: Edita uma resposta desejado.
-      description: Edita uma resposta de um tópico existente no forum.
+      description: |-
+        Edita uma resposta de um tópico existente no forum.
+        
+        ### Observações
+        
+        * <font size="3">Esta operação requer que o usuário autenticado tenha o scope `answer:edit`, não é necessário um perfil específico.</font>
+        * <font size="3">Um usuário com o perfil de `BASIC`, só pode editar a resposta que ele mesmo criou.</font>
+        * <font size="3">Um usuário com o perfil de `ADM` ou `MOD` pode editar qualquer resposta, independente de quem o criou.</font>
       operationId: updateAnswer
       parameters:
         - in: path
@@ -1072,9 +1143,16 @@ paths:
   /topics/{topic_id}/answers/{answer_id}/delete:
     delete:
       tags:
-        - answer
+        - Answer
       summary: Remove uma resposta desejada.
-      description: Remove uma resposta de um tópico existente no forum.
+      description: |- 
+        Remove uma resposta de um tópico existente no forum.
+        
+        ### Observações
+        
+        * <font size="3">Esta operação requer que o usuário autenticado tenha o scope `answer:delete`, não é necessário um perfil específico.</font>
+        * <font size="3">Um usuário com o perfil de `BASIC`, só pode remover a resposta que ele mesmo criou.</font>
+        * <font size="3">Um usuário com o perfil de `ADM` ou `MOD` pode remover qualquer resposta, independente de quem o criou.</font>
       operationId: deleteAnswer
       parameters:
         - in: path
@@ -1189,9 +1267,14 @@ paths:
   /courses/create:
     post:
       tags:
-        - course
+        - Course
       summary: Adiciona um novo curso no forum.
-      description: Adiciona um novo curso no forum para ser associado com um tópico.
+      description: |-
+        Adiciona um novo curso no forum para ser associado com um tópico.
+        
+        ### Observação
+        
+        * <font size="3">Esta operação requer que o usuário autenticado tenha o scope `course:write` e possua o perfil `ADM`.</font>
       operationId: createCourse
       requestBody:
         required: true
@@ -1271,9 +1354,14 @@ paths:
   /courses:
     get:
       tags:
-        - course
+        - Course
       summary: Obtém o curso especificado.
-      description: Obtém o curso especificado pertencente ao forum.
+      description: |- 
+        Obtém o curso especificado pertencente ao forum.
+        
+        ### Observação
+        
+        * <font size="3">Esta operação requer que o usuário esteja ao menos autenticado, não é necessário um scope ou perfil específico.</font>
       operationId: getCourse
       parameters:
         - in: query
@@ -1346,9 +1434,14 @@ paths:
   /courses/listAll:
     get:
       tags:
-        - course
+        - Course
       summary: Obtém uma lista de cursos do forum.
-      description: Obtém uma lista de cursos do forum que estão ou não associados a algum tópico.
+      description: |-
+        Obtém uma lista de cursos do forum que estão ou não associados a algum tópico.
+        
+        ### Observação
+        
+        * <font size="3">Esta operação requer que o usuário esteja ao menos autenticado, não é necessário um scope ou perfil específico.</font>
       operationId: getAllCourse
       responses:
         '200':
@@ -1382,9 +1475,14 @@ paths:
   /courses/{course_id}/edit:
     put:
       tags:
-        - course
+        - Course
       summary: Edita um curso desejado.
-      description: Edita um determinado curso existente no forum.
+      description: |-
+        Edita um determinado curso existente no forum.
+        
+        ### Observação
+        
+        * <font size="3">Esta operação requer que o usuário autenticado tenha o scope `course:edit` e possua o perfil `ADM`.</font>
       operationId: updateCourse
       parameters:
         - in: path
@@ -1465,9 +1563,14 @@ paths:
   /courses/{course_id}/delete:
     delete:
       tags:
-        - course
+        - Course
       summary: Remove um curso desejado.
-      description: Remove um determinado curso existente no forum.
+      description: |-
+        Remove um determinado curso existente no forum.
+        
+        ### Observação
+        
+        * <font size="3">Esta operação requer que o usuário autenticado tenha o scope `course:delete` e possua o perfil `ADM`.</font>
       operationId: deleteCourse
       parameters:
         - in: path
@@ -1645,7 +1748,7 @@ components:
         question:
           type: string
           description: a pergunta desse tópico
-          examples: [ Como e onde posso utilizar a anotação @Builder do lombok? ]
+          examples: [ "Como e onde posso utilizar a anotação @Builder do lombok?" ]
         createdAt:
           type: string
           format: date-time
@@ -1722,7 +1825,7 @@ components:
         question:
           type: string
           description: a pergunta desse tópico
-          examples: [ Como e onde posso utilizar a anotação @Builder do lombok? ]
+          examples: [ "Como e onde posso utilizar a anotação @Builder do lombok?" ]
         course_id:
           type: integer
           format: int32
@@ -1738,7 +1841,7 @@ components:
         question:
           type: string
           description: a nova pergunta desse tópico
-          examples: [ Como funciona a anotação @Data do Lombok? ]
+          examples: [ "Como funciona a anotação @Data do Lombok?" ]
         status:
           type: object
           $ref: '#/components/schemas/Status'
@@ -1804,7 +1907,7 @@ components:
         topic:
           id: 2
           title: Dúvida quanto a utilização do @Builder
-          question: Como e onde posso utilizar a anotação @Builder do lombok?
+          question: "Como e onde posso utilizar a anotação @Builder do lombok?"
           createdAt: 1999-01-01T02:00:34.843034
           status: UNSOLVED
           author:
@@ -1836,7 +1939,7 @@ components:
             - topic:
                 id: 2
                 title: Dúvida quanto a utilização do @Builder
-                question: Como e onde posso utilizar a anotação @Builder do lombok?
+                question: "Como e onde posso utilizar a anotação @Builder do lombok?"
                 createdAt: 1999-01-01T02:00:34.843034
                 status: UNSOLVED
                 author:
@@ -1863,13 +1966,13 @@ components:
                         profileName: BASIC
         _links:
           first:
-            href: http://localhost:8080/forumhub.io/api/v1/topics/listAll?page=0&size=1
+            href: https://topic-module.onrender.com/forumhub.io/api/v1/topics/listAll?page=0&size=1
           self:
-            href: http://localhost:8080/forumhub.io/api/v1/topics/listAll?page=0&size=1
+            href: https://topic-module.onrender.com/forumhub.io/api/v1/topics/listAll?page=0&size=1
           next:
-            href: http://localhost:8080/forumhub.io/api/v1/topics/listAll?page=1&size=1
+            href: https://topic-module.onrender.com/forumhub.io/api/v1/topics/listAll?page=1&size=1
           last:
-            href: http://localhost:8080/forumhub.io/api/v1/topics/listAll?page=1&size=1
+            href: https://topic-module.onrender.com/forumhub.io/api/v1/topics/listAll?page=1&size=1
         page:
           size: 1
           totalElements: 1

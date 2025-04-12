@@ -1,31 +1,43 @@
 openapi: 3.1.1
 info:
-  title: Forumhub - User Service
-  description: |-
-    **Forumhub** é um SaaS robusto projetado para facilitar a interação e troca de conhecimentos. Com Forumhub, os usuários podem criar perguntas 
-    sobre diversos tópicos e responder a questões levantadas por outros membros. A aplicação oferece uma plataforma eficiente e organizada para gerenciar 
-    essas interações, promovendo um ambiente colaborativo e de aprendizado contínuo. 
-
-    Alguns links úteis:
-    - [Repositório do Forumhub](https://github.com/rcmafra/forumhub)
-    - [A definição do módulo User do projeto Forumhub](https://github.com/rcmafra/forumhub/blob/main/user/src/main/resources/static/openapi.yml)
+  title: Forumhub - User Module
+  version: 1.0.0
   contact:
+    name: Raul César
     email: raulcesar.sm@gmail.com
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: 1.0.0
+  description: |-
+    **Forumhub** é um SaaS robusto projetado para facilitar a interação e troca de conhecimentos. Com Forumhub, os usuários podem criar perguntas 
+    sobre diversos tópicos e responder a questões levantadas por outros membros. A aplicação oferece uma plataforma eficiente e organizada para gerenciar 
+    essas interações, promovendo um ambiente colaborativo e de aprendizado contínuo. 
+    
+    ## Gerais
+    Esta seção apresenta uma visão geral das tags utilizadas no módulo *User*, essenciais para o gerenciamento dos usuários do Forumhub.
+    
+    ### Tag: User
+    Responsável pelas operações relacionadas a usuários no sistema. Permite:
+    
+      - Criar um novo usuário.
+      - Obter informações detalhas de um usuário específico.
+      - Obter informações resumidas de um usuário específico.
+      - Listar todos os usuários do Forumhub.
+      - Editar um usuário existente.
+      - Remover um usuário existente.
+
+    [Repositório do Forumhub](https://github.com/rcmafra/forumhub)
 servers:
   - url: https://user-module-tf6y.onrender.com/forumhub.io/api/v1/
     description: Ambiente de produção.
 tags:
-  - name: user
+  - name: User
     description: Operações sobre algum usuário.
 paths:
   /users/create:
     post:
       tags:
-        - user
+        - User
       summary: Adiciona um novo usuário no forum.
       description: Adiciona um novo usuário para interagir no forum.
       operationId: registerUser
@@ -95,9 +107,16 @@ paths:
   /users/detailed-info:
     get:
       tags:
-        - user
+        - User
       summary: Obtém as informações detalhadas de um usuário.
-      description: Obtém as informações detalhadas de um usuário pertencente ao forum.
+      description: |
+        Obtém as informações detalhadas de um usuário pertencente ao forum.
+        
+        ### Observações
+        
+        * <font size="3">Um usuário com o perfil de `BASIC`, só pode obter suas próprias informações detalhadas de cadastro. Para isso, é necessário o scope `myuser:read`.</font>
+        * <font size="3">Um usuário com o perfil de `ADM` ou `MOD`, pode obter as informações detalhadas de cadastro de qualquer usuário do Forumhub. Se desejar obter
+          as informações de cadastro de outro usuário ou suas próprias informações detalhadas de cadastro, não é necessário o scope `myuser:read`.</font>
       operationId: getDetailedInfoUser
       parameters:
         - in: query
@@ -108,10 +127,11 @@ paths:
             format: int64
           description: |
             O id do usuário que se deseja obter as informações.
-            * Se o usuário autenticado tiver as permissões adequadas e desejar obter as informações de qualquer outro usuário do forum, 
-            é necessário informar o id do usuário desejado em `user_id`.
-            * Se o usuário autenticado desejar obter as informações de seu próprio usuário, não deve ser informado o parâmetro `user_id`, 
-            caso contrário, gerará uma falha.<br>
+            * Se o usuário autenticado pertencer ao perfil `BASIC`, e desejar obter suas próprias informações detalhadas de cadastro, não deve ser informado o valor da 
+              propriedade `user_id`, caso contrário, gerará uma falha.
+            * Se o usuário autenticado pertencer ao perfil `ADM` ou `MOD`, e desejar obter as informações de cadastro de qualquer outro usuário do Forumhub,
+              é necessário informar o ID do usuário desejado em `user_id`. Caso desejar obter suas próprias informações detalhadas de cadastro, não é necessário
+              informar o valor dessa propriedade.
       responses:
         '200':
           description: Informações detalhadas do usuário obtidas com sucesso.
@@ -177,9 +197,14 @@ paths:
   /users/summary-info:
     get:
       tags:
-        - user
+        - User
       summary: Obtém as informações resumidas de um usuário.
-      description: Obtém as informações resumidas de um usuário pertencente ao forum.
+      description: |-
+        Obtém as informações resumidas de um usuário pertencente ao forum.
+        
+        ### Observação
+        
+        * <font size="3">Esta operação requer que o usuário esteja ao menos autenticado, não é necessário um scope ou perfil específico.</font>
       operationId: getSummaryInfoUser
       parameters:
         - in: query
@@ -252,9 +277,14 @@ paths:
   /users/listAll:
     get:
       tags:
-        - user
+        - User
       summary: Obtém uma lista de usuários paginados do forum.
-      description: Obtém uma lista de usuários do forum com seus dados resumidos.
+      description: |-
+        Obtém uma lista de usuários do forum com seus dados resumidos.
+        
+        ### Observação
+        
+        * <font size="3">Esta operação requer que o usuário autenticado possua o perfil `ADM` ou `MOD`, e possua o scope `user:readAll`.</font>
       operationId: usersList
       parameters:
         - in: query
@@ -335,9 +365,17 @@ paths:
   /users/edit:
     put:
       tags:
-        - user
+        - User
       summary: Edita alguma informação desejada do usuário.
-      description: Edita alguma informação desejada do usuário pertencente ao forum.
+      description: |-
+        Edita alguma informação desejada do usuário pertencente ao forum.
+        
+        ### Observações
+        
+        * <font size="3">Um usuário com o perfil de `BASIC` ou `MOD`, só pode editar suas próprias informações de cadastro. Para isso, é necessário o scope `myuser:edit`.
+          Só está disponível para edição os campos `username` e `email` para este perfil.</font>
+        * <font size="3">Um usuário com o perfil de `ADM`, pode editar as informações de cadastro de qualquer usuário do Forumhub - inclusive dele mesmo -
+          sem a necessidade do scope `myuser:edit`. Este perfil pode editar todos os campos, com exceção dos campos `id` e `password` do usuário.</font>
       operationId: updateUser
       parameters:
         - in: query
@@ -348,10 +386,11 @@ paths:
             format: int64
           description: |
             O id do usuário que se deseja editar.
-            * Se o usuário autenticado tiver as permissões adequadas e desejar editar as informações de qualquer outro usuário do forum, 
-            é necessário informar o id do usuário desejado em `user_id`.
-            * Se o usuário autenticado desejar editar as informações de seu próprio usuário, não deve ser informado o parâmetro `user_id`, 
-            caso contrário, gerará uma falha.<br>
+            * Se o usuário autenticado pertencer ao perfil `BASIC` ou `MOD`, e desejar editar suas próprias informações de cadastro, não deve ser informado o valor da 
+              propriedade `user_id`, caso contrário, gerará uma falha.
+            * Se o usuário autenticado pertencer ao perfil `ADM`, e desejar editar as informações de cadastro de qualquer outro usuário do Forumhub,
+              é necessário informar o ID do usuário desejado em `user_id`. Caso desejar editar suas próprias informações de cadastro, não é necessário
+              informar o valor dessa propriedade.
       requestBody:
         required: true
         content:
@@ -439,9 +478,15 @@ paths:
   /users/delete:
     delete:
       tags:
-        - user
+        - User
       summary: Remove um usuário desejado.
-      description: Remove algum usuário pertencente ao forum.
+      description: |-
+        Remove algum usuário pertencente ao forum.
+        
+        ### Observações
+        
+        * <font size="3">Um usuário com o perfil de `BASIC` ou `MOD`, só pode remover seu próprio usuário. Para isso, é necessário o scope `myuser:delete`.</font>
+        * <font size="3">Um usuário com o perfil de `ADM`, pode remover qualquer usuário do Forumhub sem a necessidade do scope `myuser:delete`.</font>
       operationId: deleteUser
       parameters:
         - in: query
@@ -452,10 +497,9 @@ paths:
             format: int64
           description: |
             O id do usuário que se deseja remover.
-            * Se o usuário autenticado tiver as permissões adequadas e desejar remover qualquer outro usuário do forum, 
-            é necessário informar o id do usuário desejado em `user_id`.
-            * Se o usuário autenticado desejar remover seu próprio usuário, não deve ser informado o parâmetro `user_id`, 
-            caso contrário, gerará uma falha.<br>
+            * Se o usuário autenticado pertencer ao perfil `BASIC` ou `MOD`, e desejar remover seu próprio usuário, não deve ser informado o valor da 
+              propriedade `user_id`, caso contrário, gerará uma falha.
+            * Se o usuário autenticado pertencer ao perfil `ADM`, e desejar remover qualquer usuário do Forumhub, é necessário informar o ID do usuário desejado em `user_id`.
       responses:
         '200':
           description: Usuário removido com sucesso.
@@ -760,13 +804,13 @@ components:
                 profileName: BASIC
         _links:
           first:
-            href: http://localhost:8081/forumhub.io/api/v1/users/listAll?page=0&size=1
+            href: https://user-module-tf6y.onrender.com/forumhub.io/api/v1/users/listAll?page=0&size=1
           self:
-            href: http://localhost:8081/forumhub.io/api/v1/users/listAll?page=0&size=1
+            href: https://user-module-tf6y.onrender.com/forumhub.io/api/v1/users/listAll?page=0&size=1
           next:
-            href: http://localhost:8081/forumhub.io/api/v1/users/listAll?page=1&size=1
+            href: https://user-module-tf6y.onrender.com/forumhub.io/api/v1/users/listAll?page=1&size=1
           last:
-            href: http://localhost:8081/forumhub.io/api/v1/users/listAll?page=1&size=1
+            href: https://user-module-tf6y.onrender.com/forumhub.io/api/v1/users/listAll?page=1&size=1
         page:
           size: 1
           totalElements: 1
@@ -789,4 +833,3 @@ components:
             user:readAll: ler todos os usuários do forum
             myuser:edit: edita um usuário do forum
             myuser:delete: remove um usuário do forum
-
