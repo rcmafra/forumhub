@@ -41,3 +41,4 @@ springdoc:
       use-pkce-with-authorization-code-grant: true
       client-id: ${OAUTH2_USER_CLIENT_ID}
       client-secret: ${OAUTH2_USER_PASSWORD}
+    displayRequestDuration: true

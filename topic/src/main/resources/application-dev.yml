@@ -71,3 +71,4 @@ springdoc:
       use-pkce-with-authorization-code-grant: true
       client-id: hub-topic
       client-secret: aHViLXRvcGljOmNmZjM3MWJmLWFhNDYtNDNjOC04ODdlLTI4MmJjZDM3ZjEzNw==
+    displayRequestDuration: true

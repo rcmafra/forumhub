@@ -39,3 +39,4 @@ springdoc:
       use-pkce-with-authorization-code-grant: true
       client-id: hub-user
       client-secret: aHViLXVzZXI6ZWJjNTFlNGItMjQxOC00MTNkLTlhNWUtNDU2Yzk1YjQ3Yzcz
+    displayRequestDuration: true
