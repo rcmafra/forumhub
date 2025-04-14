@@ -12,8 +12,10 @@ import com.raul.forumhub.topic.exception.InstanceNotFoundException;
 import com.raul.forumhub.topic.repository.AnswerRepository;
 import com.raul.forumhub.topic.util.PermissionUtils;
 import com.raul.forumhub.topic.util.ValidationUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class AnswerService {
 
@@ -38,6 +40,8 @@ public class AnswerService {
         answer.setAuthor(author);
 
         this.saveAnswer(answer);
+
+        log.info("O tópico [ID: {}] recebeu a resposta: {}", topic_id, answer);
     }
 
 
@@ -46,14 +50,16 @@ public class AnswerService {
         Answer answer = this.getAnswerById(answer_id);
         Author author = userClientRequest.getUserById(user_id);
 
-        PermissionUtils.validateTopicOwner(topic.getAuthor().getId(), author.getId());
-        ValidationUtils.validateMarkBestAnswer(topic, answer_id);
+        PermissionUtils.validateTopicOwner(topic, author);
+        ValidationUtils.validateMarkBestAnswer(topic, answer);
 
 
         topic.setStatus(Status.SOLVED);
         answer.setBestAnswer(true);
 
         this.topicService.saveTopic(topic);
+
+        log.info("Resposta [ID: {}] marcada como melhor resposta para o tópico [ID: {}]", answer_id, topic_id);
 
     }
 
@@ -62,14 +68,16 @@ public class AnswerService {
         Answer answer = this.getAnswerById(answer_id);
         Author author = userClientRequest.getUserById(user_id);
 
-        PermissionUtils.validateTopicOwner(topic.getAuthor().getId(), author.getId());
-        ValidationUtils.validateUnmarkBestAnswer(topic, answer.getId());
+        PermissionUtils.validateTopicOwner(topic, author);
+        ValidationUtils.validateUnmarkBestAnswer(topic, answer);
 
 
         topic.setStatus(Status.UNSOLVED);
         answer.setBestAnswer(false);
 
         this.topicService.saveTopic(topic);
+
+        log.info("Resposta [ID: {}] desmarcada como melhor resposta para o tópico [ID: {}]", answer_id, topic_id);
 
     }
 
@@ -84,11 +92,13 @@ public class AnswerService {
         if (answer.getAuthor().getId() == 0L || answer.getAuthor().getUsername()
                 .equalsIgnoreCase("anonymous")) {
             throw new BusinessException("A resposta pertence a um autor inexistente, " +
-                                        "ela não pode ser editada");
+                                        "ela não pode ser editada!");
         }
 
         answer.setSolution(answerRequestDTO.solution());
         this.answerRepository.save(answer);
+
+        log.info("Resposta [ID: {}] do tópico [ID: {}] editada com sucesso!", answer_id, topic_id);
 
         return new AnswerResponseDTO(answer);
     }
@@ -98,18 +108,21 @@ public class AnswerService {
         Author author = this.userClientRequest.getUserById(user_id);
 
         if (!answer.getTopic().getId().equals(topic_id)) {
-            throw new BusinessException("A resposta fornecida não pertence a esse tópico");
+            throw new BusinessException(String.format("A resposta [ID: %d] fornecida não pertence ao tópico [ID: %d]", answer_id, topic_id));
         }
 
         PermissionUtils.privilegeValidator(answer.getAuthor().getId(), author);
 
         this.answerRepository.delete(answer);
 
+        log.info("Resposta [ID: {}] do tópico [ID: {}] removida com sucesso!", answer_id, topic_id);
+
     }
 
 
     public Answer getAnswerById(Long id) {
-        return this.answerRepository.findById(id).orElseThrow(() -> new InstanceNotFoundException("A resposta informada não existe"));
+        return this.answerRepository.findById(id).orElseThrow(() ->
+                new InstanceNotFoundException(String.format("A resposta [ID: %d] informada não existe", id)));
     }
 
     public void saveAnswer(Answer answer) {

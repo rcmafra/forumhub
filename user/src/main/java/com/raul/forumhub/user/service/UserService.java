@@ -9,11 +9,13 @@ import com.raul.forumhub.user.dto.response.UserSummaryInfo;
 import com.raul.forumhub.user.exception.InstanceNotFoundException;
 import com.raul.forumhub.user.respository.ProfileRepository;
 import com.raul.forumhub.user.respository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class UserService {
 
@@ -46,6 +48,9 @@ public class UserService {
                 .build();
 
         this.userRepository.save(user);
+
+        log.info("Usuário '{}' criado com sucesso!", user.getUsername());
+
         return new UserDetailedInfo(user);
     }
 
@@ -75,22 +80,28 @@ public class UserService {
         }
 
         userRepository.save(user);
+
+        log.info("Usuário [ID: {}] editado com sucesso!", user.getId());
+
         return new UserDetailedInfo(user);
     }
 
     public void deleteUser(Long user_id) {
         User user = this.getUserById(user_id);
+
+        log.info("Usuário '{}' removido com sucesso!", user.getUsername());
+
         this.userRepository.delete(user);
     }
 
     public User getUserById(Long user_id) {
-        return this.userRepository.findById(user_id)
-                .filter(user -> !user.getId().equals(0L))
-                .orElseThrow(() -> new InstanceNotFoundException("Usuário não encontrado"));
+        return this.userRepository.findById(user_id).filter(user -> !user.getId().equals(0L))
+                .orElseThrow(() -> new InstanceNotFoundException(String.format("Usuário [ID: %d] não encontrado", user_id)));
     }
 
 
     public Profile findProfileByName(Profile.ProfileName profileName) {
-        return profileRepository.findByProfileName(profileName).orElseThrow(() -> new InstanceNotFoundException("Perfil não encontrado"));
+        return profileRepository.findByProfileName(profileName).orElseThrow(
+                () -> new InstanceNotFoundException(String.format("Perfil '%s' não encontrado", profileName.toString())));
     }
 }

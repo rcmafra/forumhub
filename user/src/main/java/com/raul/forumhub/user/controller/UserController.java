@@ -142,7 +142,7 @@ public class UserController {
     }
 
     private MalFormatedParamUserException raiseMalFormatedParamUserException() {
-        return new MalFormatedParamUserException("Parâmetro fornecido não esperado");
+        return new MalFormatedParamUserException("Parâmetro 'user_id' fornecido não esperado");
     }
 
 }

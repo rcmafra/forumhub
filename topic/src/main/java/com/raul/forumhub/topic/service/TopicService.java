@@ -11,10 +11,12 @@ import com.raul.forumhub.topic.exception.BusinessException;
 import com.raul.forumhub.topic.exception.InstanceNotFoundException;
 import com.raul.forumhub.topic.repository.TopicRepository;
 import com.raul.forumhub.topic.util.PermissionUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class TopicService {
 
@@ -37,6 +39,8 @@ public class TopicService {
 
         Topic topic = new Topic(topicCreateRequestDTO.title(), topicCreateRequestDTO.question(), author, course);
         this.saveTopic(topic);
+
+        log.info("Tópico criado com sucesso: {}", topic);
     }
 
     public Page<TopicResponseDTO> topicList(Pageable pageable) {
@@ -50,7 +54,7 @@ public class TopicService {
 
     public Topic getTopicById(Long topic_id) {
         return topicRepository.findById(topic_id).orElseThrow(() ->
-                new InstanceNotFoundException("O tópico informado não existe"));
+                new InstanceNotFoundException(String.format("O tópico [ID: %d] informado não existe", topic_id)));
     }
 
 
@@ -63,8 +67,8 @@ public class TopicService {
 
         if (topic.getAuthor().getId() == 0L || topic.getAuthor().getUsername()
                 .equalsIgnoreCase("anonymous")) {
-            throw new BusinessException("O tópico pertence a um autor inexistente, " +
-                                        "ele não pode ser editado");
+            throw new BusinessException(String.format("O tópico [ID: %d] pertence a um autor inexistente, " +
+                                        "ele não pode ser editado!", topic.getId()));
         }
 
         topic.setTitle(update.title());
@@ -73,6 +77,9 @@ public class TopicService {
         topic.setCourse(course);
 
         this.saveTopic(topic);
+
+        log.info("Tópico editado com sucesso: {}", topic);
+
         return new TopicResponseDTO(topic);
 
     }
@@ -85,6 +92,8 @@ public class TopicService {
         PermissionUtils.privilegeValidator(topic.getAuthor().getId(), author);
 
         this.topicRepository.delete(topic);
+
+        log.info("Tópico removido com sucesso: {}", topic);
     }
 
     public void saveTopic(Topic topic) {

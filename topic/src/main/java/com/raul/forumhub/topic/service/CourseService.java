@@ -6,10 +6,12 @@ import com.raul.forumhub.topic.dto.response.CourseResponseCollection;
 import com.raul.forumhub.topic.dto.response.CourseResponseDTO;
 import com.raul.forumhub.topic.exception.InstanceNotFoundException;
 import com.raul.forumhub.topic.repository.CourseRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 public class CourseService {
 
@@ -27,6 +29,8 @@ public class CourseService {
                 .build();
 
         this.courseRepository.save(course);
+
+        log.info("Curso criado com sucesso: {}", course);
     }
 
     public List<CourseResponseCollection> getAllCourse(){
@@ -36,6 +40,8 @@ public class CourseService {
     public void deleteCourse(Long course_id){
         Course course = this.getCourseById(course_id);
         this.courseRepository.delete(course);
+
+        log.info("Curso removido com sucesso: {}", course);
     }
 
     public CourseResponseDTO updateCourse(Long course_id, CourseRequestDTO courseUpdateDTO) {
@@ -45,11 +51,15 @@ public class CourseService {
         course.setCategory(courseUpdateDTO.category());
 
         this.courseRepository.save(course);
+
+        log.info("Curso editado com sucesso: {}", course);
+
         return new CourseResponseDTO(course);
     }
 
     public Course getCourseById(Long id) {
-        return this.courseRepository.findById(id).orElseThrow(() -> new InstanceNotFoundException("O curso informado não existe"));
+        return this.courseRepository.findById(id).orElseThrow(() ->
+                new InstanceNotFoundException(String.format("O curso [ID: %d] informado não existe", id)));
     }
 
 
