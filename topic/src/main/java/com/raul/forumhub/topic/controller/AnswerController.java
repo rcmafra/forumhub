@@ -25,13 +25,13 @@ public class AnswerController {
 
     @IsAuthenticated
     @PostMapping("/{topic_id}/answer")
-    public ResponseEntity<HttpStatusMessage> answerTopic(@PathVariable Long topic_id, @Valid @RequestBody AnswerRequestDTO answerRequestDTO,
+    public ResponseEntity<AnswerResponseDTO> answerTopic(@PathVariable Long topic_id, @Valid @RequestBody AnswerRequestDTO answerRequestDTO,
                                                          @AuthenticationPrincipal Jwt jwt) {
 
         Long user_id = Long.parseLong(jwt.getClaim("user_id"));
-        this.answerService.answerTopic(topic_id, user_id, answerRequestDTO);
+        AnswerResponseDTO answerResponseDTO = this.answerService.answerTopic(topic_id, user_id, answerRequestDTO);
 
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(answerResponseDTO);
     }
 
     @IsAuthenticated
