@@ -31,13 +31,13 @@ public class TopicController {
 
     @IsAuthenticated
     @PostMapping("/create")
-    public ResponseEntity<HttpStatusMessage> createTopic(@Valid @RequestBody TopicCreateRequestDTO topicCreateRequestDTO,
+    public ResponseEntity<TopicResponseDTO> createTopic(@Valid @RequestBody TopicCreateRequestDTO topicCreateRequestDTO,
                                                          @AuthenticationPrincipal Jwt jwt) {
 
         Long user_id = Long.parseLong(jwt.getClaim("user_id"));
-        this.topicService.createTopic(topicCreateRequestDTO, user_id);
+        TopicResponseDTO topicResponseDTO = this.topicService.createTopic(topicCreateRequestDTO, user_id);
 
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(topicResponseDTO);
     }
 
     @GetMapping("/listAll")

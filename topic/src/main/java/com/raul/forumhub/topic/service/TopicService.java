@@ -33,7 +33,7 @@ public class TopicService {
         this.courseService = courseService;
     }
 
-    public void createTopic(TopicCreateRequestDTO topicCreateRequestDTO, Long user_id) {
+    public TopicResponseDTO createTopic(TopicCreateRequestDTO topicCreateRequestDTO, Long user_id) {
         Author author = userClientRequest.getUserById(user_id);
         Course course = courseService.getCourseById(topicCreateRequestDTO.course_id());
 
@@ -41,6 +41,9 @@ public class TopicService {
         this.saveTopic(topic);
 
         log.info("Tópico criado com sucesso: {}", topic);
+
+        return new TopicResponseDTO(topic);
+
     }
 
     public Page<TopicResponseDTO> topicList(Pageable pageable) {
