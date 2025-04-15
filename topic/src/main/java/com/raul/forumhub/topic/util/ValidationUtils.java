@@ -15,13 +15,7 @@ public class ValidationUtils {
 
     public void validateMarkBestAnswer(Topic topic, Answer answer) {
         hasAnswerInTopic(topic);
-
-        topic.getAnswers().stream().filter(ans -> ans.getId().equals(answer.getId()))
-                .findFirst().or(() -> {
-                            throw raiseValidationException(String.format(
-                                    "A resposta [ID: %d] fornecida não pertence ao tópico [ID: %d] fornecido", answer.getId(), topic.getId()));
-                        }
-                );
+        validateAnswerBelongsTopic(topic, answer);
 
         topic.getAnswers().stream().filter(Answer::isBestAnswer)
                 .findFirst().ifPresent(ans -> {
@@ -36,17 +30,12 @@ public class ValidationUtils {
 
     public void validateUnmarkBestAnswer(Topic topic, Answer answer) {
         hasAnswerInTopic(topic);
+        validateAnswerBelongsTopic(topic, answer);
 
-        topic.getAnswers().stream().filter(ans -> ans.getId().equals(answer.getId()))
-                .findFirst().or(() -> {
-                    throw raiseValidationException(String.format(
-                            "A resposta [ID: %d] fornecida não pertence ao tópico [ID: %d] fornecido", answer.getId(), topic.getId()));
-                }).ifPresent(ans -> {
-                    if (!ans.isBestAnswer()) {
-                        throw raiseValidationException(String.format(
-                                "A resposta [ID: %d] fornecida não está definida como melhor resposta", answer.getId()));
-                    }
-                });
+        if(!answer.isBestAnswer()) {
+            throw raiseValidationException(String.format(
+                    "A resposta [ID: %d] fornecida não está definida como melhor resposta", answer.getId()));
+        }
 
         log.info("Validações realizadas com sucesso para desmarcação de melhor resposta para a resposta: {}", answer);
 
@@ -62,6 +51,14 @@ public class ValidationUtils {
 
     private boolean hasAnswer(Set<Answer> answers) {
         return !answers.isEmpty();
+    }
+
+
+    public void validateAnswerBelongsTopic(Topic topic, Answer answer) {
+        if (!answer.getTopic().getId().equals(topic.getId())) {
+            throw raiseValidationException(String.format(
+                    "A resposta [ID: %d] fornecida não pertence ao tópico [ID: %d] fornecido", answer.getId(), topic.getId()));
+        }
     }
 
     private ValidationException raiseValidationException(String message) {

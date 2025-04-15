@@ -15,6 +15,8 @@ import com.raul.forumhub.topic.util.ValidationUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Slf4j
 @Service
 public class AnswerService {
@@ -31,17 +33,20 @@ public class AnswerService {
         this.userClientRequest = userClientRequest;
     }
 
-    public void answerTopic(Long topic_id, Long user_id, AnswerRequestDTO answerRequestDTO) {
+    public AnswerResponseDTO answerTopic(Long topic_id, Long user_id, AnswerRequestDTO answerRequestDTO) {
         Topic topic = topicService.getTopicById(topic_id);
         Author author = userClientRequest.getUserById(user_id);
 
-        Answer answer = new Answer(answerRequestDTO.solution());
-        answer.setTopic(topic);
-        answer.setAuthor(author);
+        Answer answer = Answer.builder().solution(answerRequestDTO.solution())
+                        .topic(topic).author(author).createdAt(LocalDateTime.now())
+                        .build();
 
         this.saveAnswer(answer);
 
         log.info("O tópico [ID: {}] recebeu a resposta: {}", topic_id, answer);
+
+        return new AnswerResponseDTO(answer);
+
     }
 
 
@@ -83,10 +88,11 @@ public class AnswerService {
 
 
     public AnswerResponseDTO updateAnswer(Long topic_id, Long answer_id, Long user_id, AnswerRequestDTO answerRequestDTO) {
-        this.topicService.getTopicById(topic_id);
+        Topic topic = this.topicService.getTopicById(topic_id);
         Answer answer = this.getAnswerById(answer_id);
         Author author = this.userClientRequest.getUserById(user_id);
 
+        ValidationUtils.validateAnswerBelongsTopic(topic, answer);
         PermissionUtils.privilegeValidator(answer.getAuthor().getId(), author);
 
         if (answer.getAuthor().getId() == 0L || answer.getAuthor().getUsername()
@@ -105,12 +111,10 @@ public class AnswerService {
 
     public void deleteAnswer(Long topic_id, Long answer_id, Long user_id) {
         Answer answer = this.getAnswerById(answer_id);
+        Topic topic = this.topicService.getTopicById(topic_id);
         Author author = this.userClientRequest.getUserById(user_id);
 
-        if (!answer.getTopic().getId().equals(topic_id)) {
-            throw new BusinessException(String.format("A resposta [ID: %d] fornecida não pertence ao tópico [ID: %d]", answer_id, topic_id));
-        }
-
+        ValidationUtils.validateAnswerBelongsTopic(topic, answer);
         PermissionUtils.privilegeValidator(answer.getAuthor().getId(), author);
 
         this.answerRepository.delete(answer);
