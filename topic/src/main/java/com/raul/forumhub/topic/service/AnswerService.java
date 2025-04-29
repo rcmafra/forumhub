@@ -38,8 +38,8 @@ public class AnswerService {
         Author author = userClientRequest.getUserById(user_id);
 
         Answer answer = Answer.builder().solution(answerRequestDTO.solution())
-                        .topic(topic).author(author).createdAt(LocalDateTime.now())
-                        .build();
+                .topic(topic).author(author).createdAt(LocalDateTime.now())
+                .build();
 
         this.saveAnswer(answer);
 
@@ -88,11 +88,11 @@ public class AnswerService {
 
 
     public AnswerResponseDTO updateAnswer(Long topic_id, Long answer_id, Long user_id, AnswerRequestDTO answerRequestDTO) {
-        Topic topic = this.topicService.getTopicById(topic_id);
+        this.topicService.getTopicById(topic_id);
         Answer answer = this.getAnswerById(answer_id);
         Author author = this.userClientRequest.getUserById(user_id);
 
-        ValidationUtils.validateAnswerBelongsTopic(topic, answer);
+        ValidationUtils.validateAnswerBelongsTopic(topic_id, answer);
         PermissionUtils.privilegeValidator(answer.getAuthor().getId(), author);
 
         if (answer.getAuthor().getId() == 0L || answer.getAuthor().getUsername()
@@ -111,10 +111,9 @@ public class AnswerService {
 
     public void deleteAnswer(Long topic_id, Long answer_id, Long user_id) {
         Answer answer = this.getAnswerById(answer_id);
-        Topic topic = this.topicService.getTopicById(topic_id);
         Author author = this.userClientRequest.getUserById(user_id);
 
-        ValidationUtils.validateAnswerBelongsTopic(topic, answer);
+        ValidationUtils.validateAnswerBelongsTopic(topic_id, answer);
         PermissionUtils.privilegeValidator(answer.getAuthor().getId(), author);
 
         this.answerRepository.delete(answer);

@@ -15,7 +15,7 @@ public class ValidationUtils {
 
     public void validateMarkBestAnswer(Topic topic, Answer answer) {
         hasAnswerInTopic(topic);
-        validateAnswerBelongsTopic(topic, answer);
+        validateAnswerBelongsTopic(topic.getId(), answer);
 
         topic.getAnswers().stream().filter(Answer::isBestAnswer)
                 .findFirst().ifPresent(ans -> {
@@ -30,7 +30,7 @@ public class ValidationUtils {
 
     public void validateUnmarkBestAnswer(Topic topic, Answer answer) {
         hasAnswerInTopic(topic);
-        validateAnswerBelongsTopic(topic, answer);
+        validateAnswerBelongsTopic(topic.getId(), answer);
 
         if(!answer.isBestAnswer()) {
             throw raiseValidationException(String.format(
@@ -54,10 +54,10 @@ public class ValidationUtils {
     }
 
 
-    public void validateAnswerBelongsTopic(Topic topic, Answer answer) {
-        if (!answer.getTopic().getId().equals(topic.getId())) {
+    public void validateAnswerBelongsTopic(long topic_id, Answer answer) {
+        if (!answer.getTopic().getId().equals(topic_id)) {
             throw raiseValidationException(String.format(
-                    "A resposta [ID: %d] fornecida não pertence ao tópico [ID: %d] fornecido", answer.getId(), topic.getId()));
+                    "A resposta [ID: %d] fornecida não pertence ao tópico [ID: %d] fornecido", answer.getId(), topic_id));
         }
     }
 
