@@ -35,7 +35,7 @@ public class AnswerController {
     }
 
     @IsAuthenticated
-    @PutMapping("/{topic_id}/answers/{answer_id}/markBestAnswer")
+    @PatchMapping("/{topic_id}/answers/{answer_id}/markBestAnswer")
     public ResponseEntity<HttpStatusMessage> markBestAnswer(@PathVariable Long topic_id, @PathVariable Long answer_id,
                                                             @AuthenticationPrincipal Jwt jwt) {
 
@@ -46,7 +46,7 @@ public class AnswerController {
     }
 
     @IsAuthenticated
-    @PutMapping("/{topic_id}/answers/{answer_id}/unmarkBestAnswer")
+    @PatchMapping("/{topic_id}/answers/{answer_id}/unmarkBestAnswer")
     public ResponseEntity<HttpStatusMessage> unmarkBestAnswer(@PathVariable Long topic_id, @PathVariable Long answer_id,
                                                             @AuthenticationPrincipal Jwt jwt) {
 
@@ -57,7 +57,7 @@ public class AnswerController {
     }
 
     @PreAuthorize("hasAuthority('SCOPE_answer:edit')")
-    @PutMapping("/{topic_id}/answers/{answer_id}/edit")
+    @PatchMapping("/{topic_id}/answers/{answer_id}/edit")
     public ResponseEntity<AnswerResponseDTO> updateAnswer(@PathVariable Long topic_id, @PathVariable Long answer_id,
                                                           @AuthenticationPrincipal Jwt jwt, @Valid @RequestBody AnswerRequestDTO answerRequestDTO) {
 
