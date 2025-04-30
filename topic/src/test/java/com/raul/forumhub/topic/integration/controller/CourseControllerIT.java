@@ -359,7 +359,7 @@ public class CourseControllerIT {
                         .content(new ObjectMapper()
                                 .writeValueAsString(courseUpdateDTO)))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.detail", is("O curso informado não existe")));
+                .andExpect(jsonPath("$.detail", is("O curso [ID: 5] informado não existe")));
 
         assertFalse(this.courseRepository.findById(5L).isPresent());
 
@@ -441,7 +441,7 @@ public class CourseControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.detail", is("O curso informado não existe")));
+                .andExpect(jsonPath("$.detail", is("O curso [ID: 5] informado não existe")));
 
         Assertions.assertAll(
                 () -> assertEquals(4, this.courseRepository.findAll().size()),

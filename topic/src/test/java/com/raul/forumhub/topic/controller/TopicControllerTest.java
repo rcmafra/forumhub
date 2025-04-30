@@ -1,6 +1,7 @@
 package com.raul.forumhub.topic.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.raul.forumhub.topic.domain.Status;
 import com.raul.forumhub.topic.domain.Topic;
 import com.raul.forumhub.topic.dto.request.TopicCreateRequestDTO;
@@ -10,7 +11,10 @@ import com.raul.forumhub.topic.exception.handler.GlobalExceptionHandler;
 import com.raul.forumhub.topic.security.TopicSecurityConfig;
 import com.raul.forumhub.topic.service.TopicService;
 import com.raul.forumhub.topic.util.TestsHelper;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -52,6 +56,9 @@ class TopicControllerTest {
 
     @MockBean
     ClientRegistrationRepository clientRegistrationRepository;
+    
+    @Autowired
+    ObjectMapper objectMapper;
 
     private static final Jwt JWT;
 
@@ -73,7 +80,7 @@ class TopicControllerTest {
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
-                        .content(new ObjectMapper()
+                        .content(this.objectMapper
                                 .writeValueAsString(topicCreateRequestDTO)))
                 .andExpect(status().isNotFound());
 
@@ -90,7 +97,7 @@ class TopicControllerTest {
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
-                        .content(new ObjectMapper()
+                        .content(this.objectMapper
                                 .writeValueAsString(topicCreateRequestDTO)))
                 .andExpect(status().isBadRequest());
 
@@ -107,7 +114,7 @@ class TopicControllerTest {
         this.mockMvc.perform(post("/forumhub.io/api/v1/topics/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
-                        .content(new ObjectMapper()
+                        .content(this.objectMapper
                                 .writeValueAsString(topicCreateRequestDTO)))
                 .andExpect(status().isUnauthorized());
 
@@ -123,15 +130,21 @@ class TopicControllerTest {
                 "Como utilizar o Feign Client para integração do serviço x?",
                 1L);
 
-        BDDMockito.doNothing().when(this.topicService).createTopic(topicCreateRequestDTO, 1L);
+        final TopicResponseDTO topicResponseDTO = new TopicResponseDTO(TestsHelper.TopicHelper.topicList().get(0));
+
+        BDDMockito.given(this.topicService.createTopic(topicCreateRequestDTO, 1L))
+                .willReturn(topicResponseDTO);
 
         this.mockMvc.perform(post("/forumhub.io/api/v1/topics/create")
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
-                        .content(new ObjectMapper()
+                        .content(this.objectMapper
                                 .writeValueAsString(topicCreateRequestDTO)))
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andExpect(content().json(this.objectMapper
+                        .registerModule(new JavaTimeModule())
+                        .writeValueAsString(topicResponseDTO)));
 
         BDDMockito.verify(this.topicService).createTopic(topicCreateRequestDTO, 1L);
         BDDMockito.verifyNoMoreInteractions(this.topicService);
@@ -529,7 +542,7 @@ class TopicControllerTest {
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
-                        .content(new ObjectMapper()
+                        .content(this.objectMapper
                                 .writeValueAsString(topicUpdateRequestDTO)))
                 .andExpect(status().isForbidden());
 
@@ -552,7 +565,7 @@ class TopicControllerTest {
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:edit")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
-                        .content(new ObjectMapper()
+                        .content(this.objectMapper
                                 .writeValueAsString(topicUpdateRequestDTO)))
                 .andExpect(status().isBadRequest());
 
@@ -577,7 +590,7 @@ class TopicControllerTest {
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:edit")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
-                        .content(new ObjectMapper()
+                        .content(this.objectMapper
                                 .writeValueAsString(topicUpdateRequestDTO)))
                 .andExpect(status().isBadRequest());
 
@@ -607,7 +620,7 @@ class TopicControllerTest {
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:edit")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
-                        .content(new ObjectMapper()
+                        .content(this.objectMapper
                                 .writeValueAsString(topicUpdateRequestDTO)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.topic.title", is("Dúvida na utilização do WebClient")))

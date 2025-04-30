@@ -801,7 +801,9 @@ public class TopicControllerIT {
                         .content(new ObjectMapper()
                                 .writeValueAsString(topicUpdateRequestDTO)))
                 .andExpect(status().isIAmATeapot())
-                .andExpect(jsonPath("$.detail", is("Usuário com privilégios insuficientes para realizar esta operação!")));
+                .andExpect(jsonPath("$.detail",
+                        is("Usuário 'Jose' com privilégios insuficientes" +
+                           " para realizar esta operação!")));
 
         Topic topic = this.topicRepository.findById(2L).orElseThrow();
 
@@ -837,8 +839,8 @@ public class TopicControllerIT {
                                 .writeValueAsString(topicUpdateRequestDTO)))
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.detail", is(
-                        "O tópico pertence a um autor inexistente," +
-                        " ele não pode ser editado"
+                        "O tópico [ID: 3] pertence a um autor inexistente, " +
+                        "ele não pode ser editado!"
                 )));
 
         Topic topic = this.topicRepository.findById(3L).orElseThrow();
@@ -1056,7 +1058,9 @@ public class TopicControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isIAmATeapot())
-                .andExpect(jsonPath("$.detail", is("Usuário com privilégios insuficientes para realizar esta operação!")));
+                .andExpect(jsonPath("$.detail",
+                        is("Usuário 'Jose' com privilégios insuficientes " +
+                           "para realizar esta operação!")));
 
         Assertions.assertEquals(4, this.topicRepository.findAll().size());
 

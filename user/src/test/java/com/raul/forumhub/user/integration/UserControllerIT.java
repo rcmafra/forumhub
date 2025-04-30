@@ -376,7 +376,7 @@ public class UserControllerIT {
                         .content(new ObjectMapper()
                                 .writeValueAsString(userCreateDTO)))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.detail", is("Perfil não encontrado")));
+                .andExpect(jsonPath("$.detail", is("Perfil 'BASIC' não encontrado")));
 
     }
 
@@ -613,7 +613,7 @@ public class UserControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.detail", is("Usuário não encontrado")));
+                .andExpect(jsonPath("$.detail", is("Usuário [ID: 5] não encontrado")));
 
         assertAll(
                 () -> assertEquals(3, this.userRepository.findAll().size()),
@@ -1250,7 +1250,7 @@ public class UserControllerIT {
                         .content(new ObjectMapper().writeValueAsString(userUpdateDTO))
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.detail", is("Usuário não encontrado")));
+                .andExpect(jsonPath("$.detail", is("Usuário [ID: 5] não encontrado")));
 
         assertTrue(this.userRepository.findById(5L).isEmpty());
 

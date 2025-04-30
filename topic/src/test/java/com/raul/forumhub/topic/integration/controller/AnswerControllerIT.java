@@ -171,7 +171,7 @@ public class AnswerControllerIT {
                         .content(new ObjectMapper()
                                 .writeValueAsString(answerRequestDTO)))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.detail", is("O tópico informado não existe")));
+                .andExpect(jsonPath("$.detail", is("O tópico [ID: 6] informado não existe")));
 
 
         assertFalse(this.topicRepository.findById(6L).isPresent());
@@ -242,7 +242,7 @@ public class AnswerControllerIT {
     @DisplayName("Should fail with status code 401 when mark best answer if user unauthenticated")
     @Test
     void shouldFailToMarkBestAnswerIfUnauthenticated() throws Exception {
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/markBestAnswer",
+        this.mockMvc.perform(patch("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/markBestAnswer",
                         1, 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -277,13 +277,13 @@ public class AnswerControllerIT {
                  "topic specified not exists")
     @Test
     void shouldFailToMarkBestAnswerIfSpecifiedTopicNotExists() throws Exception {
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/markBestAnswer",
+        this.mockMvc.perform(patch("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/markBestAnswer",
                         6, 1)
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.detail", is("O tópico informado não existe")));
+                .andExpect(jsonPath("$.detail", is("O tópico [ID: 6] informado não existe")));
 
         Assertions.assertAll(
                 () -> assertEquals(4, this.answerRepository.findAll().size()),
@@ -302,7 +302,7 @@ public class AnswerControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(1L)).
                 willThrow(new RestClientException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/markBestAnswer",
+        this.mockMvc.perform(patch("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/markBestAnswer",
                         1, 1)
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -330,14 +330,14 @@ public class AnswerControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(2L)).
                 willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/markBestAnswer",
+        this.mockMvc.perform(patch("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/markBestAnswer",
                         1, 1)
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "2")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isIAmATeapot())
                 .andExpect(jsonPath("$.detail",
-                        is("O tópico fornecido não pertence ao usuário atualmente logado")));
+                        is("O tópico [ID: 1] fornecido não pertence ao usuário 'Maria'")));
 
 
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
@@ -361,14 +361,14 @@ public class AnswerControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(1L)).
                 willReturn(TestsHelper.AuthorHelper.authorList().get(0));
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/markBestAnswer",
+        this.mockMvc.perform(patch("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/markBestAnswer",
                         4, 1)
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isIAmATeapot())
                 .andExpect(jsonPath("$.detail",
-                        is("Ainda não existe respostas para esse tópico")));
+                        is("Ainda não existe respostas para o tópico [ID: 4]")));
 
 
         Topic topic = this.topicRepository.findById(4L).orElseThrow();
@@ -391,14 +391,14 @@ public class AnswerControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(2L)).
                 willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/markBestAnswer",
+        this.mockMvc.perform(patch("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/markBestAnswer",
                         2, 2)
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "2")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.detail",
-                        is("Este tópico já possui a resposta [ID: 2] como melhor resposta")));
+                        is("Este tópico já possui como melhor resposta a resposta [ID: 2]")));
 
         Topic topic = this.topicRepository.findById(2L).orElseThrow();
 
@@ -422,7 +422,7 @@ public class AnswerControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(1L)).
                 willReturn(TestsHelper.AuthorHelper.authorList().get(0));
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/markBestAnswer",
+        this.mockMvc.perform(patch("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/markBestAnswer",
                         1, 1)
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -446,7 +446,7 @@ public class AnswerControllerIT {
     @DisplayName("Should fail with status code 401 when unmark best answer if user unauthenticated")
     @Test
     void shouldFailToUnmarkBestAnswerIfUnauthenticated() throws Exception {
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/unmarkBestAnswer",
+        this.mockMvc.perform(patch("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/unmarkBestAnswer",
                         1, 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -481,13 +481,13 @@ public class AnswerControllerIT {
                  "topic specified not exists")
     @Test
     void shouldFailToUnmarkBestAnswerIfSpecifiedTopicNotExists() throws Exception {
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/unmarkBestAnswer",
+        this.mockMvc.perform(patch("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/unmarkBestAnswer",
                         6, 1)
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.detail", is("O tópico informado não existe")));
+                .andExpect(jsonPath("$.detail", is("O tópico [ID: 6] informado não existe")));
 
         Assertions.assertAll(
                 () -> assertEquals(4, this.answerRepository.findAll().size()),
@@ -502,13 +502,13 @@ public class AnswerControllerIT {
                  "answer specified not exists")
     @Test
     void shouldFailToUnmarkBestAnswerIfSpecifiedAnswerNotExists() throws Exception {
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/unmarkBestAnswer",
+        this.mockMvc.perform(patch("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/unmarkBestAnswer",
                         1, 6)
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.detail", is("A resposta informada não existe")));
+                .andExpect(jsonPath("$.detail", is("A resposta [ID: 6] informada não existe")));
 
         Assertions.assertAll(
                 () -> assertEquals(4, this.answerRepository.findAll().size()),
@@ -527,7 +527,7 @@ public class AnswerControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(1L)).
                 willThrow(new RestClientException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/unmarkBestAnswer",
+        this.mockMvc.perform(patch("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/unmarkBestAnswer",
                         1, 1)
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -556,14 +556,14 @@ public class AnswerControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(2L)).
                 willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/unmarkBestAnswer",
+        this.mockMvc.perform(patch("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/unmarkBestAnswer",
                         1, 1)
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "2")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isIAmATeapot())
                 .andExpect(jsonPath("$.detail",
-                        is("O tópico fornecido não pertence ao usuário atualmente logado")));
+                        is("O tópico [ID: 1] fornecido não pertence ao usuário 'Maria'")));
 
 
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
@@ -587,14 +587,14 @@ public class AnswerControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(1L)).
                 willReturn(TestsHelper.AuthorHelper.authorList().get(0));
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/unmarkBestAnswer",
+        this.mockMvc.perform(patch("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/unmarkBestAnswer",
                         4, 1)
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isIAmATeapot())
                 .andExpect(jsonPath("$.detail",
-                        is("Ainda não existe respostas para esse tópico")));
+                        is("Ainda não existe respostas para o tópico [ID: 4]")));
 
 
         Topic topic = this.topicRepository.findById(4L).orElseThrow();
@@ -617,14 +617,14 @@ public class AnswerControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(2L)).
                 willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/unmarkBestAnswer",
+        this.mockMvc.perform(patch("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/unmarkBestAnswer",
                         2, 1)
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "2")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isIAmATeapot())
                 .andExpect(jsonPath("$.detail",
-                        is("A resposta fornecida não pertence ao tópico fornecido")));
+                        is("A resposta [ID: 1] fornecida não pertence ao tópico [ID: 2] fornecido")));
 
         Topic topic = this.topicRepository.findById(2L).orElseThrow();
 
@@ -645,14 +645,14 @@ public class AnswerControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(1L)).
                 willReturn(TestsHelper.AuthorHelper.authorList().get(0));
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/unmarkBestAnswer",
+        this.mockMvc.perform(patch("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/unmarkBestAnswer",
                         1, 1)
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "1")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isIAmATeapot())
                 .andExpect(jsonPath("$.detail",
-                        is("A resposta fornecida não está definida como melhor resposta")));
+                        is("A resposta [ID: 1] fornecida não está definida como melhor resposta")));
 
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
 
@@ -675,7 +675,7 @@ public class AnswerControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(2L)).
                 willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/unmarkBestAnswer",
+        this.mockMvc.perform(patch("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/unmarkBestAnswer",
                         2, 2)
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "2")))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -704,7 +704,7 @@ public class AnswerControllerIT {
         final AnswerRequestDTO answerUpdateDTO =
                 new AnswerRequestDTO("Primeiro teste de edição de uma resposta");
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/edit",
+        this.mockMvc.perform(patch("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/edit",
                         1, 1)
                         .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -735,7 +735,7 @@ public class AnswerControllerIT {
         final AnswerRequestDTO answerUpdateDTO =
                 new AnswerRequestDTO("Primeiro teste de edição de uma resposta");
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/edit",
+        this.mockMvc.perform(patch("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/edit",
                         1, "unexpected")
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "2"))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_answer:edit")))
@@ -751,7 +751,7 @@ public class AnswerControllerIT {
     void shouldFailIfSolutionPropertyIsEmptyWhenEditAnswer() throws Exception {
         final AnswerRequestDTO answerUpdateDTO = new AnswerRequestDTO("");
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/edit",
+        this.mockMvc.perform(patch("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/edit",
                         1, 1)
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "2"))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_answer:edit")))
@@ -781,7 +781,7 @@ public class AnswerControllerIT {
         final AnswerRequestDTO answerUpdateDTO =
                 new AnswerRequestDTO("Primeiro teste de edição de uma resposta");
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/edit",
+        this.mockMvc.perform(patch("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/edit",
                         6, 1)
                         .queryParam("answer_id", "1")
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "2"))
@@ -792,7 +792,7 @@ public class AnswerControllerIT {
                                 .writeValueAsString(answerUpdateDTO)))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.detail",
-                        is("O tópico informado não existe")));
+                        is("O tópico [ID: 6] informado não existe")));
 
         List<Answer> answer = this.answerRepository.findAll();
 
@@ -813,7 +813,7 @@ public class AnswerControllerIT {
         final AnswerRequestDTO answerUpdateDTO =
                 new AnswerRequestDTO("Primeiro teste de edição de uma resposta");
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/edit",
+        this.mockMvc.perform(patch("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/edit",
                         1, 6)
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "2"))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_answer:edit")))
@@ -823,7 +823,7 @@ public class AnswerControllerIT {
                                 .writeValueAsString(answerUpdateDTO)))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.detail",
-                        is("A resposta informada não existe")));
+                        is("A resposta [ID: 6] informada não existe")));
 
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
 
@@ -848,7 +848,7 @@ public class AnswerControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(2L))
                 .willThrow(new RestClientException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/edit",
+        this.mockMvc.perform(patch("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/edit",
                         1, 1)
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "2"))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_answer:edit")))
@@ -884,7 +884,7 @@ public class AnswerControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(1L))
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/edit",
+        this.mockMvc.perform(patch("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/edit",
                         1, 1)
                         .with(jwt().jwt(JWT)
                                 .authorities(new SimpleGrantedAuthority("SCOPE_answer:edit")))
@@ -893,7 +893,7 @@ public class AnswerControllerIT {
                         .content(new ObjectMapper()
                                 .writeValueAsString(answerUpdateDTO)))
                 .andExpect(status().isIAmATeapot())
-                .andExpect(jsonPath("$.detail", is("Usuário com privilégios insuficientes para realizar esta operação!")));
+                .andExpect(jsonPath("$.detail", is("Usuário 'Jose' com privilégios insuficientes para realizar esta operação!")));
 
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
 
@@ -919,7 +919,7 @@ public class AnswerControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(3L))
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(2));
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/edit",
+        this.mockMvc.perform(patch("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/edit",
                         1, 4)
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "3"))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_answer:edit")))
@@ -929,8 +929,8 @@ public class AnswerControllerIT {
                                 .writeValueAsString(answerUpdateDTO)))
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.detail", is(
-                        "A resposta pertence a um autor inexistente," +
-                        " ela não pode ser editada"
+                        "A resposta pertence a um autor inexistente, " +
+                        "ela não pode ser editada!"
                 )));
 
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
@@ -959,7 +959,7 @@ public class AnswerControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(2L))
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/edit",
+        this.mockMvc.perform(patch("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/edit",
                         1, 1)
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "2"))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_answer:edit")))
@@ -998,7 +998,7 @@ public class AnswerControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(3L))
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(2));
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/edit",
+        this.mockMvc.perform(patch("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/edit",
                         1, 1)
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "3"))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_answer:edit")))
@@ -1036,7 +1036,7 @@ public class AnswerControllerIT {
         BDDMockito.given(this.userClientRequest.getUserById(2L))
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
-        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/edit",
+        this.mockMvc.perform(patch("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/edit",
                         3, 3)
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "2"))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_answer:edit")))
@@ -1129,7 +1129,7 @@ public class AnswerControllerIT {
     }
 
 
-    @DisplayName("Should fail with status code 422 if provided answer not belonging to the " +
+    @DisplayName("Should fail with status code 418 if provided answer not belonging to the " +
                  "provided topic when delete answer")
     @Test
     void shouldFailIfProvidedAnswerNotBelongingToTheProvidedTopicWhenDeleteAnswer() throws Exception {
@@ -1142,9 +1142,9 @@ public class AnswerControllerIT {
                                 .authorities(new SimpleGrantedAuthority("SCOPE_answer:delete")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
-                .andExpect(status().isUnprocessableEntity())
+                .andExpect(status().isIAmATeapot())
                 .andExpect(jsonPath("$.detail",
-                        is("A resposta fornecida não pertence a esse tópico")));
+                        is("A resposta [ID: 2] fornecida não pertence ao tópico [ID: 1] fornecido")));
 
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
         Long[] answersId = {1L, 4L, 5L};
@@ -1173,7 +1173,7 @@ public class AnswerControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isIAmATeapot())
-                .andExpect(jsonPath("$.detail", is("Usuário com privilégios insuficientes para realizar esta operação!")));
+                .andExpect(jsonPath("$.detail", is("Usuário 'Jose' com privilégios insuficientes para realizar esta operação!")));
 
         Topic topic = this.topicRepository.findById(1L).orElseThrow();
 
