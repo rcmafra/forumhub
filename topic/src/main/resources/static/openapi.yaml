@@ -77,6 +77,14 @@ paths:
       responses:
         '201':
           description: Tópico criado com sucesso.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/TopicResponseDTO'
+              examples:
+                ExampleOfSuccessWhenCreateTopic:
+                  $ref: '#/components/examples/ExampleOfSuccessWhenCreateTopic'
+                  summary: Exemplo de tópico criado com sucesso
         '400':
           description: Erro no lado do cliente.
           content:
@@ -382,7 +390,7 @@ paths:
                     detail: Erro inesperado no servidor. Mais detalhes no log.
                     instance: /forumhub.io/api/v1/topics/searchTopicsByCourse
   /topics/{topic_id}/edit:
-    put:
+    patch:
       tags:
         - Topic
       summary: Edita um tópico desejado.
@@ -391,9 +399,9 @@ paths:
         
         ### Observações
         
-        * <font size="3">Esta operação requer que o usuário autenticado tenha o scope `topic:edit`, não é necessário um role específico.</font>
-        * <font size="3">Um usuário com o perfil de `BASIC`, só pode editar o tópico que ele mesmo criou.</font>
-        * <font size="3">Um usuário com o perfil de `ADM` ou `MOD` pode editar qualquer tópico, independente de quem o criou.</font>
+        * <font size="3">Esta operação requer que o usuário autenticado tenha o scope `topic:edit`, não é necessário um perfil específico.</font>
+        * <font size="3">Um usuário com o perfil `BASIC`, só pode editar o tópico que ele mesmo o criou.</font>
+        * <font size="3">Um usuário com o perfil `ADM` ou `MOD` pode editar qualquer tópico, independente de quem o criou.</font>
       operationId: updateTopic
       parameters:
         - in: path
@@ -531,9 +539,9 @@ paths:
         
         ### Observações
         
-        * <font size="3">Esta operação requer que o usuário autenticado tenha o scope `topic:delete`, não é necessário um role específico.</font>
-        * <font size="3">Um usuário com o perfil de `BASIC`, só pode remover o tópico que ele mesmo criou.</font>
-        * <font size="3">Um usuário com o perfil de `ADM` ou `MOD` pode remover qualquer tópico, independente de quem o criou.</font>
+        * <font size="3">Esta operação requer que o usuário autenticado tenha o scope `topic:delete`, não é necessário um perfil específico.</font>
+        * <font size="3">Um usuário com o perfil `BASIC`, só pode remover o tópico que ele mesmo criou.</font>
+        * <font size="3">Um usuário com o perfil `ADM` ou `MOD` pode remover qualquer tópico, independente de quem o criou.</font>
       operationId: deleteTopic
       parameters:
         - in: path
@@ -667,6 +675,13 @@ paths:
       responses:
         '201':
           description: Resposta criada com sucesso.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/AnswerResponseDTO'
+              examples:
+                ExampleOfSuccessWhenCreateAnswer:
+                  $ref: '#/components/examples/ExampleOfSuccessWhenCreateAnswer'
         '400':
           description: Erro no lado do cliente.
           content:
@@ -735,7 +750,7 @@ paths:
       security:
         - forumhub_auth: [ ]
   /topics/{topic_id}/answers/{answer_id}/markBestAnswer:
-    put:
+    patch:
       tags:
         - Answer
       summary: Marca uma resposta como melhor.
@@ -873,7 +888,7 @@ paths:
       security:
         - forumhub_auth: [ ]
   /topics/{topic_id}/answers/{answer_id}/unmarkBestAnswer:
-    put:
+    patch:
       tags:
         - Answer
       summary: Desmarca uma resposta como melhor.
@@ -995,7 +1010,7 @@ paths:
       security:
         - forumhub_auth: [ ]
   /topics/{topic_id}/answers/{answer_id}/edit:
-    put:
+    patch:
       tags:
         - Answer
       summary: Edita uma resposta desejado.
@@ -1005,8 +1020,8 @@ paths:
         ### Observações
         
         * <font size="3">Esta operação requer que o usuário autenticado tenha o scope `answer:edit`, não é necessário um perfil específico.</font>
-        * <font size="3">Um usuário com o perfil de `BASIC`, só pode editar a resposta que ele mesmo criou.</font>
-        * <font size="3">Um usuário com o perfil de `ADM` ou `MOD` pode editar qualquer resposta, independente de quem o criou.</font>
+        * <font size="3">Um usuário com o perfil `BASIC`, só pode editar a resposta que ele mesmo o criou.</font>
+        * <font size="3">Um usuário com o perfil `ADM` ou `MOD` pode editar qualquer resposta, independente de quem o criou.</font>
       operationId: updateAnswer
       parameters:
         - in: path
@@ -1151,8 +1166,8 @@ paths:
         ### Observações
         
         * <font size="3">Esta operação requer que o usuário autenticado tenha o scope `answer:delete`, não é necessário um perfil específico.</font>
-        * <font size="3">Um usuário com o perfil de `BASIC`, só pode remover a resposta que ele mesmo criou.</font>
-        * <font size="3">Um usuário com o perfil de `ADM` ou `MOD` pode remover qualquer resposta, independente de quem o criou.</font>
+        * <font size="3">Um usuário com o perfil `BASIC`, só pode remover a resposta que ele mesmo o criou.</font>
+        * <font size="3">Um usuário com o perfil `ADM` ou `MOD` pode remover qualquer resposta, independente de quem o criou.</font>
       operationId: deleteAnswer
       parameters:
         - in: path
@@ -1667,7 +1682,7 @@ components:
         - UNSOLVED
         - SOLVED
       description: o status do tópico
-      examples: [ SOLVED ]
+      examples: [ UNSOLVED ]
     Category:
       type: string
       enum:
@@ -1714,7 +1729,7 @@ components:
                 - MOD
                 - BASIC
               description: o nome do perfil do autor
-              examples: [ ADM ]
+              examples: [ BASIC ]
           description: o perfil do autor
       description: o autor do tópico ou da resposta
     Course:
@@ -1787,7 +1802,7 @@ components:
         bestAnswer:
           type: boolean
           description: indica se essa foi a melhor solução para tópico
-          examples: [ true ]
+          examples: [ false ]
         author:
           type: object
           $ref: '#/components/schemas/Author'
@@ -1902,6 +1917,25 @@ components:
           description: a rota da requisição que causou o erro.
           examples: [ /forumhub.io/api/v1/topics ]
   examples:
+    ExampleOfSuccessWhenCreateTopic:
+      value:
+        topic:
+          id: 2
+          title: Dúvida quanto a utilização do @Builder
+          question: "Como e onde posso utilizar a anotação @Builder do lombok?"
+          createdAt: 1999-01-01T02:00:34.843034
+          status: UNSOLVED
+          author:
+            id: 15
+            username: john_doe
+            email: doe@email.com
+            profile:
+              profileName: BASIC
+          course:
+            id: 2
+            name: Aprofundando em testes de software
+            category: QA
+          answers: null
     ExampleOfSuccessWhenGettingTopic:
       value:
         topic:
@@ -1978,6 +2012,22 @@ components:
           totalElements: 1
           totalPages: 1
           number: 0
+    ExampleOfSuccessWhenCreateAnswer:
+      summary: Exemplo de resposta criada com sucesso
+      value:
+        answer:
+          id: 15
+          solution:
+            A anotação @Builder do Lombok é utilizada para facilitar a instanciação de objetos,
+            fornecendo os parâmetros para as respectivas propriedades declaradas na classe.
+          bestAnswer: false
+          createdAt: 1999-01-01T02:00:34.843034
+          author:
+            id: 15
+            username: john_doe
+            email: doe@email.com
+            profile:
+              profileName: BASIC
     ExampleOfSuccessWhenEditingAnswer:
       summary: Exemplo de resposta editada com sucesso
       value:
