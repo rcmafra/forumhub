@@ -89,7 +89,7 @@ paths:
                     title: Falha de restrição
                     detail: Payload conflitante com outro usuário
                     instance: /forumhub.io/api/v1/users/create
-        500':
+        '500':
           description: Erro interno no serviço.
           content:
             application/problem+json:
@@ -782,14 +782,15 @@ components:
           isCredentialsNonExpired: true
           isEnabled: true
     ExampleUserSummaryInfo:
-      id: 1
-      firstName: John
-      lastName: Doe
-      username: john_doe
-      email: doe@email.com
-      profile:
+      value:
         id: 1
-        profileName: BASIC
+        firstName: John
+        lastName: Doe
+        username: john_doe
+        email: doe@email.com
+        profile:
+          id: 1
+          profileName: BASIC
     ExampleOfSuccessWhenGettingAllUsers:
       value:
         _embedded:
