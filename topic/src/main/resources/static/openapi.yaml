@@ -238,7 +238,7 @@ paths:
           schema:
             type: string
           description: |
-            A direção de ordenação dos tópicos retornados com base em uma propriedade. Se vazio `sort` será igual a `UNSORTED`. E.g.:
+            A direção de ordenação dos tópicos retornados com base em uma propriedade. Se vazio, `sort` será igual a `UNSORTED`. E.g.:
             * `sort=createdAt,desc` **::** ordem descendente pela data de criação.
             * `sort=title,asc` **::** ordem ascendente pelo título.
             * `sort=author,desc` **::** ordem descendente pelo autor.
@@ -251,7 +251,7 @@ paths:
             type: integer
             format: int32
           description: |
-            A quantidade de tópicos por página. Se vazio `size` será igual a `10`. E.g.:
+            A quantidade de tópicos por página. Se vazio, `size` será igual a `10`. E.g.:
             * `size=10` **::** 10 tópicos por página.
         - in: query
           name: page
@@ -260,7 +260,7 @@ paths:
             type: integer
             format: int32
           description: |
-            O número da pagina que se deseja obter. Se vazio `page` será igual a `0`. E.g.:
+            O número da pagina que se deseja obter. Se vazio, `page` será igual a `0`. E.g.:
             * `page=0` **::** primeira página.
       responses:
         '200':
@@ -324,7 +324,7 @@ paths:
           schema:
             type: string
           description: |
-            A direção de ordenação dos tópicos retornados com base em uma propriedade. Se vazio `sort` será igual a `UNSORTED`. E.g.:
+            A direção de ordenação dos tópicos retornados com base em uma propriedade. Se vazio, `sort` será igual a `UNSORTED`. E.g.:
             * `sort=createdAt,desc` **::** ordem descendente pela data de criação.
             * `sort=title,asc` **::** ordem ascendente pelo título.
             * `sort=author,desc` **::** ordem descendente pelo autor.
@@ -337,7 +337,7 @@ paths:
             type: integer
             format: int32
           description: |
-            A quantidade de tópicos por página. Se vazio `size` será igual a `10`. E.g.:
+            A quantidade de tópicos por página. Se vazio, `size` será igual a `10`. E.g.:
             * `size=10` **::** 10 tópicos por página.
         - in: query
           name: page
@@ -346,7 +346,7 @@ paths:
             type: integer
             format: int32
           description: |
-            O número da pagina que se deseja obter. Se vazio `page` será igual a `0`. E.g.:
+            O número da pagina que se deseja obter. Se vazio, `page` será igual a `0`. E.g.:
             * `page=0` **::** primeira página.
       responses:
         '200':
@@ -390,7 +390,7 @@ paths:
                     detail: Erro inesperado no servidor. Mais detalhes no log.
                     instance: /forumhub.io/api/v1/topics/searchTopicsByCourse
   /topics/{topic_id}/edit:
-    patch:
+    put:
       tags:
         - Topic
       summary: Edita um tópico desejado.

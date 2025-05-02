@@ -115,8 +115,8 @@ paths:
         ### Observações
         
         * <font size="3">Um usuário com o perfil de `BASIC`, só pode obter suas próprias informações detalhadas de cadastro. Para isso, é necessário o scope `myuser:read`.</font>
-        * <font size="3">Um usuário com o perfil de `ADM` ou `MOD`, pode obter as informações detalhadas de cadastro de qualquer usuário do Forumhub. Se desejar obter
-          as informações de cadastro de outro usuário ou suas próprias informações detalhadas de cadastro, não é necessário o scope `myuser:read`.</font>
+        * <font size="3">Um usuário com o perfil de `ADM` ou `MOD`, pode obter as informações detalhadas de cadastro de qualquer usuário do Forumhub. Caso tenha um desses perfils, e 
+          desejar obter as informações de cadastro de outro usuário ou suas próprias informações detalhadas de cadastro, não é necessário o scope `myuser:read`.</font>
       operationId: getDetailedInfoUser
       parameters:
         - in: query
