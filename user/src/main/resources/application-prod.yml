@@ -13,6 +13,12 @@ spring:
       hibernate:
         format_sql: true
 
+  #Domain SQL init script configuration
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:scripts/init-script.sql
+
   #Authorization server configuration
   security:
     oauth2:

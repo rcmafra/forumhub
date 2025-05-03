@@ -13,6 +13,12 @@ spring:
       hibernate:
         format_sql: true
 
+  #Domain SQL init script configuration
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:db/migration/V1_0_0__entities.sql
+
   #Flyway configuration
   flyway:
     default-schema: ${POSTGRES_USER}
