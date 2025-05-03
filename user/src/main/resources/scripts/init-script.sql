@@ -1,7 +1,10 @@
--->Grant all privileges on schema hub to role hub<--
+-->hub schema creation owned by role 'hub'<--
+CREATE SCHEMA IF NOT EXISTS hub AUTHORIZATION hub;
+
+-->Grant all privileges on schema 'hub' to role 'hub'<--
 GRANT ALL PRIVILEGES ON SCHEMA hub TO hub;
 
--->Grant all privileges for all tables in schema hub to role hub<--
+-->Grant all privileges for all tables in schema 'hub' to role 'hub'<--
 GRANT ALL ON ALL TABLES IN SCHEMA hub TO hub;
 ----------------------------------------------------------//----------------------------------------------------------
 
