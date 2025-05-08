@@ -118,10 +118,10 @@ SELECT 1,
        'adm',
        'adm@email.com',
        '$2a$10$dKvyjxi6gbqvGWzchu0dDedZsvTzDvhKp6rf5xVBlTg62pwtZwfCO',
-       false,
-       false,
-       false,
-       false,
+       true,
+       true,
+       true,
+       true,
        2
 WHERE NOT EXISTS (SELECT 1
                   FROM hub.users
@@ -141,10 +141,10 @@ SELECT 2,
        'mod',
        'mod@email.com',
        '$2a$10$FqrmHjfPd026BGwbV56JO.OiNVZPIhZL8Y5d7VI3.yTscDjdO62Ze',
-       false,
-       false,
-       false,
-       false,
+       true,
+       true,
+       true,
+       true,
        3
 WHERE NOT EXISTS (SELECT 1
                   FROM hub.users
