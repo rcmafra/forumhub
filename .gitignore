@@ -1,2 +1,4 @@
 .idea
-.env
+user/.env
+topic/.env
+authorization-server/.env

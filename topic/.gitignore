@@ -2,6 +2,7 @@ HELP.md
 .mvn/wrapper/maven-wrapper.jar
 target/
 **/resources/application.properties
+.env
 
 
 ### STS ###
