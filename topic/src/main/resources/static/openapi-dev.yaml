@@ -2067,9 +2067,9 @@ components:
       description: Essa API utiliza o protocolo OAuth2 com o fluxo `authorization_code` para conceder autorização aos recursos.
       flows:
         authorizationCode:
-          authorizationUrl: https://authorization-server-module.onrender.com/oauth2/authorize
-          tokenUrl: https://authorization-server-module.onrender.com/oauth2/token
-          refreshUrl: https://authorization-server-module.onrender.com/oauth2/token
+          authorizationUrl: http://localhost:8082/oauth2/authorize
+          tokenUrl: http://localhost:8082/oauth2/token
+          refreshUrl: http://localhost:8082/oauth2/token
           scopes:
             topic:edit: edita um tópico no forum
             topic:delete: remove um tópico no forum
