@@ -1,0 +1,2081 @@
+openapi: 3.1.1
+info:
+  title: Forumhub - Topic Module
+  version: 1.0.0
+  contact:
+    name: Raul César
+    email: raulcesar.sm@gmail.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  description: |-
+    **Forumhub** é um SaaS robusto projetado para facilitar a interação e troca de conhecimentos. Com Forumhub, os usuários podem criar perguntas
+    sobre diversos tópicos e responder a questões levantadas por outros membros. A aplicação oferece uma plataforma eficiente e organizada para gerenciar
+    essas interações, promovendo um ambiente colaborativo e de aprendizado contínuo.
+    
+    ## Gerais
+    Esta seção apresenta uma visão geral das tags utilizadas no módulo *Topic*, essenciais para o funcionamento do Forumhub.
+    
+    ### Tag: Topic
+    Responsável pelas operações relacionadas a tópicos (perguntas) no sistema. Permite:
+    
+      - Criar um novo tópico.
+      - Listar todos os tópicos cadastrados, incluindo as respectivas respostas, se houver.
+      - Listar os tópicos associados a um curso específico, incluindo suas respostas, se houver.
+      - Obter os detalhes de um tópico específico por seu ID, incluindo as respostas, se houver.
+      - Editar um tópico existente.
+      - Remover um tópico existente.
+    
+    ### Tag: Answer
+    Responsável pelas operações relacionadas a respostas de tópicos. Permite:
+    
+      - Criar uma nova resposta para um tópico.
+      - Marcar uma resposta como a melhor (ou mais aderente) para o respectivo tópico.
+      - Desmarcar uma resposta anteriormente marcada como a melhor.
+      - Editar uma resposta existente.
+      - Remover uma resposta existente.
+    
+    ### Tag: Course
+    Responsável pelas operações relacionadas aos cursos, que servem como categorias para os tópicos. Permite:
+    
+      - Criar um novo curso.
+      - Listar todos os cursos disponíveis no Forumhub.
+      - Obter os detalhes de um curso específico por seu ID.
+      - Editar um curso existente.
+      - Remover um curso existente.
+    
+    [Repositório do Forumhub](https://github.com/rcmafra/forumhub)
+servers:
+  - url: http://localhost:8080/forumhub.io/api/v1
+    description: Ambiente de desenvolvimento.
+tags:
+  - name: Topic
+    description: Operações sobre algum tópico.
+  - name: Answer
+    description: Operações sobre alguma resposta associada a algum tópico.
+  - name: Course
+    description: Operações sobre algum curso associado a algum tópico.
+paths:
+  /topics/create:
+    post:
+      tags:
+        - Topic
+      summary: Adiciona um novo tópico no forum.
+      description: |-
+        Adiciona um novo tópico de pergunta no forum para receber respostas. 
+        
+        ### Observação
+        
+        * <font size="3">Esta operação requer que o usuário esteja ao menos autenticado, não é necessário um scope ou perfil específico.</font>
+      operationId: createTopic
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TopicCreateRequestDTO'
+      responses:
+        '201':
+          description: Tópico criado com sucesso.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/TopicResponseDTO'
+              examples:
+                ExampleOfSuccessWhenCreateTopic:
+                  $ref: '#/components/examples/ExampleOfSuccessWhenCreateTopic'
+                  summary: Exemplo de tópico criado com sucesso
+        '400':
+          description: Erro no lado do cliente.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleClientErrorWhenCreatingTopic:
+                  summary: Exemplo de erro 400 na criação do tópico
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 400
+                    title: Falha de validação
+                    detail: O título não pode ser vazio
+                    instance: /forumhub.io/api/v1/topics/create
+        '401':
+          description: Usuário não autenticado.
+        '404':
+          description: |
+            Um dos seguintes objetos não existem:
+              - o curso informado;
+              - o usuário que enviou a solicitação;
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleResourceNotFoundWhenCreatingTopic:
+                  summary: Exemplo de erro 404 na criação do tópico
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 404
+                    title: Recurso não encontrado
+                    detail: O curso informado não existe
+                    instance: /forumhub.io/api/v1/topics/create
+        '500':
+          description: Erro interno no serviço.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleInternalErrorWhenCreatingTopic:
+                  summary: Exemplo de erro 500 na criação do tópico
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 500
+                    title: Falha inesperada
+                    detail: Erro inesperado no servidor. Mais detalhes no log.
+                    instance: /forumhub.io/api/v1/topics/create
+        '503':
+          description: Serviço de usuário indisponível.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleServiceUnavailableWhenCreatingTopic:
+                  summary: Exemplo de erro 503 na criação do tópico
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 503
+                    title: Falha no serviço de usuário
+                    detail: Serviço de usuário indisponível. Tente novamente.
+                    instance: /forumhub.io/api/v1/topics/create
+      security:
+        - forumhub_auth: [ ]
+  /topics:
+    get:
+      tags:
+        - Topic
+      summary: Obtém o tópico especificado.
+      description: Obtém o tópico especificado pertencente ao forum.
+      operationId: getTopic
+      parameters:
+        - in: query
+          name: topic_id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: O id do tópico que se deseja obter.
+      responses:
+        '200':
+          description: Tópico obtido com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/TopicResponseDTO'
+              examples:
+                ExampleOfSuccessWhenGettingTopic:
+                  $ref: '#/components/examples/ExampleOfSuccessWhenGettingTopic'
+                  summary: Exemplo de tópico obtido com sucesso
+        '400':
+          description: Erro no lado do cliente.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleClientErrorWhenGettingTopic:
+                  summary: Exemplo de erro 400 na obtenção do tópico
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 400
+                    title: Falha de validação
+                    detail: O valor 'x' enviado é inválido
+                    instance: /forumhub.io/api/v1/topics
+        '404':
+          description: O tópico informado não existe.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleResourceNotFoundWhenGettingTopic:
+                  summary: Exemplo de erro 404 na obtenção do tópico
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 404
+                    title: Recurso não encontrado
+                    detail: O tópico informado não existe
+                    instance: /forumhub.io/api/v1/topics
+        '500':
+          description: Erro interno no serviço.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleInternalErrorWhenGettingTopic:
+                  summary: Exemplo de erro 500 na obtenção do tópico
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 500
+                    title: Falha inesperada
+                    detail: Erro inesperado no servidor. Mais detalhes no log.
+                    instance: /forumhub.io/api/v1/topics
+  /topics/listAll:
+    get:
+      tags:
+        - Topic
+      summary: Obtém uma lista de tópicos paginados do forum.
+      description: Obtém uma lista de tópicos do forum que receberam ou não uma resposta.
+      operationId: topicsList
+      parameters:
+        - in: query
+          name: sort
+          required: false
+          schema:
+            type: string
+          description: |
+            A direção de ordenação dos tópicos retornados com base em uma propriedade. Se vazio, `sort` será igual a `UNSORTED`. E.g.:
+            * `sort=createdAt,desc` **::** ordem descendente pela data de criação.
+            * `sort=title,asc` **::** ordem ascendente pelo título.
+            * `sort=author,desc` **::** ordem descendente pelo autor.
+            * `sort=author.profile.profileName,desc` **::** ordem descendente pelo nome do
+            perfil.
+        - in: query
+          name: size
+          required: false
+          schema:
+            type: integer
+            format: int32
+          description: |
+            A quantidade de tópicos por página. Se vazio, `size` será igual a `10`. E.g.:
+            * `size=10` **::** 10 tópicos por página.
+        - in: query
+          name: page
+          required: false
+          schema:
+            type: integer
+            format: int32
+          description: |
+            O número da pagina que se deseja obter. Se vazio, `page` será igual a `0`. E.g.:
+            * `page=0` **::** primeira página.
+      responses:
+        '200':
+          description: Lista de tópicos paginados obtidos com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TopicResponseDTOList'
+              examples:
+                ExampleOfSuccessWhenGettingTopics:
+                  $ref: '#/components/examples/ExampleOfSuccessWhenGettingAllTopics'
+                  summary: Exemplo de lista de tópicos paginados obtida com sucesso
+        '400':
+          description: Erro no lado do cliente.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleClientErrorWhenGettingPaginatedTopics:
+                  summary: Exemplo de erro 400 na obtenção de tópicos paginados
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 400
+                    title: Falha de validação
+                    detail: A propriedade 'x' enviada não existe
+                    instance: /forumhub.io/api/v1/topics/listAll
+        '500':
+          description: Erro interno no serviço.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleInternalErrorWhenGettingPaginatedTopics:
+                  summary: Exemplo de erro 500 na obtenção de tópicos paginados
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 500
+                    title: Falha inesperada
+                    detail: Erro inesperado no servidor. Mais detalhes no log.
+                    instance: /forumhub.io/api/v1/topics/listAll
+  /topics/searchTopicsByCourse:
+    get:
+      tags:
+        - Topic
+      summary: Obtém uma lista de tópicos paginados por curso.
+      description: Obtém uma lista de tópicos do forum que receberam ou não uma resposta através de um curso.
+      operationId: topicsListByCourse
+      parameters:
+        - in: query
+          name: course_id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: O id do curso desejado.
+        - in: query
+          name: sort
+          required: false
+          schema:
+            type: string
+          description: |
+            A direção de ordenação dos tópicos retornados com base em uma propriedade. Se vazio, `sort` será igual a `UNSORTED`. E.g.:
+            * `sort=createdAt,desc` **::** ordem descendente pela data de criação.
+            * `sort=title,asc` **::** ordem ascendente pelo título.
+            * `sort=author,desc` **::** ordem descendente pelo autor.
+            * `sort=author.profile.profileName,desc` **::** ordem descendente pelo nome do
+            perfil.
+        - in: query
+          name: size
+          required: false
+          schema:
+            type: integer
+            format: int32
+          description: |
+            A quantidade de tópicos por página. Se vazio, `size` será igual a `10`. E.g.:
+            * `size=10` **::** 10 tópicos por página.
+        - in: query
+          name: page
+          required: false
+          schema:
+            type: integer
+            format: int32
+          description: |
+            O número da pagina que se deseja obter. Se vazio, `page` será igual a `0`. E.g.:
+            * `page=0` **::** primeira página.
+      responses:
+        '200':
+          description: Lista de tópicos paginados obtidos com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TopicResponseDTOList'
+              examples:
+                ExampleOfSuccessWhenGettingTopics:
+                  $ref: '#/components/examples/ExampleOfSuccessWhenGettingAllTopics'
+                  summary: Exemplo de lista de tópicos paginados obtida através do curso com sucesso
+        '400':
+          description: Erro no lado do cliente.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleClientErrorWhenGettingPaginatedTopicsByCourse:
+                  summary: Exemplo de erro 400 na obtenção de tópicos paginados através do curso
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 400
+                    title: Falha de validação
+                    detail: O valor 'x' enviado é inválido
+                    instance: /forumhub.io/api/v1/topics/searchTopicsByCourse
+        '500':
+          description: Erro interno no serviço.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleInternalErrorWhenGettingPaginatedTopicsByCourse:
+                  summary: Exemplo de erro 500 na obtenção de tópicos paginados através do curso
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 500
+                    title: Falha inesperada
+                    detail: Erro inesperado no servidor. Mais detalhes no log.
+                    instance: /forumhub.io/api/v1/topics/searchTopicsByCourse
+  /topics/{topic_id}/edit:
+    put:
+      tags:
+        - Topic
+      summary: Edita um tópico desejado.
+      description: |-
+        Edita um determinado tópico existente no forum.
+        
+        ### Observações
+        
+        * <font size="3">Esta operação requer que o usuário autenticado tenha o scope `topic:edit`, não é necessário um perfil específico.</font>
+        * <font size="3">Um usuário com o perfil `BASIC`, só pode editar o tópico que ele mesmo o criou.</font>
+        * <font size="3">Um usuário com o perfil `ADM` ou `MOD` pode editar qualquer tópico, independente de quem o criou.</font>
+      operationId: updateTopic
+      parameters:
+        - in: path
+          name: topic_id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: O id do tópico desejado.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TopicUpdateRequestDTO'
+      responses:
+        '200':
+          description: Tópico editado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/TopicResponseDTO'
+              examples:
+                ExampleSuccessWhenEditingTopic:
+                  $ref: '#/components/examples/ExampleOfSuccessWhenGettingTopic'
+                  summary: Exemplo de tópico editado com sucesso
+        '400':
+          description: Erro no lado do cliente.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleClientErrorWhenEditingTopic:
+                  summary: Exemplo de erro 400 na edição do tópico
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 400
+                    title: Falha de validação
+                    detail: O título não pode ser vazio
+                    instance: /forumhub.io/api/v1/topics/1/edit
+        '401':
+          description: Usuário não autenticado.
+        '403':
+          description: Usuário sem permissão.
+        '404':
+          description: |
+            Um dos seguintes objetos não existem:
+             - o curso informado;
+             - o tópico informado;
+             - o usuário que enviou a solicitação;
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleResourceNotFoundWhenEditingTopic:
+                  summary: Exemplo de erro 404 na edição do tópico
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 404
+                    title: Recurso não encontrado
+                    detail: O tópico informado não existe
+                    instance: /forumhub.io/api/v1/topics/1/edit
+        '418':
+          description: Privilégio insuficiente.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleInsufficientPrivilegeWhenEditingTopic:
+                  summary: Exemplo de erro 418 na edição do tópico
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 418
+                    title: Previlégio insuficiente
+                    detail: Usuário com privilégios insuficientes para realizar esta operação!
+                    instance: /forumhub.io/api/v1/topics/1/edit
+        '422':
+          description: Erro de business.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleBusinessErrorWhenEditingTopic:
+                  summary: Exemplo de erro 422 na edição do tópico
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 418
+                    title: Erro de business
+                    detail: O tópico pertence a um autor inexistente, ele não pode ser editado
+                    instance: /forumhub.io/api/v1/topics/1/edit
+        '500':
+          description: Erro interno no serviço.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleInternalErrorWhenEditingTopic:
+                  summary: Exemplo de erro 500 na edição do tópico
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 500
+                    title: Falha inesperada
+                    detail: Erro inesperado no servidor. Mais detalhes no log.
+                    instance: /forumhub.io/api/v1/topics/1/edit
+        '503':
+          description: Serviço de usuário indisponível.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleServiceUnavailableWhenEditingTopic:
+                  summary: Exemplo de erro 503 na edição do tópico
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 503
+                    title: Falha no serviço de usuário
+                    detail: Serviço de usuário indisponível. Tente novamente.
+                    instance: /forumhub.io/api/v1/topics/1/edit
+      security:
+        - forumhub_auth: [ topic:edit ]
+  /topics/{topic_id}/delete:
+    delete:
+      tags:
+        - Topic
+      summary: Remove um tópico desejado.
+      description: |-
+        Remove um determinado tópico existente no forum.
+        
+        ### Observações
+        
+        * <font size="3">Esta operação requer que o usuário autenticado tenha o scope `topic:delete`, não é necessário um perfil específico.</font>
+        * <font size="3">Um usuário com o perfil `BASIC`, só pode remover o tópico que ele mesmo criou.</font>
+        * <font size="3">Um usuário com o perfil `ADM` ou `MOD` pode remover qualquer tópico, independente de quem o criou.</font>
+      operationId: deleteTopic
+      parameters:
+        - in: path
+          name: topic_id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: O id do tópico desejado.
+      responses:
+        '200':
+          description: Tópico removido com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpStatusMessage'
+              examples:
+                ExampleHttpStatusMessage:
+                  $ref: '#/components/examples/ExampleHttpStatusMessage'
+                  summary: Exemplo de tópico removido com sucesso
+        '400':
+          description: Erro no lado do cliente.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleClientErrorWhenDeletingTopic:
+                  summary: Exemplo de erro 400 na remoção do tópico
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 400
+                    title: Falha de validação
+                    detail: O valor 'x' enviado é inválido
+                    instance: /forumhub.io/api/v1/topics/x/delete
+        '401':
+          description: Usuário não autenticado.
+        '403':
+          description: Usuário sem permissão.
+        '404':
+          description: |
+            Um dos seguintes objetos não existem:
+             - o tópico informado;
+             - o usuário que enviou a solicitação;
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleResourceNotFoundWhenDeletingTopic:
+                  summary: Exemplo de erro 404 na deleção do tópico
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 404
+                    title: Recurso não encontrado
+                    detail: O tópico informado não existe
+                    instance: /forumhub.io/api/v1/topics/1/delete
+        '418':
+          description: Privilégio insuficiente.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleInsufficientPrivilegeWhenDeletingTopic:
+                  summary: Exemplo de erro 418 na deleção do tópico
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 418
+                    title: Previlégio insuficiente
+                    detail: Usuário com privilégios insuficientes para realizar esta operação!
+                    instance: /forumhub.io/api/v1/topics/1/delete
+        '500':
+          description: Erro interno no serviço.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleInternalErrorWhenDeletingTopic:
+                  summary: Exemplo de erro 500 na deleção do tópico
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 500
+                    title: Falha inesperada
+                    detail: Erro inesperado no servidor. Mais detalhes no log.
+                    instance: /forumhub.io/api/v1/topics/1/delete
+        '503':
+          description: Serviço de usuário indisponível.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleServiceUnavailableWhenDeletingTopic:
+                  summary: Exemplo de erro 503 na deleção do tópico
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 503
+                    title: Falha no serviço de usuário
+                    detail: Serviço de usuário indisponível. Tente novamente.
+                    instance: /forumhub.io/api/v1/topics/1/delete
+      security:
+        - forumhub_auth: [ topic:delete ]
+  /topics/{topic_id}/answer:
+    post:
+      tags:
+        - Answer
+      summary: Responde um tópico no forum.
+      description: |- 
+        Responde um determinado tópico no forum.
+        
+        ### Observação
+        
+        * <font size="3">Esta operação requer que o usuário esteja ao menos autenticado, não é necessário um scope ou perfil específico.</font>
+      operationId: answerTopic
+      parameters:
+        - in: path
+          name: topic_id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: O id do tópico desejado.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnswerRequestDTO'
+      responses:
+        '201':
+          description: Resposta criada com sucesso.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/AnswerResponseDTO'
+              examples:
+                ExampleOfSuccessWhenCreateAnswer:
+                  $ref: '#/components/examples/ExampleOfSuccessWhenCreateAnswer'
+        '400':
+          description: Erro no lado do cliente.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleClientErrorWhenAnswerTopic:
+                  summary: Exemplo de erro 400 ao responder o tópico
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 400
+                    title: Falha de validação
+                    detail: A solução não pode ser vazia
+                    instance: /forumhub.io/api/v1/topics/1/answer
+        '401':
+          description: Usuário não autenticado.
+        '404':
+          description: |
+            Um dos seguintes objetos não existem:
+              - o tópico informado;
+              - o usuário que enviou a solicitação;
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleResourceNotFoundWhenAnswerTopic:
+                  summary: Exemplo de erro 404 ao responder o tópico
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 404
+                    title: Recurso não encontrado
+                    detail: O tópico informado não existe
+                    instance: /forumhub.io/api/v1/topics/1/answer
+        '500':
+          description: Erro interno no serviço.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleInternalErrorWhenAnswerTopic:
+                  summary: Exemplo de erro 500 ao responder o tópico
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 500
+                    title: Falha inesperada
+                    detail: Erro inesperado no servidor. Mais detalhes no log.
+                    instance: /forumhub.io/api/v1/topics/1/answer
+        '503':
+          description: Serviço de usuário indisponível.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleServiceUnavailableWhenAnswerTopic:
+                  summary: Exemplo de erro 503 ao responder o tópico
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 503
+                    title: Falha no serviço de usuário
+                    detail: Serviço de usuário indisponível. Tente novamente.
+                    instance: /forumhub.io/api/v1/topics/1/answer
+      security:
+        - forumhub_auth: [ ]
+  /topics/{topic_id}/answers/{answer_id}/markBestAnswer:
+    patch:
+      tags:
+        - Answer
+      summary: Marca uma resposta como melhor.
+      description: |- 
+        Marca uma determinada resposta como a mais aderente aquela pergunta.
+        
+        ### Observação
+        
+        * <font size="3">Esta operação requer que o usuário esteja ao menos autenticado, não é necessário um scope ou perfil específico.</font>
+      operationId: markBestAnswer
+      parameters:
+        - in: path
+          name: topic_id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: O id do tópico desejado.
+        - in: path
+          name: answer_id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: O id da resposta desejada.
+      responses:
+        '200':
+          description: Resposta marcada como melhor com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/HttpStatusMessage'
+              examples:
+                ExampleHttpStatusMessage:
+                  $ref: '#/components/examples/ExampleHttpStatusMessage'
+                  summary: Exemplo de resposta marcada como melhor com sucesso
+        '400':
+          description: Erro no lado do cliente.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleClientErrorWhenMarkBestAnswer:
+                  summary: Exemplo de erro 400 ao marcar uma resposta como melhor
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 400
+                    title: Falha de validação
+                    detail: O valor 'x' enviado é inválido
+                    instance: /forumhub.io/api/v1/topics/x/answers/1/markBestAnswer
+        '401':
+          description: Usuário não autenticado.
+        '404':
+          description: |
+            Um dos seguintes objetos não existem:
+              - o tópico informado;
+              - a resposta informada;
+              - o usuário que enviou a solicitação;
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleResourceNotFoundWhenMarkBestAnswer:
+                  summary: Exemplo de erro 404 ao marcar uma resposta como melhor
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 404
+                    title: Recurso não encontrado
+                    detail: O tópico informado não existe
+                    instance: /forumhub.io/api/v1/topics/1/answers/1/markBestAnswer
+        '418':
+          description: Privilégio insuficiente.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleInsufficientPrivilegeWhenMarkBestAnswer:
+                  summary: Exemplo de erro 418 ao marcar uma resposta como melhor
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 418
+                    title: Previlégio insuficiente
+                    detail: O tópico fornecido não pertence ao usuário atualmente logado
+                    instance: /forumhub.io/api/v1/topics/1/answers/1/markBestAnswer
+        '422':
+          description: Erro de business.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleBusinessErrorWhenMarkBestAnswer:
+                  summary: Exemplo de erro 422 ao marcar uma resposta como melhor
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 418
+                    title: Erro de business
+                    detail:
+                      Este tópico já possui a resposta [ID: 1] como melhor resposta
+                    instance: /forumhub.io/api/v1/topics/1/answers/2/markBestAnswer
+        '500':
+          description: Erro interno no serviço.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleInternalErrorWhenMarkBestAnswer:
+                  summary: Exemplo de erro 500 ao marcar uma resposta como melhor
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 500
+                    title: Falha inesperada
+                    detail: Erro inesperado no servidor. Mais detalhes no log.
+                    instance: /forumhub.io/api/v1/topics/1/answers/1/markBestAnswer
+        '503':
+          description: Serviço de usuário indisponível.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleServiceUnavailableWhenMarkBestAnswer:
+                  summary: Exemplo de erro 503 ao marcar uma resposta como melhor
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 503
+                    title: Falha no serviço de usuário
+                    detail: Serviço de usuário indisponível. Tente novamente.
+                    instance: /forumhub.io/api/v1/topics/1/answers/1/markBestAnswer
+      security:
+        - forumhub_auth: [ ]
+  /topics/{topic_id}/answers/{answer_id}/unmarkBestAnswer:
+    patch:
+      tags:
+        - Answer
+      summary: Desmarca uma resposta como melhor.
+      description: |- 
+        Desmarca uma determinada resposta como a mais aderente aquela pergunta.
+        
+        ### Observação
+        
+        * <font size="3">Esta operação requer que o usuário esteja ao menos autenticado, não é necessário um scope ou perfil específico.</font>
+      operationId: unmarkBestAnswer
+      parameters:
+        - in: path
+          name: topic_id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: O id do tópico desejado.
+        - in: path
+          name: answer_id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: O id da resposta desejada.
+      responses:
+        '200':
+          description: Resposta desmarcada como melhor com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/HttpStatusMessage'
+              examples:
+                ExampleHttpStatusMessage:
+                  $ref: '#/components/examples/ExampleHttpStatusMessage'
+                  summary: Exemplo de resposta desmarcada como melhor com sucesso
+        '400':
+          description: Erro no lado do cliente.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleClientErrorWhenUnmarkBestAnswer:
+                  summary: Exemplo de erro 400 ao desmarcar uma resposta como melhor
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 400
+                    title: Falha de validação
+                    detail: O valor 'x' enviado é inválido
+                    instance: /forumhub.io/api/v1/topics/x/answers/1/unmarkBestAnswer
+        '401':
+          description: Usuário não autenticado.
+        '404':
+          description: |
+            Um dos seguintes objetos não existem:
+              - o tópico informado;
+              - a resposta informada;
+              - o usuário que enviou a solicitação;
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleResourceNotFoundWhenUnmarkBestAnswer:
+                  summary: Exemplo de erro 404 ao desmarcar uma resposta como melhor
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 404
+                    title: Recurso não encontrado
+                    detail: O tópico informado não existe
+                    instance: /forumhub.io/api/v1/topics/1/answers/1/unmarkBestAnswer
+        '418':
+          description: Privilégio insuficiente.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleInsufficientPrivilegeWhenUnmarkBestAnswer:
+                  summary: Exemplo de erro 418 ao desmarcar uma resposta como melhor
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 418
+                    title: Previlégio insuficiente
+                    detail: O tópico fornecido não pertence ao usuário atualmente logado
+                    instance: /forumhub.io/api/v1/topics/1/answers/1/unmarkBestAnswer
+        '500':
+          description: Erro interno no serviço.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleInternalErrorWhenUnmarkBestAnswer:
+                  summary: Exemplo de erro 500 ao desmarcar uma resposta como melhor
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 500
+                    title: Falha inesperada
+                    detail: Erro inesperado no servidor. Mais detalhes no log.
+                    instance: /forumhub.io/api/v1/topics/1/answers/1/unmarkBestAnswer
+        '503':
+          description: Serviço de usuário indisponível.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleServiceUnavailableWhenUnmarkBestAnswer:
+                  summary: Exemplo de erro 503 ao desmarcar uma resposta como melhor
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 503
+                    title: Falha no serviço de usuário
+                    detail: Serviço de usuário indisponível. Tente novamente.
+                    instance: /forumhub.io/api/v1/topics/1/answers/1/unmarkBestAnswer
+      security:
+        - forumhub_auth: [ ]
+  /topics/{topic_id}/answers/{answer_id}/edit:
+    patch:
+      tags:
+        - Answer
+      summary: Edita uma resposta desejado.
+      description: |-
+        Edita uma resposta de um tópico existente no forum.
+        
+        ### Observações
+        
+        * <font size="3">Esta operação requer que o usuário autenticado tenha o scope `answer:edit`, não é necessário um perfil específico.</font>
+        * <font size="3">Um usuário com o perfil `BASIC`, só pode editar a resposta que ele mesmo o criou.</font>
+        * <font size="3">Um usuário com o perfil `ADM` ou `MOD` pode editar qualquer resposta, independente de quem o criou.</font>
+      operationId: updateAnswer
+      parameters:
+        - in: path
+          name: topic_id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: O id do tópico desejado.
+        - in: path
+          name: answer_id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: O id da resposta desejada.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnswerRequestDTO'
+      responses:
+        '200':
+          description: Resposta editada com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/AnswerResponseDTO'
+              examples:
+                ExampleOfSuccessWhenEditingAnswer:
+                  $ref: '#/components/examples/ExampleOfSuccessWhenEditingAnswer'
+        '400':
+          description: Erro no lado do cliente.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleClientErrorWhenEditingAnswer:
+                  summary: Exemplo de erro 400 na edição de uma resposta
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 400
+                    title: Falha de validação
+                    detail: O valor 'x' enviado é inválido
+                    instance: /forumhub.io/api/v1/topics/x/answers/1/edit
+        '401':
+          description: Usuário não autenticado.
+        '403':
+          description: Usuário sem permissão.
+        '404':
+          description: |
+            Um dos seguintes objetos não existem:
+              - o tópico informado;
+              - a resposta infomada;
+              - o usuário que enviou a solicitação;
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleResourceNotFoundWhenEditingAnswer:
+                  summary: Exemplo de erro 404 na edição de uma resposta
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 404
+                    title: Recurso não encontrado
+                    detail: A resposta informada não existe
+                    instance: /forumhub.io/api/v1/topics/1/answers/1/edit
+        '418':
+          description: Privilégio insuficiente.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleInsufficientPrivilegeWhenEditingAnswer:
+                  summary: Exemplo de erro 418 na edição de uma resposta
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 418
+                    title: Previlégio insuficiente
+                    detail: Usuário com privilégios insuficientes para realizar esta operação!
+                    instance: /forumhub.io/api/v1/topics/1/answers/1/edit
+        '422':
+          description: Erro de business.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleBusinessErrorWhenEditingAnswer:
+                  summary: Exemplo de erro 422 na edição de uma resposta
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 418
+                    title: Erro de business
+                    detail: A resposta pertence a um autor inexistente, ela não pode ser editada
+                    instance: /forumhub.io/api/v1/topics/1/answers/1/edit
+        '500':
+          description: Erro interno no serviço.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleInternalErrorWhenEditingAnswer:
+                  summary: Exemplo de erro 500 na edição de uma resposta
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 500
+                    title: Falha inesperada
+                    detail: Erro inesperado no servidor. Mais detalhes no log.
+                    instance: /forumhub.io/api/v1/topics/1/answers/1/edit
+        '503':
+          description: Serviço de usuário indisponível.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleServiceUnavailableWhenEditingAnswer:
+                  summary: Exemplo de erro 500 na edição de uma resposta
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 503
+                    title: Falha no serviço de usuário
+                    detail: Serviço de usuário indisponível. Tente novamente.
+                    instance: /forumhub.io/api/v1/topics/1/answers/1/edit
+      security:
+        - forumhub_auth: [ answer:edit ]
+  /topics/{topic_id}/answers/{answer_id}/delete:
+    delete:
+      tags:
+        - Answer
+      summary: Remove uma resposta desejada.
+      description: |- 
+        Remove uma resposta de um tópico existente no forum.
+        
+        ### Observações
+        
+        * <font size="3">Esta operação requer que o usuário autenticado tenha o scope `answer:delete`, não é necessário um perfil específico.</font>
+        * <font size="3">Um usuário com o perfil `BASIC`, só pode remover a resposta que ele mesmo o criou.</font>
+        * <font size="3">Um usuário com o perfil `ADM` ou `MOD` pode remover qualquer resposta, independente de quem o criou.</font>
+      operationId: deleteAnswer
+      parameters:
+        - in: path
+          name: topic_id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: O id do tópico desejado.
+        - in: path
+          name: answer_id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: O id da resposta desejada.
+      responses:
+        '200':
+          description: Resposa removida com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpStatusMessage'
+              examples:
+                ExampleHttpStatusMessage:
+                  $ref: '#/components/examples/ExampleHttpStatusMessage'
+                  summary: Exemplo de resposta removida com sucesso
+        '400':
+          description: Erro no lado do cliente.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleClientErrorWhenDeletingAnswer:
+                  summary: Exemplo de erro 400 na remoção de uma resposta
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 400
+                    title: Falha de validação
+                    detail: O valor 'x' enviado é inválido
+                    instance: /forumhub.io/api/v1/topics/x/answers/1/delete
+        '401':
+          description: Usuário não autenticado.
+        '403':
+          description: Usuário sem permissão.
+        '404':
+          description: |
+            Um dos seguintes objetos não existem:
+              - a resposta informada;
+              - o usuário que enviou a solicitação;
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleResourceNotFoundWhenDeletingAnswer:
+                  summary: Exemplo de erro 404 na remoção de uma resposta
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 404
+                    title: Recurso não encontrado
+                    detail: A resposta informada não existe
+                    instance: /forumhub.io/api/v1/topics/1/answers/1/delete
+        '418':
+          description: Privilégio insuficiente.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleInsufficientPrivilegeWhenDeletingAnswer:
+                  summary: Exemplo de erro 418 na remoção de uma resposta
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 418
+                    title: Previlégio insuficiente
+                    detail: Usuário com privilégios insuficientes para realizar esta operação!
+                    instance: /forumhub.io/api/v1/topics/1/answers/1/delete
+        '500':
+          description: Erro interno no serviço.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleInternalErrorWhenDeletingAnswer:
+                  summary: Exemplo de erro 500 na remoção de uma resposta
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 500
+                    title: Falha inesperada
+                    detail: Erro inesperado no servidor. Mais detalhes no log.
+                    instance: /forumhub.io/api/v1/topics/1/answers/1/delete
+        '503':
+          description: Serviço de usuário indisponível.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleServiceUnavailableWhenDeletingAnswer:
+                  summary: Exemplo de erro 503 na remoção de uma resposta
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 503
+                    title: Falha no serviço de usuário
+                    detail: Serviço de usuário indisponível. Tente novamente.
+                    instance: /forumhub.io/api/v1/topics/1/answers/1/delete
+      security:
+        - forumhub_auth: [ answer:delete ]
+  /courses/create:
+    post:
+      tags:
+        - Course
+      summary: Adiciona um novo curso no forum.
+      description: |-
+        Adiciona um novo curso no forum para ser associado com um tópico.
+        
+        ### Observação
+        
+        * <font size="3">Esta operação requer que o usuário autenticado tenha o scope `course:write` e possua o perfil `ADM`.</font>
+      operationId: createCourse
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourseRequestDTO'
+      responses:
+        '201':
+          description: Curso criado com sucesso.
+        '400':
+          description: Erro no lado do cliente.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleClientErrorWhenCreatingCourse:
+                  summary: Exemplo de erro 400 na criação de um curso
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 400
+                    title: Falha de validação
+                    detail: O nome do curso não pode ser vazio
+                    instance: /forumhub.io/api/v1/courses/create
+        '401':
+          description: Usuário não autenticado.
+        '403':
+          description: Usuário sem permissão.
+        '409':
+          description: Payload conflitante com outro curso.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleConflictWhenCreatingCourse:
+                  summary: Exemplo de erro 409 na criação de um curso
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 409
+                    title: Falha de restrição
+                    detail: Payload conflitante com outro registro
+                    instance: /forumhub.io/api/v1/courses/create
+        '413':
+          description: Payload com valor muito grande.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExamplePayloadTooLargeWhenCreatingCourse:
+                  summary: Exemplo de erro 413 na criação de um curso
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 413
+                    title: Falha de validação
+                    detail: Payload com valor muito grande
+                    instance: /forumhub.io/api/v1/courses/create
+        '500':
+          description: Erro interno no serviço.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleInternalErrorWhenCreatingCourse:
+                  summary: Exemplo de erro 500 na criação de um curso
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 500
+                    title: Falha inesperada
+                    detail: Erro inesperado no servidor. Mais detalhes no log.
+                    instance: /forumhub.io/api/v1/courses/create
+      security:
+        - forumhub_auth: [ course:write ]
+  /courses:
+    get:
+      tags:
+        - Course
+      summary: Obtém o curso especificado.
+      description: |- 
+        Obtém o curso especificado pertencente ao forum.
+        
+        ### Observação
+        
+        * <font size="3">Esta operação requer que o usuário esteja ao menos autenticado, não é necessário um scope ou perfil específico.</font>
+      operationId: getCourse
+      parameters:
+        - in: query
+          name: course_id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: O id do curso que se deseja obter.
+      responses:
+        '200':
+          description: Curso obtido com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/CourseResponseDTO'
+              examples:
+                ExampleOfSuccessWhenGettingCourse:
+                  $ref: '#/components/examples/ExampleOfSuccessWhenGettingCourse'
+        '400':
+          description: Erro no lado do cliente.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleClientErrorWhenGettingCourse:
+                  summary: Exemplo de erro 400 na obtenção de um curso
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 400
+                    title: Falha de validação
+                    detail: O valor 'x' enviado é inválido
+                    instance: /forumhub.io/api/v1/courses
+        '401':
+          description: Usuário não autenticado.
+        '404':
+          description: O curso informado não existe.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleResourceNotFoundWhenGettingCourse:
+                  summary: Exemplo de erro 404 na obtenção de um curso
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 404
+                    title: Recurso não encontrado
+                    detail: O curso informado não existe
+                    instance: /forumhub.io/api/v1/courses
+        '500':
+          description: Erro interno no serviço.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleInternalErrorWhenGettingCourse:
+                  summary: Exemplo de erro 500 na obtenção de um curso
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 500
+                    title: Falha inesperada
+                    detail: Erro inesperado no servidor. Mais detalhes no log.
+                    instance: /forumhub.io/api/v1/courses
+      security:
+        - forumhub_auth: [ ]
+  /courses/listAll:
+    get:
+      tags:
+        - Course
+      summary: Obtém uma lista de cursos do forum.
+      description: |-
+        Obtém uma lista de cursos do forum que estão ou não associados a algum tópico.
+        
+        ### Observação
+        
+        * <font size="3">Esta operação requer que o usuário esteja ao menos autenticado, não é necessário um scope ou perfil específico.</font>
+      operationId: getAllCourse
+      responses:
+        '200':
+          description: Lista de cursos obtidos com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseResponseCollection'
+              examples:
+                ExampleOfSuccessWhenGettingAllCourses:
+                  $ref: '#/components/examples/ExampleOfSuccessWhenGettingAllCourses'
+        '401':
+          description: Usuário não autenticado.
+        '500':
+          description: Erro interno no serviço.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleInternalErrorWhenGettingAllCourses:
+                  summary: Exemplo de erro 500 na obtenção de todos os cursos
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 500
+                    title: Falha inesperada
+                    detail: Erro inesperado no servidor. Mais detalhes no log.
+                    instance: /forumhub.io/api/v1/courses/listAll
+      security:
+        - forumhub_auth: [ ]
+  /courses/{course_id}/edit:
+    put:
+      tags:
+        - Course
+      summary: Edita um curso desejado.
+      description: |-
+        Edita um determinado curso existente no forum.
+        
+        ### Observação
+        
+        * <font size="3">Esta operação requer que o usuário autenticado tenha o scope `course:edit` e possua o perfil `ADM`.</font>
+      operationId: updateCourse
+      parameters:
+        - in: path
+          name: course_id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: O id do curso desejado.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourseRequestDTO'
+      responses:
+        '200':
+          description: Curso editado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/CourseResponseDTO'
+              examples:
+                ExampleOfSuccessWhenGettingCourse:
+                  $ref: '#/components/examples/ExampleOfSuccessWhenGettingCourse'
+        '400':
+          description: Erro no lado do cliente.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleClientErrorWhenEditingCourse:
+                  summary: Exemplo de erro 400 na edição de um curso
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 400
+                    title: Falha de validação
+                    detail: O nome do curso não pode ser vazio
+                    instance: /forumhub.io/api/v1/courses/1/edit
+        '401':
+          description: Usuário não autenticado.
+        '403':
+          description: Usuário sem permissão.
+        '404':
+          description: O curso informado não existe.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleResourceNotFoundWhenEditingCourse:
+                  summary: Exemplo de erro 404 na edição de um curso
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 404
+                    title: Recurso não encontrado
+                    detail: O curso informado não existe
+                    instance: /forumhub.io/api/v1/courses/1/edit
+        '500':
+          description: Erro interno no serviço.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleInternalErrorWhenEdittingCourse:
+                  summary: Exemplo de erro 500 na edição de um curso
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 500
+                    title: Falha inesperada
+                    detail: Erro inesperado no servidor. Mais detalhes no log.
+                    instance: /forumhub.io/api/v1/courses/1/edit
+      security:
+        - forumhub_auth: [ course:edit ]
+  /courses/{course_id}/delete:
+    delete:
+      tags:
+        - Course
+      summary: Remove um curso desejado.
+      description: |-
+        Remove um determinado curso existente no forum.
+        
+        ### Observação
+        
+        * <font size="3">Esta operação requer que o usuário autenticado tenha o scope `course:delete` e possua o perfil `ADM`.</font>
+      operationId: deleteCourse
+      parameters:
+        - in: path
+          name: course_id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: O id do curso desejado.
+      responses:
+        '200':
+          description: Curso removido com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpStatusMessage'
+              examples:
+                ExampleHttpStatusMessage:
+                  $ref: '#/components/examples/ExampleHttpStatusMessage'
+                  summary: Exemplo de curso removido com sucesso
+        '400':
+          description: Erro no lado do cliente.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleClientErrorWhenDeletingCourse:
+                  summary: Exemplo de erro 400 na deleção de um curso
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 400
+                    title: Falha de validação
+                    detail: O valor 'x' enviado é inválido
+                    instance: /forumhub.io/api/v1/courses/x/delete
+        '401':
+          description: Usuário não autenticado.
+        '403':
+          description: Usuário sem permissão.
+        '404':
+          description: O curso informado não existe.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleResourceNotFoundWhenDeletingCourse:
+                  summary: Exemplo de erro 404 na deleção de um curso
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 404
+                    title: Recurso não encontrado
+                    detail: O curso informado não existe
+                    instance: /forumhub.io/api/v1/courses/1/delete
+        '409':
+          description: O curso informado não pode ser removido porquê está associado a um tópico.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleConflictWhenDeletingCourse:
+                  summary: Exemplo de erro 409 na deleção de um curso
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 409
+                    title: Falha de restrição
+                    detail: O curso informado não pode ser removido porquê está associado a um tópico
+                    instance: /forumhub.io/api/v1/courses/1/delete
+        '500':
+          description: Erro interno no serviço.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleInternalErrorWhenDeletingCourse:
+                  summary: Exemplo de erro 500 na deleção de um curso
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 500
+                    title: Falha inesperada
+                    detail: Erro inesperado no servidor. Mais detalhes no log.
+                    instance: /forumhub.io/api/v1/courses/1/delete
+      security:
+        - forumhub_auth: [ course:delete ]
+components:
+  schemas:
+    Status:
+      type: string
+      minimum: 2
+      maximum: 2
+      enum:
+        - UNSOLVED
+        - SOLVED
+      description: o status do tópico
+      examples: [ UNSOLVED ]
+    Category:
+      type: string
+      enum:
+        - JAVA
+        - C
+        - CPLUSPLUS
+        - CSHARP
+        - GOLANG
+        - COMPUTATION
+        - QA
+      description: a categoria do curso que o tópico está associado
+      examples: [ QA ]
+    Author:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: o id do autor
+          examples: [ 15 ]
+        username:
+          type: string
+          description: o username do autor
+          examples: [ john_doe ]
+        email:
+          type: string
+          format: email
+          description: o email do autor
+          examples: [ doe@email.com ]
+        profile:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int32
+              description: o id do perfil do autor
+              examples: [ 3 ]
+            profileName:
+              type: string
+              minimum: 3
+              maximum: 3
+              enum:
+                - ADM
+                - MOD
+                - BASIC
+              description: o nome do perfil do autor
+              examples: [ BASIC ]
+          description: o perfil do autor
+      description: o autor do tópico ou da resposta
+    Course:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: o id do curso.
+          examples: [ 2 ]
+        name:
+          type: string
+          description: o nome do curso.
+          examples: [ Aprofundando em testes de software ]
+        category:
+          type: object
+          $ref: '#/components/schemas/Category'
+      description: o curso que o tópico está associado.
+    Topic:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: o id do tópico
+          exampes: [ 2 ]
+        title:
+          type: string
+          description: o título do tópico
+          examples: [ Dúvida quanto a utilização do @Builder ]
+        question:
+          type: string
+          description: a pergunta desse tópico
+          examples: [ "Como e onde posso utilizar a anotação @Builder do lombok?" ]
+        createdAt:
+          type: string
+          format: date-time
+          description: o timestamp de criação do tópico
+          examples: [ 1999-01-01T02:00:34.843034 ]
+        status:
+          type: string
+          $ref: '#/components/schemas/Status'
+        author:
+          type: object
+          $ref: '#/components/schemas/Author'
+        course:
+          type: object
+          $ref: '#/components/schemas/Course'
+        answer:
+          type: array
+          items:
+            type: object
+            $ref: '#/components/schemas/Answer'
+    Answer:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: o id da resposta de um tópico
+          examples: [ 15 ]
+        topic:
+          type: object
+          $ref: '#/components/schemas/Topic'
+        solution:
+          type: string
+          description: a solução para o tópico
+          examples: [ A anotação @Builder do Lombok é utilizada para facilitar a instanciação de objetos, fornecendo os parâmetros para as
+            respectivas propriedades declaradas na classe. ]
+        bestAnswer:
+          type: boolean
+          description: indica se essa foi a melhor solução para tópico
+          examples: [ false ]
+        author:
+          type: object
+          $ref: '#/components/schemas/Author'
+    CourseRequestDTO:
+      required:
+        - name
+      type: object
+      properties:
+        name:
+          type: string
+          description: o nome do curso
+          examples: [ Conhecendo os tipos de testes de software. ]
+        category:
+          type: object
+          $ref: '#/components/schemas/Category'
+    CourseResponseDTO:
+      type: object
+      $ref: '#/components/schemas/Course'
+    CourseResponseCollection:
+      type: array
+      items:
+        type: object
+        $ref: '#/components/schemas/Course'
+    TopicCreateRequestDTO:
+      required:
+        - title
+        - question
+        - course_id
+      type: object
+      properties:
+        title:
+          type: string
+          description: o título do tópico
+          examples: [ Dúvida quanto a utilização do @Builder ]
+        question:
+          type: string
+          description: a pergunta desse tópico
+          examples: [ "Como e onde posso utilizar a anotação @Builder do lombok?" ]
+        course_id:
+          type: integer
+          format: int32
+          description: o id do curso que o tópico pertence
+          examples: [ 1 ]
+    TopicUpdateRequestDTO:
+      type: object
+      properties:
+        title:
+          type: string
+          description: o novo título do tópico
+          examples: [ Dúvida quanto a utilização de uma anotação do Lombok ]
+        question:
+          type: string
+          description: a nova pergunta desse tópico
+          examples: [ "Como funciona a anotação @Data do Lombok?" ]
+        status:
+          type: object
+          $ref: '#/components/schemas/Status'
+        course_id:
+          type: integer
+          format: int32
+          description: o id do curso que o tópico pertence
+          examples: [ 1 ]
+    TopicResponseDTO:
+      type: object
+      $ref: '#/components/schemas/Topic'
+    TopicResponseDTOList:
+      type: array
+      items:
+        type: object
+        $ref: '#/components/schemas/Topic'
+    AnswerRequestDTO:
+      type: object
+      properties:
+        solution:
+          type: string
+          description: a solução para o tópico
+          examples: [ A anotação @Builder do Lombok é utilizada para facilitar a instanciação de objetos, fornecendo os parâmetros para as respectivas
+            propriedades declaradas na classe. ]
+    AnswerResponseDTO:
+      type: object
+      $ref: '#/components/schemas/Answer'
+    HttpStatusMessage:
+      type: object
+      properties:
+        message:
+          type: string
+          description: código de status da resposta de requisição
+          examples: [ HttpStatusCode OK ]
+    Problem:
+      type: string
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: o timestamp do erro.
+          examples: [ 1999-01-01T02:00:34.843034 ]
+        status:
+          type: int
+          format: int32
+          description: o status do erro.
+          examples: [ 404 ]
+        title:
+          type: string
+          description: descrição resumida do erro.
+          examples: [ Não encontrado. ]
+        detail:
+          type: string
+          description: descrição detalhada do erro.
+          examples: [ O tópico informado não existe. ]
+        instance:
+          type: string
+          description: a rota da requisição que causou o erro.
+          examples: [ /forumhub.io/api/v1/topics ]
+  examples:
+    ExampleOfSuccessWhenCreateTopic:
+      value:
+        topic:
+          id: 2
+          title: Dúvida quanto a utilização do @Builder
+          question: "Como e onde posso utilizar a anotação @Builder do lombok?"
+          createdAt: 1999-01-01T02:00:34.843034
+          status: UNSOLVED
+          author:
+            id: 15
+            username: john_doe
+            email: doe@email.com
+            profile:
+              profileName: BASIC
+          course:
+            id: 2
+            name: Aprofundando em testes de software
+            category: QA
+          answers: null
+    ExampleOfSuccessWhenGettingTopic:
+      value:
+        topic:
+          id: 2
+          title: Dúvida quanto a utilização do @Builder
+          question: "Como e onde posso utilizar a anotação @Builder do lombok?"
+          createdAt: 1999-01-01T02:00:34.843034
+          status: UNSOLVED
+          author:
+            id: 15
+            username: john_doe
+            email: doe@email.com
+            profile:
+              profileName: BASIC
+          course:
+            id: 2
+            name: Aprofundando em testes de software
+            category: JAVA
+          answers:
+            - id: 15
+              solution: "A anotação @Builder do Lombok é utilizada para facilitar a instanciação de objetos, fornecendo os parâmetros para as 
+              respectivas propriedades declaradas na classe."
+              bestAnswer: true
+              createdAt: 1999-01-01T02:00:34.843034
+              author:
+                id: 10
+                username: bob
+                email: bob@email.com
+                profile:
+                  profileName: BASIC
+    ExampleOfSuccessWhenGettingAllTopics:
+      value:
+        _embedded:
+          topicResponseDTOList:
+            - topic:
+                id: 2
+                title: Dúvida quanto a utilização do @Builder
+                question: "Como e onde posso utilizar a anotação @Builder do lombok?"
+                createdAt: 1999-01-01T02:00:34.843034
+                status: UNSOLVED
+                author:
+                  id: 15
+                  username: john_doe
+                  email: doe@email.com
+                  profile:
+                    profileName: BASIC
+                course:
+                  id: 2
+                  name: Aprofundando em testes de software
+                  category: JAVA
+                answers:
+                  - id: 15
+                    solution: A anotação @Builder do Lombok é utilizada para facilitar a instanciação de objetos, fornecendo os parâmetros para as
+                      respectivas propriedades declaradas na classe.
+                    bestAnswer: true
+                    createdAt: 1999-01-01T02:00:34.843034
+                    author:
+                      id: 10
+                      username: bob
+                      email: bob@email.com
+                      profile:
+                        profileName: BASIC
+        _links:
+          first:
+            href: http://localhost:8080/forumhub.io/api/v1/topics/listAll?page=0&size=1
+          self:
+            href: http://localhost:8080/forumhub.io/api/v1/topics/listAll?page=0&size=1
+          next:
+            href: http://localhost:8080/forumhub.io/api/v1/topics/listAll?page=1&size=1
+          last:
+            href: http://localhost:8080/forumhub.io/api/v1/topics/listAll?page=1&size=1
+        page:
+          size: 1
+          totalElements: 1
+          totalPages: 1
+          number: 0
+    ExampleOfSuccessWhenCreateAnswer:
+      summary: Exemplo de resposta criada com sucesso
+      value:
+        answer:
+          id: 15
+          solution:
+            A anotação @Builder do Lombok é utilizada para facilitar a instanciação de objetos,
+            fornecendo os parâmetros para as respectivas propriedades declaradas na classe.
+          bestAnswer: false
+          createdAt: 1999-01-01T02:00:34.843034
+          author:
+            id: 15
+            username: john_doe
+            email: doe@email.com
+            profile:
+              profileName: BASIC
+    ExampleOfSuccessWhenEditingAnswer:
+      summary: Exemplo de resposta editada com sucesso
+      value:
+        answer:
+          id: 15
+          solution:
+            A anotação @Builder do Lombok é utilizada para facilitar a instanciação de objetos,
+            fornecendo os parâmetros para as respectivas propriedades declaradas na classe.
+          bestAnswer: false
+          createdAt: 1999-01-01T02:00:34.843034
+          author:
+            id: 15
+            username: john_doe
+            email: doe@email.com
+            profile:
+              profileName: BASIC
+    ExampleOfSuccessWhenGettingCourse:
+      summary: Exemplo de curso obtido com sucesso
+      value:
+        course:
+          id: 2
+          name: Aprofundando em testes de software
+          category: QA
+    ExampleOfSuccessWhenGettingAllCourses:
+      summary: Exemplo de lista de cursos obtidos com sucesso
+      value:
+        course:
+          - id: 2
+            name: Aprofundando em testes de software
+            category: QA
+    ExampleHttpStatusMessage:
+      value:
+        message: HttpStatusCode OK
+  securitySchemes:
+    forumhub_auth:
+      type: oauth2
+      description: Essa API utiliza o protocolo OAuth2 com o fluxo `authorization_code` para conceder autorização aos recursos.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://authorization-server-module.onrender.com/oauth2/authorize
+          tokenUrl: https://authorization-server-module.onrender.com/oauth2/token
+          refreshUrl: https://authorization-server-module.onrender.com/oauth2/token
+          scopes:
+            topic:edit: edita um tópico no forum
+            topic:delete: remove um tópico no forum
+            course:write: cria um curso no forum
+            course:edit: edita um curso no forum
+            course:delete: remove um curso no forum
+            answer:edit: edita uma resposta no forum
+            answer:delete: remove uma resposta no forum
+

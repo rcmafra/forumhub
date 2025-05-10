@@ -67,10 +67,10 @@ springdoc:
   api-docs:
     enabled: true
     version: openapi_3_1
-    path: /forumhub.io/api/v1/openapi.yaml
+    path: /forumhub.io/api/v1/openapi-dev.yaml
   swagger-ui:
     enabled: true
-    url: openapi.yaml
+    url: openapi-dev.yaml
     path: /forumhub.io/api/v1/swagger-ui.html
     oauth:
       use-basic-authentication-with-access-code-grant: true
