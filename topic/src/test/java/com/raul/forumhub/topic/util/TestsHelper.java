@@ -132,7 +132,7 @@ public final class TestsHelper {
             courseList.add(Course.builder()
                     .id(2L)
                     .name("Gerenciamento de contêiners")
-                    .category(Course.Category.COMPUTATION)
+                    .category(Course.Category.CLOUD_COMPUTATION)
                     .build()
             );
             courseList.add(Course.builder()

@@ -32,8 +32,10 @@ public class Course {
         CPLUSPLUS,
         CSHARP,
         GOLANG,
-        COMPUTATION,
-        QA
+        QA,
+        CLOUD_COMPUTATION,
+        DevOps
+
 
     }
 
