@@ -112,6 +112,7 @@ public class AuthorizationServerConfig {
                 .scopes((scp) -> scp.addAll(Set.of(
                         "topic:delete", "topic:edit",
                         "course:write", "course:delete", "course:edit",
+                        "category:readAll",
                         "answer:delete", "answer:edit")
                 ))
                 .clientSettings(ClientSettings.builder()
