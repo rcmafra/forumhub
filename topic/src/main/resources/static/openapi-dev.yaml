@@ -36,13 +36,19 @@ info:
       - Remover uma resposta existente.
     
     ### Tag: Course
-    Responsável pelas operações relacionadas aos cursos, que servem como categorias para os tópicos. Permite:
+    Responsável pelas operações relacionadas aos cursos, utilizadas para categorizar os tópicos criados. Permite:
     
       - Criar um novo curso.
       - Listar todos os cursos disponíveis no Forumhub.
       - Obter os detalhes de um curso específico por seu ID.
       - Editar um curso existente.
       - Remover um curso existente.
+    
+    ### Tag: Category
+    Responsável pela operação de obtenção das categorias utilizadas para categorizar algum curso. Pemite:
+    
+      - Listar todas as categorias existentes.
+  
     
     [Repositório do Forumhub](https://github.com/rcmafra/forumhub)
 servers:
@@ -55,6 +61,8 @@ tags:
     description: Operações sobre alguma resposta associada a algum tópico.
   - name: Course
     description: Operações sobre algum curso associado a algum tópico.
+  - name: Category
+    description: Operação de obtenção das categorias existentes.
 paths:
   /topics/create:
     post:
@@ -1672,6 +1680,49 @@ paths:
                     instance: /forumhub.io/api/v1/courses/1/delete
       security:
         - forumhub_auth: [ course:delete ]
+  /categories/listAll:
+    get:
+      tags:
+        - Category
+      summary: Obtém uma lista de categorias do forum.
+      description: |-
+        Obtém uma lista de categorias do forum que são associadas a algum curso.
+
+        ### Observação
+        
+        * <font size="3">Esta operação requer que o usuário autenticado tenha o scope `category:readAll` e possua o perfil `ADM`.</font>
+      operationId: getAllCategory
+      responses:
+        '200':
+          description: Lista de categorias obtidas com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryResponseCollection'
+              examples:
+                ExampleOfSuccessWhenGettingAllCategories:
+                  $ref: '#/components/examples/ExampleOfSuccessWhenGettingAllCategories'
+        '401':
+          description: Usuário não autenticado.
+        '403':
+          description: Usuário sem permissão.
+        '500':
+          description: Erro interno no serviço.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                ExampleInternalErrorWhenGettingAllCategories:
+                  summary: Exemplo de erro 500 na obtenção de todas as categorias
+                  value:
+                    timestamp: 1999-01-01T02:00:34.843034
+                    status: 500
+                    title: Falha inesperada
+                    detail: Erro inesperado no servidor. Mais detalhes no log.
+                    instance: /forumhub.io/api/v1/categories/listAll
+      security:
+        - forumhub_auth: [ category:readAll ]
 components:
   schemas:
     Status:
@@ -1691,8 +1742,9 @@ components:
         - CPLUSPLUS
         - CSHARP
         - GOLANG
-        - COMPUTATION
         - QA
+        - CLOUD_COMPUTATION
+        - DevOps
       description: a categoria do curso que o tópico está associado
       examples: [ QA ]
     Author:
@@ -1826,6 +1878,11 @@ components:
       items:
         type: object
         $ref: '#/components/schemas/Course'
+    CategoryResponseCollection:
+      type: array
+      items:
+        type: objetc
+        $ref: '#/components/schemas/Category'
     TopicCreateRequestDTO:
       required:
         - title
@@ -2055,9 +2112,33 @@ components:
       summary: Exemplo de lista de cursos obtidos com sucesso
       value:
         course:
-          - id: 2
+          - id: 1
             name: Aprofundando em testes de software
             category: QA
+          - id: 2
+            name: Introdução à Linguagem C
+            category: C
+          - id: 3
+            name: Melhores práticas de escalabilidade
+            category: CLOUD_COMPUTATION
+          - id: 4
+            name: Introdução sobre CI/CD
+            category: DevOps
+          - id: 5
+            name: Programação Avançada em C++
+            category: C++
+    ExampleOfSuccessWhenGettingAllCategories:
+      summary: Exemplo de lista de categorias obtidas com sucesso
+      value:
+        category:
+          - JAVA
+          - C
+          - CPLUSPLUS
+          - CSHARP
+          - GOLANG
+          - QA
+          - CLOUD_COMPUTATION
+          - DevOps
     ExampleHttpStatusMessage:
       value:
         message: HttpStatusCode OK
@@ -2076,6 +2157,7 @@ components:
             course:write: cria um curso no forum
             course:edit: edita um curso no forum
             course:delete: remove um curso no forum
+            category:readAll: obtém todas as categorias do forum
             answer:edit: edita uma resposta no forum
             answer:delete: remove uma resposta no forum
 
