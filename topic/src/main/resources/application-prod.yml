@@ -49,6 +49,11 @@ spring:
           auth-server:
             issuer-uri: ${ISSUER_URI}
 
+  #Disable devtools in production environment
+  devtools:
+    restart:
+      enabled: false
+
 #Topic API port
 server:
   port: 8080
