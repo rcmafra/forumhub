@@ -28,7 +28,7 @@ spring:
 
 #User API port
 server:
-  port: ${PORT}
+  port: 8080
   ssl:
     enabled: false
 
@@ -37,11 +37,11 @@ springdoc:
   api-docs:
     enabled: true
     version: openapi_3_1
-    path: ${PATH_OPEN_API}
+    path: /forumhub.io/api/v1/openapi-prod.yaml
   swagger-ui:
     enabled: true
-    url: openapi.yaml
-    path: ${PATH_SWAGGER_UI}
+    url: openapi-prod.yaml
+    path: /forumhub.io/api/v1/swagger-ui.html
     oauth:
       use-basic-authentication-with-access-code-grant: true
       use-pkce-with-authorization-code-grant: true
