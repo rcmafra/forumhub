@@ -21,6 +21,6 @@ public class CategoryController {
     @PreAuthorize("hasRole('ADM') and hasAuthority('SCOPE_category:readAll')")
     @GetMapping("/listAll")
     public ResponseEntity<CategoryResponseCollection> getAllCategories() {
-        return ResponseEntity.ok(new CategoryResponseCollection(this.categoryService.getCategories()));
+        return ResponseEntity.ok(new CategoryResponseCollection(this.categoryService.getAllCategories()));
     }
 }

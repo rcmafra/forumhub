@@ -8,7 +8,7 @@ import java.util.List;
 @Service
 public class CategoryService {
 
-    public List<Course.Category> getCategories() {
+    public List<Course.Category> getAllCategories() {
         return List.of(Course.Category.values());
     }
 }
