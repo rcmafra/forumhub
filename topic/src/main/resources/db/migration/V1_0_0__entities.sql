@@ -68,10 +68,10 @@ WHERE NOT EXISTS(SELECT 1
                  WHERE profile = 'ANONYMOUS');
 
 INSERT INTO profile (profile)
-SELECT 'ADM'
+SELECT 'BASIC'
 WHERE NOT EXISTS(SELECT 1
                  FROM profile
-                 WHERE profile = 'ADM');
+                 WHERE profile = 'BASIC');
 
 INSERT INTO profile (profile)
 SELECT 'MOD'
@@ -80,16 +80,16 @@ WHERE NOT EXISTS(SELECT 1
                  WHERE profile = 'MOD');
 
 INSERT INTO profile (profile)
-SELECT 'BASIC'
+SELECT 'ADM'
 WHERE NOT EXISTS(SELECT 1
                  FROM profile
-                 WHERE profile = 'BASIC');
+                 WHERE profile = 'ADM');
 
 
 INSERT INTO hub.users
 (user_id, first_name, last_name, username, email, "password", is_account_non_expired, is_account_non_locked,
  is_credentials_non_expired, is_enabled, profile_id)
-SELECT 0,
+SELECT 1,
        'Anonymous',
        'Anonymous',
        'anonymous',
@@ -102,7 +102,7 @@ SELECT 0,
        1
 WHERE NOT EXISTS (SELECT 1
                   FROM hub.users
-                  WHERE user_id = 0
+                  WHERE user_id = 1
                     AND first_name = 'Anonymous'
                     AND last_name = 'Anonymous'
                     AND username = 'anonymous'
@@ -112,7 +112,7 @@ WHERE NOT EXISTS (SELECT 1
 INSERT INTO hub.users
 (user_id, first_name, last_name, username, email, "password", is_account_non_expired, is_account_non_locked,
  is_credentials_non_expired, is_enabled, profile_id)
-SELECT 1,
+SELECT 2,
        'adm',
        'adm',
        'adm',
@@ -125,7 +125,7 @@ SELECT 1,
        2
 WHERE NOT EXISTS (SELECT 1
                   FROM hub.users
-                  WHERE user_id = 1
+                  WHERE user_id = 2
                     AND first_name = 'adm'
                     AND last_name = 'adm'
                     AND username = 'adm'
@@ -135,7 +135,7 @@ WHERE NOT EXISTS (SELECT 1
 INSERT INTO hub.users
 (user_id, first_name, last_name, username, email, "password", is_account_non_expired, is_account_non_locked,
  is_credentials_non_expired, is_enabled, profile_id)
-SELECT 2,
+SELECT 3,
        'mod',
        'mod',
        'mod',
@@ -148,7 +148,7 @@ SELECT 2,
        3
 WHERE NOT EXISTS (SELECT 1
                   FROM hub.users
-                  WHERE user_id = 2
+                  WHERE user_id = 3
                     AND first_name = 'mod'
                     AND last_name = 'mod'
                     AND username = 'mod'
