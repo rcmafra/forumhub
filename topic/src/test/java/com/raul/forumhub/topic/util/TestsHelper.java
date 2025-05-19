@@ -19,7 +19,7 @@ public final class TestsHelper {
                     .question("Como utilizar o Feign Client para integração do serviço x?")
                     .createdAt(LocalDateTime.of(2024, 8, 10, 20, 5))
                     .status(Status.UNSOLVED)
-                    .author(AuthorHelper.authorList().get(0))
+                    .author(AuthorHelper.authorList().get(1))
                     .course(CourseHelper.courseList().get(0))
                     .build()
             );
@@ -29,7 +29,7 @@ public final class TestsHelper {
                     .question("Como utilizar o Rosa/OpenShift para implantação do serviço x?")
                     .createdAt(LocalDateTime.of(2023, 10, 10, 15, 5))
                     .status(Status.UNSOLVED)
-                    .author(AuthorHelper.authorList().get(1))
+                    .author(AuthorHelper.authorList().get(2))
                     .course(CourseHelper.courseList().get(1))
                     .build()
             );
@@ -39,7 +39,7 @@ public final class TestsHelper {
                     .question("Quais as boas práticas na execução dos testes end-to-end?")
                     .createdAt(LocalDateTime.of(2024, 10, 1, 11, 0))
                     .status(Status.SOLVED)
-                    .author(AuthorHelper.authorList().get(3))
+                    .author(AuthorHelper.authorList().get(0))
                     .course(CourseHelper.courseList().get(2))
                     .build()
             );
@@ -49,7 +49,7 @@ public final class TestsHelper {
                     .question("Não consigo entender por que x configuração não funciona")
                     .createdAt(LocalDateTime.of(2023, 1, 15, 14, 0))
                     .status(Status.UNSOLVED)
-                    .author(AuthorHelper.authorList().get(0))
+                    .author(AuthorHelper.authorList().get(1))
                     .course(CourseHelper.courseList().get(0))
                     .answers(Collections.emptySet())
                     .build());
@@ -84,7 +84,7 @@ public final class TestsHelper {
                     .solution("Resposta do primeiro tópico")
                     .bestAnswer(false)
                     .createdAt(LocalDateTime.now())
-                    .author(AuthorHelper.authorList().get(1))
+                    .author(AuthorHelper.authorList().get(2))
                     .build()
             );
             answerList.add(Answer.builder()
@@ -93,7 +93,7 @@ public final class TestsHelper {
                     .solution("Resposta do segundo tópico")
                     .bestAnswer(true)
                     .createdAt(LocalDateTime.now())
-                    .author(AuthorHelper.authorList().get(0))
+                    .author(AuthorHelper.authorList().get(1))
                     .build()
             );
             answerList.add(Answer.builder()
@@ -102,7 +102,7 @@ public final class TestsHelper {
                     .solution("Resposta do terceiro tópico")
                     .bestAnswer(false)
                     .createdAt(LocalDateTime.now())
-                    .author(AuthorHelper.authorList().get(2))
+                    .author(AuthorHelper.authorList().get(3))
                     .build()
             );
             answerList.add(Answer.builder()
@@ -111,7 +111,7 @@ public final class TestsHelper {
                     .solution("Resposta do primeiro tópico")
                     .bestAnswer(false)
                     .createdAt(LocalDateTime.now())
-                    .author(AuthorHelper.authorList().get(3))
+                    .author(AuthorHelper.authorList().get(0))
                     .build()
             );
             return answerList;
@@ -157,32 +157,33 @@ public final class TestsHelper {
             final List<Author> authorList = new ArrayList<>();
             authorList.add(Author.builder()
                     .id(1L)
-                    .username("Jose")
-                    .email("jose@email.com")
+                    .username("anonymous")
+                    .email("anonymous@email.com")
                     .profile(ProfileHelper.profileList().get(0))
                     .build()
             );
             authorList.add(Author.builder()
                     .id(2L)
-                    .username("Maria")
-                    .email("maria@email.com")
+                    .username("Jose")
+                    .email("jose@email.com")
                     .profile(ProfileHelper.profileList().get(1))
                     .build()
             );
             authorList.add(Author.builder()
                     .id(3L)
-                    .username("Joao")
-                    .email("joao@email.com")
+                    .username("Maria")
+                    .email("maria@email.com")
                     .profile(ProfileHelper.profileList().get(2))
                     .build()
             );
             authorList.add(Author.builder()
                     .id(4L)
-                    .username("Anonymous")
-                    .email("anonymous@email.com")
-                    .profile(ProfileHelper.profileList().get(0))
+                    .username("Joao")
+                    .email("joao@email.com")
+                    .profile(ProfileHelper.profileList().get(3))
                     .build()
             );
+
             return authorList;
         }
 
@@ -194,22 +195,22 @@ public final class TestsHelper {
             final List<Profile> profileList = new ArrayList<>();
             profileList.add(Profile.builder()
                     .id(1L)
-                    .profileName(Profile.ProfileName.BASIC)
+                    .profileName(Profile.ProfileName.ANONYMOUS)
                     .build()
             );
             profileList.add(Profile.builder()
                     .id(2L)
-                    .profileName(Profile.ProfileName.MOD)
+                    .profileName(Profile.ProfileName.BASIC)
                     .build()
             );
             profileList.add(Profile.builder()
                     .id(3L)
-                    .profileName(Profile.ProfileName.ADM)
+                    .profileName(Profile.ProfileName.MOD)
                     .build()
             );
             profileList.add(Profile.builder()
                     .id(4L)
-                    .profileName(Profile.ProfileName.ANONYMOUS)
+                    .profileName(Profile.ProfileName.ADM)
                     .build()
             );
             return profileList;
