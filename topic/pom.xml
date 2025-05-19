@@ -164,7 +164,8 @@
                         <configuration>
                             <formats>HTML</formats>
                             <excludes>
-                                <exclude>com.raul.forumhub.topic.TopicApplication</exclude>
+                                <exclude>com/raul/forumhub/topic/TopicApplication*.class</exclude>
+                                <exclude>com/raul/forumhub/topic/security/TopicSecurityConfig*.class</exclude>
                             </excludes>
                         </configuration>
                     </execution>
@@ -176,7 +177,8 @@
                         <configuration>
                             <formats>HTML</formats>
                             <excludes>
-                                <exclude>com.raul.forumhub.topic.TopicApplication</exclude>
+                                <exclude>com/raul/forumhub/topic/TopicApplication*.class</exclude>
+                                <exclude>com/raul/forumhub/topic/security/TopicSecurityConfig*.class</exclude>
                             </excludes>
                         </configuration>
                     </execution>
