@@ -2,6 +2,7 @@ package com.raul.forumhub.topic.client;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties("forumhub.client.user")
 @Getter
 @Setter
+@NoArgsConstructor
 public class UserClientProperties {
 
     @NotNull
