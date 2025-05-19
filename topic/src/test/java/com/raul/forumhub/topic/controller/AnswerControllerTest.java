@@ -26,7 +26,6 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-
 import java.nio.charset.StandardCharsets;
 
 import static org.hamcrest.Matchers.is;
@@ -40,7 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = {AnswerController.class,
         TopicSecurityConfig.class, GlobalExceptionHandler.class})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class AnswerControllerTest {
+class AnswerControllerTest {
 
     @Autowired
     MockMvc mockMvc;
@@ -50,7 +49,7 @@ public class AnswerControllerTest {
 
     @MockBean
     ClientRegistrationRepository clientRegistrationRepository;
-    
+
     @Autowired
     ObjectMapper objectMapper;
 
@@ -108,6 +107,24 @@ public class AnswerControllerTest {
 
     }
 
+    @DisplayName("Should fail with status code 400 if solution property is sent empty when answer topic")
+    @Test
+    void shouldFailIfQuestionPropertyIsEmptyWhenAnswerTopic() throws Exception {
+        final AnswerRequestDTO answerRequestDTO = new AnswerRequestDTO("");
+
+        this.mockMvc.perform(post("/forumhub.io/api/v1/topics/{topic_id}/answer", 1)
+                        .with(jwt().jwt(JWT))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .content(new ObjectMapper()
+                                .writeValueAsString(answerRequestDTO)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.detail", is("A solução não pode ser vazia")));
+
+        BDDMockito.verifyNoInteractions(this.answerService);
+
+    }
+
 
     @DisplayName("Should answer topic with success if user is authenticated")
     @Test
@@ -115,7 +132,7 @@ public class AnswerControllerTest {
         final AnswerRequestDTO answerRequestDTO = new AnswerRequestDTO("Resposta teste");
 
         final AnswerResponseDTO answerResponseDTO = new AnswerResponseDTO(TestsHelper.AnswerHelper.answerList().get(0));
-                
+
         BDDMockito.given(this.answerService.answerTopic(1L, 2L, answerRequestDTO))
                 .willReturn(answerResponseDTO);
 
@@ -265,6 +282,26 @@ public class AnswerControllerTest {
                         .content(this.objectMapper
                                 .writeValueAsString(answerUpdateDTO)))
                 .andExpect(status().isBadRequest());
+    }
+
+    @DisplayName("Should fail with status code 400 if solution property is sent empty when edit answer")
+    @Test
+    void shouldFailIfSolutionPropertyIsEmptyWhenEditAnswer() throws Exception {
+        final AnswerRequestDTO answerUpdateDTO = new AnswerRequestDTO("");
+
+        this.mockMvc.perform(patch("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/edit",
+                        1, 1)
+                        .with(jwt().jwt(jwt -> jwt.claim("user_id", "2"))
+                                .authorities(new SimpleGrantedAuthority("SCOPE_answer:edit")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .content(new ObjectMapper()
+                                .writeValueAsString(answerUpdateDTO)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.detail", is("A solução não pode ser vazia")));
+
+        BDDMockito.verifyNoInteractions(this.answerService);
+
     }
 
     @DisplayName("Should edit answer with success if user authenticated has authority 'answer:edit'")

@@ -41,7 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = {CourseController.class,
         TopicSecurityConfig.class, GlobalExceptionHandler.class})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class CourseControllerTest {
+class CourseControllerTest {
 
     @Autowired
     MockMvc mockMvc;
@@ -104,7 +104,7 @@ public class CourseControllerTest {
 
 
     @DisplayName("Should fail with status code 403 when attempt create course if user is ADM, but " +
-            "hasn't authority course:create")
+                 "hasn't authority course:create")
     @Test
     void shouldFailToCreateCourseIfUserIsADMButHasNotSuitableAuthority() throws Exception {
         final CourseRequestDTO courseRequestDTO = new CourseRequestDTO(
@@ -124,7 +124,7 @@ public class CourseControllerTest {
 
 
     @DisplayName("Should fail with status code 403 when attempt create course if user has authority" +
-            " course:create, but isn't ADM")
+                 " course:create, but isn't ADM")
     @Test
     void shouldFailToCreateCourseIfUserHasSuitableAuthorityButNotIsADM() throws Exception {
         final CourseRequestDTO courseRequestDTO = new CourseRequestDTO(
@@ -144,7 +144,7 @@ public class CourseControllerTest {
     }
 
     @DisplayName("Should fail with status code 400 when create course if category sent is" +
-            " different of the enum types available")
+                 " different of the enum types available")
     @Test
     void shouldFailToCreateCourseIfEnumTypeSentNonExists() throws Exception {
         String request = """
@@ -166,9 +166,29 @@ public class CourseControllerTest {
         BDDMockito.verifyNoInteractions(this.courseService);
     }
 
+    @DisplayName("Should fail with status code 400 when create course if the course name property is empty")
+    @Test
+    void shouldFailToCreateCourseIfCourseNamePropertyIsEmpty() throws Exception {
+        final CourseRequestDTO courseRequestDTO = new CourseRequestDTO(
+                "", Course.Category.C);
+
+        this.mockMvc.perform(post("/forumhub.io/api/v1/courses/create")
+                        .with(jwt().authorities(
+                                new SimpleGrantedAuthority("SCOPE_course:write"),
+                                new SimpleGrantedAuthority("ROLE_ADM")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .content(new ObjectMapper()
+                                .writeValueAsString(courseRequestDTO)))
+                .andExpectAll(status().isBadRequest())
+                .andExpect(jsonPath("$.detail", is("O nome do curso não pode ser vazio")));
+
+        BDDMockito.verifyNoInteractions(this.courseService);
+
+    }
 
     @DisplayName("Should create course with success if user ADM authenticated " +
-            "has authority course:create")
+                 "has authority course:create")
     @Test
     void shouldCreateCourseWithSuccessIfAuthenticatedAndHasSuitableAuthority() throws Exception {
         final CourseRequestDTO courseRequestDTO = new CourseRequestDTO(
@@ -225,6 +245,48 @@ public class CourseControllerTest {
 
     }
 
+    @Test
+    @DisplayName("Should fail with status code 401 when get course if unauthenticated")
+    void shouldFailWhenGetCourseIfIsNotUnauthenticated() throws Exception {
+        this.mockMvc.perform(get("/forumhub.io/api/v1/courses")
+                        .queryParam("course_id", "1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isUnauthorized());
+
+        BDDMockito.verifyNoInteractions(this.courseService);
+
+    }
+
+    @Test
+    @DisplayName("Should fail with status code 400 when get course if provided unexpect value in uri parameter")
+    void shouldFailWhenGetCourseIfProvidedUnexpectedValueInParameter() throws Exception {
+        this.mockMvc.perform(get("/forumhub.io/api/v1/courses")
+                        .queryParam("course_id", "unexpect")
+                        .with(jwt())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isBadRequest());
+
+        BDDMockito.verifyNoInteractions(this.courseService);
+
+    }
+
+    @Test
+    @DisplayName("Shoud get course with success if everything is ok")
+    void shouldGetCourseWithSuccessIfEverythingIsOk() throws Exception {
+        this.mockMvc.perform(get("/forumhub.io/api/v1/courses")
+                        .queryParam("course_id", "1")
+                        .with(jwt())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isOk());
+
+        BDDMockito.verify(this.courseService).getCourseById(1L);
+        BDDMockito.verifyNoMoreInteractions(this.courseService);
+
+    }
+
 
     @DisplayName("Should fail with status code 401 when edit course if unauthenticated")
     @Test
@@ -244,7 +306,7 @@ public class CourseControllerTest {
 
 
     @DisplayName("Should fail with status code 403 when attempt edit course if user is ADM, but " +
-            "hasn't authority course:edit")
+                 "hasn't authority course:edit")
     @Test
     void shouldFailToEditCourseIfUserIsADMButHasNotSuitableAuthority() throws Exception {
         final CourseRequestDTO courseUpdateDTO = new CourseRequestDTO("Como criar uma API Rest escalável", Course.Category.C);
@@ -263,7 +325,7 @@ public class CourseControllerTest {
 
 
     @DisplayName("Should fail with status code 403 when attempt edit course if user has authority" +
-            " course:edit, but isn't ADM")
+                 " course:edit, but isn't ADM")
     @Test
     void shouldFailToEditCourseIfUserHasSuitableAuthorityButNotIsADM() throws Exception {
         final CourseRequestDTO courseUpdateDTO = new CourseRequestDTO("Como criar uma API Rest escalável", Course.Category.C);
@@ -275,6 +337,27 @@ public class CourseControllerTest {
                         .content(new ObjectMapper()
                                 .writeValueAsString(courseUpdateDTO)))
                 .andExpect(status().isForbidden());
+
+        BDDMockito.verifyNoInteractions(this.courseService);
+
+    }
+
+    @DisplayName("Should fail with status code 400 when attempt edit course if course name property " +
+                 "of DTO object is sent empty")
+    @Test
+    void shouldFailIfCourseNamePropertyOfDtoObjectIsEmptyWhenEditCourse() throws Exception {
+        final CourseRequestDTO courseUpdateDTO = new CourseRequestDTO("", Course.Category.C);
+
+        this.mockMvc.perform(put("/forumhub.io/api/v1/courses/{course_id}/edit", 1L)
+                        .with(jwt().authorities(
+                                new SimpleGrantedAuthority("SCOPE_course:edit"),
+                                new SimpleGrantedAuthority("ROLE_ADM")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .content(new ObjectMapper()
+                                .writeValueAsString(courseUpdateDTO)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.detail", is("O nome do curso não pode ser vazio")));
 
         BDDMockito.verifyNoInteractions(this.courseService);
 
@@ -322,7 +405,7 @@ public class CourseControllerTest {
 
 
     @DisplayName("Should fail with status code 403 when attempt delete course if user is ADM, but " +
-            "hasn't authority course:delete")
+                 "hasn't authority course:delete")
     @Test
     void shouldFailToDeleteCourseIfUserIsADMButHasNotSuitableAuthority() throws Exception {
         this.mockMvc.perform(delete("/forumhub.io/api/v1/courses/{course_id}/delete", 2L)
@@ -337,7 +420,7 @@ public class CourseControllerTest {
 
 
     @DisplayName("Should fail with status code 403 when attempt delete course if user has authority" +
-            " course:delete, but isn't ADM")
+                 " course:delete, but isn't ADM")
     @Test
     void shouldFailToDeleteCourseIfUserHasSuitableAuthorityButNotIsADM() throws Exception {
         this.mockMvc.perform(delete("/forumhub.io/api/v1/courses/{course_id}/delete", 2L)
@@ -351,7 +434,7 @@ public class CourseControllerTest {
     }
 
     @DisplayName("Should delete course with success if user ADM authenticated and " +
-            "has authority 'course:delete'")
+                 "has authority 'course:delete'")
     @Test
     void shouldDeleteCourseWithSuccessIfAuthenticatedAndHasSuitableAuthority() throws Exception {
         BDDMockito.doNothing().when(this.courseService).deleteCourse(2L);

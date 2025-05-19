@@ -122,6 +122,46 @@ class TopicControllerTest {
 
     }
 
+    @DisplayName("Should fail with status code 400 if title property is sent empty when create topic")
+    @Test
+    void shouldFailIfTitlePropertyIsEmptyWhenCreateTopic() throws Exception {
+        final TopicCreateRequestDTO topicCreateRequestDTO = new TopicCreateRequestDTO("",
+                "Como utilizar o Feign Client para integração do serviço x?",
+                1L);
+
+        this.mockMvc.perform(post("/forumhub.io/api/v1/topics/create")
+                        .with(jwt().jwt(JWT))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .content(new ObjectMapper()
+                                .writeValueAsString(topicCreateRequestDTO)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.detail", is("O título não pode ser vazio")));
+
+        BDDMockito.verifyNoInteractions(this.topicService);
+
+    }
+
+
+    @DisplayName("Should fail with status code 400 if question property is sent empty when create topic")
+    @Test
+    void shouldFailIfQuestionPropertyIsEmptyWhenCreateTopic() throws Exception {
+        final TopicCreateRequestDTO topicCreateRequestDTO = new TopicCreateRequestDTO("Dúvida na utilização do Feign Client",
+                "",
+                1L);
+
+        this.mockMvc.perform(post("/forumhub.io/api/v1/topics/create")
+                        .with(jwt().jwt(JWT))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .content(new ObjectMapper()
+                                .writeValueAsString(topicCreateRequestDTO)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.detail", is("A pergunta não pode ser vazia")));
+
+        BDDMockito.verifyNoInteractions(this.topicService);
+
+    }
 
     @DisplayName("Should create topic with success if user is authenticated")
     @Test
@@ -573,6 +613,53 @@ class TopicControllerTest {
 
     }
 
+    @DisplayName("Should fail with status code 400 if title property is sent empty when edit topic")
+    @Test
+    void shouldFailIfTitlePropertyIsEmptyWhenEditTopic() throws Exception {
+        final TopicUpdateRequestDTO topicUpdateRequestDTO = new TopicUpdateRequestDTO(
+                "",
+                "Como posso integrar minha API com o Elasticsearch para monitoração?",
+                Status.UNSOLVED, 1L
+        );
+
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/edit", 1)
+                        .with(jwt().jwt(JWT)
+                                .authorities(new SimpleGrantedAuthority("SCOPE_topic:edit")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .content(new ObjectMapper()
+                                .writeValueAsString(topicUpdateRequestDTO)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.detail", is("O título não pode ser vazio")));
+
+        BDDMockito.verifyNoInteractions(this.topicService);
+
+    }
+
+
+    @DisplayName("Should fail with status code 400 if question property is sent empty when edit topic")
+    @Test
+    void shouldFailIfQuestionPropertyIsEmptyWhenEditTopic() throws Exception {
+        TopicUpdateRequestDTO topicUpdateRequestDTO = new TopicUpdateRequestDTO(
+                "Dúvida quanto a utilização do Elasticsearch",
+                "",
+                Status.UNSOLVED, 1L
+        );
+
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/edit", 1)
+                        .with(jwt().jwt(JWT)
+                                .authorities(new SimpleGrantedAuthority("SCOPE_topic:edit")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .content(new ObjectMapper()
+                                .writeValueAsString(topicUpdateRequestDTO)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.detail", is("A pergunta não pode ser vazia")));
+
+        BDDMockito.verifyNoInteractions(this.topicService);
+
+    }
+
 
     @DisplayName("Should fail with status code 400 when attempt update topic if topic_id property " +
                  "of query param is sent empty")
@@ -599,8 +686,78 @@ class TopicControllerTest {
 
     }
 
+    @DisplayName("Should edit topic of the other author with success if user authenticated has authority 'topic:edit'" +
+                 "and is ADM")
+    @Test
+    void shouldEditTopicOfTheOtherAuthorWithSuccessIfUserHasSuitableAuthorityAndIsADM() throws Exception {
+        final TopicUpdateRequestDTO topicUpdateRequestDTO = new TopicUpdateRequestDTO("Dúvida na utilização do WebClient",
+                "Como utilizar o WebClient para integração do serviço x?",
+                Status.UNSOLVED, 1L
+        );
 
-    @DisplayName("Should edit topic with success if user authenticated has authority 'topic:edit'")
+        Topic topic = TestsHelper.TopicHelper.topicList().get(0);
+        topic.setTitle("Dúvida na utilização do WebClient");
+        topic.setQuestion("Como utilizar o WebClient para integração do serviço x?");
+
+        BDDMockito.given(this.topicService.updateTopic(1L, 4L, topicUpdateRequestDTO))
+                .willReturn(new TopicResponseDTO(topic));
+
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/edit", 1)
+                        .with(jwt().jwt(jwt -> jwt.claim("user_id", "4"))
+                                .authorities(new SimpleGrantedAuthority("SCOPE_topic:edit")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .content(this.objectMapper
+                                .writeValueAsString(topicUpdateRequestDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.topic.title", is("Dúvida na utilização do WebClient")))
+                .andExpect(jsonPath("$.topic.question", is("Como utilizar o WebClient para " +
+                                                           "integração do serviço x?")));
+
+
+        BDDMockito.verify(this.topicService).updateTopic(1L, 4L, topicUpdateRequestDTO);
+        BDDMockito.verifyNoMoreInteractions(this.topicService);
+
+
+    }
+
+    @DisplayName("Should edit topic of the other author with success if user authenticated has authority 'topic:edit'" +
+                 "and is MOD")
+    @Test
+    void shouldEditTopicOfTheOtherAuthorWithSuccessIfUserHasSuitableAuthorityAndIsMOD() throws Exception {
+        final TopicUpdateRequestDTO topicUpdateRequestDTO = new TopicUpdateRequestDTO("Dúvida na utilização do WebClient",
+                "Como utilizar o WebClient para integração do serviço x?",
+                Status.UNSOLVED, 1L
+        );
+
+        Topic topic = TestsHelper.TopicHelper.topicList().get(0);
+        topic.setTitle("Dúvida na utilização do WebClient");
+        topic.setQuestion("Como utilizar o WebClient para integração do serviço x?");
+
+        BDDMockito.given(this.topicService.updateTopic(1L, 3L, topicUpdateRequestDTO))
+                .willReturn(new TopicResponseDTO(topic));
+
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/edit", 1)
+                        .with(jwt().jwt(jwt -> jwt.claim("user_id", "3"))
+                                .authorities(new SimpleGrantedAuthority("SCOPE_topic:edit")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .content(this.objectMapper
+                                .writeValueAsString(topicUpdateRequestDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.topic.title", is("Dúvida na utilização do WebClient")))
+                .andExpect(jsonPath("$.topic.question", is("Como utilizar o WebClient para " +
+                                                           "integração do serviço x?")));
+
+
+        BDDMockito.verify(this.topicService).updateTopic(1L, 3L, topicUpdateRequestDTO);
+        BDDMockito.verifyNoMoreInteractions(this.topicService);
+
+
+    }
+
+
+    @DisplayName("Topic owner should edit your topic with success if is authenticated has authority 'topic:edit'")
     @Test
     void shouldEditTopicWithSuccessIfUserHasSuitableAuthority() throws Exception {
         final TopicUpdateRequestDTO topicUpdateRequestDTO = new TopicUpdateRequestDTO("Dúvida na utilização do WebClient",
