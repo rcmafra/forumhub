@@ -40,7 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestClassOrder(ClassOrderer.ClassName.class)
 @Order(2)
-public class TopicControllerIT {
+class TopicControllerIT {
 
     @Autowired
     MockMvc mockMvc;
@@ -73,7 +73,7 @@ public class TopicControllerIT {
     static {
         JWT = Jwt.withTokenValue("token")
                 .header("alg", "none")
-                .claim("user_id", "1")
+                .claim("user_id", "2")
                 .build();
     }
 
@@ -153,8 +153,8 @@ public class TopicControllerIT {
                 "Como utilizar o Feign Client para integração do serviço x?",
                 1L);
 
-        BDDMockito.given(this.userClientRequest.getUserById(1L))
-                .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
+        BDDMockito.given(this.userClientRequest.getUserById(2L))
+                .willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
         this.mockMvc.perform(post("/forumhub.io/api/v1/topics/create")
                         .with(jwt().jwt(JWT))
@@ -179,8 +179,8 @@ public class TopicControllerIT {
                 "",
                 1L);
 
-        BDDMockito.given(this.userClientRequest.getUserById(1L))
-                .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
+        BDDMockito.given(this.userClientRequest.getUserById(2L))
+                .willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
         this.mockMvc.perform(post("/forumhub.io/api/v1/topics/create")
                         .with(jwt().jwt(JWT))
@@ -207,8 +207,8 @@ public class TopicControllerIT {
                 "Diferença entre o Feign Client, RestTemplate e WebClient",
                 1L);
 
-        BDDMockito.given(this.userClientRequest.getUserById(1L))
-                .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
+        BDDMockito.given(this.userClientRequest.getUserById(2L))
+                .willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
         this.mockMvc.perform(post("/forumhub.io/api/v1/topics/create")
                         .with(jwt().jwt(JWT))
@@ -219,7 +219,7 @@ public class TopicControllerIT {
                 .andExpect(status().isPayloadTooLarge())
                 .andExpect(jsonPath("$.detail", is("Payload com valor muito grande")));
 
-        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verify(this.userClientRequest).getUserById(2L);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
@@ -232,8 +232,8 @@ public class TopicControllerIT {
                 "Como utilizar o Feign Client para integração do serviço x?",
                 5L);
 
-        BDDMockito.given(this.userClientRequest.getUserById(1L))
-                .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
+        BDDMockito.given(this.userClientRequest.getUserById(2L))
+                .willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
         this.mockMvc.perform(post("/forumhub.io/api/v1/topics/create")
                         .with(jwt().jwt(JWT))
@@ -245,7 +245,7 @@ public class TopicControllerIT {
 
         Assertions.assertEquals(4, this.topicRepository.findAll().size());
 
-        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verify(this.userClientRequest).getUserById(2L);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
@@ -259,7 +259,7 @@ public class TopicControllerIT {
                 "Como utilizar o Feign Client para integração do serviço x?",
                 1L);
 
-        BDDMockito.given(this.userClientRequest.getUserById(1L))
+        BDDMockito.given(this.userClientRequest.getUserById(2L))
                 .willThrow(new RestClientException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
 
         this.mockMvc.perform(post("/forumhub.io/api/v1/topics/create")
@@ -272,7 +272,7 @@ public class TopicControllerIT {
 
         Assertions.assertEquals(4, this.topicRepository.findAll().size());
 
-        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verify(this.userClientRequest).getUserById(2L);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
@@ -287,8 +287,8 @@ public class TopicControllerIT {
                 "Como utilizar o Feign Client para integração do serviço x?",
                 1L);
 
-        BDDMockito.given(this.userClientRequest.getUserById(1L))
-                .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
+        BDDMockito.given(this.userClientRequest.getUserById(2L))
+                .willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
         this.mockMvc.perform(post("/forumhub.io/api/v1/topics/create")
                         .with(jwt().jwt(JWT))
@@ -300,11 +300,25 @@ public class TopicControllerIT {
 
         Assertions.assertEquals(5, this.topicRepository.findAll().size());
 
-        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verify(this.userClientRequest).getUserById(2L);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
 
+
+    @DisplayName("Should fail with status code 400 when request all topics if value of " +
+                 "property 'sort' of pagination properties not exists")
+    @Test
+    void shouldFailWhenRequestAllTopicIfSortPropertyValueNotExists() throws Exception {
+        this.mockMvc.perform(get("/forumhub.io/api/v1/topics/listAll")
+                        .queryParam("sort", "unexpected")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.detail",
+                        is("A propriedade 'unexpected' enviada não existe")));
+
+    }
 
     @DisplayName("Should return all topics unsorted with successful")
     @Test
@@ -606,8 +620,8 @@ public class TopicControllerIT {
                 Status.UNSOLVED, 1L
         );
 
-        BDDMockito.given(this.userClientRequest.getUserById(1L))
-                .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
+        BDDMockito.given(this.userClientRequest.getUserById(2L))
+                .willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/edit", "unexpected")
                         .with(jwt().jwt(JWT)
@@ -632,8 +646,8 @@ public class TopicControllerIT {
                 Status.UNSOLVED, 1L
         );
 
-        BDDMockito.given(this.userClientRequest.getUserById(1L))
-                .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
+        BDDMockito.given(this.userClientRequest.getUserById(2L))
+                .willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/edit", 1)
                         .with(jwt().jwt(JWT)
@@ -666,8 +680,8 @@ public class TopicControllerIT {
                 Status.UNSOLVED, 1L
         );
 
-        BDDMockito.given(this.userClientRequest.getUserById(1L))
-                .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
+        BDDMockito.given(this.userClientRequest.getUserById(2L))
+                .willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/edit", 1)
                         .with(jwt().jwt(JWT)
@@ -756,7 +770,7 @@ public class TopicControllerIT {
                 Status.UNSOLVED, 1L
         );
 
-        BDDMockito.given(this.userClientRequest.getUserById(1L))
+        BDDMockito.given(this.userClientRequest.getUserById(2L))
                 .willThrow(new RestClientException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/edit", 1)
@@ -775,7 +789,7 @@ public class TopicControllerIT {
                 () -> assertEquals("Como utilizar o Feign Client para integração do serviço x?", topic.getQuestion())
         );
 
-        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verify(this.userClientRequest).getUserById(2L);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
@@ -790,8 +804,8 @@ public class TopicControllerIT {
                 Status.UNSOLVED, 1L
         );
 
-        BDDMockito.given(this.userClientRequest.getUserById(1L))
-                .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
+        BDDMockito.given(this.userClientRequest.getUserById(2L))
+                .willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/edit", 2)
                         .with(jwt().jwt(JWT)
@@ -812,7 +826,7 @@ public class TopicControllerIT {
                 () -> assertEquals("Como utilizar o Rosa/OpenShift para implantação do serviço x?", topic.getQuestion())
         );
 
-        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verify(this.userClientRequest).getUserById(2L);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
@@ -856,6 +870,80 @@ public class TopicControllerIT {
     }
 
     @Transactional
+    @DisplayName("Should edit topic with success of unknown author when author id isn't one")
+    @Test
+    void shouldEditTopicWithSuccessOfUnknownAuthorWhenAuthorIdIsNotOne() throws Exception {
+        final TopicUpdateRequestDTO topicUpdateRequestDTO = new TopicUpdateRequestDTO(
+                "Dúvida na utilização do WebClient",
+                "Como utilizar o WebClient para integração do serviço x?",
+                Status.UNSOLVED, 1L
+        );
+
+        BDDMockito.given(this.userClientRequest.getUserById(3L))
+                .willReturn(TestsHelper.AuthorHelper.authorList().get(2));
+
+        this.authorRepository.findById(1L).ifPresent(author -> {
+            author.setId(7L);
+            this.authorRepository.save(author);
+        });
+
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/edit", 3)
+                        .with(jwt().jwt(jwt -> jwt.claim("user_id", "3"))
+                                .authorities(new SimpleGrantedAuthority("SCOPE_topic:edit")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .content(new ObjectMapper()
+                                .writeValueAsString(topicUpdateRequestDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.topic.title", is("Dúvida na utilização do WebClient")))
+                .andExpect(jsonPath("$.topic.question", is("Como utilizar o WebClient para " +
+                                                           "integração do serviço x?")));
+
+
+        BDDMockito.verify(this.userClientRequest).getUserById(3L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
+
+    }
+
+    @Transactional
+    @DisplayName("Should edit topic with success of unknown author when author username isn't anonymous")
+    @Test
+    void shouldEditTopicWithSuccessOfUnknownAuthorWhenUsernameIsNotAnonymous() throws Exception {
+        final TopicUpdateRequestDTO topicUpdateRequestDTO = new TopicUpdateRequestDTO(
+                "Dúvida na utilização do WebClient",
+                "Como utilizar o WebClient para integração do serviço x?",
+                Status.UNSOLVED, 1L
+        );
+
+        BDDMockito.given(this.userClientRequest.getUserById(3L))
+                .willReturn(TestsHelper.AuthorHelper.authorList().get(2));
+
+        this.authorRepository.findById(1L).ifPresent(author -> {
+            author.setUsername("João");
+            this.authorRepository.save(author);
+        });
+
+        this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/edit", 3)
+                        .with(jwt().jwt(jwt -> jwt.claim("user_id", "3"))
+                                .authorities(new SimpleGrantedAuthority("SCOPE_topic:edit")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .content(new ObjectMapper()
+                                .writeValueAsString(topicUpdateRequestDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.topic.title", is("Dúvida na utilização do WebClient")))
+                .andExpect(jsonPath("$.topic.question", is("Como utilizar o WebClient para " +
+                                                           "integração do serviço x?")));
+
+
+        BDDMockito.verify(this.userClientRequest).getUserById(3L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
+
+
+    }
+
+
+    @Transactional
     @DisplayName("Topic author should be able edit specified topic if authenticated, " +
                  "has authority 'topic:edit' and previous premisses are adequate")
     @Test
@@ -866,8 +954,8 @@ public class TopicControllerIT {
                 Status.UNSOLVED, 1L
         );
 
-        BDDMockito.given(this.userClientRequest.getUserById(1L))
-                .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
+        BDDMockito.given(this.userClientRequest.getUserById(2L))
+                .willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/edit", 1)
                         .with(jwt().jwt(JWT)
@@ -889,7 +977,7 @@ public class TopicControllerIT {
                 () -> assertEquals("Como utilizar o WebClient para integração do serviço x?", topic.getQuestion())
         );
 
-        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verify(this.userClientRequest).getUserById(2L);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
@@ -905,11 +993,11 @@ public class TopicControllerIT {
                 Status.UNSOLVED, 1L
         );
 
-        BDDMockito.given(this.userClientRequest.getUserById(3L))
-                .willReturn(TestsHelper.AuthorHelper.authorList().get(2));
+        BDDMockito.given(this.userClientRequest.getUserById(4L))
+                .willReturn(TestsHelper.AuthorHelper.authorList().get(3));
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/edit", 1)
-                        .with(jwt().jwt(jwt -> jwt.claim("user_id", "3"))
+                        .with(jwt().jwt(jwt -> jwt.claim("user_id", "4"))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:edit")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -928,7 +1016,7 @@ public class TopicControllerIT {
                 () -> assertEquals("Como utilizar o RestTemplate para integração do serviço x?", topic.getQuestion())
         );
 
-        BDDMockito.verify(this.userClientRequest).getUserById(3L);
+        BDDMockito.verify(this.userClientRequest).getUserById(4L);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
@@ -944,11 +1032,11 @@ public class TopicControllerIT {
                 Status.UNSOLVED, 1L
         );
 
-        BDDMockito.given(this.userClientRequest.getUserById(2L))
-                .willReturn(TestsHelper.AuthorHelper.authorList().get(1));
+        BDDMockito.given(this.userClientRequest.getUserById(3L))
+                .willReturn(TestsHelper.AuthorHelper.authorList().get(2));
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/topics/{topic_id}/edit", 1)
-                        .with(jwt().jwt(jwt -> jwt.claim("user_id", "2"))
+                        .with(jwt().jwt(jwt -> jwt.claim("user_id", "3"))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:edit")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -968,7 +1056,7 @@ public class TopicControllerIT {
                 () -> assertEquals("Quais são as anotações da API de validação do Spring?", topic.getQuestion())
         );
 
-        BDDMockito.verify(this.userClientRequest).getUserById(2L);
+        BDDMockito.verify(this.userClientRequest).getUserById(3L);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
@@ -994,8 +1082,8 @@ public class TopicControllerIT {
                  " param different of type number")
     @Test
     void shouldFailToDeleteTopicIfParamDifferentOfTypeNumber() throws Exception {
-        BDDMockito.given(this.userClientRequest.getUserById(1L))
-                .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
+        BDDMockito.given(this.userClientRequest.getUserById(2L))
+                .willReturn(TestsHelper.AuthorHelper.authorList().get(2));
 
         this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/{topic_id}/delete", "unexpected")
                         .with(jwt().jwt(JWT)
@@ -1028,7 +1116,7 @@ public class TopicControllerIT {
                  "return 404 not found status code")
     @Test
     void shouldFailToDeleteTopicIfUserServiceReturn404StatusCode() throws Exception {
-        BDDMockito.given(this.userClientRequest.getUserById(1L))
+        BDDMockito.given(this.userClientRequest.getUserById(2L))
                 .willThrow(new RestClientException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
 
         this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/{topic_id}/delete", 1)
@@ -1040,7 +1128,7 @@ public class TopicControllerIT {
 
         Assertions.assertEquals(4, this.topicRepository.findAll().size());
 
-        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verify(this.userClientRequest).getUserById(2L);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
@@ -1049,8 +1137,8 @@ public class TopicControllerIT {
     @DisplayName("Should fail with status code 418 if basic user attempt delete topic of other author")
     @Test
     void shouldFailIfBasicUserAttemptDeleteTopicOfOtherAuthor() throws Exception {
-        BDDMockito.given(this.userClientRequest.getUserById(1L))
-                .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
+        BDDMockito.given(this.userClientRequest.getUserById(2L))
+                .willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
         this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/{topic_id}/delete", 2)
                         .with(jwt().jwt(JWT)
@@ -1064,7 +1152,7 @@ public class TopicControllerIT {
 
         Assertions.assertEquals(4, this.topicRepository.findAll().size());
 
-        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verify(this.userClientRequest).getUserById(2L);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
@@ -1074,8 +1162,8 @@ public class TopicControllerIT {
                  "has authority 'topic:delete' and previous premisses are adequate")
     @Test
     void topicAuthorShouldDeleteSpecifiedTopicWithSuccessIfHasSuitableAuthority() throws Exception {
-        BDDMockito.given(this.userClientRequest.getUserById(1L))
-                .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
+        BDDMockito.given(this.userClientRequest.getUserById(2L))
+                .willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
         this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/{topic_id}/delete", 1)
                         .with(jwt().jwt(JWT)
@@ -1087,7 +1175,7 @@ public class TopicControllerIT {
 
         Assertions.assertEquals(3, this.topicRepository.findAll().size());
 
-        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verify(this.userClientRequest).getUserById(2L);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
@@ -1097,10 +1185,33 @@ public class TopicControllerIT {
                  "has authority 'topic:delete' and previous premisses are adequate")
     @Test
     void userADMShouldDeleteTopicOfOtherAuthorWithSuccessIfHasSuitableAuthority() throws Exception {
+        BDDMockito.given(this.userClientRequest.getUserById(4L))
+                .willReturn(TestsHelper.AuthorHelper.authorList().get(3));
+
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/{topic_id}/delete", 2)
+                        .with(jwt().jwt(jwt -> jwt.claim("user_id", "4"))
+                                .authorities(new SimpleGrantedAuthority("SCOPE_topic:delete")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isOk())
+                .andExpect(content().json("{\"message\":\"HttpStatusCode OK\"}"));
+
+        Assertions.assertEquals(3, this.topicRepository.findAll().size());
+
+        BDDMockito.verify(this.userClientRequest).getUserById(4L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
+
+    }
+
+    @Transactional
+    @DisplayName("User MOD should be able delete topic of other author if authenticated, " +
+                 "has authority 'topic:delete' and previous premisses are adequate")
+    @Test
+    void userMODShouldDeleteTopicOfOtherAuthorWithSuccessIfHasSuitableAuthority() throws Exception {
         BDDMockito.given(this.userClientRequest.getUserById(3L))
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(2));
 
-        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/{topic_id}/delete", 2)
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/{topic_id}/delete", 3)
                         .with(jwt().jwt(jwt -> jwt.claim("user_id", "3"))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_topic:delete")))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -1111,29 +1222,6 @@ public class TopicControllerIT {
         Assertions.assertEquals(3, this.topicRepository.findAll().size());
 
         BDDMockito.verify(this.userClientRequest).getUserById(3L);
-        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
-
-    }
-
-    @Transactional
-    @DisplayName("User MOD should be able delete topic of other author if authenticated, " +
-                 "has authority 'topic:delete' and previous premisses are adequate")
-    @Test
-    void userMODShouldDeleteTopicOfOtherAuthorWithSuccessIfHasSuitableAuthority() throws Exception {
-        BDDMockito.given(this.userClientRequest.getUserById(2L))
-                .willReturn(TestsHelper.AuthorHelper.authorList().get(1));
-
-        this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/{topic_id}/delete", 3)
-                        .with(jwt().jwt(jwt -> jwt.claim("user_id", "2"))
-                                .authorities(new SimpleGrantedAuthority("SCOPE_topic:delete")))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .characterEncoding(StandardCharsets.UTF_8))
-                .andExpect(status().isOk())
-                .andExpect(content().json("{\"message\":\"HttpStatusCode OK\"}"));
-
-        Assertions.assertEquals(3, this.topicRepository.findAll().size());
-
-        BDDMockito.verify(this.userClientRequest).getUserById(2L);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }

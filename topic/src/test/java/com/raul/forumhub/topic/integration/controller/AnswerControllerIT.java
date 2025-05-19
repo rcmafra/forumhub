@@ -4,8 +4,10 @@ package com.raul.forumhub.topic.integration.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.raul.forumhub.topic.client.UserClientRequest;
 import com.raul.forumhub.topic.domain.Answer;
+import com.raul.forumhub.topic.domain.Status;
 import com.raul.forumhub.topic.domain.Topic;
 import com.raul.forumhub.topic.dto.request.AnswerRequestDTO;
+import com.raul.forumhub.topic.dto.request.TopicUpdateRequestDTO;
 import com.raul.forumhub.topic.exception.RestClientException;
 import com.raul.forumhub.topic.repository.*;
 import com.raul.forumhub.topic.util.TestsHelper;
@@ -40,7 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestClassOrder(ClassOrderer.ClassName.class)
 @Order(1)
-public class AnswerControllerIT {
+class AnswerControllerIT {
 
     @Autowired
     MockMvc mockMvc;
@@ -50,6 +52,9 @@ public class AnswerControllerIT {
 
     @Autowired
     AnswerRepository answerRepository;
+
+    @Autowired
+    AuthorRepository authorRepository;
 
     @MockBean
     ClientRegistrationRepository clientRegistrationRepository;
@@ -64,7 +69,7 @@ public class AnswerControllerIT {
     static {
         JWT = Jwt.withTokenValue("token")
                 .header("alg", "none")
-                .claim("user_id", "1")
+                .claim("user_id", "2")
                 .build();
     }
 
@@ -137,8 +142,8 @@ public class AnswerControllerIT {
     void shouldFailIfQuestionPropertyIsEmptyWhenAnswerTopic() throws Exception {
         final AnswerRequestDTO answerRequestDTO = new AnswerRequestDTO("");
 
-        BDDMockito.given(this.userClientRequest.getUserById(1L))
-                .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
+        BDDMockito.given(this.userClientRequest.getUserById(2L))
+                .willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
         this.mockMvc.perform(post("/forumhub.io/api/v1/topics/{topic_id}/answer", 1)
                         .with(jwt().jwt(JWT))
@@ -187,7 +192,7 @@ public class AnswerControllerIT {
     void shouldFailToAnswerTopicIfUserServiceReturn404StatusCode() throws Exception {
         final AnswerRequestDTO answerRequestDTO = new AnswerRequestDTO("Resposta teste");
 
-        BDDMockito.given(this.userClientRequest.getUserById(1L))
+        BDDMockito.given(this.userClientRequest.getUserById(2L))
                 .willThrow(new RestClientException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
 
         this.mockMvc.perform(post("/forumhub.io/api/v1/topics/{topic_id}/answer", 1)
@@ -201,7 +206,7 @@ public class AnswerControllerIT {
 
         assertEquals(2, this.topicRepository.findById(1L).orElseThrow().getAnswers().size());
 
-        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verify(this.userClientRequest).getUserById(2L);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
 
@@ -215,8 +220,8 @@ public class AnswerControllerIT {
     void shouldAnswerTopicWithSuccessIfAuthenticated() throws Exception {
         final AnswerRequestDTO answerRequestDTO = new AnswerRequestDTO("Resposta teste");
 
-        BDDMockito.given(this.userClientRequest.getUserById(1L))
-                .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
+        BDDMockito.given(this.userClientRequest.getUserById(2L))
+                .willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
         this.mockMvc.perform(post("/forumhub.io/api/v1/topics/{topic_id}/answer", 1)
                         .with(jwt().jwt(JWT))
@@ -233,7 +238,7 @@ public class AnswerControllerIT {
                 () -> assertEquals("Resposta teste", answer.getSolution())
         );
 
-        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verify(this.userClientRequest).getUserById(2L);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
@@ -299,7 +304,7 @@ public class AnswerControllerIT {
                  "return 404 not found status code")
     @Test
     void shouldFailToMarkBestAnswerIfUserServiceReturn404StatusCode() throws Exception {
-        BDDMockito.given(this.userClientRequest.getUserById(1L)).
+        BDDMockito.given(this.userClientRequest.getUserById(2L)).
                 willThrow(new RestClientException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
 
         this.mockMvc.perform(patch("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/markBestAnswer",
@@ -317,7 +322,7 @@ public class AnswerControllerIT {
                         .findFirst().orElseThrow().isBestAnswer())
         );
 
-        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verify(this.userClientRequest).getUserById(2L);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
@@ -327,12 +332,12 @@ public class AnswerControllerIT {
                  "authenticated user isn't owner of topic")
     @Test
     void shouldFailToMarkBestAnswerIfAuthenticatedUserIsNotOwnerTopic() throws Exception {
-        BDDMockito.given(this.userClientRequest.getUserById(2L)).
-                willReturn(TestsHelper.AuthorHelper.authorList().get(1));
+        BDDMockito.given(this.userClientRequest.getUserById(3L)).
+                willReturn(TestsHelper.AuthorHelper.authorList().get(2));
 
         this.mockMvc.perform(patch("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/markBestAnswer",
                         1, 1)
-                        .with(jwt().jwt(jwt -> jwt.claim("user_id", "2")))
+                        .with(jwt().jwt(jwt -> jwt.claim("user_id", "3")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isIAmATeapot())
@@ -348,7 +353,7 @@ public class AnswerControllerIT {
                         .findFirst().orElseThrow().isBestAnswer())
         );
 
-        BDDMockito.verify(this.userClientRequest).getUserById(2L);
+        BDDMockito.verify(this.userClientRequest).getUserById(3L);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
@@ -358,8 +363,8 @@ public class AnswerControllerIT {
                  "yet not exists a answer for specified topic")
     @Test
     void shouldFailToMarkAnswerBestIfYetNotExistsAnswer() throws Exception {
-        BDDMockito.given(this.userClientRequest.getUserById(1L)).
-                willReturn(TestsHelper.AuthorHelper.authorList().get(0));
+        BDDMockito.given(this.userClientRequest.getUserById(2L)).
+                willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
         this.mockMvc.perform(patch("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/markBestAnswer",
                         4, 1)
@@ -378,7 +383,7 @@ public class AnswerControllerIT {
                 () -> assertEquals(0, topic.getAnswers().size())
         );
 
-        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verify(this.userClientRequest).getUserById(2L);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
@@ -388,12 +393,12 @@ public class AnswerControllerIT {
                  "exists a best answer for specified topic")
     @Test
     void shouldFailToMarkBestAnswerIfAlreadyExistsBestAnswer() throws Exception {
-        BDDMockito.given(this.userClientRequest.getUserById(2L)).
-                willReturn(TestsHelper.AuthorHelper.authorList().get(1));
+        BDDMockito.given(this.userClientRequest.getUserById(3L)).
+                willReturn(TestsHelper.AuthorHelper.authorList().get(2));
 
         this.mockMvc.perform(patch("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/markBestAnswer",
                         2, 2)
-                        .with(jwt().jwt(jwt -> jwt.claim("user_id", "2")))
+                        .with(jwt().jwt(jwt -> jwt.claim("user_id", "3")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isUnprocessableEntity())
@@ -408,7 +413,7 @@ public class AnswerControllerIT {
                         .findFirst().orElseThrow().isBestAnswer())
         );
 
-        BDDMockito.verify(this.userClientRequest).getUserById(2L);
+        BDDMockito.verify(this.userClientRequest).getUserById(3L);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
@@ -419,8 +424,8 @@ public class AnswerControllerIT {
                  "previous premisses are adequate")
     @Test
     void shouldMarkBestAnswerWithSuccessIfAuthenticated() throws Exception {
-        BDDMockito.given(this.userClientRequest.getUserById(1L)).
-                willReturn(TestsHelper.AuthorHelper.authorList().get(0));
+        BDDMockito.given(this.userClientRequest.getUserById(2L)).
+                willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
         this.mockMvc.perform(patch("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/markBestAnswer",
                         1, 1)
@@ -438,7 +443,7 @@ public class AnswerControllerIT {
                         .findFirst().orElseThrow().isBestAnswer())
         );
 
-        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verify(this.userClientRequest).getUserById(2L);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
@@ -524,7 +529,7 @@ public class AnswerControllerIT {
                  "return 404 not found status code")
     @Test
     void shouldFailToUnmarkBestAnswerIfUserServiceReturn404StatusCode() throws Exception {
-        BDDMockito.given(this.userClientRequest.getUserById(1L)).
+        BDDMockito.given(this.userClientRequest.getUserById(2L)).
                 willThrow(new RestClientException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
 
         this.mockMvc.perform(patch("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/unmarkBestAnswer",
@@ -543,7 +548,7 @@ public class AnswerControllerIT {
                         .findFirst().orElseThrow().isBestAnswer())
         );
 
-        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verify(this.userClientRequest).getUserById(2L);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
@@ -553,12 +558,12 @@ public class AnswerControllerIT {
                  "authenticated user isn't owner of topic")
     @Test
     void shouldFailToUnmarkBestAnswerIfAuthenticatedUserIsNotOwnerTopic() throws Exception {
-        BDDMockito.given(this.userClientRequest.getUserById(2L)).
-                willReturn(TestsHelper.AuthorHelper.authorList().get(1));
+        BDDMockito.given(this.userClientRequest.getUserById(3L)).
+                willReturn(TestsHelper.AuthorHelper.authorList().get(2));
 
         this.mockMvc.perform(patch("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/unmarkBestAnswer",
                         1, 1)
-                        .with(jwt().jwt(jwt -> jwt.claim("user_id", "2")))
+                        .with(jwt().jwt(jwt -> jwt.claim("user_id", "3")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isIAmATeapot())
@@ -574,7 +579,7 @@ public class AnswerControllerIT {
                         .findFirst().orElseThrow().isBestAnswer())
         );
 
-        BDDMockito.verify(this.userClientRequest).getUserById(2L);
+        BDDMockito.verify(this.userClientRequest).getUserById(3L);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
@@ -584,8 +589,8 @@ public class AnswerControllerIT {
                  "yet not exists a answer for specified topic")
     @Test
     void shouldFailToUnmarkAnswerBestIfYetNotExistsAnswer() throws Exception {
-        BDDMockito.given(this.userClientRequest.getUserById(1L)).
-                willReturn(TestsHelper.AuthorHelper.authorList().get(0));
+        BDDMockito.given(this.userClientRequest.getUserById(2L)).
+                willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
         this.mockMvc.perform(patch("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/unmarkBestAnswer",
                         4, 1)
@@ -604,7 +609,7 @@ public class AnswerControllerIT {
                 () -> assertEquals(0, topic.getAnswers().size())
         );
 
-        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verify(this.userClientRequest).getUserById(2L);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
@@ -614,12 +619,12 @@ public class AnswerControllerIT {
                  "not belongs to the topic provided")
     @Test
     void shouldFailToUnmarkBestAnswerIfAnswerProvidedNotBelongsToTheTopicProvided() throws Exception {
-        BDDMockito.given(this.userClientRequest.getUserById(2L)).
-                willReturn(TestsHelper.AuthorHelper.authorList().get(1));
+        BDDMockito.given(this.userClientRequest.getUserById(3L)).
+                willReturn(TestsHelper.AuthorHelper.authorList().get(2));
 
         this.mockMvc.perform(patch("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/unmarkBestAnswer",
                         2, 1)
-                        .with(jwt().jwt(jwt -> jwt.claim("user_id", "2")))
+                        .with(jwt().jwt(jwt -> jwt.claim("user_id", "3")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isIAmATeapot())
@@ -633,7 +638,7 @@ public class AnswerControllerIT {
                 () -> assertTrue(topic.getAnswers().stream().noneMatch(a -> a.getId().equals(1L)))
         );
 
-        BDDMockito.verify(this.userClientRequest).getUserById(2L);
+        BDDMockito.verify(this.userClientRequest).getUserById(3L);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
@@ -642,12 +647,12 @@ public class AnswerControllerIT {
                  "isn't as best answer")
     @Test
     void shouldFailToUnmarkBestAnswerIfAnswerProvidedIsNotAsBestAnswer() throws Exception {
-        BDDMockito.given(this.userClientRequest.getUserById(1L)).
-                willReturn(TestsHelper.AuthorHelper.authorList().get(0));
+        BDDMockito.given(this.userClientRequest.getUserById(2L)).
+                willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
         this.mockMvc.perform(patch("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/unmarkBestAnswer",
                         1, 1)
-                        .with(jwt().jwt(jwt -> jwt.claim("user_id", "1")))
+                        .with(jwt().jwt(JWT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isIAmATeapot())
@@ -661,7 +666,7 @@ public class AnswerControllerIT {
                 () -> assertFalse(topic.getAnswers().stream().allMatch(Answer::isBestAnswer))
         );
 
-        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verify(this.userClientRequest).getUserById(2L);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
@@ -672,12 +677,12 @@ public class AnswerControllerIT {
                  "previous premisses are adequate")
     @Test
     void shouldUnmarkBestAnswerWithSuccessIfAuthenticated() throws Exception {
-        BDDMockito.given(this.userClientRequest.getUserById(2L)).
-                willReturn(TestsHelper.AuthorHelper.authorList().get(1));
+        BDDMockito.given(this.userClientRequest.getUserById(3L)).
+                willReturn(TestsHelper.AuthorHelper.authorList().get(2));
 
         this.mockMvc.perform(patch("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/unmarkBestAnswer",
                         2, 2)
-                        .with(jwt().jwt(jwt -> jwt.claim("user_id", "2")))
+                        .with(jwt().jwt(jwt -> jwt.claim("user_id", "3")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
@@ -691,7 +696,7 @@ public class AnswerControllerIT {
                         .findFirst().orElseThrow().isBestAnswer())
         );
 
-        BDDMockito.verify(this.userClientRequest).getUserById(2L);
+        BDDMockito.verify(this.userClientRequest).getUserById(3L);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
@@ -881,8 +886,8 @@ public class AnswerControllerIT {
         final AnswerRequestDTO answerUpdateDTO =
                 new AnswerRequestDTO("Primeiro teste de edição de uma resposta");
 
-        BDDMockito.given(this.userClientRequest.getUserById(1L))
-                .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
+        BDDMockito.given(this.userClientRequest.getUserById(2L))
+                .willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
         this.mockMvc.perform(patch("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/edit",
                         1, 1)
@@ -904,7 +909,7 @@ public class AnswerControllerIT {
                         .getSolution())
         );
 
-        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verify(this.userClientRequest).getUserById(2L);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
@@ -947,6 +952,72 @@ public class AnswerControllerIT {
 
     }
 
+    @Transactional
+    @DisplayName("Should edit answer with success of unknown author when author id isn't one")
+    @Test
+    void shouldEditAnswerWithSuccessOfUnknownAuthorWhenAuthorIdIsNotOne() throws Exception {
+        final AnswerRequestDTO answerUpdateDTO =
+                new AnswerRequestDTO("Primeiro teste de edição de uma resposta");
+
+        BDDMockito.given(this.userClientRequest.getUserById(3L))
+                .willReturn(TestsHelper.AuthorHelper.authorList().get(2));
+        
+        this.authorRepository.findById(1L).ifPresent(author -> {
+            author.setId(5L);
+            this.authorRepository.save(author);
+        });
+
+        this.mockMvc.perform(patch("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/edit",
+                        1, 4)
+                        .with(jwt().jwt(jwt -> jwt.claim("user_id", "3"))
+                                .authorities(new SimpleGrantedAuthority("SCOPE_answer:edit")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .content(new ObjectMapper()
+                                .writeValueAsString(answerUpdateDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.answer.solution",
+                        is("Primeiro teste de edição de uma resposta")));
+
+        BDDMockito.verify(this.userClientRequest).getUserById(3L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
+
+    }
+
+    @Transactional
+    @DisplayName("Should edit topic with success of unknown author when author username isn't anonymous")
+    @Test
+    void shouldEditTopicWithSuccessOfUnknownAuthorWhenUsernameIsNotAnonymous() throws Exception {
+        final AnswerRequestDTO answerUpdateDTO =
+                new AnswerRequestDTO("Primeiro teste de edição de uma resposta");
+
+        BDDMockito.given(this.userClientRequest.getUserById(3L))
+                .willReturn(TestsHelper.AuthorHelper.authorList().get(2));
+
+        this.authorRepository.findById(1L).ifPresent(author -> {
+            author.setUsername("João");
+            this.authorRepository.save(author);
+        });
+
+        this.mockMvc.perform(patch("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/edit",
+                        1, 4)
+                        .with(jwt().jwt(jwt -> jwt.claim("user_id", "3"))
+                                .authorities(new SimpleGrantedAuthority("SCOPE_answer:edit")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .content(new ObjectMapper()
+                                .writeValueAsString(answerUpdateDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.answer.solution",
+                        is("Primeiro teste de edição de uma resposta")));
+        
+
+        BDDMockito.verify(this.userClientRequest).getUserById(3L);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
+
+
+    }
+
 
     @Transactional
     @DisplayName("Answer author should be able edit specified answer if authenticated, " +
@@ -956,12 +1027,12 @@ public class AnswerControllerIT {
         final AnswerRequestDTO answerUpdateDTO =
                 new AnswerRequestDTO("Primeiro teste de edição de uma resposta");
 
-        BDDMockito.given(this.userClientRequest.getUserById(2L))
-                .willReturn(TestsHelper.AuthorHelper.authorList().get(1));
+        BDDMockito.given(this.userClientRequest.getUserById(3L))
+                .willReturn(TestsHelper.AuthorHelper.authorList().get(2));
 
         this.mockMvc.perform(patch("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/edit",
                         1, 1)
-                        .with(jwt().jwt(jwt -> jwt.claim("user_id", "2"))
+                        .with(jwt().jwt(jwt -> jwt.claim("user_id", "3"))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_answer:edit")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -981,7 +1052,7 @@ public class AnswerControllerIT {
                         .getSolution())
         );
 
-        BDDMockito.verify(this.userClientRequest).getUserById(2L);
+        BDDMockito.verify(this.userClientRequest).getUserById(3L);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
@@ -1033,12 +1104,12 @@ public class AnswerControllerIT {
         final AnswerRequestDTO answerUpdateDTO =
                 new AnswerRequestDTO("Terceiro teste de edição de uma resposta");
 
-        BDDMockito.given(this.userClientRequest.getUserById(2L))
-                .willReturn(TestsHelper.AuthorHelper.authorList().get(1));
+        BDDMockito.given(this.userClientRequest.getUserById(3L))
+                .willReturn(TestsHelper.AuthorHelper.authorList().get(2));
 
         this.mockMvc.perform(patch("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/edit",
                         3, 3)
-                        .with(jwt().jwt(jwt -> jwt.claim("user_id", "2"))
+                        .with(jwt().jwt(jwt -> jwt.claim("user_id", "3"))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_answer:edit")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -1057,7 +1128,7 @@ public class AnswerControllerIT {
                         .getSolution())
         );
 
-        BDDMockito.verify(this.userClientRequest).getUserById(2L);
+        BDDMockito.verify(this.userClientRequest).getUserById(3L);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
@@ -1104,7 +1175,7 @@ public class AnswerControllerIT {
                  "return 404 not found status code")
     @Test
     void shouldFailToDeleteAnswerIfUserServiceReturn404StatusCode() throws Exception {
-        BDDMockito.given(this.userClientRequest.getUserById(1L))
+        BDDMockito.given(this.userClientRequest.getUserById(2L))
                 .willThrow(new RestClientException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
 
         this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/delete",
@@ -1123,7 +1194,7 @@ public class AnswerControllerIT {
 
         );
 
-        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verify(this.userClientRequest).getUserById(2L);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
@@ -1133,8 +1204,8 @@ public class AnswerControllerIT {
                  "provided topic when delete answer")
     @Test
     void shouldFailIfProvidedAnswerNotBelongingToTheProvidedTopicWhenDeleteAnswer() throws Exception {
-        BDDMockito.given(this.userClientRequest.getUserById(1L))
-                .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
+        BDDMockito.given(this.userClientRequest.getUserById(2L))
+                .willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
         this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/delete",
                         1, 2)
@@ -1163,8 +1234,8 @@ public class AnswerControllerIT {
     @DisplayName("Should fail with status code 418 if basic user attempt delete answer of other author")
     @Test
     void shouldFailIfBasicUserAttemptDeleteAnswerOfOtherAuthor() throws Exception {
-        BDDMockito.given(this.userClientRequest.getUserById(1L))
-                .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
+        BDDMockito.given(this.userClientRequest.getUserById(2L))
+                .willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
         this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/delete",
                         1, 1)
@@ -1183,7 +1254,7 @@ public class AnswerControllerIT {
 
         );
 
-        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verify(this.userClientRequest).getUserById(2L);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }
@@ -1194,19 +1265,19 @@ public class AnswerControllerIT {
                  "has authority 'answer:delete' and previous premisses are adequate")
     @Test
     void answerAuthorShouldDeleteYourAnswerWithSuccessIfHasSuitableAuthority() throws Exception {
-        BDDMockito.given(this.userClientRequest.getUserById(2L))
-                .willReturn(TestsHelper.AuthorHelper.authorList().get(1));
+        BDDMockito.given(this.userClientRequest.getUserById(3L))
+                .willReturn(TestsHelper.AuthorHelper.authorList().get(2));
 
         this.mockMvc.perform(delete("/forumhub.io/api/v1/topics/{topic_id}/answers/{answer_id}/delete",
                         1, 1)
-                        .with(jwt().jwt(jwt -> jwt.claim("user_id", "2"))
+                        .with(jwt().jwt(jwt -> jwt.claim("user_id", "3"))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_answer:delete")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
                 .andExpect(content().json("{\"message\":\"HttpStatusCode OK\"}"));
 
-        BDDMockito.verify(this.userClientRequest).getUserById(2L);
+        BDDMockito.verify(this.userClientRequest).getUserById(3L);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
 
     }

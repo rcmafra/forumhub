@@ -4,7 +4,10 @@ package com.raul.forumhub.topic.integration.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.raul.forumhub.topic.domain.Course;
 import com.raul.forumhub.topic.dto.request.CourseRequestDTO;
+import com.raul.forumhub.topic.repository.AuthorRepository;
 import com.raul.forumhub.topic.repository.CourseRepository;
+import com.raul.forumhub.topic.repository.ProfileRepository;
+import com.raul.forumhub.topic.repository.TopicRepository;
 import com.raul.forumhub.topic.util.TestsHelper;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,13 +35,22 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestClassOrder(ClassOrderer.ClassName.class)
 @Order(3)
-public class CourseControllerIT {
+class CourseControllerIT {
 
     @Autowired
     MockMvc mockMvc;
 
     @Autowired
     CourseRepository courseRepository;
+
+    @Autowired
+    TopicRepository topicRepository;
+
+    @Autowired
+    ProfileRepository profileRepository;
+
+    @Autowired
+    AuthorRepository authorRepository;
 
     @MockBean
     ClientRegistrationRepository clientRegistrationRepository;
@@ -49,7 +61,10 @@ public class CourseControllerIT {
     @BeforeEach
     void setup() {
         if (!hasBeenInitialized) {
+            this.profileRepository.saveAll(TestsHelper.ProfileHelper.profileList());
+            this.authorRepository.saveAll(TestsHelper.AuthorHelper.authorList());
             this.courseRepository.saveAll(TestsHelper.CourseHelper.courseList());
+            this.topicRepository.saveAll(TestsHelper.TopicHelper.topicList());
             hasBeenInitialized = true;
         }
     }
@@ -197,7 +212,7 @@ public class CourseControllerIT {
 
     @DisplayName("Should fail with status code 409 when create course if her already exists")
     @Test
-    void shouldFailToCreateCourseIfHerAlreadyExists() throws Exception {
+    void shouldFailToCreateCourseIfHimAlreadyExists() throws Exception {
         final CourseRequestDTO courseRequestDTO = new CourseRequestDTO(
                 "Criação de uma API Rest", Course.Category.JAVA);
 
@@ -265,6 +280,56 @@ public class CourseControllerIT {
                 .andExpect(jsonPath("$..course.length()", is(4)));
 
         assertEquals(4, this.courseRepository.findAll().size());
+
+    }
+
+    @Test
+    @DisplayName("Should fail with status code 401 when get course if unauthenticated")
+    void shouldFailWhenGetCourseIfIsUnauthenticated() throws Exception {
+        this.mockMvc.perform(get("/forumhub.io/api/v1/courses")
+                        .queryParam("course_id", "1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isUnauthorized());
+
+    }
+
+    @Test
+    @DisplayName("Should fail with status code 400 when get course if provided unexpect value in uri parameter")
+    void shouldFailWhenGetCourseIfProvidedUnexpectedValueInParameter() throws Exception {
+        this.mockMvc.perform(get("/forumhub.io/api/v1/courses")
+                        .queryParam("course_id", "unexpect")
+                        .with(jwt())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    @DisplayName("Should fail with status code 404 when request course and him not exists")
+    void shouldFailWhenGetCourseIfHimNotExists() throws Exception {
+        this.mockMvc.perform(get("/forumhub.io/api/v1/courses")
+                        .queryParam("course_id", "5")
+                        .with(jwt())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isNotFound());
+
+    }
+
+    @Test
+    @DisplayName("Shoud get course with success if everything is ok")
+    void shouldGetCourseWithSuccessIfEverythingIsOk() throws Exception {
+        this.mockMvc.perform(get("/forumhub.io/api/v1/courses")
+                        .queryParam("course_id", "1")
+                        .with(jwt())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.course.id", is(1)))
+                .andExpect(jsonPath("$.course.name", is("Criação de uma API Rest")))
+                .andExpect(jsonPath("$.course.category", is("JAVA")));
 
     }
 
@@ -431,7 +496,7 @@ public class CourseControllerIT {
 
     }
 
-    @DisplayName("Should fail to delete course if desired course not exists")
+    @DisplayName("Should fail with status code 404 when delete course if desired course not exists")
     @Test
     void shouldFailToDeleteCourseIfDesiredCourseNotExists() throws Exception {
         this.mockMvc.perform(delete("/forumhub.io/api/v1/courses/{course_id}/delete", 5L)
@@ -450,13 +515,33 @@ public class CourseControllerIT {
 
     }
 
+    @DisplayName("Should fail with status code 409 when delete course if this course is referenced in some topic")
+    @Test
+    void shouldFailToDeleteCourseIfThisCourseIsReferencedInSomeTopic() throws Exception {
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/courses/{course_id}/delete", 2L)
+                        .with(jwt().authorities(
+                                new SimpleGrantedAuthority("SCOPE_course:delete"),
+                                new SimpleGrantedAuthority("ROLE_ADM")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.detail", is("O curso informado não pode ser removido porque " +
+                                                   "está associado a um tópico")));
+
+        Assertions.assertAll(
+                () -> assertEquals(4, this.courseRepository.findAll().size()),
+                () -> assertTrue(this.courseRepository.findById(2L).isPresent())
+        );
+
+    }
+
 
     @Transactional
     @DisplayName("Should delete course with success if user ADM authenticated, " +
                  "has authority course:delete and previous premisses are adequate")
     @Test
     void shouldDeleteCourseWithSuccessIfAuthenticatedAndHasSuitableAuthority() throws Exception {
-        this.mockMvc.perform(delete("/forumhub.io/api/v1/courses/{course_id}/delete", 2L)
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/courses/{course_id}/delete", 4L)
                         .with(jwt().authorities(
                                 new SimpleGrantedAuthority("SCOPE_course:delete"),
                                 new SimpleGrantedAuthority("ROLE_ADM")))
