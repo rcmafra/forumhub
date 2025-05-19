@@ -58,8 +58,8 @@ public class CourseService {
     }
 
     public Course getCourseById(Long id) {
-        return this.courseRepository.findById(id).orElseThrow(() ->
-                new InstanceNotFoundException(String.format("O curso [ID: %d] informado não existe", id)));
+        return this.courseRepository.findById(id)
+                .orElseThrow(() -> new InstanceNotFoundException(String.format("O curso [ID: %d] informado não existe", id)));
     }
 
 
