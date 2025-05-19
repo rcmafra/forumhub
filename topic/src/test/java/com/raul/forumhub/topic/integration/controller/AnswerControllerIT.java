@@ -4,10 +4,8 @@ package com.raul.forumhub.topic.integration.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.raul.forumhub.topic.client.UserClientRequest;
 import com.raul.forumhub.topic.domain.Answer;
-import com.raul.forumhub.topic.domain.Status;
 import com.raul.forumhub.topic.domain.Topic;
 import com.raul.forumhub.topic.dto.request.AnswerRequestDTO;
-import com.raul.forumhub.topic.dto.request.TopicUpdateRequestDTO;
 import com.raul.forumhub.topic.exception.RestClientException;
 import com.raul.forumhub.topic.repository.*;
 import com.raul.forumhub.topic.util.TestsHelper;
@@ -961,7 +959,7 @@ class AnswerControllerIT {
 
         BDDMockito.given(this.userClientRequest.getUserById(3L))
                 .willReturn(TestsHelper.AuthorHelper.authorList().get(2));
-        
+
         this.authorRepository.findById(1L).ifPresent(author -> {
             author.setId(5L);
             this.authorRepository.save(author);
@@ -1010,7 +1008,7 @@ class AnswerControllerIT {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.answer.solution",
                         is("Primeiro teste de edição de uma resposta")));
-        
+
 
         BDDMockito.verify(this.userClientRequest).getUserById(3L);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
