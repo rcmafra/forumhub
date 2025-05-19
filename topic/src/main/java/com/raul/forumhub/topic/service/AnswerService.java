@@ -95,8 +95,8 @@ public class AnswerService {
         ValidationUtils.validateAnswerBelongsTopic(topic_id, answer);
         PermissionUtils.privilegeValidator(answer.getAuthor().getId(), author);
 
-        if (answer.getAuthor().getId() == 0L || answer.getAuthor().getUsername()
-                .equalsIgnoreCase("anonymous")) {
+        if (answer.getAuthor().getId() == 1L &&
+            answer.getAuthor().getUsername().equalsIgnoreCase("anonymous")) {
             throw new BusinessException("A resposta pertence a um autor inexistente, " +
                                         "ela não pode ser editada!");
         }
@@ -124,8 +124,8 @@ public class AnswerService {
 
 
     public Answer getAnswerById(Long id) {
-        return this.answerRepository.findById(id).orElseThrow(() ->
-                new InstanceNotFoundException(String.format("A resposta [ID: %d] informada não existe", id)));
+        return this.answerRepository.findById(id)
+                .orElseThrow(() -> new InstanceNotFoundException(String.format("A resposta [ID: %d] informada não existe", id)));
     }
 
     public void saveAnswer(Answer answer) {
