@@ -23,7 +23,7 @@ import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class CourseServiceTest {
+class CourseServiceTest {
 
     @Mock
     CourseRepository courseRepository;
@@ -53,7 +53,7 @@ public class CourseServiceTest {
 
 
     @Test
-    void shouldFailToCreateCourseIfHerAlreadyExists() {
+    void shouldFailToCreateCourseIfHimAlreadyExists() {
         final CourseRequestDTO courseRequestDTO = new CourseRequestDTO(
                 "Criação de uma API Rest", Course.Category.JAVA);
 
@@ -101,6 +101,43 @@ public class CourseServiceTest {
         BDDMockito.verify(this.courseRepository).findAll();
         BDDMockito.verifyNoMoreInteractions(this.courseRepository);
 
+    }
+
+    @Test
+    void shouldRaiseExceptionWhenRequestCourseIfHimNotExists() {
+        BDDMockito.given(this.courseRepository.findById(5L))
+                .willThrow(new InstanceNotFoundException
+                        (String.format("O curso [ID: %d] informado não existe", 5L)) );
+
+        Assertions.assertThrows(InstanceNotFoundException.class, () -> this.courseService.getCourseById(5L));
+
+
+        BDDMockito.verify(this.courseRepository).findById(5L);
+        BDDMockito.verifyNoMoreInteractions(this.courseRepository);
+
+    }
+
+    @Test
+    void shouldFailWhenGetCourseIfSpecifiedCourseNotExists(){
+        BDDMockito.given(this.courseRepository.findById(5L))
+                .willThrow(new InstanceNotFoundException(String.format("O curso [ID: %d] informado não existe", 5)));
+
+        Assertions.assertThrows(InstanceNotFoundException.class, () -> this.courseService.getCourseById(5L),
+                String.format("O curso [ID: %d] informado não existe", 5));
+
+        BDDMockito.verify(this.courseRepository).findById(5L);
+        BDDMockito.verifyNoMoreInteractions(this.courseRepository);
+    }
+
+    @Test
+    void shouldGetCourseWithSuccessIfEvertythingIsOk(){
+        BDDMockito.given(this.courseRepository.findById(1L))
+                .willReturn(Optional.of(TestsHelper.CourseHelper.courseList().get(0)));
+
+        Assertions.assertDoesNotThrow(() -> this.courseService.getCourseById(1L));
+
+        BDDMockito.verify(this.courseRepository).findById(1L);
+        BDDMockito.verifyNoMoreInteractions(this.courseRepository);
     }
 
 

@@ -2,6 +2,7 @@ package com.raul.forumhub.topic.service;
 
 import com.raul.forumhub.topic.client.UserClientRequest;
 import com.raul.forumhub.topic.domain.Answer;
+import com.raul.forumhub.topic.domain.Author;
 import com.raul.forumhub.topic.domain.Topic;
 import com.raul.forumhub.topic.dto.request.AnswerRequestDTO;
 import com.raul.forumhub.topic.exception.*;
@@ -18,11 +19,12 @@ import org.springframework.http.HttpStatus;
 
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class AnswerServiceTest {
+class AnswerServiceTest {
 
     @Mock
     AnswerRepository answerRepository;
@@ -193,15 +195,15 @@ public class AnswerServiceTest {
         BDDMockito.given(this.answerRepository.findById(1L))
                 .willReturn(Optional.of(TestsHelper.AnswerHelper.answerList().get(0)));
 
-        BDDMockito.given(this.userClientRequest.getUserById(2L)).
-                willReturn(TestsHelper.AuthorHelper.authorList().get(1));
+        BDDMockito.given(this.userClientRequest.getUserById(3L)).
+                willReturn(TestsHelper.AuthorHelper.authorList().get(2));
 
         Assertions.assertThrows(PrivilegeValidationException.class,
-                () -> this.answerService.markBestAnswer(1L, 1L, 2L));
+                () -> this.answerService.markBestAnswer(1L, 1L, 3L));
 
 
         BDDMockito.verify(this.topicService).getTopicById(1L);
-        BDDMockito.verify(this.userClientRequest).getUserById(2L);
+        BDDMockito.verify(this.userClientRequest).getUserById(3L);
         BDDMockito.verify(this.answerRepository).findById(1L);
         BDDMockito.verifyNoMoreInteractions(this.topicService);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
@@ -219,16 +221,16 @@ public class AnswerServiceTest {
         BDDMockito.given(this.answerRepository.findById(1L))
                 .willReturn(Optional.of(TestsHelper.AnswerHelper.answerList().get(0)));
 
-        BDDMockito.given(this.userClientRequest.getUserById(1L)).
-                willReturn(TestsHelper.AuthorHelper.authorList().get(0));
+        BDDMockito.given(this.userClientRequest.getUserById(2L)).
+                willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
 
         Assertions.assertThrows(ValidationException.class,
-                () -> this.answerService.markBestAnswer(4L, 1L, 1L));
+                () -> this.answerService.markBestAnswer(4L, 1L, 2L));
 
 
         BDDMockito.verify(this.topicService).getTopicById(4L);
-        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verify(this.userClientRequest).getUserById(2L);
         BDDMockito.verify(this.answerRepository).findById(1L);
         BDDMockito.verifyNoMoreInteractions(this.topicService);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
@@ -245,16 +247,16 @@ public class AnswerServiceTest {
         BDDMockito.given(this.answerRepository.findById(2L))
                 .willReturn(Optional.of(TestsHelper.AnswerHelper.answerList().get(1)));
 
-        BDDMockito.given(this.userClientRequest.getUserById(2L)).
-                willReturn(TestsHelper.AuthorHelper.authorList().get(1));
+        BDDMockito.given(this.userClientRequest.getUserById(3L)).
+                willReturn(TestsHelper.AuthorHelper.authorList().get(2));
 
 
         Assertions.assertThrows(BusinessException.class,
-                () -> this.answerService.markBestAnswer(2L, 2L, 2L));
+                () -> this.answerService.markBestAnswer(2L, 2L, 3L));
 
 
         BDDMockito.verify(this.topicService).getTopicById(2L);
-        BDDMockito.verify(this.userClientRequest).getUserById(2L);
+        BDDMockito.verify(this.userClientRequest).getUserById(3L);
         BDDMockito.verify(this.answerRepository).findById(2L);
         BDDMockito.verifyNoMoreInteractions(this.topicService);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
@@ -269,19 +271,19 @@ public class AnswerServiceTest {
         BDDMockito.given(this.topicService.getTopicById(1L))
                 .willReturn(TestsHelper.TopicHelper.topicListWithAnswers().get(0));
 
-        BDDMockito.given(this.userClientRequest.getUserById(1L)).
-                willReturn(TestsHelper.AuthorHelper.authorList().get(0));
+        BDDMockito.given(this.userClientRequest.getUserById(2L)).
+                willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
         BDDMockito.given(this.answerRepository.findById(1L))
                 .willReturn(Optional.of(TestsHelper.AnswerHelper.answerList().get(0)));
 
 
         Assertions.assertDoesNotThrow(
-                () -> this.answerService.markBestAnswer(1L, 1L, 1L));
+                () -> this.answerService.markBestAnswer(1L, 1L, 2L));
 
 
         BDDMockito.verify(this.topicService).getTopicById(1L);
-        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verify(this.userClientRequest).getUserById(2L);
         BDDMockito.verify(this.answerRepository).findById(1L);
         BDDMockito.verify(this.topicService).saveTopic(any(Topic.class));
         BDDMockito.verifyNoMoreInteractions(this.topicService);
@@ -389,17 +391,17 @@ public class AnswerServiceTest {
         BDDMockito.given(this.answerRepository.findById(1L)).
                 willReturn(Optional.of(TestsHelper.AnswerHelper.answerList().get(0)));
 
-        BDDMockito.given(this.userClientRequest.getUserById(1L)).
-                willReturn(TestsHelper.AuthorHelper.authorList().get(0));
+        BDDMockito.given(this.userClientRequest.getUserById(2L)).
+                willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
 
         Assertions.assertThrows(ValidationException.class,
-                () -> this.answerService.unmarkBestAnswer(4L, 1L, 1L));
+                () -> this.answerService.unmarkBestAnswer(4L, 1L, 2L));
 
 
         BDDMockito.verify(this.topicService).getTopicById(4L);
         BDDMockito.verify(this.answerRepository).findById(1L);
-        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verify(this.userClientRequest).getUserById(2L);
         BDDMockito.verifyNoMoreInteractions(this.topicService);
         BDDMockito.verifyNoMoreInteractions(this.answerRepository);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
@@ -415,17 +417,17 @@ public class AnswerServiceTest {
         BDDMockito.given(this.answerRepository.findById(2L)).
                 willReturn(Optional.of(TestsHelper.AnswerHelper.answerList().get(1)));
 
-        BDDMockito.given(this.userClientRequest.getUserById(1L)).
-                willReturn(TestsHelper.AuthorHelper.authorList().get(0));
+        BDDMockito.given(this.userClientRequest.getUserById(2L)).
+                willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
 
         Assertions.assertThrows(ValidationException.class,
-                () -> this.answerService.unmarkBestAnswer(1L, 2L, 1L));
+                () -> this.answerService.unmarkBestAnswer(1L, 2L, 2L));
 
 
         BDDMockito.verify(this.topicService).getTopicById(1L);
         BDDMockito.verify(this.answerRepository).findById(2L);
-        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verify(this.userClientRequest).getUserById(2L);
         BDDMockito.verifyNoMoreInteractions(this.topicService);
         BDDMockito.verifyNoMoreInteractions(this.answerRepository);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
@@ -441,17 +443,17 @@ public class AnswerServiceTest {
         BDDMockito.given(this.answerRepository.findById(1L)).
                 willReturn(Optional.of(TestsHelper.AnswerHelper.answerList().get(0)));
 
-        BDDMockito.given(this.userClientRequest.getUserById(1L)).
-                willReturn(TestsHelper.AuthorHelper.authorList().get(0));
+        BDDMockito.given(this.userClientRequest.getUserById(2L)).
+                willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
 
         Assertions.assertThrows(ValidationException.class,
-                () -> this.answerService.unmarkBestAnswer(1L, 1L, 1L));
+                () -> this.answerService.unmarkBestAnswer(1L, 1L, 2L));
 
 
         BDDMockito.verify(this.topicService).getTopicById(1L);
         BDDMockito.verify(this.answerRepository).findById(1L);
-        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verify(this.userClientRequest).getUserById(2L);
         BDDMockito.verifyNoMoreInteractions(this.topicService);
         BDDMockito.verifyNoMoreInteractions(this.answerRepository);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
@@ -464,25 +466,63 @@ public class AnswerServiceTest {
         BDDMockito.given(this.topicService.getTopicById(2L))
                 .willReturn(TestsHelper.TopicHelper.topicListWithAnswers().get(1));
 
-        BDDMockito.given(this.userClientRequest.getUserById(2L)).
-                willReturn(TestsHelper.AuthorHelper.authorList().get(1));
+        BDDMockito.given(this.userClientRequest.getUserById(3L)).
+                willReturn(TestsHelper.AuthorHelper.authorList().get(2));
 
         BDDMockito.given(this.answerRepository.findById(2L))
                 .willReturn(Optional.of(TestsHelper.AnswerHelper.answerList().get(1)));
 
 
         Assertions.assertDoesNotThrow(
-                () -> this.answerService.unmarkBestAnswer(2L, 2L, 2L));
+                () -> this.answerService.unmarkBestAnswer(2L, 2L, 3L));
 
 
         BDDMockito.verify(this.topicService).getTopicById(2L);
-        BDDMockito.verify(this.userClientRequest).getUserById(2L);
+        BDDMockito.verify(this.userClientRequest).getUserById(3L);
         BDDMockito.verify(this.answerRepository).findById(2L);
         BDDMockito.verify(this.topicService).saveTopic(any(Topic.class));
         BDDMockito.verifyNoMoreInteractions(this.topicService);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
         BDDMockito.verifyNoMoreInteractions(this.answerRepository);
 
+
+    }
+
+    @Test
+    void shouldFailToRequestTheSpecifiedAnswerIfNotExists() {
+        BDDMockito.given(this.answerRepository.findById(1L))
+                .willThrow(new InstanceNotFoundException(String.format("A resposta [ID: %d] informada não existe", 1)));
+
+
+        Assertions.assertThrows(InstanceNotFoundException.class,
+                () -> this.answerService.getAnswerById(1L),
+                String.format("A resposta [ID: %d] informada não existe", 1));
+
+
+        BDDMockito.verify(this.answerRepository).findById(1L);
+        BDDMockito.verifyNoMoreInteractions(this.answerRepository);
+
+
+    }
+
+    @Test
+    void shouldReturnTheSpecifiedAnswerWithSuccessful() {
+        Answer answer = TestsHelper.AnswerHelper.answerList().get(0);
+
+        BDDMockito.given(this.answerRepository.findById(1L))
+                .willReturn(Optional.of(answer));
+
+
+        Assertions.assertDoesNotThrow(() -> this.answerService.getAnswerById(1L));
+
+
+        Assertions.assertAll(
+                () -> assertEquals(1L, answer.getId()),
+                () -> assertEquals("Resposta do primeiro tópico", answer.getSolution())
+        );
+
+        BDDMockito.verify(this.answerRepository).findById(1L);
+        BDDMockito.verifyNoMoreInteractions(this.answerRepository);
 
     }
 
@@ -497,21 +537,21 @@ public class AnswerServiceTest {
         BDDMockito.given(this.answerRepository.findById(1L))
                 .willReturn(Optional.of(TestsHelper.AnswerHelper.answerList().get(0)));
 
-        BDDMockito.given(this.userClientRequest.getUserById(2L))
-                .willReturn(TestsHelper.AuthorHelper.authorList().get(1));
+        BDDMockito.given(this.userClientRequest.getUserById(3L))
+                .willReturn(TestsHelper.AuthorHelper.authorList().get(2));
 
         BDDMockito.given(this.answerRepository.save(any(Answer.class)))
                 .willThrow(ConstraintViolationException.class);
 
 
         Assertions.assertThrows(ConstraintViolationException.class,
-                () -> this.answerService.updateAnswer(1L, 1L, 2L,
+                () -> this.answerService.updateAnswer(1L, 1L, 3L,
                         answerUpdateDTO));
 
 
         BDDMockito.verify(this.topicService).getTopicById(1L);
         BDDMockito.verify(this.answerRepository).findById(1L);
-        BDDMockito.verify(this.userClientRequest).getUserById(2L);
+        BDDMockito.verify(this.userClientRequest).getUserById(3L);
         BDDMockito.verify(this.answerRepository).save(any(Answer.class));
         BDDMockito.verifyNoMoreInteractions(this.topicService);
         BDDMockito.verifyNoMoreInteractions(this.answerRepository);
@@ -628,7 +668,6 @@ public class AnswerServiceTest {
     }
 
 
-    @DisplayName("Should fail with status code 422 when attempt edit a answer of unknown author")
     @Test
     void shouldFailWhenAttemptEditAnswerOfUnknownAuthor() {
         final AnswerRequestDTO answerUpdateDTO =
@@ -648,12 +687,86 @@ public class AnswerServiceTest {
         Assertions.assertThrows(BusinessException.class,
                 () -> this.answerService.updateAnswer(1L, 4L, 3L,
                         answerUpdateDTO),
-                "O tópico pertence a um autor inexistente, ele não pode ser editado");
+                "A resposta pertence a um autor inexistente, ela não pode ser editada!");
 
 
         BDDMockito.verify(this.topicService).getTopicById(1L);
         BDDMockito.verify(this.answerRepository).findById(4L);
         BDDMockito.verify(this.userClientRequest).getUserById(3L);
+        BDDMockito.verifyNoMoreInteractions(this.topicService);
+        BDDMockito.verifyNoMoreInteractions(this.answerRepository);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
+
+
+    }
+
+    @Test
+    void shouldEditAnswerWithSuccessOfUnknownAuthorWhenAuthorIdIsNotOne() {
+        final AnswerRequestDTO answerUpdateDTO =
+                new AnswerRequestDTO("Primeiro teste de edição de uma resposta");
+
+
+        BDDMockito.given(this.topicService.getTopicById(1L))
+                .willReturn(TestsHelper.TopicHelper.topicList().get(0));
+
+
+        Answer answer = TestsHelper.AnswerHelper.answerList().get(3);
+        Author anonymous = TestsHelper.AuthorHelper.authorList().get(0);
+        anonymous.setId(5L);
+        answer.setAuthor(anonymous);
+
+
+        BDDMockito.given(this.answerRepository.findById(4L))
+                .willReturn(Optional.of(answer));
+
+        BDDMockito.given(this.userClientRequest.getUserById(3L))
+                .willReturn(TestsHelper.AuthorHelper.authorList().get(2));
+
+
+        Assertions.assertDoesNotThrow(() ->
+                this.answerService.updateAnswer(1L, 4L, 3L, answerUpdateDTO));
+
+
+        BDDMockito.verify(this.topicService).getTopicById(1L);
+        BDDMockito.verify(this.answerRepository).findById(4L);
+        BDDMockito.verify(this.userClientRequest).getUserById(3L);
+        BDDMockito.verify(this.answerRepository).save(any(Answer.class));
+        BDDMockito.verifyNoMoreInteractions(this.topicService);
+        BDDMockito.verifyNoMoreInteractions(this.answerRepository);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
+
+
+    }
+
+    @Test
+    void shouldEditAnswerWithSuccessOfUnknownAuthorWhenUsernameIsNotAnonymous() {
+        final AnswerRequestDTO answerUpdateDTO =
+                new AnswerRequestDTO("Primeiro teste de edição de uma resposta");
+
+
+        BDDMockito.given(this.topicService.getTopicById(1L))
+                .willReturn(TestsHelper.TopicHelper.topicList().get(0));
+
+        Answer answer = TestsHelper.AnswerHelper.answerList().get(3);
+        Author anonymous = TestsHelper.AuthorHelper.authorList().get(0);
+        anonymous.setUsername("João");
+        answer.setAuthor(anonymous);
+
+        BDDMockito.given(this.answerRepository.findById(4L))
+                .willReturn(Optional.of(answer));
+
+        BDDMockito.given(this.userClientRequest.getUserById(3L))
+                .willReturn(TestsHelper.AuthorHelper.authorList().get(2));
+
+
+        Assertions.assertDoesNotThrow(() ->
+                this.answerService.updateAnswer(1L, 4L, 3L, answerUpdateDTO));
+
+
+        BDDMockito.verify(this.topicService).getTopicById(1L);
+        BDDMockito.verify(this.answerRepository).findById(4L);
+        BDDMockito.verify(this.userClientRequest).getUserById(3L);
+        BDDMockito.verify(this.answerRepository).save(any(Answer.class));
         BDDMockito.verifyNoMoreInteractions(this.topicService);
         BDDMockito.verifyNoMoreInteractions(this.answerRepository);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
@@ -673,18 +786,18 @@ public class AnswerServiceTest {
         BDDMockito.given(this.answerRepository.findById(1L))
                 .willReturn(Optional.of(TestsHelper.AnswerHelper.answerList().get(0)));
 
-        BDDMockito.given(this.userClientRequest.getUserById(2L))
-                .willReturn(TestsHelper.AuthorHelper.authorList().get(1));
+        BDDMockito.given(this.userClientRequest.getUserById(3L))
+                .willReturn(TestsHelper.AuthorHelper.authorList().get(2));
 
 
         Assertions.assertDoesNotThrow(
-                () -> this.answerService.updateAnswer(1L, 1L, 2L,
+                () -> this.answerService.updateAnswer(1L, 1L, 3L,
                         answerUpdateDTO));
 
 
         BDDMockito.verify(this.topicService).getTopicById(1L);
         BDDMockito.verify(this.answerRepository).findById(1L);
-        BDDMockito.verify(this.userClientRequest).getUserById(2L);
+        BDDMockito.verify(this.userClientRequest).getUserById(3L);
         BDDMockito.verify(this.answerRepository).save(any(Answer.class));
         BDDMockito.verifyNoMoreInteractions(this.topicService);
         BDDMockito.verifyNoMoreInteractions(this.answerRepository);
@@ -738,18 +851,18 @@ public class AnswerServiceTest {
         BDDMockito.given(this.answerRepository.findById(3L))
                 .willReturn(Optional.of(TestsHelper.AnswerHelper.answerList().get(2)));
 
-        BDDMockito.given(this.userClientRequest.getUserById(2L))
-                .willReturn(TestsHelper.AuthorHelper.authorList().get(1));
+        BDDMockito.given(this.userClientRequest.getUserById(3L))
+                .willReturn(TestsHelper.AuthorHelper.authorList().get(2));
 
 
         Assertions.assertDoesNotThrow(
-                () -> this.answerService.updateAnswer(3L, 3L, 2L,
+                () -> this.answerService.updateAnswer(3L, 3L, 3L,
                         answerUpdateDTO));
 
 
         BDDMockito.verify(this.topicService).getTopicById(3L);
         BDDMockito.verify(this.answerRepository).findById(3L);
-        BDDMockito.verify(this.userClientRequest).getUserById(2L);
+        BDDMockito.verify(this.userClientRequest).getUserById(3L);
         BDDMockito.verify(this.answerRepository).save(any(Answer.class));
         BDDMockito.verifyNoMoreInteractions(this.topicService);
         BDDMockito.verifyNoMoreInteractions(this.answerRepository);
@@ -833,16 +946,16 @@ public class AnswerServiceTest {
         BDDMockito.given(this.answerRepository.findById(1L))
                 .willReturn(Optional.of(TestsHelper.AnswerHelper.answerList().get(0)));
 
-        BDDMockito.given(this.userClientRequest.getUserById(2L))
-                .willReturn(TestsHelper.AuthorHelper.authorList().get(1));
+        BDDMockito.given(this.userClientRequest.getUserById(3L))
+                .willReturn(TestsHelper.AuthorHelper.authorList().get(2));
 
 
         Assertions.assertDoesNotThrow(
-                () -> this.answerService.deleteAnswer(1L, 1L, 2L));
+                () -> this.answerService.deleteAnswer(1L, 1L, 3L));
 
 
         BDDMockito.verify(this.answerRepository).findById(1L);
-        BDDMockito.verify(this.userClientRequest).getUserById(2L);
+        BDDMockito.verify(this.userClientRequest).getUserById(3L);
         BDDMockito.verify(this.answerRepository).delete(any(Answer.class));
         BDDMockito.verifyNoMoreInteractions(this.answerRepository);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
@@ -879,16 +992,16 @@ public class AnswerServiceTest {
         BDDMockito.given(this.answerRepository.findById(3L))
                 .willReturn(Optional.of(TestsHelper.AnswerHelper.answerList().get(2)));
 
-        BDDMockito.given(this.userClientRequest.getUserById(2L))
-                .willReturn(TestsHelper.AuthorHelper.authorList().get(1));
+        BDDMockito.given(this.userClientRequest.getUserById(3L))
+                .willReturn(TestsHelper.AuthorHelper.authorList().get(2));
 
 
         Assertions.assertDoesNotThrow(
-                () -> this.answerService.deleteAnswer(3L, 3L, 2L));
+                () -> this.answerService.deleteAnswer(3L, 3L, 3L));
 
 
         BDDMockito.verify(this.answerRepository).findById(3L);
-        BDDMockito.verify(this.userClientRequest).getUserById(2L);
+        BDDMockito.verify(this.userClientRequest).getUserById(3L);
         BDDMockito.verify(this.answerRepository).delete(any(Answer.class));
         BDDMockito.verifyNoMoreInteractions(this.answerRepository);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);

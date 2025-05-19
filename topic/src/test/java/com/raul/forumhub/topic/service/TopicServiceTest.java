@@ -1,16 +1,23 @@
 package com.raul.forumhub.topic.service;
 
 import com.raul.forumhub.topic.client.UserClientRequest;
+import com.raul.forumhub.topic.domain.Author;
 import com.raul.forumhub.topic.domain.Status;
 import com.raul.forumhub.topic.domain.Topic;
 import com.raul.forumhub.topic.dto.request.TopicCreateRequestDTO;
 import com.raul.forumhub.topic.dto.request.TopicUpdateRequestDTO;
 import com.raul.forumhub.topic.dto.response.TopicResponseDTO;
-import com.raul.forumhub.topic.exception.*;
+import com.raul.forumhub.topic.exception.BusinessException;
+import com.raul.forumhub.topic.exception.InstanceNotFoundException;
+import com.raul.forumhub.topic.exception.PrivilegeValidationException;
+import com.raul.forumhub.topic.exception.RestClientException;
 import com.raul.forumhub.topic.repository.TopicRepository;
 import com.raul.forumhub.topic.util.TestsHelper;
 import jakarta.validation.ConstraintViolationException;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
@@ -19,6 +26,8 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.*;
+import org.springframework.data.mapping.PropertyReferenceException;
+import org.springframework.data.util.TypeInformation;
 import org.springframework.http.HttpStatus;
 
 import java.util.Comparator;
@@ -30,7 +39,7 @@ import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class TopicServiceTest {
+class TopicServiceTest {
 
     @Mock
     TopicRepository topicRepository;
@@ -216,6 +225,21 @@ public class TopicServiceTest {
 
     }
 
+    @Test
+    void shouldFailWhenRequestAllTopicIfSortPropertyValueNotExists() {
+        Pageable pageable = PageRequest.of(0, 10,
+                Sort.by(Sort.Direction.DESC, "unexpected"));
+
+        BDDMockito.given(this.topicRepository.findAll(pageable))
+                .willThrow(new PropertyReferenceException("unexpected",
+                        TypeInformation.of(Topic.class), List.of()));
+
+        Assertions.assertThrows(PropertyReferenceException.class,
+                () -> this.topicService.topicList(pageable));
+
+        BDDMockito.verify(this.topicRepository).findAll(pageable);
+        BDDMockito.verifyNoMoreInteractions(this.topicRepository);
+    }
 
     @Test
     void shouldReturnAllTopicsUnsortedWithSuccessful() {
@@ -540,12 +564,12 @@ public class TopicServiceTest {
     @Test
     void shouldFailToRequestTheSpecifiedTopicIfNotExists() {
         BDDMockito.given(this.topicRepository.findById(1L))
-                .willThrow(new InstanceNotFoundException("O tópico informado não existe"));
+                .willThrow(new InstanceNotFoundException(String.format("O tópico [ID: %d] informado não existe", 1)));
 
 
         Assertions.assertThrows(InstanceNotFoundException.class,
                 () -> this.topicService.getTopicById(1L),
-                "O tópico informado não existe");
+                String.format("O tópico [ID: %d] informado não existe", 1));
 
 
         BDDMockito.verify(this.topicRepository).findById(1L);
@@ -555,7 +579,6 @@ public class TopicServiceTest {
     }
 
 
-    @DisplayName("Should return the specified topic with successful if exists")
     @Test
     void shouldReturnTheSpecifiedTopicWithSuccessful() {
         Topic topic = TestsHelper.TopicHelper.topicList().get(0);
@@ -592,20 +615,20 @@ public class TopicServiceTest {
         BDDMockito.given(this.courseService.getCourseById(1L))
                 .willReturn(TestsHelper.CourseHelper.courseList().get(0));
 
-        BDDMockito.given(this.userClientRequest.getUserById(1L))
-                .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
+        BDDMockito.given(this.userClientRequest.getUserById(2L))
+                .willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
         BDDMockito.given(this.topicRepository.save(any(Topic.class)))
                 .willThrow(ConstraintViolationException.class);
 
 
         Assertions.assertThrows(ConstraintViolationException.class,
-                () -> this.topicService.updateTopic(1L, 1L, topicUpdateRequestDTO));
+                () -> this.topicService.updateTopic(1L, 2L, topicUpdateRequestDTO));
 
 
         BDDMockito.verify(this.topicRepository).findById(1L);
         BDDMockito.verify(this.courseService).getCourseById(1L);
-        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verify(this.userClientRequest).getUserById(2L);
         BDDMockito.verify(this.topicRepository).save(any(Topic.class));
         BDDMockito.verifyNoMoreInteractions(this.topicRepository);
         BDDMockito.verifyNoMoreInteractions(this.courseService);
@@ -629,20 +652,20 @@ public class TopicServiceTest {
         BDDMockito.given(this.courseService.getCourseById(1L))
                 .willReturn(TestsHelper.CourseHelper.courseList().get(0));
 
-        BDDMockito.given(this.userClientRequest.getUserById(1L))
-                .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
+        BDDMockito.given(this.userClientRequest.getUserById(2L))
+                .willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
         BDDMockito.given(this.topicRepository.save(any(Topic.class)))
                 .willThrow(ConstraintViolationException.class);
 
 
         Assertions.assertThrows(ConstraintViolationException.class,
-                () -> this.topicService.updateTopic(1L, 1L, topicUpdateRequestDTO));
+                () -> this.topicService.updateTopic(1L, 2L, topicUpdateRequestDTO));
 
 
         BDDMockito.verify(this.topicRepository).findById(1L);
         BDDMockito.verify(this.courseService).getCourseById(1L);
-        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verify(this.userClientRequest).getUserById(2L);
         BDDMockito.verify(this.topicRepository).save(any(Topic.class));
         BDDMockito.verifyNoMoreInteractions(this.topicRepository);
         BDDMockito.verifyNoMoreInteractions(this.courseService);
@@ -787,7 +810,7 @@ public class TopicServiceTest {
 
         Assertions.assertThrows(BusinessException.class,
                 () -> this.topicService.updateTopic(3L, 3L, topicUpdateRequestDTO),
-                "O tópico pertence a um autor inexistente, ele não pode ser editado");
+                "O tópico pertence a um autor inexistente, ele não pode ser editado!");
 
 
         BDDMockito.verify(this.topicRepository).findById(3L);
@@ -803,6 +826,82 @@ public class TopicServiceTest {
 
 
     @Test
+    void shouldEditTopicWithSuccessOfUnknownAuthorWhenAuthorIdIsNotOne() {
+        final TopicUpdateRequestDTO topicUpdateRequestDTO = new TopicUpdateRequestDTO(
+                "Dúvida quanto a utilização do Elasticsearch",
+                "Como posso integrar minha API com o Elasticsearch para monitoração?",
+                Status.SOLVED, 1L
+        );
+
+        Topic topic = TestsHelper.TopicHelper.topicList().get(2);
+        Author anonymous = TestsHelper.AuthorHelper.authorList().get(0);
+        anonymous.setId(5L);
+        topic.setAuthor(anonymous);
+
+        BDDMockito.given(this.topicRepository.findById(3L))
+                .willReturn(Optional.of(topic));
+
+        BDDMockito.given(this.courseService.getCourseById(1L))
+                .willReturn(TestsHelper.CourseHelper.courseList().get(0));
+
+        BDDMockito.given(this.userClientRequest.getUserById(3L))
+                .willReturn(TestsHelper.AuthorHelper.authorList().get(2));
+
+        Assertions.assertDoesNotThrow(() ->
+                this.topicService.updateTopic(3L, 3L, topicUpdateRequestDTO));
+
+
+        BDDMockito.verify(this.topicRepository).findById(3L);
+        BDDMockito.verify(this.courseService).getCourseById(1L);
+        BDDMockito.verify(this.userClientRequest).getUserById(3L);
+        BDDMockito.verify(this.topicRepository).save(any(Topic.class));
+        BDDMockito.verifyNoMoreInteractions(this.topicRepository);
+        BDDMockito.verifyNoMoreInteractions(this.courseService);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
+
+    }
+
+    @Test
+    void shouldEditTopicWithSuccessOfUnknownAuthorWhenUsernameIsNotAnonymous() {
+        final TopicUpdateRequestDTO topicUpdateRequestDTO = new TopicUpdateRequestDTO(
+                "Dúvida quanto a utilização do Elasticsearch",
+                "Como posso integrar minha API com o Elasticsearch para monitoração?",
+                Status.SOLVED, 1L
+        );
+
+        Topic topic = TestsHelper.TopicHelper.topicList().get(2);
+        Author anonymous = TestsHelper.AuthorHelper.authorList().get(0);
+        anonymous.setUsername("João");
+        topic.setAuthor(anonymous);
+
+        BDDMockito.given(this.topicRepository.findById(3L))
+                .willReturn(Optional.of(topic));
+
+        BDDMockito.given(this.topicRepository.findById(3L))
+                .willReturn(Optional.of(topic));
+
+        BDDMockito.given(this.courseService.getCourseById(1L))
+                .willReturn(TestsHelper.CourseHelper.courseList().get(0));
+
+        BDDMockito.given(this.userClientRequest.getUserById(3L))
+                .willReturn(TestsHelper.AuthorHelper.authorList().get(2));
+
+        Assertions.assertDoesNotThrow(() ->
+                this.topicService.updateTopic(3L, 3L, topicUpdateRequestDTO));
+
+
+        BDDMockito.verify(this.topicRepository).findById(3L);
+        BDDMockito.verify(this.courseService).getCourseById(1L);
+        BDDMockito.verify(this.userClientRequest).getUserById(3L);
+        BDDMockito.verify(this.topicRepository).save(any(Topic.class));
+        BDDMockito.verifyNoMoreInteractions(this.topicRepository);
+        BDDMockito.verifyNoMoreInteractions(this.courseService);
+        BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
+
+
+    }
+
+    @Test
     void topicAuthorShouldEditSpecifiedTopicWithSuccess() {
         final TopicUpdateRequestDTO topicUpdateRequestDTO = new TopicUpdateRequestDTO(
                 "Dúvida na utilização do WebClient",
@@ -816,16 +915,16 @@ public class TopicServiceTest {
         BDDMockito.given(this.courseService.getCourseById(1L))
                 .willReturn(TestsHelper.CourseHelper.courseList().get(0));
 
-        BDDMockito.given(this.userClientRequest.getUserById(1L))
-                .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
+        BDDMockito.given(this.userClientRequest.getUserById(2L))
+                .willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
         Assertions.assertDoesNotThrow(
-                () -> this.topicService.updateTopic(1L, 1L, topicUpdateRequestDTO));
+                () -> this.topicService.updateTopic(1L, 2L, topicUpdateRequestDTO));
 
 
         BDDMockito.verify(this.topicRepository).findById(1L);
         BDDMockito.verify(this.courseService).getCourseById(1L);
-        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verify(this.userClientRequest).getUserById(2L);
         BDDMockito.verify(this.topicRepository).save(any(Topic.class));
         BDDMockito.verifyNoMoreInteractions(this.topicRepository);
         BDDMockito.verifyNoMoreInteractions(this.courseService);
@@ -848,16 +947,16 @@ public class TopicServiceTest {
         BDDMockito.given(this.courseService.getCourseById(1L))
                 .willReturn(TestsHelper.CourseHelper.courseList().get(0));
 
-        BDDMockito.given(this.userClientRequest.getUserById(3L))
-                .willReturn(TestsHelper.AuthorHelper.authorList().get(2));
+        BDDMockito.given(this.userClientRequest.getUserById(4L))
+                .willReturn(TestsHelper.AuthorHelper.authorList().get(3));
 
         Assertions.assertDoesNotThrow(
-                () -> this.topicService.updateTopic(1L, 3L, topicUpdateRequestDTO));
+                () -> this.topicService.updateTopic(1L, 4L, topicUpdateRequestDTO));
 
 
         BDDMockito.verify(this.topicRepository).findById(1L);
         BDDMockito.verify(this.courseService).getCourseById(1L);
-        BDDMockito.verify(this.userClientRequest).getUserById(3L);
+        BDDMockito.verify(this.userClientRequest).getUserById(4L);
         BDDMockito.verify(this.topicRepository).save(any(Topic.class));
         BDDMockito.verifyNoMoreInteractions(this.topicRepository);
         BDDMockito.verifyNoMoreInteractions(this.courseService);
@@ -880,16 +979,16 @@ public class TopicServiceTest {
         BDDMockito.given(this.courseService.getCourseById(1L))
                 .willReturn(TestsHelper.CourseHelper.courseList().get(0));
 
-        BDDMockito.given(this.userClientRequest.getUserById(2L))
-                .willReturn(TestsHelper.AuthorHelper.authorList().get(1));
+        BDDMockito.given(this.userClientRequest.getUserById(3L))
+                .willReturn(TestsHelper.AuthorHelper.authorList().get(2));
 
         Assertions.assertDoesNotThrow(
-                () -> this.topicService.updateTopic(1L, 2L, topicUpdateRequestDTO));
+                () -> this.topicService.updateTopic(1L, 3L, topicUpdateRequestDTO));
 
 
         BDDMockito.verify(this.topicRepository).findById(1L);
         BDDMockito.verify(this.courseService).getCourseById(1L);
-        BDDMockito.verify(this.userClientRequest).getUserById(2L);
+        BDDMockito.verify(this.userClientRequest).getUserById(3L);
         BDDMockito.verify(this.topicRepository).save(any(Topic.class));
         BDDMockito.verifyNoMoreInteractions(this.topicRepository);
         BDDMockito.verifyNoMoreInteractions(this.courseService);
@@ -964,16 +1063,16 @@ public class TopicServiceTest {
         BDDMockito.given(this.topicRepository.findById(1L))
                 .willReturn(Optional.of(TestsHelper.TopicHelper.topicList().get(0)));
 
-        BDDMockito.given(this.userClientRequest.getUserById(1L))
-                .willReturn(TestsHelper.AuthorHelper.authorList().get(0));
+        BDDMockito.given(this.userClientRequest.getUserById(2L))
+                .willReturn(TestsHelper.AuthorHelper.authorList().get(1));
 
 
         Assertions.assertDoesNotThrow(
-                () -> this.topicService.deleteTopic(1L, 1L));
+                () -> this.topicService.deleteTopic(1L, 2L));
 
 
         BDDMockito.verify(this.topicRepository).findById(1L);
-        BDDMockito.verify(this.userClientRequest).getUserById(1L);
+        BDDMockito.verify(this.userClientRequest).getUserById(2L);
         BDDMockito.verify(this.topicRepository).delete(any(Topic.class));
         BDDMockito.verifyNoMoreInteractions(this.topicRepository);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
@@ -1005,18 +1104,18 @@ public class TopicServiceTest {
 
     @Test
     void userMODShouldDeleteTopicOfOtherAuthorWithSuccess() {
-        BDDMockito.given(this.topicRepository.findById(3L))
-                .willReturn(Optional.of(TestsHelper.TopicHelper.topicList().get(2)));
+        BDDMockito.given(this.topicRepository.findById(1L))
+                .willReturn(Optional.of(TestsHelper.TopicHelper.topicList().get(0)));
 
-        BDDMockito.given(this.userClientRequest.getUserById(2L))
-                .willReturn(TestsHelper.AuthorHelper.authorList().get(1));
-
-
-        Assertions.assertDoesNotThrow(() -> this.topicService.deleteTopic(3L, 2L));
+        BDDMockito.given(this.userClientRequest.getUserById(3L))
+                .willReturn(TestsHelper.AuthorHelper.authorList().get(2));
 
 
-        BDDMockito.verify(this.topicRepository).findById(3L);
-        BDDMockito.verify(this.userClientRequest).getUserById(2L);
+        Assertions.assertDoesNotThrow(() -> this.topicService.deleteTopic(1L, 3L));
+
+
+        BDDMockito.verify(this.topicRepository).findById(1L);
+        BDDMockito.verify(this.userClientRequest).getUserById(3L);
         BDDMockito.verify(this.topicRepository).delete(any(Topic.class));
         BDDMockito.verifyNoMoreInteractions(this.topicRepository);
         BDDMockito.verifyNoMoreInteractions(this.userClientRequest);
