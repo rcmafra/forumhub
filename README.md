@@ -1,6 +1,5 @@
 # 🚧 ForumHub – Arquitetando Respostas em um Mundo de Perguntas
 
----
 
 # 🚀 Sumário
 
@@ -16,7 +15,6 @@
 * [📝 Licença](#-licença)
 * [📫 Contato](#-contato)
 
----
 
 # 📄 Sobre o Projeto
 
@@ -37,7 +35,6 @@ Cada módulo é desacoplado e pode ser desenvolvido e escalado de forma independ
 
 Hospedado atualmente em ambiente de nuvem para maior escalabilidade e disponibilidade.
 
----
 
 # 🧱 Estrutura de Módulos
 
@@ -61,7 +58,6 @@ Gerencia a criação de tópicos, criação de respostas associadas aos tópicos
 
 Gerencia a criação de usuários, perfis, permissões e dados de usuários.
 
----
 
 # ☁️ Hospedagem e Ambiente
 
@@ -107,7 +103,6 @@ https://user-module-tf6y.onrender.com/forumhub.io/api/v1/swagger-ui/index.html
 >Observe que após 60s sem interação em um dos módulos, este ficará inativo, e será necessário
 o reenvio da requisição para o endpoint `<base_url>/actuator/health` novamente para o retorno de sua atividade.
 
----
 
 # ⚙️ Tecnologias Utilizadas
 
@@ -119,7 +114,6 @@ o reenvio da requisição para o endpoint `<base_url>/actuator/health` novamente
 * Contêineres: `Docker`
 * Outros: `FlywayDB / Spring Actuator / JUnit / Mockito / MockWebServer / OpenAPI / Swagger / Passay for password policy`
 
----
 
 # 📦 Instalação e Execução Local
 
@@ -167,7 +161,6 @@ cd <diretorio_base>/forumhub/authorization-server
 ```
 Faça o mesmo processo para os módulos `forumhub/topic` e `forumhub/user` na ordem especificada anteriormente.
 
----
 
 ## 🛡️ Autenticação e Segurança
 
@@ -176,7 +169,6 @@ Faça o mesmo processo para os módulos `forumhub/topic` e `forumhub/user` na or
 * CORS configurado.
 * Proteção contra ataques comuns: SQLi, XSS, Sniffing, CSRF, etc.
 
----
 
 ## 🧪 Testes
 
@@ -188,7 +180,6 @@ Para a execução dos testes dos módulos `topic` e `user`, execute a instruçã
 .\mvnw verify
 ```
 
----
 
 ## 📌 Endpoints Principais
 
@@ -243,7 +234,6 @@ porém os detalhes de cada enpoint pode ser visualizado em: [The OAuth 2.0 Autho
 > * <ins>Módulo User:</ins> [User module - OpenAPI Spec](https://user-module-tf6y.onrender.com/forumhub.io/api/v1/swagger-ui/index.html)
 
 
----
 
 ## 🔄 Contribuição
 
@@ -255,18 +245,14 @@ Contribuições são bem-vindas! Para colaborar:
 4. Push na branch: `git push origin minha-feature`
 5. Abra um Pull Request
 
----
 
 ## 📝 Licença
 
 Este projeto está licenciado sob a [MIT License](LICENSE).
 
----
 
 ## 📫 Contato
 
 * Autor: [Raul César](https://github.com/rcmafra/forumhub)
 * Email: [raulcesar.sm@gmail.com](mailto:raulcesar.sm@gmail.com)
 * LinkedIn: [Raul César](https://www.linkedin.com/in/raulcesar/)
-
----
