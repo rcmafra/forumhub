@@ -3,6 +3,7 @@ package com.raul.forumhub.topic.client;
 import com.raul.forumhub.topic.domain.Author;
 import com.raul.forumhub.topic.exception.RestClientException;
 import com.raul.forumhub.topic.util.TestsHelper;
+import jakarta.validation.ConstraintViolationException;
 import lombok.SneakyThrows;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -13,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.reactive.server.WebTestClient;
 
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
@@ -29,21 +29,19 @@ class UserClientRequestTest {
     @Autowired
     UserClientRequest userClientRequest;
 
-    WebTestClient webTestClient;
+    @Autowired
+    UserClientProperties userClientProperties;
 
     static MockWebServer authorizationServer;
 
     MockWebServer userClient;
 
-    static String jwt;
-
 
     @SneakyThrows
     @BeforeEach
     void userClientSetup() {
-        webTestClient = WebTestClient.bindToServer().build();
         userClient = new MockWebServer();
-        userClient.start(8081);
+        userClient.start(Integer.parseInt(userClientProperties.getPort()));
     }
 
     @SneakyThrows
@@ -71,22 +69,22 @@ class UserClientRequestTest {
     @Test
     @DisplayName("Should return OK and summarized info user in the body with success")
     void shouldReturn200WhenRequestingSummarizedInfoUser() {
-        Author author = TestsHelper.AuthorHelper.authorList().get(0);
+        Author author = TestsHelper.AuthorHelper.authorList().get(1);
 
         prepareResponse(response -> {
             response.setHeader("Content-Type", "application/json");
-            response.setBody("{\"id\":1,\"username\":\"Jose\",\"email\":\"jose@email.com\"," +
-                    "\"profile\":{\"profileName\":\"BASIC\"}}");
+            response.setBody("{\"id\":2,\"username\":\"Jose\",\"email\":\"jose@email.com\"," +
+                             "\"profile\":{\"profileName\":\"BASIC\"}}");
         });
 
-        Author authorResponse = assertDoesNotThrow(() -> this.userClientRequest.getUserById(1L));
+        Author authorResponse = assertDoesNotThrow(() -> this.userClientRequest.getUserById(2L));
 
-        assertThat(authorResponse.toString()).isEqualTo(author.toString());
+        assertThat(authorResponse.toString()).hasToString(author.toString());
 
         expecOnlyOneRequest();
         expectedRequest(expected -> {
                     assertThat(expected.getMethod()).isEqualTo("GET");
-                    assertThat(expected.getPath()).isEqualTo("/forumhub.io/api/v1/users/summary-info?user_id=1");
+                    assertThat(expected.getPath()).isEqualTo(userClientProperties.getPath().concat("?user_id=2"));
                     assertThat(expected.getHeader(HttpHeaders.ACCEPT)).isEqualTo("application/json");
                     assertThat(expected.getHeader(HttpHeaders.ACCEPT_CHARSET)).isEqualTo("utf-8");
                     assertThat(expected.getHeader(HttpHeaders.AUTHORIZATION)).isNotEmpty();
@@ -97,24 +95,24 @@ class UserClientRequestTest {
 
     @Test
     @DisplayName("Should return OK and summarized info user " +
-            "in the body with success same with the slow network")
+                 "in the body with success same with the slow network")
     void shouldReturn200WhenRequestingSummarizedInfoUserWithSlowNetwork() {
-        Author author = TestsHelper.AuthorHelper.authorList().get(0);
+        Author author = TestsHelper.AuthorHelper.authorList().get(1);
 
         prepareResponse(response -> {
             response.setHeader("Content-Type", "application/json");
-            response.setChunkedBody("{\"id\":1,\"username\":\"Jose\",\"email\":\"jose@email.com\"," +
-                    "\"profile\":{\"profileName\":\"BASIC\"}}", 5);
+            response.setChunkedBody("{\"id\":2,\"username\":\"Jose\",\"email\":\"jose@email.com\"," +
+                                    "\"profile\":{\"profileName\":\"BASIC\"}}", 5);
         });
 
-        Author authorResponse = assertDoesNotThrow(() -> this.userClientRequest.getUserById(1L));
+        Author authorResponse = assertDoesNotThrow(() -> this.userClientRequest.getUserById(2L));
 
-        assertThat(authorResponse.toString()).isEqualTo(author.toString());
+        assertThat(authorResponse.toString()).hasToString(author.toString());
 
         expecOnlyOneRequest();
         expectedRequest(expected -> {
                     assertThat(expected.getMethod()).isEqualTo("GET");
-                    assertThat(expected.getPath()).isEqualTo("/forumhub.io/api/v1/users/summary-info?user_id=1");
+                    assertThat(expected.getPath()).isEqualTo(userClientProperties.getPath().concat("?user_id=2"));
                     assertThat(expected.getHeader(HttpHeaders.ACCEPT)).isEqualTo("application/json");
                     assertThat(expected.getHeader(HttpHeaders.ACCEPT_CHARSET)).isEqualTo("utf-8");
                     assertThat(expected.getHeader(HttpHeaders.AUTHORIZATION)).isNotEmpty();
@@ -125,7 +123,7 @@ class UserClientRequestTest {
 
     @Test
     @DisplayName("Should throw an exception when requesting info " +
-            "summarized from user and the server doesn't respond")
+                 "summarized from user and the server doesn't respond")
     void shouldThrowExceptionWhenReceiveTimedOutInTheRequestWithClient() {
         prepareResponse(response -> {
             response.setHeadersDelay(11000, TimeUnit.MILLISECONDS);
@@ -133,13 +131,13 @@ class UserClientRequestTest {
             response.setHeader("Content-Type", "application/json");
         });
 
-        assertThrows(RestClientException.class, () -> this.userClientRequest.getUserById(1L),
+        assertThrows(RestClientException.class, () -> this.userClientRequest.getUserById(2L),
                 "Erro inesperado durante a comunicação com o serviço de usuário");
 
         expecOnlyOneRequest();
         expectedRequest(expected -> {
                     assertThat(expected.getMethod()).isEqualTo("GET");
-                    assertThat(expected.getPath()).isEqualTo("/forumhub.io/api/v1/users/summary-info?user_id=1");
+                    assertThat(expected.getPath()).isEqualTo(userClientProperties.getPath().concat("?user_id=2"));
                     assertThat(expected.getHeader(HttpHeaders.ACCEPT)).isEqualTo("application/json");
                     assertThat(expected.getHeader(HttpHeaders.ACCEPT_CHARSET)).isEqualTo("utf-8");
                     assertThat(expected.getHeader(HttpHeaders.AUTHORIZATION)).isNotEmpty();
@@ -150,7 +148,7 @@ class UserClientRequestTest {
 
     @Test
     @DisplayName("Should throw an exception when requesting info summarized from user " +
-            "and the client not able open connection with server")
+                 "and the client not able open connection with server")
     void shouldThrowExceptionWhenNotAbleOpenConnectionWithServer() {
         prepareResponse(response -> {
             response.setHeader("Content-Type", "application/json");
@@ -159,13 +157,13 @@ class UserClientRequestTest {
             response.setBody("Serviço de usuário indisponível");
         });
 
-        assertThrows(RestClientException.class, () -> this.userClientRequest.getUserById(1L),
+        assertThrows(RestClientException.class, () -> this.userClientRequest.getUserById(2L),
                 "Serviço de usuário indisponível");
 
         expecOnlyOneRequest();
         expectedRequest(expected -> {
                     assertThat(expected.getMethod()).isEqualTo("GET");
-                    assertThat(expected.getPath()).isEqualTo("/forumhub.io/api/v1/users/summary-info?user_id=1");
+                    assertThat(expected.getPath()).isEqualTo(userClientProperties.getPath().concat("?user_id=2"));
                     assertThat(expected.getHeader(HttpHeaders.ACCEPT)).isEqualTo("application/json");
                     assertThat(expected.getHeader(HttpHeaders.ACCEPT_CHARSET)).isEqualTo("utf-8");
                     assertThat(expected.getHeader(HttpHeaders.AUTHORIZATION)).isNotEmpty();
@@ -176,7 +174,7 @@ class UserClientRequestTest {
 
     @Test
     @DisplayName("Should throw an exception when requesting info " +
-            "summarized from user and he not exists")
+                 "summarized from user and he not exists")
     void shouldThrowExceptionWhenRequestingInfoUserAndHimNotToExists() {
         String body = """
                 {
@@ -199,7 +197,33 @@ class UserClientRequestTest {
         expecOnlyOneRequest();
         expectedRequest(expected -> {
                     assertThat(expected.getMethod()).isEqualTo("GET");
-                    assertThat(expected.getPath()).isEqualTo("/forumhub.io/api/v1/users/summary-info?user_id=5");
+                    assertThat(expected.getPath()).isEqualTo(userClientProperties.getPath().concat("?user_id=5"));
+                    assertThat(expected.getHeader(HttpHeaders.ACCEPT)).isEqualTo("application/json");
+                    assertThat(expected.getHeader(HttpHeaders.ACCEPT_CHARSET)).isEqualTo("utf-8");
+                    assertThat(expected.getHeader(HttpHeaders.AUTHORIZATION)).isNotEmpty();
+                }
+        );
+
+    }
+
+    @Test
+    @DisplayName("Should throw an exception when requesting info " +
+                 "summarized from user and some field is null")
+    void shouldThrowExceptionWhenRequestingInfoUserAndReturnSomeNullField() {
+        prepareResponse(response -> {
+            response.setHeader("Content-Type", "application/json");
+            response.setResponseCode(200);
+            response.setBody("{\"id\":1,\"username\":null,\"email\":\"jose@email.com\"," +
+                             "\"profile\":{\"profileName\":\"BASIC\"}}");
+        });
+
+        assertThrows(ConstraintViolationException.class, () -> this.userClientRequest.getUserById(2L),
+                "O username do usuário não pode ser nulo");
+
+        expecOnlyOneRequest();
+        expectedRequest(expected -> {
+                    assertThat(expected.getMethod()).isEqualTo("GET");
+                    assertThat(expected.getPath()).isEqualTo(userClientProperties.getPath().concat("?user_id=2"));
                     assertThat(expected.getHeader(HttpHeaders.ACCEPT)).isEqualTo("application/json");
                     assertThat(expected.getHeader(HttpHeaders.ACCEPT_CHARSET)).isEqualTo("utf-8");
                     assertThat(expected.getHeader(HttpHeaders.AUTHORIZATION)).isNotEmpty();
