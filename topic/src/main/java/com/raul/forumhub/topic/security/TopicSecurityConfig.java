@@ -9,17 +9,20 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
 import java.util.Collection;
-import java.util.Objects;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class TopicSecurityConfig {
+
+    private static final String JWT_AUDIENCE = "hub-topic";
 
     @Bean
     public SecurityFilterChain topicSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -37,9 +40,13 @@ public class TopicSecurityConfig {
         JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
         converter.setJwtGrantedAuthoritiesConverter(
                 jwt -> {
-                    String roleAuthority = jwt.getClaim("authority");
-                    roleAuthority = Objects.isNull(roleAuthority) ? "ANONYMOUS" : roleAuthority;
+                    if (!jwt.getAudience().contains(JWT_AUDIENCE)) {
+                        OAuth2Error error = new OAuth2Error("invalid_token", "Audience unidentified!",
+                                null);
+                        throw new OAuth2AuthenticationException(error);
+                    }
 
+                    String roleAuthority = jwt.getClaim("authority");
                     JwtGrantedAuthoritiesConverter scopeConverter = new JwtGrantedAuthoritiesConverter();
                     Collection<GrantedAuthority> userScopeAuthorities = scopeConverter.convert(jwt);
 

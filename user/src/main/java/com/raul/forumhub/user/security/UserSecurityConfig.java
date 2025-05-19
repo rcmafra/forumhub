@@ -10,6 +10,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
@@ -21,6 +23,9 @@ import java.util.Objects;
 @Configuration
 @EnableMethodSecurity
 public class UserSecurityConfig {
+
+    private static final String JWT_AUDIENCE = "hub-user";
+
 
     @Bean
     public SecurityFilterChain userSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -36,6 +41,12 @@ public class UserSecurityConfig {
         JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
         converter.setJwtGrantedAuthoritiesConverter(
                 jwt -> {
+                    if (!jwt.getAudience().contains(JWT_AUDIENCE)) {
+                        OAuth2Error error = new OAuth2Error("invalid_token", "Audience unidentified!",
+                                null);
+                        throw new OAuth2AuthenticationException(error);
+                    }
+
                     String roleAuthority = jwt.getClaim("authority");
                     roleAuthority = Objects.isNull(roleAuthority) ? "ANONYMOUS" : roleAuthority;
 
