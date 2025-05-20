@@ -17,7 +17,7 @@
 * [📫 Contato](#contato)
 
 
-## 📄 Sobre o Projeto
+## Sobre o Projeto
 
 O **ForumHub** é um projeto SaaS desenvolvido com fins acadêmicos e de aprimoramento pessoal, inspirado em plataformas de perguntas e respostas.
 Seu principal objetivo é servir como um laboratório de aprendizado prático sobre arquitetura de sistemas distribuídos, segurança, autenticação moderna
