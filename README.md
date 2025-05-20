@@ -8,12 +8,12 @@
 * [🧱 Estrutura de Módulos](#estrutura-de-módulos)
 * [☁️ Hospedagem e Ambiente](#hospedagem-e-ambiente)
 * [⚙️ Tecnologias Utilizadas](#tecnologias-utilizadas)
-* [📦 Instalação e Execução](#instalacao-e-execucao)
-* [🛡️ Autenticação e Segurança](#autenticacao-e-seguranca)
+* [📦 Instalação e Execução](#instalação-e-execução-local)
+* [🛡️ Autenticação e Segurança](#autenticação-e-segurança)
 * [🧪 Testes](#testes)
 * [📌 Endpoints Principais](#endpoints-principais)
-* [🔄 Contribuição](#contribuicao)
-* [📝 Licença](#licenca)
+* [🔄 Contribuição](#contribuiçao)
+* [📝 Licença](#licença)
 * [📫 Contato](#contato)
 
 
