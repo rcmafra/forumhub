@@ -1,7 +1,8 @@
 # 🚧 ForumHub – Arquitetando Respostas em um Mundo de Perguntas
 
+<br/>
 
-# 🚀 Sumário
+## 🚀 Sumário
 
 * [📄 Sobre o Projeto](#-sobre-o-projeto)
 * [🧱 Estrutura de Módulos](#-estrutura-de-módulos)
@@ -16,13 +17,13 @@
 * [📫 Contato](#-contato)
 
 
-# 📄 Sobre o Projeto
+## 📄 Sobre o Projeto
 
-O **ForumHub** é um projeto SaaS desenvolvido com fins acadêmicos e de aprimoramento pessoal, inspirado em plataformas de perguntas e respostas. 
-Seu principal objetivo é servir como um laboratório de aprendizado prático sobre arquitetura de sistemas distribuídos, segurança, autenticação moderna 
+O **ForumHub** é um projeto SaaS desenvolvido com fins acadêmicos e de aprimoramento pessoal, inspirado em plataformas de perguntas e respostas.
+Seu principal objetivo é servir como um laboratório de aprendizado prático sobre arquitetura de sistemas distribuídos, segurança, autenticação moderna
 e boas práticas de desenvolvimento web em nuvem.
 
-Com uma estrutura modular composta por três serviços — authorization-server, topic e user — o projeto simula um ambiente real de fórum colaborativo, 
+Com uma estrutura modular composta por três serviços — authorization-server, topic e user — o projeto simula um ambiente real de fórum colaborativo,
 permitindo testar conceitos como autenticação baseada em tokens JWT, isolamento de domínios de negócio, integração entre microsserviços e deploy em ambientes cloud.
 
 Embora não tenha sido pensado para uso corporativo, o ForumHub busca refletir os desafios e padrões encontrados em aplicações SaaS modernas,
@@ -36,7 +37,7 @@ Cada módulo é desacoplado e pode ser desenvolvido e escalado de forma independ
 Hospedado atualmente em ambiente de nuvem para maior escalabilidade e disponibilidade.
 
 
-# 🧱 Estrutura de Módulos
+## 🧱 Estrutura de Módulos
 
 ```
 forumhub/
@@ -46,39 +47,39 @@ forumhub/
 └── README.md (este arquivo)
 ```
 
-## 🔐 `authorization-server`
+### 🔐 `authorization-server`
 
 Responsável pelo autenticação, emissão e assinaturas de tokens JWT, refresh tokens, e políticas de acesso com OAuth2 e Spring Security.
 
-## 🗂️ `topic`
+### 🗂️ `topic`
 
 Gerencia a criação de tópicos, criação de respostas associadas aos tópicos, e a criação de cursos utilizados para categorizar cada tópico.
 
-## 👤 `user`
+### 👤 `user`
 
 Gerencia a criação de usuários, perfis, permissões e dados de usuários.
 
 
-# ☁️ Hospedagem e Ambiente
+## ☁️ Hospedagem e Ambiente
 
 Atualmente, o sistema está hospedado na nuvem, com suporte a ambiente de **produção**.
 
 * Provedora e CI/CD pipeline: [Render](https://render.com/)
 * Banco de dados: `PostgreSQL`
 
-## Inicialização dos módulos do ambiente de produção:
+### Inicialização dos módulos do ambiente de produção:
 Para inicializar os módulos, é necessário enviar uma operação do tipo `GET` para os endpoints abaixo.
-Para isso, envie uma requisição para eles no browser na ordem que se segue e aguarde até que estejam `healthly`. 
+Para isso, envie uma requisição para eles no browser na ordem que se segue e aguarde até que estejam `healthly`.
 A inicialização de cada módulo pode levar de 3 a 5 minutos.
 
 1. Módulo Authorization Server:
-https://authorization-server-module.onrender.com/actuator/health
+   https://authorization-server-module.onrender.com/actuator/health
 
 2. Módulo Topico:
-https://topic-module.onrender.com/actuator/health
+   https://topic-module.onrender.com/actuator/health
 
 3. Módulo User:
-https://user-module-tf6y.onrender.com/actuator/health
+   https://user-module-tf6y.onrender.com/actuator/health
 
 Ao receber o retorno a seguir, significa que o módulo foi inicializado e está pronto para receber e processar as requisições:
 ```
@@ -95,16 +96,16 @@ Após a inicialização dos módulos, será possível acessar a documentação b
 nos módulos `topic` e `user` - para conhecer os detalhes de cada endpoint:
 
 1. Especificação do módulo Topico:
-https://topic-module.onrender.com/forumhub.io/api/v1/swagger-ui.html
+   https://topic-module.onrender.com/forumhub.io/api/v1/swagger-ui.html
 
 2. Especificação do módulo User:
-https://user-module-tf6y.onrender.com/forumhub.io/api/v1/swagger-ui/index.html
+   https://user-module-tf6y.onrender.com/forumhub.io/api/v1/swagger-ui/index.html
 
 >Observe que após 60s sem interação em um dos módulos, este ficará inativo, e será necessário
 o reenvio da requisição para o endpoint `<base_url>/actuator/health` novamente para o retorno de sua atividade.
 
 
-# ⚙️ Tecnologias Utilizadas
+## ⚙️ Tecnologias Utilizadas
 
 * Linguagem: `Java`
 * Framework: `Spring Framework / Spring Boot / Spring Data / Spring Authorization Server / Spring Session / Spring Hateoas`
@@ -115,29 +116,29 @@ o reenvio da requisição para o endpoint `<base_url>/actuator/health` novamente
 * Outros: `FlywayDB / Spring Actuator / JUnit / Mockito / MockWebServer / OpenAPI / Swagger / Passay for password policy`
 
 
-# 📦 Instalação e Execução Local
+## 📦 Instalação e Execução Local
 
-## Requisitos
+### Requisitos
 
 * `Docker` e `Docker Compose`
 * `Java 17` ou superior
 
-## Instalação
+### Instalação
 
 Clone o projeto e acesse o diretório `forumhub`.
 ```shell
-git clone https://github.com/rcmafra/forumhub.git
-cd forumhub
+> git clone https://github.com/rcmafra/forumhub.git
+> cd forumhub
 ```
 
-## Execução do PostresSQL com Docker
+### Execução do PostresSQL com Docker
 
 Dentro do diretório do projeto, execute a instrução abaixo para a inicialização do banco de dados PostegreSQL em um contêiner do Docker.
 ```shell
-docker-compose --env-file .env up --build
+> docker-compose --env-file .env up --build
 ```
 
-## Execução dos módulos
+### Execução dos módulos
 
 Para cada módulo, deverá ser utilizado um novo shell (Terminal, CMD, Powershell, etc...).
 Caso o shell utilizado seja um bash, substituia `.\mvnw` por `./mvnw`, por exemplo:
@@ -150,14 +151,14 @@ Acesse o diretório do módulo em um shell na ordem em que se segue, e execute a
 3. `.../forumhub/user`
 
 ```shell
-.\mvnw spring-boot:run -Dspring-boot.run.profiles=dev
+> .\mvnw spring-boot:run -Dspring-boot.run.profiles=dev
 ```
 
 
 Por exemplo, em um shell, após clonar o projeto, execute as instruções a seguir no diretório base em que o projeto foi clonado:
 ``` shell
-cd <diretorio_base>/forumhub/authorization-server
-.\mvnw spring-boot:run -Dspring-boot.run.profiles=dev
+> cd <diretorio_base>/forumhub/authorization-server
+> .\mvnw spring-boot:run -Dspring-boot.run.profiles=dev
 ```
 Faça o mesmo processo para os módulos `forumhub/topic` e `forumhub/user` na ordem especificada anteriormente.
 
@@ -177,7 +178,7 @@ Faça o mesmo processo para os módulos `forumhub/topic` e `forumhub/user` na or
 
 Para a execução dos testes dos módulos `topic` e `user`, execute a instrução abaixo no diretório de cada módulo a partir de um shell.
 ```shell 
-.\mvnw verify
+> .\mvnw verify
 ```
 
 
@@ -228,8 +229,8 @@ Para a execução dos testes dos módulos `topic` e `user`, execute a instruçã
 
 
 > **Mais detalhes sobre cada endpoint, assim como o payload (se aplicável), pode ser visualizado na documentação baseado na especificação OpenAPI de acordo com o serviço:**
-> * <ins>Módulo Authorization Server:</ins> Como esse módulo é integrado nos módulos `topic` e `user`, não há uma documentação com a especificação OpenAPI, 
-porém os detalhes de cada enpoint pode ser visualizado em: [The OAuth 2.0 Authorization Framework](https://datatracker.ietf.org/doc/html/rfc6749)
+> * <ins>Módulo Authorization Server:</ins> Como esse módulo é integrado nos módulos `topic` e `user`, não há uma documentação com a especificação OpenAPI,
+    porém os detalhes de cada enpoint pode ser visualizado em: [The OAuth 2.0 Authorization Framework](https://datatracker.ietf.org/doc/html/rfc6749)
 > * <ins>Módulo tópico:</ins> [Topic module - OpenAPI Spec](https://topic-module.onrender.com/forumhub.io/api/v1/swagger-ui.html)
 > * <ins>Módulo User:</ins> [User module - OpenAPI Spec](https://user-module-tf6y.onrender.com/forumhub.io/api/v1/swagger-ui/index.html)
 
