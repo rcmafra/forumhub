@@ -4,17 +4,17 @@
 
 ## 🚀 Sumário
 
-* [📄 Sobre o Projeto](#-sobre-o-projeto)
-* [🧱 Estrutura de Módulos](#-estrutura-de-módulos)
-* [☁️ Hospedagem e Ambiente](#-hospedagem-e-ambiente)
-* [⚙️ Tecnologias Utilizadas](#️-tecnologias-utilizadas)
-* [📦 Instalação e Execução](#-instalação-e-execução)
-* [🛡️ Autenticação e Segurança](#️-autenticação-e-segurança)
-* [🧪 Testes](#-testes)
-* [📌 Endpoints Principais](#-endpoints-principais)
-* [🔄 Contribuição](#-contribuição)
-* [📝 Licença](#-licença)
-* [📫 Contato](#-contato)
+* [📄 Sobre o Projeto](#sobre-o-projeto)
+* [🧱 Estrutura de Módulos](#estrutura-de-módulos)
+* [☁️ Hospedagem e Ambiente](#hospedagem-e-ambiente)
+* [⚙️ Tecnologias Utilizadas](#tecnologias-utilizadas)
+* [📦 Instalação e Execução](#instalacao-e-execucao)
+* [🛡️ Autenticação e Segurança](#autenticacao-e-seguranca)
+* [🧪 Testes](#testes)
+* [📌 Endpoints Principais](#endpoints-principais)
+* [🔄 Contribuição](#contribuicao)
+* [📝 Licença](#licenca)
+* [📫 Contato](#contato)
 
 
 ## 📄 Sobre o Projeto
