@@ -2,22 +2,22 @@
 
 <br/>
 
-## 🚀 Sumário
+##  Sumário
 
-* [📄 Sobre o Projeto](#-sobre-o-projeto)
-* [🧱 Estrutura de Módulos](#-estrutura-de-módulos)
-* [☁️ Hospedagem e Ambiente](#-hospedagem-e-ambiente)
-* [⚙️ Tecnologias Utilizadas](#-tecnologias-utilizadas)
-* [📦 Instalação e Execução](#-instalacao-e-execucao)
-* [🛡️ Autenticação e Segurança](#-autenticacao-e-seguranca)
-* [🧪 Testes](#-testes)
-* [📌 Endpoints Principais](#-endpoints-principais)
-* [🔄 Contribuição](#-contribuicao)
-* [📝 Licença](#-licenca)
-* [📫 Contato](#-contato)
+* [📄 Sobre o Projeto](#sobre-o-projeto)
+* [🧱 Estrutura de Módulos](#estrutura-de-módulos)
+* [☁️ Hospedagem e Ambiente](#hospedagem-e-ambiente)
+* [⚙️ Tecnologias Utilizadas](#tecnologias-utilizadas)
+* [📦 Instalação e Execução](#instalacao-e-execucao)
+* [🛡️ Autenticação e Segurança](#autenticacao-e-seguranca)
+* [🧪 Testes](#testes)
+* [📌 Endpoints Principais](#endpoints-principais)
+* [🔄 Contribuição](#contribuicao)
+* [📝 Licença](#licenca)
+* [📫 Contato](#contato)
 
 
-## 📄 Sobre o Projeto
+## Sobre o Projeto
 
 O **ForumHub** é um projeto SaaS desenvolvido com fins acadêmicos e de aprimoramento pessoal, inspirado em plataformas de perguntas e respostas.
 Seu principal objetivo é servir como um laboratório de aprendizado prático sobre arquitetura de sistemas distribuídos, segurança, autenticação moderna
@@ -37,7 +37,7 @@ Cada módulo é desacoplado e pode ser desenvolvido e escalado de forma independ
 Hospedado atualmente em ambiente de nuvem para maior escalabilidade e disponibilidade.
 
 
-## 🧱 Estrutura de Módulos
+## Estrutura de Módulos
 
 ```
 forumhub/
@@ -60,7 +60,7 @@ Gerencia a criação de tópicos, criação de respostas associadas aos tópicos
 Gerencia a criação de usuários, perfis, permissões e dados de usuários.
 
 
-## ☁ Hospedagem e Ambiente
+## Hospedagem e Ambiente
 
 Atualmente, o sistema está hospedado na nuvem, com suporte a ambiente de **produção**.
 
@@ -105,7 +105,7 @@ nos módulos `topic` e `user` - para conhecer os detalhes de cada endpoint:
 o reenvio da requisição para o endpoint `<base_url>/actuator/health` novamente para o retorno de sua atividade.
 
 
-## ⚙ Tecnologias Utilizadas
+## Tecnologias Utilizadas
 
 * Linguagem: `Java`
 * Framework: `Spring Framework / Spring Boot / Spring Data / Spring Authorization Server / Spring Session / Spring Hateoas`
@@ -116,7 +116,7 @@ o reenvio da requisição para o endpoint `<base_url>/actuator/health` novamente
 * Outros: `FlywayDB / Spring Actuator / JUnit / Mockito / MockWebServer / OpenAPI / Swagger / Passay for password policy`
 
 
-## 📦 Instalação e Execução Local
+## Instalação e Execução Local
 
 ### Requisitos
 
@@ -163,7 +163,7 @@ Por exemplo, em um shell, após clonar o projeto, execute as instruções a segu
 Faça o mesmo processo para os módulos `forumhub/topic` e `forumhub/user` na ordem especificada anteriormente.
 
 
-## 🛡 Autenticação e Segurança
+## Autenticação e Segurança
 
 * Tokens JWT com expiração e renovação via refresh token.
 * Middleware de proteção por escopo/role.
@@ -171,7 +171,7 @@ Faça o mesmo processo para os módulos `forumhub/topic` e `forumhub/user` na or
 * Proteção contra ataques comuns: SQLi, XSS, Sniffing, CSRF, etc.
 
 
-## 🧪 Testes
+## Testes
 
 * Testes unitários e de integração: `JUnit / Mockito / MockWebServer`
 * Coverage report: `JaCoCo`
@@ -182,9 +182,9 @@ Para a execução dos testes dos módulos `topic` e `user`, execute a instruçã
 ```
 
 
-## 📌 Endpoints Principais
+## Endpoints Principais
 
-### Módulo Authorization Server
+### 🔐 Módulo Authorization Server
 
 | Método | Rota                           | Módulo               | Descrição                                            |
 | ------ |--------------------------------| -------------------- |------------------------------------------------------|
@@ -195,7 +195,7 @@ Para a execução dos testes dos módulos `topic` e `user`, execute a instruçã
 | POST   | `<base_url>/oauth2/revoke`     | authorization-server | Permite revogar um refresh token.                    |
 
 
-###  Módulo Tópico
+### 🗂️ Módulo Tópico
 
 | Método | Rota                                                                         | Módulo  | Descrição                  |
 |--------|------------------------------------------------------------------------------|---------|----------------------------|
@@ -216,7 +216,7 @@ Para a execução dos testes dos módulos `topic` e `user`, execute a instruçã
 
 
 
-###  Módulo User
+### 👤 Módulo User
 
 | Método | Rota                                                                    | Módulo   | Descrição                                   |
 |--------|-------------------------------------------------------------------------|----------|---------------------------------------------|
@@ -236,7 +236,7 @@ Para a execução dos testes dos módulos `topic` e `user`, execute a instruçã
 
 
 
-## 🔄 Contribuição
+## Contribuição
 
 Contribuições são bem-vindas! Para colaborar:
 
@@ -247,12 +247,12 @@ Contribuições são bem-vindas! Para colaborar:
 5. Abra um Pull Request
 
 
-## 📝 Licença
+## Licença
 
 Este projeto está licenciado sob a [MIT License](LICENSE).
 
 
-## 📫 Contato
+## Contato
 
 * Autor: [Raul César](https://github.com/rcmafra/forumhub)
 * Email: [raulcesar.sm@gmail.com](mailto:raulcesar.sm@gmail.com)
