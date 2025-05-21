@@ -21,7 +21,7 @@ public class Profile {
     @ToString.Exclude
     private Long id;
     @Enumerated(EnumType.STRING)
-    @Column(name = "profile")
+    @Column(name = "profile", length = 50)
     private ProfileName profileName;
 
     public enum ProfileName {

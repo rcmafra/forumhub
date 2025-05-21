@@ -26,7 +26,7 @@ public class User {
     @Column
     @NotBlank
     private String lastName;
-    @Column(unique = true)
+    @Column(unique = true, length = 20)
     @NotBlank
     private String username;
     @Column(unique = true)
