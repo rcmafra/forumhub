@@ -34,7 +34,7 @@ public class Course {
         GOLANG,
         QA,
         CLOUD_COMPUTATION,
-        DevOps
+        DEVOPS
 
 
     }
