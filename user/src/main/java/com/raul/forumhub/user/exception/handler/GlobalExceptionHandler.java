@@ -3,6 +3,7 @@ package com.raul.forumhub.user.exception.handler;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.raul.forumhub.user.exception.InstanceNotFoundException;
 import com.raul.forumhub.user.exception.MalFormatedParamUserException;
+import com.raul.forumhub.user.exception.PasswordRulesException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ValidationException;
@@ -32,6 +33,8 @@ import java.util.Locale;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    private static final String DEFAULT_VALIDATION_TITLE = "Falha de validação";
+
     public HttpHeaders headers() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PROBLEM_JSON);
@@ -45,7 +48,7 @@ public class GlobalExceptionHandler {
                 argEx.getBindingResult().getAllErrors().stream().findFirst().orElseThrow().getDefaultMessage() :
                 ex.getCause().getMessage();
         ExceptionEntity entity = new ExceptionEntity(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(),
-                "Falha de validação", detail, request.getRequestURI());
+                DEFAULT_VALIDATION_TITLE, detail, request.getRequestURI());
         return new ResponseEntity<>(entity, headers(), HttpStatus.BAD_REQUEST);
     }
 
@@ -54,7 +57,7 @@ public class GlobalExceptionHandler {
                                                                                  HttpServletRequest request) {
         String detail = ex.getConstraintViolations().stream().findFirst().orElseThrow().getMessageTemplate();
         ExceptionEntity entity = new ExceptionEntity(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(),
-                "Falha de validação", detail, request.getRequestURI());
+                DEFAULT_VALIDATION_TITLE, detail, request.getRequestURI());
         return new ResponseEntity<>(entity, headers(), HttpStatus.BAD_REQUEST);
     }
 
@@ -62,7 +65,7 @@ public class GlobalExceptionHandler {
     private ResponseEntity<ExceptionEntity> propertyPathExceptionResolver(PropertyReferenceException ex, HttpServletRequest request) {
         String detail = String.format("A propriedade '%s' enviada não existe", ex.getPropertyName());
         ExceptionEntity entity = new ExceptionEntity(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(),
-                "Falha de validação", detail, request.getRequestURI());
+                DEFAULT_VALIDATION_TITLE, detail, request.getRequestURI());
         return new ResponseEntity<>(entity, headers(), HttpStatus.BAD_REQUEST);
     }
 
@@ -71,44 +74,40 @@ public class GlobalExceptionHandler {
                                                                                  HttpServletRequest request) {
         String detail = String.format("A propriedade '%s' não foi informada", ex.getParameterName());
         ExceptionEntity entity = new ExceptionEntity(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(),
-                "Falha de validação", detail, request.getRequestURI());
+                DEFAULT_VALIDATION_TITLE, detail, request.getRequestURI());
         return new ResponseEntity<>(entity, headers(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(DataAccessException.class)
     private ResponseEntity<ExceptionEntity> dataAccessExceptionResolver(DataAccessException ex, HttpServletRequest request) {
-        if (ex.getCause() instanceof ConstraintViolationException && ((ConstraintViolationException) ex.getCause())
-                .getSQLException().getSQLState().equals("23505")) {
-            return new ResponseEntity<>(new ExceptionEntity(LocalDateTime.now(), HttpStatus.CONFLICT.value(),
-                    "Falha de restrição", "Payload conflitante com outro usuário", request.getRequestURI()),
-                    headers(), HttpStatus.CONFLICT);
-        } else if ((ex.getCause() instanceof DataException && ((DataException) ex.getCause()).getSQLException().getSQLState().equals("22001"))) {
-            return new ResponseEntity<>(new ExceptionEntity(LocalDateTime.now(), HttpStatus.PAYLOAD_TOO_LARGE.value(),
-                    "Falha de restrição", "Payload com valor muito grande", request.getRequestURI()),
-                    headers(), HttpStatus.PAYLOAD_TOO_LARGE);
+        ResponseEntity<ExceptionEntity> responseEntity = null;
+        if (ex.getCause() instanceof ConstraintViolationException constraintViolationException) {
+            responseEntity = constraintViolationException.getSQLException().getSQLState().equals("23505") ?
+                    new ResponseEntity<>(new ExceptionEntity(LocalDateTime.now(), HttpStatus.CONFLICT.value(),
+                            "Falha de restrição", "Payload conflitante com outro registro", request.getRequestURI()),
+                            headers(), HttpStatus.CONFLICT) : this.notExpectedExceptionResolver(constraintViolationException, request);
+        } else if (ex.getCause() instanceof DataException dataException) {
+            responseEntity = dataException.getSQLException().getSQLState().equals("22001") ?
+                    new ResponseEntity<>(new ExceptionEntity(LocalDateTime.now(), HttpStatus.PAYLOAD_TOO_LARGE.value(),
+                            DEFAULT_VALIDATION_TITLE, "Payload com valor muito grande", request.getRequestURI()),
+                            headers(), HttpStatus.PAYLOAD_TOO_LARGE) : this.notExpectedExceptionResolver(dataException, request);
         }
-        return this.notExpectedExceptionResolver(ex, request);
+        return responseEntity;
     }
 
-    @ExceptionHandler({IllegalArgumentException.class, MethodArgumentTypeMismatchException.class})
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     private ResponseEntity<ExceptionEntity> illegalArgExceptionResolver(RuntimeException ex, HttpServletRequest request) {
-        return ex instanceof IllegalArgumentException ?
+        return ex instanceof MethodArgumentTypeMismatchException mismatchException ?
                 new ResponseEntity<>(new ExceptionEntity(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(),
-                        "Falha de validação", ex.getMessage(), request.getRequestURI()), headers(), HttpStatus.BAD_REQUEST) :
-                ex instanceof MethodArgumentTypeMismatchException mismatchException ?
-                        new ResponseEntity<>(new ExceptionEntity(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(),
-                                "Falha de validação", String.format("O valor '%s' enviado é inválido", mismatchException.getValue()),
-                                request.getRequestURI()), headers(), HttpStatus.BAD_REQUEST) :
-                        new ResponseEntity<>(new ExceptionEntity(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(),
-                                "Falha de validação", "Solicitação com valor ilegível", request.getRequestURI()),
-                                headers(), HttpStatus.BAD_REQUEST);
+                        DEFAULT_VALIDATION_TITLE, String.format("O valor '%s' enviado é inválido", mismatchException.getValue()),
+                        request.getRequestURI()), headers(), HttpStatus.BAD_REQUEST) : this.notExpectedExceptionResolver(ex, request);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     private ResponseEntity<ExceptionEntity> notReadableExceptionResolver(HttpMessageNotReadableException ex, HttpServletRequest request) {
         InvalidFormatException invalidEx = (InvalidFormatException) ex.getCause();
         return new ResponseEntity<>(new ExceptionEntity(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(),
-                "Falha de validação", String.format("A propriedade '%s' enviada é inválida", invalidEx.getValue()), request.getRequestURI()),
+                DEFAULT_VALIDATION_TITLE, String.format("A propriedade '%s' enviada é inválida", invalidEx.getValue()), request.getRequestURI()),
                 headers(), HttpStatus.BAD_REQUEST);
     }
 
@@ -122,7 +121,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MalFormatedParamUserException.class)
     private ResponseEntity<ExceptionEntity> malFormatedParamExceptionResolver(MalFormatedParamUserException ex, HttpServletRequest request) {
         ExceptionEntity entity = new ExceptionEntity(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(),
-                "Falha de validação", ex.getMessage(), request.getRequestURI());
+                DEFAULT_VALIDATION_TITLE, ex.getMessage(), request.getRequestURI());
         return new ResponseEntity<>(entity, headers(), HttpStatus.BAD_REQUEST);
     }
 
@@ -134,18 +133,24 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(entity, headers(), status);
     }
 
-
     @ExceptionHandler(AuthorizationDeniedException.class)
     private ResponseEntity<?> authorizationDeniedExceptionResolver(Authentication authentication) {
         HttpStatus status = authentication == null ? HttpStatus.UNAUTHORIZED : HttpStatus.FORBIDDEN;
         return new ResponseEntity<>(headers(), status);
     }
 
+    @ExceptionHandler(PasswordRulesException.class)
+    private ResponseEntity<ExceptionEntity> passwordRulesValidationExceptionResolver(PasswordRulesException ex, HttpServletRequest request) {
+        ExceptionEntity entity = new ExceptionEntity(LocalDateTime.now(), HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "Falha na validação da password", ex.getMessage(), request.getRequestURI());
+        return new ResponseEntity<>(entity, headers(), entity.status());
+    }
+
     @ExceptionHandler(Exception.class)
     private ResponseEntity<ExceptionEntity> notExpectedExceptionResolver(Exception ex, HttpServletRequest request) {
         log.error("Falha inesperada: {} - causa: {}", ex.getMessage(), ex.getCause(), ex);
         ExceptionEntity entity = new ExceptionEntity(LocalDateTime.now(), HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "Falha inesperada", "Erro inesperado no servidor. Mais detalhes no log.", request.getRequestURI());
+                "Falha inesperada", "Erro inesperado no servidor.", request.getRequestURI());
         return new ResponseEntity<>(entity, headers(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

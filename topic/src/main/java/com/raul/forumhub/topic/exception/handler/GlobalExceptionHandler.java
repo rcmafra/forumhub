@@ -173,7 +173,7 @@ public class GlobalExceptionHandler {
     private ResponseEntity<ExceptionEntity> notExpectedExceptionResolver(Exception ex, HttpServletRequest request) {
         log.error("Falha inesperada: {} - causa: {}", ex.getMessage(), ex.getCause(), ex);
         ExceptionEntity entity = new ExceptionEntity(LocalDateTime.now(), HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "Falha inesperada", "Erro inesperado no servidor. Mais detalhes no log.", request.getRequestURI());
+                "Falha inesperada", "Erro inesperado no servidor.", request.getRequestURI());
         return new ResponseEntity<>(entity, headers(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
