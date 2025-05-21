@@ -197,13 +197,13 @@ class TopicControllerIT {
 
 
     @DisplayName("Should fail with status code 400 when create topic if the title " +
-                 "property is greater than 150 chars")
+                 "property is greater than 200 chars")
     @Test
     void shouldFailToCreateTopicIfTitlePropertyExceedsLimit() throws Exception {
         final TopicCreateRequestDTO topicCreateRequestDTO = new TopicCreateRequestDTO(
-                "Qual é a diferença entre o Feign Client, RestTemplate e o WebClient no " +
-                "Spring Framework e em que situações é mais adequado utilizá-los durante a " +
-                "integração de um serviço?",
+                "Qual é a diferença entre os algoritmos de ordenação QuickSort, MergeSort e HeapSort em " +
+                "termos de complexidade de tempo no pior caso, melhor caso e caso médio, e como essas diferenças " +
+                "impactam a escolha do algoritmo em aplicações práticas?",
                 "Diferença entre o Feign Client, RestTemplate e WebClient",
                 1L);
 

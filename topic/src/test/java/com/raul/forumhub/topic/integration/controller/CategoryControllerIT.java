@@ -62,7 +62,7 @@ class CategoryControllerIT {
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
                 .andExpect(content().json("{\"category\":[\"JAVA\",\"C\",\"CPLUSPLUS\",\"CSHARP\"," +
-                                          "\"GOLANG\",\"QA\",\"CLOUD_COMPUTATION\",\"DevOps\"]}"));
+                                          "\"GOLANG\",\"QA\",\"CLOUD_COMPUTATION\",\"DEVOPS\"]}"));
 
     }
 }

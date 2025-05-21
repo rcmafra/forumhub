@@ -82,7 +82,7 @@ class CategoryControllerTest {
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
                 .andExpect(content().json("{\"category\":[\"JAVA\",\"C\",\"CPLUSPLUS\",\"CSHARP\"," +
-                                          "\"GOLANG\",\"QA\",\"CLOUD_COMPUTATION\",\"DevOps\"]}"));
+                                          "\"GOLANG\",\"QA\",\"CLOUD_COMPUTATION\",\"DEVOPS\"]}"));
 
 
         BDDMockito.verify(this.categoryService).getAllCategories();
