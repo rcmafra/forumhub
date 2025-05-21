@@ -22,10 +22,10 @@ public class Topic {
     @Column(name = "topic_id")
     private Long id;
     @NotBlank
-    @Column(length = 150)
+    @Column(length = 200)
     private String title;
     @NotBlank
-    @Column
+    @Column(columnDefinition = "text")
     private String question;
     @Column
     private LocalDateTime createdAt;

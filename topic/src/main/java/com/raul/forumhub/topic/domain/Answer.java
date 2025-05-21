@@ -27,7 +27,7 @@ public class Answer {
     @ToString.Exclude
     private Topic topic;
     @NotBlank
-    @Column(nullable = false)
+    @Column(columnDefinition = "text", nullable = false)
     private String solution;
     @Column
     private boolean bestAnswer;
