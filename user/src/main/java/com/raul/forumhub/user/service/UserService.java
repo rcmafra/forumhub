@@ -95,13 +95,13 @@ public class UserService {
     }
 
     public User getUserById(Long user_id) {
-        return this.userRepository.findById(user_id).filter(user -> !user.getId().equals(0L))
+        return this.userRepository.findById(user_id).filter(user -> !user.getId().equals(1L))
                 .orElseThrow(() -> new InstanceNotFoundException(String.format("Usuário [ID: %d] não encontrado", user_id)));
     }
 
 
     public Profile findProfileByName(Profile.ProfileName profileName) {
-        return profileRepository.findByProfileName(profileName).orElseThrow(
-                () -> new InstanceNotFoundException(String.format("Perfil '%s' não encontrado", profileName.toString())));
+        return profileRepository.findByProfileName(profileName)
+                .orElseThrow(() -> new InstanceNotFoundException(String.format("Perfil '%s' não encontrado", profileName.toString())));
     }
 }
