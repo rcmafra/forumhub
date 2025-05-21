@@ -5,10 +5,14 @@ import com.raul.forumhub.user.domain.Profile;
 import com.raul.forumhub.user.domain.User;
 import com.raul.forumhub.user.dto.request.UserCreateDTO;
 import com.raul.forumhub.user.dto.request.UserUpdateDTO;
+import com.raul.forumhub.user.exception.PasswordRulesException;
 import com.raul.forumhub.user.respository.ProfileRepository;
 import com.raul.forumhub.user.respository.UserRepository;
+import com.raul.forumhub.user.security.password.PasswordConstraintValidator;
 import com.raul.forumhub.user.util.TestsHelper;
+import jakarta.validation.ConstraintValidatorContext;
 import org.junit.jupiter.api.*;
+import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc(printOnlyOnFailure = false)
 @ActiveProfiles(value = "test")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class UserControllerIT {
+class UserControllerIT {
 
     @Autowired
     MockMvc mockMvc;
@@ -190,6 +194,23 @@ public class UserControllerIT {
 
     }
 
+    @DisplayName("Should fail if raise exception when load the translated messages of password rules from properties " +
+                 "when create user")
+    @Test
+    void shouldFailToCreateUserIfRaiseExceptionWhenLoadTranslatedMessages() {
+        PasswordConstraintValidator validator = BDDMockito.mock(PasswordConstraintValidator.class);
+        ConstraintValidatorContext context = BDDMockito.mock(ConstraintValidatorContext.class);
+
+        BDDMockito.given(validator.isValid("P4s$word", context))
+                .willThrow(new PasswordRulesException("Falha interna durante a validação da password"));
+
+        assertThrows(PasswordRulesException.class, () -> validator.isValid("P4s$word", context));
+
+        BDDMockito.verify(validator).isValid("P4s$word", context);
+        BDDMockito.verifyNoMoreInteractions(validator);
+
+    }
+
     @DisplayName("Should fail if password length is less than 8 characters when create user")
     @Test
     void shouldFailIfPasswordLengthIsLess8CharsWhenCreateUser() throws Exception {
@@ -227,7 +248,7 @@ public class UserControllerIT {
     }
 
     @DisplayName("Should fail if password hasn't at least one character " +
-            "uppercase when create user")
+                 "uppercase when create user")
     @Test
     void shouldFailIfPasswordHasNotCharUppercaseWhenCreateUser() throws Exception {
         final UserCreateDTO userCreateDTO = new UserCreateDTO("Marcus",
@@ -246,7 +267,7 @@ public class UserControllerIT {
     }
 
     @DisplayName("Should fail if password hasn't at least one character " +
-            "lowercase when create user")
+                 "lowercase when create user")
     @Test
     void shouldFailIfPasswordHasNotCharLowercaseWhenCreateUser() throws Exception {
         final UserCreateDTO userCreateDTO = new UserCreateDTO("Marcus",
@@ -301,7 +322,7 @@ public class UserControllerIT {
     }
 
     @DisplayName("Should fail if exists five sequence alphabetic in the password " +
-            "when create user (e.g.: abcde)")
+                 "when create user (e.g.: abcde)")
     @Test
     void shouldFailIfPasswordHasSequenceAlphabeticWhenCreateUser() throws Exception {
         final UserCreateDTO userCreateDTO = new UserCreateDTO("Marcus",
@@ -320,7 +341,7 @@ public class UserControllerIT {
     }
 
     @DisplayName("Should fail if exists five sequence numerical in the password " +
-            "when create user (e.g.: 12345)")
+                 "when create user (e.g.: 12345)")
     @Test
     void shouldFailIfPasswordHasSequenceNumericalWhenCreateUser() throws Exception {
         final UserCreateDTO userCreateDTO = new UserCreateDTO("Marcus",
@@ -339,7 +360,7 @@ public class UserControllerIT {
     }
 
     @DisplayName("Should fail if exists 'qwerty' sequence in the password " +
-            "when create user")
+                 "when create user")
     @Test
     void shouldFailIfPasswordHasSequenceQWERTYWhenCreateUser() throws Exception {
         final UserCreateDTO userCreateDTO = new UserCreateDTO("Marcus",
@@ -364,7 +385,7 @@ public class UserControllerIT {
         this.userRepository.findAll().stream().filter(u -> u.getProfile()
                         .getProfileName().equals(Profile.ProfileName.BASIC))
                 .forEach(userRepository::delete);
-        this.profileRepository.deleteById(1L);
+        this.profileRepository.deleteById(2L);
 
         final UserCreateDTO userCreateDTO = new UserCreateDTO("Joe",
                 "Silva", "joe_silva", "joe@email.com",
@@ -381,7 +402,7 @@ public class UserControllerIT {
     }
 
     @DisplayName("Should fail if exists whitespace in the password " +
-            "when create user")
+                 "when create user")
     @Test
     void shouldFailIfPasswordHasWhitespaceWhenCreateUser() throws Exception {
         final UserCreateDTO userCreateDTO = new UserCreateDTO("Marcus",
@@ -400,7 +421,7 @@ public class UserControllerIT {
     }
 
     @DisplayName("Should fail with status code 409 when create user if already exists " +
-            "an user with same username")
+                 "an user with same username")
     @Test
     void shouldFailToCreateUserIfAlreadyExistsAnUserWithSameUsername() throws Exception {
         final UserCreateDTO userCreateDTO = new UserCreateDTO("Jose",
@@ -413,15 +434,15 @@ public class UserControllerIT {
                         .content(new ObjectMapper()
                                 .writeValueAsString(userCreateDTO)))
                 .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.detail", is("Payload conflitante com outro usuário")));
+                .andExpect(jsonPath("$.detail", is("Payload conflitante com outro registro")));
 
-        assertThat(this.userRepository.findById(1L).orElseThrow()
+        assertThat(this.userRepository.findById(2L).orElseThrow()
                 .getUsername(), is("jose_silva"));
 
     }
 
     @DisplayName("Should fail with status code 409 when create user if already exists " +
-            "an user with same email")
+                 "an user with same email")
     @Test
     void shouldFailToCreateUserIfAlreadyExistsAnUserWithSameEmail() throws Exception {
         final UserCreateDTO userCreateDTO = new UserCreateDTO("Jose",
@@ -434,21 +455,21 @@ public class UserControllerIT {
                         .content(new ObjectMapper()
                                 .writeValueAsString(userCreateDTO)))
                 .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.detail", is("Payload conflitante com outro usuário")));
+                .andExpect(jsonPath("$.detail", is("Payload conflitante com outro registro")));
 
-        assertThat(this.userRepository.findById(1L).orElseThrow()
+        assertThat(this.userRepository.findById(2L).orElseThrow()
                 .getEmail(), is("jose@email.com"));
 
     }
 
     @DisplayName("Should fail with status code 400 when create user if firstName " +
-            "length overtake 255 chars")
+                 "length overtake 255 chars")
     @Test
     void shouldFailToCreateUserIfFirstNameLengthOvertake255Chars() throws Exception {
         final UserCreateDTO userCreateDTO = new UserCreateDTO(
                 "User1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+-=[]{}|;:,." +
-                        "<>?~User1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+-=[]{}|;:," +
-                        ".<>?~User1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^",
+                "<>?~User1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+-=[]{}|;:," +
+                ".<>?~User1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^",
                 "Silva", "jose_silva", "marcus@email.com",
                 "P4s$word");
 
@@ -463,13 +484,13 @@ public class UserControllerIT {
     }
 
     @DisplayName("Should fail with status code 400 when create user if lastName " +
-            "length overtake 255 chars")
+                 "length overtake 255 chars")
     @Test
     void shouldFailToCreateUserIfLastNameLengthOvertake255Chars() throws Exception {
         final UserCreateDTO userCreateDTO = new UserCreateDTO("Marcus",
                 "User1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+-=[]{}|;:,." +
-                        "<>?~User1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+-=[]{}|;:,." +
-                        "<>?~User1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^",
+                "<>?~User1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+-=[]{}|;:,." +
+                "<>?~User1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^",
                 "jose_silva", "marcus@email.com",
                 "P4s$word");
 
@@ -484,14 +505,14 @@ public class UserControllerIT {
     }
 
     @DisplayName("Should fail with status code 400 when create user if username " +
-            "length overtake 255 chars")
+                 "length overtake 255 chars")
     @Test
     void shouldFailToCreateUserIfUsernameLengthOvertake255Chars() throws Exception {
         final UserCreateDTO userCreateDTO = new UserCreateDTO("Marcus",
                 "Silva", "User1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUV" +
-                "WXYZ!@#$%^&*()_+-=[]{}|;:,.<>?~User1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRST" +
-                "UVWXYZ!@#$%^&*()_+-=[]{}|;:,.<>?~User1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRST" +
-                "UVWXYZ!@#$%", "marcus@email.com",
+                         "WXYZ!@#$%^&*()_+-=[]{}|;:,.<>?~User1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRST" +
+                         "UVWXYZ!@#$%^&*()_+-=[]{}|;:,.<>?~User1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRST" +
+                         "UVWXYZ!@#$%", "marcus@email.com",
                 "P4s$word");
 
         this.mockMvc.perform(post("/forumhub.io/api/v1/users/create")
@@ -520,14 +541,14 @@ public class UserControllerIT {
                 .andExpect(status().isCreated());
 
         assertAll(
-                () -> assertEquals(4, this.userRepository.findAll().size()),
-                () -> assertEquals(3, this.profileRepository.findAll().size())
+                () -> assertEquals(5, this.userRepository.findAll().size()),
+                () -> assertEquals(4, this.profileRepository.findAll().size())
         );
 
     }
 
     @DisplayName("Should fail with status code 401 when to request detailed info " +
-            "user if user unauthenticated")
+                 "user if user unauthenticated")
     @Test
     void shouldFailToRequestDetailedInfoUserIfUnauthenticated() throws Exception {
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/detailed-info")
@@ -536,14 +557,14 @@ public class UserControllerIT {
                 .andExpect(status().isUnauthorized());
 
         assertAll(
-                () -> assertEquals(3, this.userRepository.findAll().size()),
-                () -> assertEquals(3, this.profileRepository.findAll().size())
+                () -> assertEquals(4, this.userRepository.findAll().size()),
+                () -> assertEquals(4, this.profileRepository.findAll().size())
         );
 
     }
 
     @DisplayName("Should fail with status code 403 when to request detailed info " +
-            "user if authenticated user isn't ADM or MOD, or hasn't authority 'myuser:read'")
+                 "user if authenticated user isn't ADM or MOD, or hasn't authority 'myuser:read'")
     @Test
     void shouldFailToRequestDetailedInfoUserIfUserHasNotSuitableAuthority() throws Exception {
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/detailed-info")
@@ -553,19 +574,19 @@ public class UserControllerIT {
                 .andExpect(status().isForbidden());
 
         assertAll(
-                () -> assertEquals(3, this.userRepository.findAll().size()),
-                () -> assertEquals(3, this.profileRepository.findAll().size())
+                () -> assertEquals(4, this.userRepository.findAll().size()),
+                () -> assertEquals(4, this.profileRepository.findAll().size())
         );
     }
 
     @DisplayName("Should fail with status code 400 when request detailed info user" +
-            " with param different of type number, if him exists")
+                 " with param different of type number, if him exists")
     @Test
     void shouldFailToRequestDetailedInfoUserIfParamDifferentOfTypeNumber() throws Exception {
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/detailed-info")
                         .queryParam("user_id", "unexpected")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "3",
+                                        "user_id", "4",
                                         "authority", "ROLE_ADM"))))
                                 .authorities(new SimpleGrantedAuthority("ROLE_ADM")))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -573,20 +594,20 @@ public class UserControllerIT {
                 .andExpect(status().isBadRequest());
 
         assertAll(
-                () -> assertEquals(3, this.userRepository.findAll().size()),
-                () -> assertEquals(3, this.profileRepository.findAll().size())
+                () -> assertEquals(4, this.userRepository.findAll().size()),
+                () -> assertEquals(4, this.profileRepository.findAll().size())
         );
 
     }
 
     @DisplayName("Should fail with status code 400 if BASIC user to request detailed info " +
-            "of other user or yourself with user_id param not null")
+                 "of other user or yourself with user_id param not null")
     @Test
     void shouldFailIfBasicUserToRequestDetailedInfoWithUserIdParamNotNull() throws Exception {
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/detailed-info")
-                        .queryParam("user_id", "2")
+                        .queryParam("user_id", "3")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "1",
+                                        "user_id", "2",
                                         "authority", "ROLE_BASIC"))))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_myuser:read")))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -594,20 +615,20 @@ public class UserControllerIT {
                 .andExpect(status().isBadRequest());
 
         assertAll(
-                () -> assertEquals(3, this.userRepository.findAll().size()),
-                () -> assertEquals(3, this.profileRepository.findAll().size())
+                () -> assertEquals(4, this.userRepository.findAll().size()),
+                () -> assertEquals(4, this.profileRepository.findAll().size())
         );
 
     }
 
     @DisplayName("Should fail with status code 404 when to request detailed info " +
-            "user if user authenticated and has suitable authority, but user requested not exists")
+                 "user if user authenticated and has suitable authority, but user requested not exists")
     @Test
     void shouldFailToRequestDetailedInfoUserIfHimNotExists() throws Exception {
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/detailed-info")
                         .queryParam("user_id", "5")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "3",
+                                        "user_id", "4",
                                         "authority", "ROLE_ADM"))))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_myuser:read")))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -616,26 +637,26 @@ public class UserControllerIT {
                 .andExpect(jsonPath("$.detail", is("Usuário [ID: 5] não encontrado")));
 
         assertAll(
-                () -> assertEquals(3, this.userRepository.findAll().size()),
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
+                () -> assertEquals(4, this.userRepository.findAll().size()),
+                () -> assertEquals(4, this.profileRepository.findAll().size()),
                 () -> assertTrue(this.userRepository.findById(5L).isEmpty())
         );
 
     }
 
     @DisplayName("BASIC user should be able get detailed info your user with success if " +
-            "has authority 'myuser:read' and user_id param is null")
+                 "has authority 'myuser:read' and user_id param is null")
     @Test
     void basicUserShouldGetDetailedInfoYourUserWithSuccessIfHasSuitableAuthority() throws Exception {
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/detailed-info")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "1",
+                                        "user_id", "2",
                                         "authority", "ROLE_BASIC"))))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_myuser:read")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.user.id", is(1)))
+                .andExpect(jsonPath("$.user.id", is(2)))
                 .andExpect(jsonPath("$.user.firstName", is("Jose")))
                 .andExpect(jsonPath("$.user.lastName", is("Silva")))
                 .andExpect(jsonPath("$.user.username", is("jose_silva")))
@@ -648,26 +669,26 @@ public class UserControllerIT {
 
 
         assertAll(
-                () -> assertEquals(3, this.userRepository.findAll().size()),
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertTrue(this.userRepository.findById(1L).isPresent())
+                () -> assertEquals(4, this.userRepository.findAll().size()),
+                () -> assertEquals(4, this.profileRepository.findAll().size()),
+                () -> assertTrue(this.userRepository.findById(2L).isPresent())
         );
 
     }
 
     @DisplayName("MOD user should be able get detailed info your user with success if " +
-            "user_id param is null")
+                 "user_id param is null")
     @Test
     void modUserShouldGetDetailedInfoYourUserWithSuccessIfHasSuitableAuthority() throws Exception {
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/detailed-info")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "2",
+                                        "user_id", "3",
                                         "authority", "ROLE_MOD"))))
                                 .authorities(new SimpleGrantedAuthority("ROLE_MOD")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.user.id", is(2)))
+                .andExpect(jsonPath("$.user.id", is(3)))
                 .andExpect(jsonPath("$.user.firstName", is("Maria")))
                 .andExpect(jsonPath("$.user.lastName", is("Silva")))
                 .andExpect(jsonPath("$.user.username", is("maria_silva")))
@@ -680,26 +701,26 @@ public class UserControllerIT {
 
 
         assertAll(
-                () -> assertEquals(3, this.userRepository.findAll().size()),
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertTrue(this.userRepository.findById(2L).isPresent())
+                () -> assertEquals(4, this.userRepository.findAll().size()),
+                () -> assertEquals(4, this.profileRepository.findAll().size()),
+                () -> assertTrue(this.userRepository.findById(3L).isPresent())
         );
 
     }
 
     @DisplayName("ADM user should be able get detailed info your user with success if " +
-            "user_id param is null")
+                 "user_id param is null")
     @Test
     void admUserShouldGetDetailedInfoYourUserWithSuccessIfHasSuitableAuthority() throws Exception {
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/detailed-info")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "3",
+                                        "user_id", "4",
                                         "authority", "ROLE_ADM"))))
                                 .authorities(new SimpleGrantedAuthority("ROLE_ADM")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.user.id", is(3)))
+                .andExpect(jsonPath("$.user.id", is(4)))
                 .andExpect(jsonPath("$.user.firstName", is("Joao")))
                 .andExpect(jsonPath("$.user.lastName", is("Silva")))
                 .andExpect(jsonPath("$.user.username", is("joao_silva")))
@@ -711,29 +732,28 @@ public class UserControllerIT {
                 .andExpect(jsonPath("$.user.enabled", is(true)));
 
 
-
         assertAll(
-                () -> assertEquals(3, this.userRepository.findAll().size()),
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertTrue(this.userRepository.findById(3L).isPresent())
+                () -> assertEquals(4, this.userRepository.findAll().size()),
+                () -> assertEquals(4, this.profileRepository.findAll().size()),
+                () -> assertTrue(this.userRepository.findById(4L).isPresent())
         );
 
     }
 
     @DisplayName("MOD user should be able get detailed info of other user with success if " +
-            "user_id param isn't null")
+                 "user_id param isn't null")
     @Test
     void modUserShouldGetDetailedInfoOfOtherUserWithSuccessIfHasSuitableAuthority() throws Exception {
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/detailed-info")
-                        .queryParam("user_id", "1")
+                        .queryParam("user_id", "2")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "2",
+                                        "user_id", "3",
                                         "authority", "ROLE_MOD"))))
                                 .authorities(new SimpleGrantedAuthority("ROLE_MOD")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.user.id", is(1)))
+                .andExpect(jsonPath("$.user.id", is(2)))
                 .andExpect(jsonPath("$.user.firstName", is("Jose")))
                 .andExpect(jsonPath("$.user.lastName", is("Silva")))
                 .andExpect(jsonPath("$.user.username", is("jose_silva")))
@@ -745,27 +765,27 @@ public class UserControllerIT {
                 .andExpect(jsonPath("$.user.enabled", is(true)));
 
         assertAll(
-                () -> assertEquals(3, this.userRepository.findAll().size()),
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertTrue(this.userRepository.findById(1L).isPresent())
+                () -> assertEquals(4, this.userRepository.findAll().size()),
+                () -> assertEquals(4, this.profileRepository.findAll().size()),
+                () -> assertTrue(this.userRepository.findById(2L).isPresent())
         );
 
     }
 
     @DisplayName("ADM user should be able get detailed info of other user with success if " +
-            "user_id param isn't null")
+                 "user_id param isn't null")
     @Test
     void admUserShouldGetDetailedInfoOfOtherUserWithSuccessIfHasSuitableAuthority() throws Exception {
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/detailed-info")
-                        .queryParam("user_id", "1")
+                        .queryParam("user_id", "2")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "3",
+                                        "user_id", "4",
                                         "authority", "ROLE_ADM"))))
                                 .authorities(new SimpleGrantedAuthority("ROLE_ADM")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.user.id", is(1)))
+                .andExpect(jsonPath("$.user.id", is(2)))
                 .andExpect(jsonPath("$.user.firstName", is("Jose")))
                 .andExpect(jsonPath("$.user.lastName", is("Silva")))
                 .andExpect(jsonPath("$.user.username", is("jose_silva")))
@@ -777,39 +797,57 @@ public class UserControllerIT {
                 .andExpect(jsonPath("$.user.enabled", is(true)));
 
         assertAll(
-                () -> assertEquals(3, this.userRepository.findAll().size()),
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertTrue(this.userRepository.findById(1L).isPresent())
+                () -> assertEquals(4, this.userRepository.findAll().size()),
+                () -> assertEquals(4, this.profileRepository.findAll().size()),
+                () -> assertTrue(this.userRepository.findById(2L).isPresent())
         );
 
     }
 
     @DisplayName("Should fail with status code 401 when to request summary info " +
-            "user if user unauthenticated")
+                 "user if user unauthenticated")
     @Test
     void shouldFailToRequestSummaryInfoUserIfUnauthenticated() throws Exception {
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/summary-info")
-                        .queryParam("user_id", "1")
+                        .queryParam("user_id", "2")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isUnauthorized());
 
         assertAll(
-                () -> assertEquals(3, this.userRepository.findAll().size()),
-                () -> assertEquals(3, this.profileRepository.findAll().size())
+                () -> assertEquals(4, this.userRepository.findAll().size()),
+                () -> assertEquals(4, this.profileRepository.findAll().size())
         );
+    }
+
+    @DisplayName("Should fail with status code 400 when request summary info user if user_id property " +
+                 "of query param is sent empty")
+    @Test
+    void shouldFailIfUserIdPropertyOfQueryParamIsEmptyWhenRequestSummaryInfoUser() throws Exception {
+        this.mockMvc.perform(get("/forumhub.io/api/v1/users/summary-info")
+                        .with(jwt())
+                        .queryParam("user_id", "")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isBadRequest());
+
+        assertAll(
+                () -> assertEquals(4, this.userRepository.findAll().size()),
+                () -> assertEquals(4, this.profileRepository.findAll().size())
+        );
+
     }
 
     @DisplayName("Authenticated user should be able of to request user summary info with success")
     @Test
     void AuthenticatedUserShouldToRequestSummaryInfoUserWithSuccess() throws Exception {
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/summary-info")
-                        .queryParam("user_id", "1")
+                        .queryParam("user_id", "2")
                         .with(jwt())
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.id", is(2)))
                 .andExpect(jsonPath("$.firstName", is("Jose")))
                 .andExpect(jsonPath("$.lastName", is("Silva")))
                 .andExpect(jsonPath("$.username", is("jose_silva")))
@@ -817,14 +855,14 @@ public class UserControllerIT {
                 .andExpect(jsonPath("$.profile.profileName", is("BASIC")));
 
         assertAll(
-                () -> assertEquals(3, this.userRepository.findAll().size()),
-                () -> assertEquals(3, this.profileRepository.findAll().size())
+                () -> assertEquals(4, this.userRepository.findAll().size()),
+                () -> assertEquals(4, this.profileRepository.findAll().size())
         );
 
     }
 
     @DisplayName("Should fail with status code 400 if request user summary info " +
-            "with param different of type number, if him exists")
+                 "with param different of type number, if him exists")
     @Test
     void shouldFailToRequestSummaryInfoUserIfParamDifferentOfNumber() throws Exception {
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/summary-info")
@@ -835,14 +873,14 @@ public class UserControllerIT {
                 .andExpect(status().isBadRequest());
 
         assertAll(
-                () -> assertEquals(3, this.userRepository.findAll().size()),
-                () -> assertEquals(3, this.profileRepository.findAll().size())
+                () -> assertEquals(4, this.userRepository.findAll().size()),
+                () -> assertEquals(4, this.profileRepository.findAll().size())
         );
 
     }
 
     @DisplayName("Should fail with status code 401 when to request all " +
-            "users if user is unauthenticated")
+                 "users if user is unauthenticated")
     @Test
     void shouldFailToRequestAllUsersIfUserIsUnauthenticated() throws Exception {
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/listAll")
@@ -851,14 +889,14 @@ public class UserControllerIT {
                 .andExpect(status().isUnauthorized());
 
         assertAll(
-                () -> assertEquals(3, this.userRepository.findAll().size()),
-                () -> assertEquals(3, this.profileRepository.findAll().size())
+                () -> assertEquals(4, this.userRepository.findAll().size()),
+                () -> assertEquals(4, this.profileRepository.findAll().size())
         );
 
     }
 
     @DisplayName("Should fail with status code 403 when to request all users " +
-            "if authenticated user isn't ADM or MOD or hasn't authority 'user:readAll'")
+                 "if authenticated user isn't ADM or MOD or hasn't authority 'user:readAll'")
     @Test
     void shouldFailToRequestAllUsersIfUserHasNotSuitableAuthority() throws Exception {
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/listAll")
@@ -868,18 +906,18 @@ public class UserControllerIT {
                 .andExpect(status().isForbidden());
 
         assertAll(
-                () -> assertEquals(3, this.userRepository.findAll().size()),
-                () -> assertEquals(3, this.profileRepository.findAll().size())
+                () -> assertEquals(4, this.userRepository.findAll().size()),
+                () -> assertEquals(4, this.profileRepository.findAll().size())
         );
     }
 
     @DisplayName("Should fail with status code 403 if BASIC user to request all users" +
-            "same with authority 'user:readAll'")
+                 "same with authority 'user:readAll'")
     @Test
     void shouldFailIfBasicUserToRequestAllUsers() throws Exception {
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/listAll")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "1",
+                                        "user_id", "2",
                                         "authority", "ROLE_BASIC"))))
                                 .authorities(
                                         new SimpleGrantedAuthority("ROLE_BASIC"),
@@ -889,9 +927,29 @@ public class UserControllerIT {
                 .andExpect(status().isForbidden());
 
         assertAll(
-                () -> assertEquals(3, this.userRepository.findAll().size()),
-                () -> assertEquals(3, this.profileRepository.findAll().size())
+                () -> assertEquals(4, this.userRepository.findAll().size()),
+                () -> assertEquals(4, this.profileRepository.findAll().size())
         );
+
+    }
+
+    @DisplayName("Should fail with status code 400 when request all users if value of " +
+                 "property 'sort' of pagination properties not exists")
+    @Test
+    void shouldFailWhenRequestAllUsersIfSortPropertyValueNotExists() throws Exception {
+        this.mockMvc.perform(get("/forumhub.io/api/v1/users/listAll")
+                        .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
+                                        "user_id", "4",
+                                        "authority", "ROLE_ADM"))))
+                                .authorities(
+                                        new SimpleGrantedAuthority("ROLE_MOD"),
+                                        new SimpleGrantedAuthority("SCOPE_user:readAll")))
+                        .queryParam("sort", "unexpected")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.detail",
+                        is("A propriedade 'unexpected' enviada não existe")));
 
     }
 
@@ -900,7 +958,7 @@ public class UserControllerIT {
     void modUserShouldToRequestAllUsersUnsortedWithSuccess() throws Exception {
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/listAll")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "2",
+                                        "user_id", "3",
                                         "authority", "ROLE_MOD"))))
                                 .authorities(
                                         new SimpleGrantedAuthority("ROLE_MOD"),
@@ -908,15 +966,15 @@ public class UserControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$..userSummaryInfoList.length()", is(3)))
+                .andExpect(jsonPath("$..userSummaryInfoList.length()", is(4)))
                 .andExpect(jsonPath("$..page.[?(@.number == 0)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.size == 10)]").exists())
-                .andExpect(jsonPath("$..page.[?(@.totalElements == 3)]").exists())
+                .andExpect(jsonPath("$..page.[?(@.totalElements == 4)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.totalPages == 1)]").exists());
 
         assertAll(
-                () -> assertEquals(3, this.userRepository.findAll().size()),
-                () -> assertEquals(3, this.profileRepository.findAll().size())
+                () -> assertEquals(4, this.userRepository.findAll().size()),
+                () -> assertEquals(4, this.profileRepository.findAll().size())
         );
 
 
@@ -927,7 +985,7 @@ public class UserControllerIT {
     void admUserShouldToRequestAllUsersUnsortedWithSuccess() throws Exception {
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/listAll")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "3",
+                                        "user_id", "4",
                                         "authority", "ROLE_ADM"))))
                                 .authorities(
                                         new SimpleGrantedAuthority("ROLE_ADM"),
@@ -935,28 +993,28 @@ public class UserControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$..userSummaryInfoList.length()", is(3)))
+                .andExpect(jsonPath("$..userSummaryInfoList.length()", is(4)))
                 .andExpect(jsonPath("$..page.[?(@.number == 0)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.size == 10)]").exists())
-                .andExpect(jsonPath("$..page.[?(@.totalElements == 3)]").exists())
+                .andExpect(jsonPath("$..page.[?(@.totalElements == 4)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.totalPages == 1)]").exists());
 
         assertAll(
-                () -> assertEquals(3, this.userRepository.findAll().size()),
-                () -> assertEquals(3, this.profileRepository.findAll().size())
+                () -> assertEquals(4, this.userRepository.findAll().size()),
+                () -> assertEquals(4, this.profileRepository.findAll().size())
         );
 
 
     }
 
     @DisplayName("MOD user should be able to request all users sorted descendant by id " +
-            "with success")
+                 "with success")
     @Test
     void modUserShouldToRequestAllUsersSortedByIdWithSuccess() throws Exception {
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/listAll")
                         .queryParam("sort", "id,desc")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "2",
+                                        "user_id", "3",
                                         "authority", "ROLE_MOD"))))
                                 .authorities(
                                         new SimpleGrantedAuthority("ROLE_MOD"),
@@ -964,31 +1022,32 @@ public class UserControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$..userSummaryInfoList[0].[?(@.id == 3)]").exists())
-                .andExpect(jsonPath("$..userSummaryInfoList[1].[?(@.id == 2)]").exists())
-                .andExpect(jsonPath("$..userSummaryInfoList[2].[?(@.id == 1)]").exists())
-                .andExpect(jsonPath("$..userSummaryInfoList.length()", is(3)))
+                .andExpect(jsonPath("$..userSummaryInfoList[0].[?(@.id == 4)]").exists())
+                .andExpect(jsonPath("$..userSummaryInfoList[1].[?(@.id == 3)]").exists())
+                .andExpect(jsonPath("$..userSummaryInfoList[2].[?(@.id == 2)]").exists())
+                .andExpect(jsonPath("$..userSummaryInfoList[3].[?(@.id == 1)]").exists())
+                .andExpect(jsonPath("$..userSummaryInfoList.length()", is(4)))
                 .andExpect(jsonPath("$..page.[?(@.number == 0)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.size == 10)]").exists())
-                .andExpect(jsonPath("$..page.[?(@.totalElements == 3)]").exists())
+                .andExpect(jsonPath("$..page.[?(@.totalElements == 4)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.totalPages == 1)]").exists());
 
         assertAll(
-                () -> assertEquals(3, this.userRepository.findAll().size()),
-                () -> assertEquals(3, this.profileRepository.findAll().size())
+                () -> assertEquals(4, this.userRepository.findAll().size()),
+                () -> assertEquals(4, this.profileRepository.findAll().size())
         );
 
 
     }
 
     @DisplayName("ADM user should be able to request all users sorted descendant by id " +
-            "with success")
+                 "with success")
     @Test
     void admUserShouldToRequestAllUsersSortedByIdWithSuccess() throws Exception {
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/listAll")
                         .queryParam("sort", "id,desc")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "3",
+                                        "user_id", "4",
                                         "authority", "ROLE_ADM"))))
                                 .authorities(
                                         new SimpleGrantedAuthority("ROLE_ADM"),
@@ -996,31 +1055,32 @@ public class UserControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$..userSummaryInfoList[0].[?(@.id == 3)]").exists())
-                .andExpect(jsonPath("$..userSummaryInfoList[1].[?(@.id == 2)]").exists())
-                .andExpect(jsonPath("$..userSummaryInfoList[2].[?(@.id == 1)]").exists())
-                .andExpect(jsonPath("$..userSummaryInfoList.length()", is(3)))
+                .andExpect(jsonPath("$..userSummaryInfoList[0].[?(@.id == 4)]").exists())
+                .andExpect(jsonPath("$..userSummaryInfoList[1].[?(@.id == 3)]").exists())
+                .andExpect(jsonPath("$..userSummaryInfoList[2].[?(@.id == 2)]").exists())
+                .andExpect(jsonPath("$..userSummaryInfoList[3].[?(@.id == 1)]").exists())
+                .andExpect(jsonPath("$..userSummaryInfoList.length()", is(4)))
                 .andExpect(jsonPath("$..page.[?(@.number == 0)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.size == 10)]").exists())
-                .andExpect(jsonPath("$..page.[?(@.totalElements == 3)]").exists())
+                .andExpect(jsonPath("$..page.[?(@.totalElements == 4)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.totalPages == 1)]").exists());
 
         assertAll(
-                () -> assertEquals(3, this.userRepository.findAll().size()),
-                () -> assertEquals(3, this.profileRepository.findAll().size())
+                () -> assertEquals(4, this.userRepository.findAll().size()),
+                () -> assertEquals(4, this.profileRepository.findAll().size())
         );
 
 
     }
 
     @DisplayName("MOD user should be able to request all users sorted ascendant by profile name " +
-            "with success")
+                 "with success")
     @Test
     void modUserShouldToRequestAllUsersSortedByProfileNameWithSuccess() throws Exception {
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/listAll")
                         .queryParam("sort", "profile.profileName,asc")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "2",
+                                        "user_id", "3",
                                         "authority", "ROLE_MOD"))))
                                 .authorities(
                                         new SimpleGrantedAuthority("ROLE_MOD"),
@@ -1029,28 +1089,29 @@ public class UserControllerIT {
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$..userSummaryInfoList[0].[?(@.profile.profileName == \"ADM\")])").exists())
-                .andExpect(jsonPath("$..userSummaryInfoList[1].[?(@.profile.profileName == \"BASIC\")])").exists())
-                .andExpect(jsonPath("$..userSummaryInfoList[2].[?(@.profile.profileName == \"MOD\")])").exists())
-                .andExpect(jsonPath("$..userSummaryInfoList.length()", is(3)))
+                .andExpect(jsonPath("$..userSummaryInfoList[1].[?(@.profile.profileName == \"ANONYMOUS\")])").exists())
+                .andExpect(jsonPath("$..userSummaryInfoList[2].[?(@.profile.profileName == \"BASIC\")])").exists())
+                .andExpect(jsonPath("$..userSummaryInfoList[3].[?(@.profile.profileName == \"MOD\")])").exists())
+                .andExpect(jsonPath("$..userSummaryInfoList.length()", is(4)))
                 .andExpect(jsonPath("$..page.[?(@.number == 0)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.size == 10)]").exists())
-                .andExpect(jsonPath("$..page.[?(@.totalElements == 3)]").exists())
+                .andExpect(jsonPath("$..page.[?(@.totalElements == 4)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.totalPages == 1)]").exists());
 
         assertAll(
-                () -> assertEquals(3, this.userRepository.findAll().size()),
-                () -> assertEquals(3, this.profileRepository.findAll().size())
+                () -> assertEquals(4, this.userRepository.findAll().size()),
+                () -> assertEquals(4, this.profileRepository.findAll().size())
         );
     }
 
     @DisplayName("ADM user should be able to request all users sorted ascendant by profile " +
-            "with success")
+                 "with success")
     @Test
     void admUserShouldToRequestAllUsersSortedByProfileWithSuccess() throws Exception {
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/listAll")
                         .queryParam("sort", "profile.profileName,asc")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "3",
+                                        "user_id", "4",
                                         "authority", "ROLE_ADM"))))
                                 .authorities(
                                         new SimpleGrantedAuthority("ROLE_ADM"),
@@ -1059,29 +1120,30 @@ public class UserControllerIT {
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$..userSummaryInfoList[0].[?(@.profile.profileName == \"ADM\")])").exists())
-                .andExpect(jsonPath("$..userSummaryInfoList[1].[?(@.profile.profileName == \"BASIC\")])").exists())
-                .andExpect(jsonPath("$..userSummaryInfoList[2].[?(@.profile.profileName == \"MOD\")])").exists())
-                .andExpect(jsonPath("$..userSummaryInfoList.length()", is(3)))
+                .andExpect(jsonPath("$..userSummaryInfoList[1].[?(@.profile.profileName == \"ANONYMOUS\")])").exists())
+                .andExpect(jsonPath("$..userSummaryInfoList[2].[?(@.profile.profileName == \"BASIC\")])").exists())
+                .andExpect(jsonPath("$..userSummaryInfoList[3].[?(@.profile.profileName == \"MOD\")])").exists())
+                .andExpect(jsonPath("$..userSummaryInfoList.length()", is(4)))
                 .andExpect(jsonPath("$..page.[?(@.number == 0)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.size == 10)]").exists())
-                .andExpect(jsonPath("$..page.[?(@.totalElements == 3)]").exists())
+                .andExpect(jsonPath("$..page.[?(@.totalElements == 4)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.totalPages == 1)]").exists());
 
         assertAll(
-                () -> assertEquals(3, this.userRepository.findAll().size()),
-                () -> assertEquals(3, this.profileRepository.findAll().size())
+                () -> assertEquals(4, this.userRepository.findAll().size()),
+                () -> assertEquals(4, this.profileRepository.findAll().size())
         );
     }
 
     @DisplayName("MOD user should be able to request two users sorted ascendant by firstName " +
-            "with success")
+                 "with success")
     @Test
     void modUserShouldToRequestTwoUsersSortedByFirstNameWithSuccess() throws Exception {
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/listAll")
                         .queryParam("size", "2")
                         .queryParam("sort", "firstName,asc")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "2",
+                                        "user_id", "3",
                                         "authority", "ROLE_MOD"))))
                                 .authorities(
                                         new SimpleGrantedAuthority("ROLE_MOD"),
@@ -1089,29 +1151,29 @@ public class UserControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$..userSummaryInfoList[0].[?(@.id == 3)]").exists())
-                .andExpect(jsonPath("$..userSummaryInfoList[1].[?(@.id == 1)]").exists())
+                .andExpect(jsonPath("$..userSummaryInfoList[0].[?(@.id == 1)]").exists())
+                .andExpect(jsonPath("$..userSummaryInfoList[1].[?(@.id == 4)]").exists())
                 .andExpect(jsonPath("$..userSummaryInfoList.length()", is(2)))
                 .andExpect(jsonPath("$..page.[?(@.number == 0)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.size == 2)]").exists())
-                .andExpect(jsonPath("$..page.[?(@.totalElements == 3)]").exists())
+                .andExpect(jsonPath("$..page.[?(@.totalElements == 4)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.totalPages == 2)]").exists());
 
         assertAll(
-                () -> assertEquals(3, this.userRepository.findAll().size()),
-                () -> assertEquals(3, this.profileRepository.findAll().size())
+                () -> assertEquals(4, this.userRepository.findAll().size()),
+                () -> assertEquals(4, this.profileRepository.findAll().size())
         );
     }
 
     @DisplayName("ADM user should be able to request two users sorted descendant by firstName " +
-            "with success")
+                 "with success")
     @Test
     void admUserShouldToRequestTwoUsersSortedByFirstNameWithSuccess() throws Exception {
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/listAll")
                         .queryParam("size", "2")
                         .queryParam("sort", "firstName,asc")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "3",
+                                        "user_id", "4",
                                         "authority", "ROLE_ADM"))))
                                 .authorities(
                                         new SimpleGrantedAuthority("ROLE_ADM"),
@@ -1119,24 +1181,24 @@ public class UserControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$..userSummaryInfoList[0].[?(@.id == 3)]").exists())
-                .andExpect(jsonPath("$..userSummaryInfoList[1].[?(@.id == 1)]").exists())
+                .andExpect(jsonPath("$..userSummaryInfoList[0].[?(@.id == 1)]").exists())
+                .andExpect(jsonPath("$..userSummaryInfoList[1].[?(@.id == 4)]").exists())
                 .andExpect(jsonPath("$..userSummaryInfoList.length()", is(2)))
                 .andExpect(jsonPath("$..page.[?(@.number == 0)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.size == 2)]").exists())
-                .andExpect(jsonPath("$..page.[?(@.totalElements == 3)]").exists())
+                .andExpect(jsonPath("$..page.[?(@.totalElements == 4)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.totalPages == 2)]").exists());
 
         assertAll(
-                () -> assertEquals(3, this.userRepository.findAll().size()),
-                () -> assertEquals(3, this.profileRepository.findAll().size())
+                () -> assertEquals(4, this.userRepository.findAll().size()),
+                () -> assertEquals(4, this.profileRepository.findAll().size())
         );
 
 
     }
 
     @DisplayName("Should fail with status code 401 when to edit user " +
-            "if user is unauthenticated")
+                 "if user is unauthenticated")
     @Test
     void shouldFailToEditUserIfUnauthenticated() throws Exception {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO("Jose", "Silva",
@@ -1152,7 +1214,7 @@ public class UserControllerIT {
     }
 
     @DisplayName("Should fail with status code 403 when to edit user " +
-            "if authenticated user isn't ADM or hasn't authority 'myuser:edit'")
+                 "if authenticated user isn't ADM or hasn't authority 'myuser:edit'")
     @Test
     void shouldFailIfUserHasNotSuitableAuthorityWhenEditUser() throws Exception {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO("Jose", "Silva",
@@ -1160,13 +1222,13 @@ public class UserControllerIT {
                 true, true, true, true);
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
-                        .with(jwt().jwt(jwt -> jwt.claim("user_id", "1")))
+                        .with(jwt().jwt(jwt -> jwt.claim("user_id", "2")))
                         .content(new ObjectMapper().writeValueAsString(userUpdateDTO))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isForbidden());
 
-        User user = this.userRepository.findById(1L).orElseThrow();
+        User user = this.userRepository.findById(2L).orElseThrow();
 
         assertAll(
                 () -> assertThat(user.getUsername(), is("jose_silva")),
@@ -1176,7 +1238,7 @@ public class UserControllerIT {
     }
 
     @DisplayName("Should fail with status code 400 when ADM user edit other user" +
-            " with param different of type number")
+                 " with param different of type number")
     @Test
     void shouldFailToEditUserIfParamDifferentOfTypeNumber() throws Exception {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO("Jose", "Silva",
@@ -1186,7 +1248,7 @@ public class UserControllerIT {
         this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
                         .queryParam("user_id", "unexpected")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "3",
+                                        "user_id", "4",
                                         "authority", "ROLE_ADM"))))
                                 .authorities(new SimpleGrantedAuthority("ROLE_ADM")))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -1197,7 +1259,7 @@ public class UserControllerIT {
     }
 
     @DisplayName("Should fail with status code 400 when edit user if profile sent is" +
-            " different of the enum types available")
+                 " different of the enum types available")
     @Test
     void shouldFailToEditUserIfEnumTypeSentNonExists() throws Exception {
         String request = """
@@ -1213,9 +1275,9 @@ public class UserControllerIT {
                 """;
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
-                        .queryParam("user_id", "1")
+                        .queryParam("user_id", "2")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "3",
+                                        "user_id", "4",
                                         "authority", "ROLE_ADM"))))
                                 .authorities(new SimpleGrantedAuthority("ROLE_ADM")))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -1223,7 +1285,7 @@ public class UserControllerIT {
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isBadRequest());
 
-        User user = this.userRepository.findById(1L).orElseThrow();
+        User user = this.userRepository.findById(2L).orElseThrow();
 
         assertAll(
                 () -> assertThat(user.getUsername(), is("jose_silva")),
@@ -1233,7 +1295,7 @@ public class UserControllerIT {
     }
 
     @DisplayName("Should fail with status code 404 when ADM user request edit " +
-            "of other user and this one not exists")
+                 "of other user and this one not exists")
     @Test
     void shouldFailToEditUserIfInformedUserNotExists() throws Exception {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO("Maria", "Silva", "maria_silva",
@@ -1243,7 +1305,7 @@ public class UserControllerIT {
         this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
                         .queryParam("user_id", "5")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "3",
+                                        "user_id", "4",
                                         "authority", "ROLE_ADM"))))
                                 .authorities(new SimpleGrantedAuthority("ROLE_ADM")))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -1258,7 +1320,7 @@ public class UserControllerIT {
 
     @Transactional
     @DisplayName("If user isn't ADM shouldn't edit extra information, i.e, profile, expired account, " +
-            "locked account, expired credentials and enabled account")
+                 "locked account, expired credentials and enabled account")
     @Test
     void shouldNotEditExtraInformationIfEditRequestUserIsNotADM() throws Exception {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO("Joao", "Silva", "jose_silva0",
@@ -1267,7 +1329,7 @@ public class UserControllerIT {
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "1",
+                                        "user_id", "2",
                                         "authority", "ROLE_BASIC"))))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_myuser:edit")))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -1285,7 +1347,7 @@ public class UserControllerIT {
                 .andExpect(jsonPath("$.user.enabled", is(true)));
 
 
-        User user = this.userRepository.findById(1L).orElseThrow();
+        User user = this.userRepository.findById(2L).orElseThrow();
 
         assertAll(
                 () -> assertThat(user.getUsername(), is("jose_silva0")),
@@ -1297,7 +1359,7 @@ public class UserControllerIT {
 
     @Transactional
     @DisplayName("BASIC user should be able of edit your user with success if " +
-            "user_id param is null and has authority 'myuser:edit'")
+                 "user_id param is null and has authority 'myuser:edit'")
     @Test
     void basicUserShouldEditYourUserWithSuccessIfHasSuitableAuthority() throws Exception {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO("Joao", "Silva", "newJose",
@@ -1306,14 +1368,14 @@ public class UserControllerIT {
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "1",
+                                        "user_id", "2",
                                         "authority", "ROLE_BASIC"))))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_myuser:edit")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(userUpdateDTO))
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.user.id", is(1)))
+                .andExpect(jsonPath("$.user.id", is(2)))
                 .andExpect(jsonPath("$.user.firstName", is("Jose")))
                 .andExpect(jsonPath("$.user.lastName", is("Silva")))
                 .andExpect(jsonPath("$.user.username", is("newJose")))
@@ -1324,7 +1386,7 @@ public class UserControllerIT {
                 .andExpect(jsonPath("$.user.credentialsNonExpired", is(true)))
                 .andExpect(jsonPath("$.user.enabled", is(true)));
 
-        User user = this.userRepository.findById(1L).orElseThrow();
+        User user = this.userRepository.findById(2L).orElseThrow();
 
         assertAll(
                 () -> assertThat(user.getUsername(), is("newJose")),
@@ -1335,7 +1397,7 @@ public class UserControllerIT {
 
     @Transactional
     @DisplayName("MOD user should be able of edit your user with success if " +
-            "user_id param is null and has authority 'myuser:edit'")
+                 "user_id param is null and has authority 'myuser:edit'")
     @Test
     void modUserShouldEditYourUserWithSuccessIfHasSuitableAuthority() throws Exception {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO("Maria", "Silva", "newMaria",
@@ -1344,14 +1406,14 @@ public class UserControllerIT {
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "2",
+                                        "user_id", "3",
                                         "authority", "ROLE_MOD"))))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_myuser:edit")))
                         .content(new ObjectMapper().writeValueAsString(userUpdateDTO))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.user.id", is(2)))
+                .andExpect(jsonPath("$.user.id", is(3)))
                 .andExpect(jsonPath("$.user.firstName", is("Maria")))
                 .andExpect(jsonPath("$.user.lastName", is("Silva")))
                 .andExpect(jsonPath("$.user.username", is("newMaria")))
@@ -1363,7 +1425,7 @@ public class UserControllerIT {
                 .andExpect(jsonPath("$.user.enabled", is(true)));
 
 
-        User user = this.userRepository.findById(2L).orElseThrow();
+        User user = this.userRepository.findById(3L).orElseThrow();
 
         assertAll(
                 () -> assertThat(user.getUsername(), is("newMaria")),
@@ -1374,7 +1436,7 @@ public class UserControllerIT {
 
     @Transactional
     @DisplayName("ADM user should be able of edit your user with success if " +
-            "user_id param is null")
+                 "user_id param is null")
     @Test
     void admUserShouldEditYourUserWithSuccessIfUserIdParamIsNull() throws Exception {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO("Joao", "Silva", "newJoao",
@@ -1383,14 +1445,14 @@ public class UserControllerIT {
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "3",
+                                        "user_id", "4",
                                         "authority", "ROLE_ADM"))))
                                 .authorities(new SimpleGrantedAuthority("ROLE_ADM")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(userUpdateDTO))
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.user.id", is(3)))
+                .andExpect(jsonPath("$.user.id", is(4)))
                 .andExpect(jsonPath("$.user.firstName", is("Joao")))
                 .andExpect(jsonPath("$.user.lastName", is("Silva")))
                 .andExpect(jsonPath("$.user.username", is("newJoao")))
@@ -1402,7 +1464,7 @@ public class UserControllerIT {
                 .andExpect(jsonPath("$.user.enabled", is(true)));
 
 
-        User user = this.userRepository.findById(3L).orElseThrow();
+        User user = this.userRepository.findById(4L).orElseThrow();
 
         assertAll(
                 () -> assertThat(user.getUsername(), is("newJoao")),
@@ -1413,7 +1475,7 @@ public class UserControllerIT {
 
     @Transactional
     @DisplayName("ADM user should be able of edit other user with success if " +
-            "user_id param isn't null")
+                 "user_id param isn't null")
     @Test
     void admUserShouldEditOtherUserWithSuccessIfUserIdParamIsNotNull() throws Exception {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO("Maria", "Silva", "maria_silva",
@@ -1421,16 +1483,16 @@ public class UserControllerIT {
                 true, true, true, true);
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
-                        .queryParam("user_id", "2")
+                        .queryParam("user_id", "3")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "3",
+                                        "user_id", "4",
                                         "authority", "ROLE_ADM"))))
                                 .authorities(new SimpleGrantedAuthority("ROLE_ADM")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(userUpdateDTO))
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.user.id", is(2)))
+                .andExpect(jsonPath("$.user.id", is(3)))
                 .andExpect(jsonPath("$.user.firstName", is("Maria")))
                 .andExpect(jsonPath("$.user.lastName", is("Silva")))
                 .andExpect(jsonPath("$.user.username", is("maria_silva")))
@@ -1442,7 +1504,7 @@ public class UserControllerIT {
                 .andExpect(jsonPath("$.user.enabled", is(true)));
 
 
-        User user = this.userRepository.findById(2L).orElseThrow();
+        User user = this.userRepository.findById(3L).orElseThrow();
 
         assertAll(
                 () -> assertThat(user.getUsername(), is("maria_silva")),
@@ -1452,7 +1514,7 @@ public class UserControllerIT {
     }
 
     @DisplayName("Should fail with status code 400 if BASIC user to try edit other user " +
-            "or yourself with user_id param not null")
+                 "or yourself with user_id param not null")
     @Test
     void shouldFailIfBasicUserTryEditWithUserIdParamNotNull() throws Exception {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO("Maria", "Silva", "newMaria",
@@ -1460,10 +1522,39 @@ public class UserControllerIT {
                 true, true, true, true);
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
+                        .queryParam("user_id", "3")
+                        .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
+                                        "user_id", "2",
+                                        "authority", "ROLE_BASIC"))))
+                                .authorities(new SimpleGrantedAuthority("SCOPE_myuser:edit")))
+                        .content(new ObjectMapper().writeValueAsString(userUpdateDTO))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isBadRequest());
+
+
+        User user = this.userRepository.findById(3L).orElseThrow();
+
+        assertAll(
+                () -> assertThat(user.getUsername(), is("maria_silva")),
+                () -> assertThat(user.getEmail(), is("maria@email.com"))
+        );
+
+    }
+
+    @DisplayName("Should fail with status code 400 if MOD user to try edit other user " +
+                 "or yourself with user_id param not null")
+    @Test
+    void shouldFailIfModUserTryEditWithUserIdParamNotNull() throws Exception {
+        UserUpdateDTO userUpdateDTO = new UserUpdateDTO("Jose", "Silva", "jose_silva0",
+                "jose_silva0@email.com", Profile.ProfileName.BASIC, true, true,
+                true, true);
+
+        this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
                         .queryParam("user_id", "2")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "1",
-                                        "authority", "ROLE_BASIC"))))
+                                        "user_id", "3",
+                                        "authority", "ROLE_MOD"))))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_myuser:edit")))
                         .content(new ObjectMapper().writeValueAsString(userUpdateDTO))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -1474,42 +1565,13 @@ public class UserControllerIT {
         User user = this.userRepository.findById(2L).orElseThrow();
 
         assertAll(
-                () -> assertThat(user.getUsername(), is("maria_silva")),
-                () -> assertThat(user.getEmail(), is("maria@email.com"))
-        );
-
-    }
-
-    @DisplayName("Should fail with status code 400 if MOD user to try edit other user " +
-            "or yourself with user_id param not null")
-    @Test
-    void shouldFailIfModUserTryEditWithUserIdParamNotNull() throws Exception {
-        UserUpdateDTO userUpdateDTO = new UserUpdateDTO("Jose", "Silva", "jose_silva0",
-                "jose_silva0@email.com", Profile.ProfileName.BASIC, true, true,
-                true, true);
-
-        this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
-                        .queryParam("user_id", "1")
-                        .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "2",
-                                        "authority", "ROLE_MOD"))))
-                                .authorities(new SimpleGrantedAuthority("SCOPE_myuser:edit")))
-                        .content(new ObjectMapper().writeValueAsString(userUpdateDTO))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .characterEncoding(StandardCharsets.UTF_8))
-                .andExpect(status().isBadRequest());
-
-
-        User user = this.userRepository.findById(1L).orElseThrow();
-
-        assertAll(
                 () -> assertThat(user.getUsername(), is("jose_silva")),
                 () -> assertThat(user.getEmail(), is("jose@email.com"))
         );
     }
 
     @DisplayName("Should fail with status code 401 when to delete user " +
-            "if user is unauthenticated")
+                 "if user is unauthenticated")
     @Test
     void shouldFailToDeleteUserIfUnauthenticated() throws Exception {
         this.mockMvc.perform(delete("/forumhub.io/api/v1/users/delete")
@@ -1518,40 +1580,40 @@ public class UserControllerIT {
                 .andExpect(status().isUnauthorized());
 
         assertAll(
-                () -> assertEquals(3, this.userRepository.findAll().size()),
-                () -> assertEquals(3, this.profileRepository.findAll().size())
+                () -> assertEquals(4, this.userRepository.findAll().size()),
+                () -> assertEquals(4, this.profileRepository.findAll().size())
         );
 
 
     }
 
     @DisplayName("Should fail with status code 403 when to delete user " +
-            "if authenticated user isn't ADM or hasn't authority 'myuser:delete'")
+                 "if authenticated user isn't ADM or hasn't authority 'myuser:delete'")
     @Test
     void shouldFailIfUserHasNotSuitableAuthorityWhenDeleteUser() throws Exception {
         this.mockMvc.perform(delete("/forumhub.io/api/v1/users/delete")
-                        .with(jwt().jwt(jwt -> jwt.claim("user_id", "1")))
+                        .with(jwt().jwt(jwt -> jwt.claim("user_id", "2")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isForbidden());
 
         assertAll(
-                () -> assertEquals(3, this.userRepository.findAll().size()),
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertTrue(this.userRepository.findById(1L).isPresent())
+                () -> assertEquals(4, this.userRepository.findAll().size()),
+                () -> assertEquals(4, this.profileRepository.findAll().size()),
+                () -> assertTrue(this.userRepository.findById(2L).isPresent())
         );
 
 
     }
 
     @DisplayName("Should fail with status code 400 when ADM user delete other user" +
-            " with param different of type number, if him exists")
+                 " with param different of type number, if him exists")
     @Test
     void shouldFailIfParamDifferentOfTypeNumber() throws Exception {
         this.mockMvc.perform(delete("/forumhub.io/api/v1/users/delete")
                         .queryParam("user_id", "unexpected")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "3",
+                                        "user_id", "4",
                                         "authority", "ROLE_ADM"))))
                                 .authorities(new SimpleGrantedAuthority("ROLE_ADM")))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -1561,13 +1623,13 @@ public class UserControllerIT {
     }
 
     @DisplayName("Should fail with status code 400 if BASIC user to try delete other user " +
-            "or yourself with user_id param not null")
+                 "or yourself with user_id param not null")
     @Test
     void shouldFailIfBasicUserTryToDeleteWithUserIdParamNotNull() throws Exception {
         this.mockMvc.perform(delete("/forumhub.io/api/v1/users/delete")
-                        .queryParam("user_id", "1")
+                        .queryParam("user_id", "2")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "1",
+                                        "user_id", "2",
                                         "authority", "ROLE_BASIC"))))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_myuser:delete")))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -1575,20 +1637,20 @@ public class UserControllerIT {
                 .andExpect(status().isBadRequest());
 
         assertAll(
-                () -> assertEquals(3, this.userRepository.findAll().size()),
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertTrue(this.userRepository.findById(1L).isPresent())
+                () -> assertEquals(4, this.userRepository.findAll().size()),
+                () -> assertEquals(4, this.profileRepository.findAll().size()),
+                () -> assertTrue(this.userRepository.findById(2L).isPresent())
         );
     }
 
     @DisplayName("Should fail with status code 400 if MOD user to try delete other user " +
-            "or yourself with user_id param not null")
+                 "or yourself with user_id param not null")
     @Test
     void shouldFailIfModUserTryToDeleteWithUserIdParamNotNull() throws Exception {
         this.mockMvc.perform(delete("/forumhub.io/api/v1/users/delete")
-                        .queryParam("user_id", "1")
+                        .queryParam("user_id", "2")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "2",
+                                        "user_id", "3",
                                         "authority", "ROLE_MOD"))))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_myuser:delete")))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -1596,21 +1658,21 @@ public class UserControllerIT {
                 .andExpect(status().isBadRequest());
 
         assertAll(
-                () -> assertEquals(3, this.userRepository.findAll().size()),
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertTrue(this.userRepository.findById(1L).isPresent())
+                () -> assertEquals(4, this.userRepository.findAll().size()),
+                () -> assertEquals(4, this.profileRepository.findAll().size()),
+                () -> assertTrue(this.userRepository.findById(2L).isPresent())
         );
     }
 
     @Transactional
     @DisplayName("ADM user should be able of delete other user with success if " +
-            "user_id param isn't null")
+                 "user_id param isn't null")
     @Test
     void admUserShouldDeleteOtherUserWithSuccessIfUserIdParamIsNotNull() throws Exception {
         this.mockMvc.perform(delete("/forumhub.io/api/v1/users/delete")
-                        .queryParam("user_id", "1")
+                        .queryParam("user_id", "2")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "3",
+                                        "user_id", "4",
                                         "authority", "ROLE_ADM"))))
                                 .authorities(new SimpleGrantedAuthority("ROLE_ADM")))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -1619,67 +1681,67 @@ public class UserControllerIT {
                 .andExpect(content().json("{\"message\":\"HttpStatusCode OK\"}"));
 
         assertAll(
-                () -> assertEquals(2, this.userRepository.findAll().size()),
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertTrue(this.userRepository.findById(1L).isEmpty())
-        );
-
-    }
-
-    @Transactional
-    @DisplayName("BASIC user should be able of delete your user with success if " +
-            "user_id param is null and has authority 'myuser:delete'")
-    @Test
-    void basicUserShouldDeleteYourUserWithSuccessIfHasSuitableAuthority() throws Exception {
-        this.mockMvc.perform(delete("/forumhub.io/api/v1/users/delete")
-                        .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "1",
-                                        "authority", "ROLE_BASIC"))))
-                                .authorities(new SimpleGrantedAuthority("SCOPE_myuser:delete")))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .characterEncoding(StandardCharsets.UTF_8))
-                .andExpect(status().isOk())
-                .andExpect(content().json("{\"message\":\"HttpStatusCode OK\"}"));
-
-        assertAll(
-                () -> assertEquals(2, this.userRepository.findAll().size()),
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertTrue(this.userRepository.findById(1L).isEmpty())
-        );
-
-    }
-
-    @Transactional
-    @DisplayName("MOD user should be able of delete your user with success if " +
-            "user_id param is null and has authority 'myuser:delete'")
-    @Test
-    void modUserShouldDeleteYourUserWithSuccessIfHasSuitableAuthority() throws Exception {
-        this.mockMvc.perform(delete("/forumhub.io/api/v1/users/delete")
-                        .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "2",
-                                        "authority", "ROLE_MOD"))))
-                                .authorities(new SimpleGrantedAuthority("SCOPE_myuser:delete")))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .characterEncoding(StandardCharsets.UTF_8))
-                .andExpect(status().isOk())
-                .andExpect(content().json("{\"message\":\"HttpStatusCode OK\"}"));
-
-        assertAll(
-                () -> assertEquals(2, this.userRepository.findAll().size()),
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
+                () -> assertEquals(3, this.userRepository.findAll().size()),
+                () -> assertEquals(4, this.profileRepository.findAll().size()),
                 () -> assertTrue(this.userRepository.findById(2L).isEmpty())
         );
 
     }
 
     @Transactional
+    @DisplayName("BASIC user should be able of delete your user with success if " +
+                 "user_id param is null and has authority 'myuser:delete'")
+    @Test
+    void basicUserShouldDeleteYourUserWithSuccessIfHasSuitableAuthority() throws Exception {
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/users/delete")
+                        .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
+                                        "user_id", "2",
+                                        "authority", "ROLE_BASIC"))))
+                                .authorities(new SimpleGrantedAuthority("SCOPE_myuser:delete")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isOk())
+                .andExpect(content().json("{\"message\":\"HttpStatusCode OK\"}"));
+
+        assertAll(
+                () -> assertEquals(3, this.userRepository.findAll().size()),
+                () -> assertEquals(4, this.profileRepository.findAll().size()),
+                () -> assertTrue(this.userRepository.findById(2L).isEmpty())
+        );
+
+    }
+
+    @Transactional
+    @DisplayName("MOD user should be able of delete your user with success if " +
+                 "user_id param is null and has authority 'myuser:delete'")
+    @Test
+    void modUserShouldDeleteYourUserWithSuccessIfHasSuitableAuthority() throws Exception {
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/users/delete")
+                        .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
+                                        "user_id", "3",
+                                        "authority", "ROLE_MOD"))))
+                                .authorities(new SimpleGrantedAuthority("SCOPE_myuser:delete")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isOk())
+                .andExpect(content().json("{\"message\":\"HttpStatusCode OK\"}"));
+
+        assertAll(
+                () -> assertEquals(3, this.userRepository.findAll().size()),
+                () -> assertEquals(4, this.profileRepository.findAll().size()),
+                () -> assertTrue(this.userRepository.findById(3L).isEmpty())
+        );
+
+    }
+
+    @Transactional
     @DisplayName("ADM user should be able of delete your user with success if " +
-            "user_id param is null")
+                 "user_id param is null")
     @Test
     void admUserShouldDeleteYourUserWithSuccessIfUserIdParamIsNull() throws Exception {
         this.mockMvc.perform(delete("/forumhub.io/api/v1/users/delete")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "3",
+                                        "user_id", "4",
                                         "authority", "ROLE_ADM"))))
                                 .authorities(new SimpleGrantedAuthority("ROLE_ADM")))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -1689,9 +1751,9 @@ public class UserControllerIT {
 
 
         assertAll(
-                () -> assertEquals(2, this.userRepository.findAll().size()),
-                () -> assertEquals(3, this.profileRepository.findAll().size()),
-                () -> assertTrue(this.userRepository.findById(3L).isEmpty())
+                () -> assertEquals(3, this.userRepository.findAll().size()),
+                () -> assertEquals(4, this.profileRepository.findAll().size()),
+                () -> assertTrue(this.userRepository.findById(4L).isEmpty())
         );
 
     }

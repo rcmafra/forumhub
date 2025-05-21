@@ -20,6 +20,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.*;
+import org.springframework.data.mapping.PropertyReferenceException;
+import org.springframework.data.util.TypeInformation;
 import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -33,7 +35,7 @@ import static org.mockito.Mockito.never;
 
 @ExtendWith(MockitoExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class UserServiceTest {
+class UserServiceTest {
 
     @InjectMocks
     UserService userService;
@@ -55,10 +57,11 @@ public class UserServiceTest {
                 "P4s$word");
 
         BDDMockito.given(this.profileRepository.findByProfileName(Profile.ProfileName.BASIC))
-                .willThrow(new InstanceNotFoundException("Perfil não encontrado"));
+                .willThrow(new InstanceNotFoundException(String.format("Perfil '%s' não encontrado",
+                        Profile.ProfileName.BASIC.name())));
 
         assertThrows(InstanceNotFoundException.class, () -> this.userService.registerUser(userCreateDTO),
-                "Perfil não encontrado");
+                "Perfil 'BASIC' não encontrado");
 
         BDDMockito.verify(profileRepository).findByProfileName(Profile.ProfileName.BASIC);
         BDDMockito.verifyNoInteractions(passwordEncoder, userRepository);
@@ -73,7 +76,7 @@ public class UserServiceTest {
                 "P4s$word");
 
         BDDMockito.given(this.profileRepository.findByProfileName(Profile.ProfileName.BASIC))
-                .willReturn(Optional.of(new Profile(1L, Profile.ProfileName.BASIC)));
+                .willReturn(Optional.of(new Profile(2L, Profile.ProfileName.BASIC)));
 
         BDDMockito.given(this.passwordEncoder.encode(any(String.class)))
                 .willReturn("encrypted-password-test");
@@ -98,7 +101,7 @@ public class UserServiceTest {
                 "P4s$word");
 
         BDDMockito.given(this.profileRepository.findByProfileName(Profile.ProfileName.BASIC))
-                .willReturn(Optional.of(new Profile(1L, Profile.ProfileName.BASIC)));
+                .willReturn(Optional.of(new Profile(2L, Profile.ProfileName.BASIC)));
 
         BDDMockito.given(this.passwordEncoder.encode(any(String.class)))
                 .willReturn("encrypted-password-test");
@@ -126,7 +129,7 @@ public class UserServiceTest {
                 "P4s$word");
 
         BDDMockito.given(this.profileRepository.findByProfileName(Profile.ProfileName.BASIC))
-                .willReturn(Optional.of(new Profile(1L, Profile.ProfileName.BASIC)));
+                .willReturn(Optional.of(new Profile(2L, Profile.ProfileName.BASIC)));
 
         BDDMockito.given(this.passwordEncoder.encode(any(String.class)))
                 .willReturn("encrypted-password-test");
@@ -154,7 +157,7 @@ public class UserServiceTest {
                 "P4s$word");
 
         BDDMockito.given(this.profileRepository.findByProfileName(Profile.ProfileName.BASIC))
-                .willReturn(Optional.of(new Profile(1L, Profile.ProfileName.BASIC)));
+                .willReturn(Optional.of(new Profile(2L, Profile.ProfileName.BASIC)));
 
         BDDMockito.given(this.passwordEncoder.encode(any(String.class)))
                 .willReturn("encrypted-password-test");
@@ -182,7 +185,7 @@ public class UserServiceTest {
                 "P4s$word");
 
         BDDMockito.given(this.profileRepository.findByProfileName(Profile.ProfileName.BASIC))
-                .willReturn(Optional.of(new Profile(1L, Profile.ProfileName.BASIC)));
+                .willReturn(Optional.of(new Profile(2L, Profile.ProfileName.BASIC)));
 
         BDDMockito.given(this.passwordEncoder.encode(any(String.class)))
                 .willReturn("encrypted-password-test");
@@ -207,7 +210,7 @@ public class UserServiceTest {
                 "P4s$word");
 
         BDDMockito.given(this.profileRepository.findByProfileName(Profile.ProfileName.BASIC))
-                .willReturn(Optional.ofNullable(TestsHelper.ProfileHelper.profileList().get(0)));
+                .willReturn(Optional.ofNullable(TestsHelper.ProfileHelper.profileList().get(1)));
 
         BDDMockito.given(this.passwordEncoder.encode(any(String.class)))
                 .willReturn("encrypted-password-test");
@@ -225,26 +228,27 @@ public class UserServiceTest {
 
     @Test
     void shouldFailToRequestDetailedInfoUserIfHimNotExists() {
-        BDDMockito.given(this.userRepository.findById(4L)).willThrow(InstanceNotFoundException.class);
+        BDDMockito.given(this.userRepository.findById(5L))
+                .willThrow(new InstanceNotFoundException(String.format("Usário [ID: %d] não encontrado", 5L)));
 
-        assertThrows(InstanceNotFoundException.class, () -> this.userService.getDetailedInfoUser(4L),
-                "Usuário não encontrado");
+        assertThrows(InstanceNotFoundException.class, () -> this.userService.getDetailedInfoUser(5L),
+                "Usuário [ID: 5] não encontrado");
 
-        BDDMockito.verify(userRepository).findById(4L);
+        BDDMockito.verify(userRepository).findById(5L);
         BDDMockito.verifyNoMoreInteractions(userRepository);
 
     }
 
     @Test
     void shouldToReturnDetailedInfoUserWithSuccessIfExists() {
-        User user = TestsHelper.UserHelper.userList().get(0);
+        User user = TestsHelper.UserHelper.userList().get(1);
 
-        BDDMockito.given(this.userRepository.findById(1L)).willReturn(Optional.of(user));
+        BDDMockito.given(this.userRepository.findById(2L)).willReturn(Optional.of(user));
 
-        assertDoesNotThrow(() -> this.userService.getDetailedInfoUser(1L));
+        assertDoesNotThrow(() -> this.userService.getDetailedInfoUser(2L));
 
         assertAll(
-                () -> assertEquals(1L, user.getId()),
+                () -> assertEquals(2L, user.getId()),
                 () -> assertEquals("Jose", user.getFirstName()),
                 () -> assertEquals("Silva", user.getLastName()),
                 () -> assertEquals("jose_silva", user.getUsername()),
@@ -258,9 +262,25 @@ public class UserServiceTest {
         );
 
 
-        BDDMockito.verify(userRepository).findById(1L);
+        BDDMockito.verify(userRepository).findById(2L);
         BDDMockito.verifyNoMoreInteractions(userRepository);
 
+    }
+
+    @Test
+    void shouldFailWhenRequestAllUsersIfSortPropertyValueNotExists() {
+        Pageable pageable = PageRequest.of(0, 10,
+                Sort.by(Sort.Direction.DESC, "unexpected"));
+
+        BDDMockito.given(this.userRepository.findAll(pageable))
+                .willThrow(new PropertyReferenceException("unexpected",
+                        TypeInformation.of(User.class), List.of()));
+
+        Assertions.assertThrows(PropertyReferenceException.class,
+                () -> this.userService.usersList(pageable));
+
+        BDDMockito.verify(this.userRepository).findAll(pageable);
+        BDDMockito.verifyNoMoreInteractions(this.userRepository);
     }
 
     @Test
@@ -270,21 +290,21 @@ public class UserServiceTest {
         List<User> userList = TestsHelper.UserHelper.userList();
 
         Page<UserSummaryInfo> userSummaryInfoPage =
-                new PageImpl<>(userList, pageable, 3)
+                new PageImpl<>(userList, pageable, 4)
                         .map(UserSummaryInfo::new);
 
 
         BDDMockito.given(this.userRepository.findAll(pageable))
-                .willReturn(new PageImpl<>(userList, pageable, 3));
+                .willReturn(new PageImpl<>(userList, pageable, 4));
 
 
         assertDoesNotThrow(() -> this.userService.usersList(pageable));
 
 
         Assertions.assertAll(
-                () -> assertEquals(3, userSummaryInfoPage.getContent().size()),
+                () -> assertEquals(4, userSummaryInfoPage.getContent().size()),
                 () -> assertEquals(10, userSummaryInfoPage.getSize()),
-                () -> assertEquals(3, userSummaryInfoPage.getTotalElements()),
+                () -> assertEquals(4, userSummaryInfoPage.getTotalElements()),
                 () -> assertEquals(1, userSummaryInfoPage.getTotalPages())
         );
 
@@ -299,27 +319,30 @@ public class UserServiceTest {
         Pageable pageable = PageRequest.of(0, 10,
                 Sort.by(Sort.Direction.DESC, "id"));
 
-        List<User> userList = TestsHelper.UserHelper.userList();
+        List<User> userList = TestsHelper.UserHelper.userList()
+                .stream().sorted(Comparator.comparing(User::getId).reversed())
+                .toList();
 
         Page<UserSummaryInfo> userSummaryInfoPage =
-                new PageImpl<>(userList, pageable, 3)
+                new PageImpl<>(userList, pageable, 4)
                         .map(UserSummaryInfo::new);
 
 
         BDDMockito.given(this.userRepository.findAll(pageable))
-                .willReturn(new PageImpl<>(userList, pageable, 3));
+                .willReturn(new PageImpl<>(userList, pageable, 4));
 
 
         assertDoesNotThrow(() -> this.userService.usersList(pageable));
 
 
         Assertions.assertAll(
-                () -> assertEquals(3L, userSummaryInfoPage.getContent().get(2).id()),
-                () -> assertEquals(2L, userSummaryInfoPage.getContent().get(1).id()),
-                () -> assertEquals(1L, userSummaryInfoPage.getContent().get(0).id()),
-                () -> assertEquals(3, userSummaryInfoPage.getContent().size()),
+                () -> assertEquals(4L, userSummaryInfoPage.getContent().get(0).id()),
+                () -> assertEquals(3L, userSummaryInfoPage.getContent().get(1).id()),
+                () -> assertEquals(2L, userSummaryInfoPage.getContent().get(2).id()),
+                () -> assertEquals(1L, userSummaryInfoPage.getContent().get(3).id()),
+                () -> assertEquals(4, userSummaryInfoPage.getContent().size()),
                 () -> assertEquals(10, userSummaryInfoPage.getSize()),
-                () -> assertEquals(3, userSummaryInfoPage.getTotalElements()),
+                () -> assertEquals(4, userSummaryInfoPage.getTotalElements()),
                 () -> assertEquals(1, userSummaryInfoPage.getTotalPages())
         );
 
@@ -338,12 +361,12 @@ public class UserServiceTest {
                 .toList();
 
         Page<UserSummaryInfo> userSummaryInfoPage =
-                new PageImpl<>(userList, pageable, 3)
+                new PageImpl<>(userList, pageable, 4)
                         .map(UserSummaryInfo::new);
 
 
         BDDMockito.given(this.userRepository.findAll(pageable))
-                .willReturn(new PageImpl<>(userList, pageable, 3));
+                .willReturn(new PageImpl<>(userList, pageable, 4));
 
 
         assertDoesNotThrow(() -> this.userService.usersList(pageable));
@@ -351,11 +374,12 @@ public class UserServiceTest {
 
         Assertions.assertAll(
                 () -> assertEquals(Profile.ProfileName.ADM, userSummaryInfoPage.getContent().get(0).profile().getProfileName()),
-                () -> assertEquals(Profile.ProfileName.BASIC, userSummaryInfoPage.getContent().get(1).profile().getProfileName()),
-                () -> assertEquals(Profile.ProfileName.MOD, userSummaryInfoPage.getContent().get(2).profile().getProfileName()),
-                () -> assertEquals(3, userSummaryInfoPage.getContent().size()),
+                () -> assertEquals(Profile.ProfileName.ANONYMOUS, userSummaryInfoPage.getContent().get(1).profile().getProfileName()),
+                () -> assertEquals(Profile.ProfileName.BASIC, userSummaryInfoPage.getContent().get(2).profile().getProfileName()),
+                () -> assertEquals(Profile.ProfileName.MOD, userSummaryInfoPage.getContent().get(3).profile().getProfileName()),
+                () -> assertEquals(4, userSummaryInfoPage.getContent().size()),
                 () -> assertEquals(10, userSummaryInfoPage.getSize()),
-                () -> assertEquals(3, userSummaryInfoPage.getTotalElements()),
+                () -> assertEquals(4, userSummaryInfoPage.getTotalElements()),
                 () -> assertEquals(1, userSummaryInfoPage.getTotalPages())
         );
 
@@ -375,12 +399,12 @@ public class UserServiceTest {
                 .toList();
 
         Page<UserSummaryInfo> userSummaryInfoPage =
-                new PageImpl<>(userList, pageable, 3)
+                new PageImpl<>(userList, pageable, 4)
                         .map(UserSummaryInfo::new);
 
 
         BDDMockito.given(this.userRepository.findAll(pageable))
-                .willReturn(new PageImpl<>(userList, pageable, 3));
+                .willReturn(new PageImpl<>(userList, pageable, 4));
 
 
         assertDoesNotThrow(() -> this.userService.usersList(pageable));
@@ -401,17 +425,18 @@ public class UserServiceTest {
 
     @Test
     void shouldFailToEditUserIfInformedUserNotExists() {
-        BDDMockito.given(this.userRepository.findById(4L)).willThrow(InstanceNotFoundException.class);
+        BDDMockito.given(this.userRepository.findById(5L))
+                .willThrow(new InstanceNotFoundException(String.format("Usário [ID: %d] não encontrado", 5L)));
 
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO("Marcus", "Silva", "marcus_silva",
                 "marcus@email.com", Profile.ProfileName.BASIC, true, true,
                 true, true);
 
         assertThrows(InstanceNotFoundException.class,
-                () -> this.userService.updateUser(4L, Profile.ProfileName.BASIC, userUpdateDTO),
-                "Usuário não encontrado");
+                () -> this.userService.updateUser(5L, Profile.ProfileName.BASIC, userUpdateDTO),
+                "Usuário [ID: 5] não encontrado");
 
-        BDDMockito.verify(this.userRepository).findById(4L);
+        BDDMockito.verify(this.userRepository).findById(5L);
         BDDMockito.verify(this.userRepository, never()).save(any(User.class));
         BDDMockito.verifyNoInteractions(this.profileRepository);
         BDDMockito.verifyNoMoreInteractions(this.userRepository);
@@ -421,8 +446,8 @@ public class UserServiceTest {
 
     @Test
     void shouldFailToEditUserIfInformedProfileNotExists() {
-        BDDMockito.given(this.userRepository.findById(1L))
-                .willReturn(Optional.ofNullable(TestsHelper.UserHelper.userList().get(0)));
+        BDDMockito.given(this.userRepository.findById(2L))
+                .willReturn(Optional.ofNullable(TestsHelper.UserHelper.userList().get(1)));
 
         BDDMockito.given(this.profileRepository.findByProfileName(Profile.ProfileName.BASIC))
                 .willThrow(InstanceNotFoundException.class);
@@ -432,11 +457,11 @@ public class UserServiceTest {
                 true, true);
 
         assertThrows(InstanceNotFoundException.class,
-                () -> this.userService.updateUser(1L, Profile.ProfileName.BASIC, userUpdateDTO),
+                () -> this.userService.updateUser(2L, Profile.ProfileName.BASIC, userUpdateDTO),
                 "Perfil não encontrado");
 
 
-        BDDMockito.verify(this.userRepository).findById(1L);
+        BDDMockito.verify(this.userRepository).findById(2L);
         BDDMockito.verify(this.profileRepository).findByProfileName(Profile.ProfileName.BASIC);
         BDDMockito.verify(this.userRepository, never()).save(any(User.class));
         BDDMockito.verifyNoMoreInteractions(this.userRepository);
@@ -447,12 +472,12 @@ public class UserServiceTest {
 
     @Test
     void shouldNotEditExtraInformationIfEditRequestUserIsNotADM() {
-        User user = TestsHelper.UserHelper.userList().get(0);
+        User user = TestsHelper.UserHelper.userList().get(1);
 
-        BDDMockito.given(this.userRepository.findById(1L)).willReturn(Optional.of(user));
+        BDDMockito.given(this.userRepository.findById(2L)).willReturn(Optional.of(user));
 
         BDDMockito.given(this.profileRepository.findByProfileName(Profile.ProfileName.ADM))
-                .willReturn(Optional.ofNullable(TestsHelper.ProfileHelper.profileList().get(2)));
+                .willReturn(Optional.ofNullable(TestsHelper.ProfileHelper.profileList().get(3)));
 
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO("Marcus", "Silva", "marcus_silva",
                 "marcus@email.com", Profile.ProfileName.ADM, false, true,
@@ -460,7 +485,7 @@ public class UserServiceTest {
 
 
         assertAll(
-                () -> assertDoesNotThrow(() -> this.userService.updateUser(1L, Profile.ProfileName.BASIC, userUpdateDTO)),
+                () -> assertDoesNotThrow(() -> this.userService.updateUser(2L, Profile.ProfileName.BASIC, userUpdateDTO)),
                 () -> assertEquals("Jose", user.getFirstName()),
                 () -> assertEquals("Silva", user.getLastName()),
                 () -> assertEquals("marcus_silva", user.getUsername()),
@@ -473,7 +498,7 @@ public class UserServiceTest {
         );
 
 
-        BDDMockito.verify(this.userRepository).findById(1L);
+        BDDMockito.verify(this.userRepository).findById(2L);
         BDDMockito.verify(this.profileRepository).findByProfileName(Profile.ProfileName.ADM);
         BDDMockito.verify(this.userRepository).save(any(User.class));
         BDDMockito.verifyNoMoreInteractions(this.userRepository);
@@ -485,19 +510,19 @@ public class UserServiceTest {
 
     @Test
     void shouldEditExtraInformationIfEditRequestUserIsADM() {
-        User user = TestsHelper.UserHelper.userList().get(0);
+        User user = TestsHelper.UserHelper.userList().get(1);
 
-        BDDMockito.given(this.userRepository.findById(1L)).willReturn(Optional.of(user));
+        BDDMockito.given(this.userRepository.findById(2L)).willReturn(Optional.of(user));
 
         BDDMockito.given(this.profileRepository.findByProfileName(Profile.ProfileName.ADM))
-                .willReturn(Optional.ofNullable(TestsHelper.ProfileHelper.profileList().get(2)));
+                .willReturn(Optional.ofNullable(TestsHelper.ProfileHelper.profileList().get(3)));
 
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO("Marcus", "Silva", "marcus_silva",
                 "marcus@email.com", Profile.ProfileName.ADM, false, true,
                 true, false);
 
         assertAll(
-                () -> assertDoesNotThrow(() -> this.userService.updateUser(1L, Profile.ProfileName.ADM, userUpdateDTO)),
+                () -> assertDoesNotThrow(() -> this.userService.updateUser(2L, Profile.ProfileName.ADM, userUpdateDTO)),
                 () -> assertEquals("Marcus", user.getFirstName()),
                 () -> assertEquals("Silva", user.getLastName()),
                 () -> assertEquals("marcus_silva", user.getUsername()),
@@ -510,7 +535,7 @@ public class UserServiceTest {
         );
 
 
-        BDDMockito.verify(this.userRepository).findById(1L);
+        BDDMockito.verify(this.userRepository).findById(2L);
         BDDMockito.verify(this.profileRepository).findByProfileName(Profile.ProfileName.ADM);
         BDDMockito.verify(this.userRepository).save(any(User.class));
         BDDMockito.verifyNoMoreInteractions(this.userRepository);
@@ -520,12 +545,13 @@ public class UserServiceTest {
 
     @Test
     void shouldFailToDeleteUserIfRequestedUserNotExists() {
-        BDDMockito.given(this.userRepository.findById(4L)).willThrow(InstanceNotFoundException.class);
+        BDDMockito.given(this.userRepository.findById(5L))
+                .willThrow(new InstanceNotFoundException(String.format("Usário [ID: %d] não encontrado", 5L)));
 
-        assertThrows(InstanceNotFoundException.class, () -> this.userService.deleteUser(4L),
-                "Usuário não encontrado");
+        assertThrows(InstanceNotFoundException.class, () -> this.userService.getDetailedInfoUser(5L),
+                "Usuário [ID: 5] não encontrado");
 
-        BDDMockito.verify(this.userRepository).findById(4L);
+        BDDMockito.verify(this.userRepository).findById(5L);
         BDDMockito.verify(this.userRepository, never()).delete(any(User.class));
         BDDMockito.verifyNoMoreInteractions(this.userRepository);
 
@@ -533,12 +559,12 @@ public class UserServiceTest {
 
     @Test
     void shouldDeleteUserWithSuccessIfRequestedUserExists() {
-        BDDMockito.given(this.userRepository.findById(1L))
-                .willReturn(Optional.of(TestsHelper.UserHelper.userList().get(0)));
+        BDDMockito.given(this.userRepository.findById(2L))
+                .willReturn(Optional.of(TestsHelper.UserHelper.userList().get(1)));
 
-        assertDoesNotThrow(() -> this.userService.deleteUser(1L));
+        assertDoesNotThrow(() -> this.userService.deleteUser(2L));
 
-        BDDMockito.verify(this.userRepository).findById(1L);
+        BDDMockito.verify(this.userRepository).findById(2L);
         BDDMockito.verify(this.userRepository).delete(any(User.class));
         BDDMockito.verifyNoMoreInteractions(this.userRepository);
 

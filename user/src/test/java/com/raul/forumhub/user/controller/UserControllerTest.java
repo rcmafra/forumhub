@@ -7,10 +7,13 @@ import com.raul.forumhub.user.dto.request.UserCreateDTO;
 import com.raul.forumhub.user.dto.request.UserUpdateDTO;
 import com.raul.forumhub.user.dto.response.UserDetailedInfo;
 import com.raul.forumhub.user.dto.response.UserSummaryInfo;
+import com.raul.forumhub.user.exception.PasswordRulesException;
 import com.raul.forumhub.user.exception.handler.GlobalExceptionHandler;
 import com.raul.forumhub.user.security.UserSecurityConfig;
+import com.raul.forumhub.user.security.password.PasswordConstraintValidator;
 import com.raul.forumhub.user.service.UserService;
 import com.raul.forumhub.user.util.TestsHelper;
+import jakarta.validation.ConstraintValidatorContext;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
@@ -34,6 +37,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -45,7 +49,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = {UserController.class, UserSecurityConfig.class,
         GlobalExceptionHandler.class})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class UserControllerTest {
+class UserControllerTest {
 
     @Autowired
     MockMvc mockMvc;
@@ -87,6 +91,23 @@ public class UserControllerTest {
                 .andExpect(status().isBadRequest());
 
         BDDMockito.verifyNoInteractions(this.userService);
+
+    }
+
+    @DisplayName("Should fail if raise exception when load the translated messages of password rules from properties " +
+                 "when create user")
+    @Test
+    void shouldFailToCreateUserIfRaiseExceptionWhenLoadTranslatedMessages() {
+        PasswordConstraintValidator validator = BDDMockito.mock(PasswordConstraintValidator.class);
+        ConstraintValidatorContext context = BDDMockito.mock(ConstraintValidatorContext.class);
+
+        BDDMockito.given(validator.isValid("P4s$word", context))
+                .willThrow(new PasswordRulesException("Falha interna durante a validação da password"));
+
+        assertThrows(PasswordRulesException.class, () -> validator.isValid("P4s$word", context));
+
+        BDDMockito.verify(validator).isValid("P4s$word", context);
+        BDDMockito.verifyNoMoreInteractions(validator);
 
     }
 
@@ -312,7 +333,7 @@ public class UserControllerTest {
                 "jose_silva", "jose_silva@email.com", "P4s$word");
 
         BDDMockito.given(this.userService.registerUser(userCreateDTO))
-                .willReturn(new UserDetailedInfo(TestsHelper.UserHelper.userList().get(0)));
+                .willReturn(new UserDetailedInfo(TestsHelper.UserHelper.userList().get(1)));
 
         this.mockMvc.perform(post("/forumhub.io/api/v1/users/create")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -360,7 +381,7 @@ public class UserControllerTest {
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/detailed-info")
                         .queryParam("user_id", "unexpected")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "3",
+                                        "user_id", "4",
                                         "authority", "ROLE_ADM"))))
                                 .authorities(new SimpleGrantedAuthority("ROLE_ADM")))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -370,59 +391,48 @@ public class UserControllerTest {
         BDDMockito.verifyNoInteractions(this.userService);
     }
 
-    @DisplayName("BASIC user should be able get detailed info your user with success if " +
-                 "has authority 'myuser:read' and user_id param is null")
+    @DisplayName("Should raise exception if BASIC user to request detailed info of other user " +
+                 "or yourself with user_id param not null")
     @Test
-    void basicUserShouldGetDetailedInfoYourUserWithSuccessIfHasSuitableAuthority() throws Exception {
+    void shouldFailIfBasicUserToRequestDetailedInfoWithUserIdParamNotNull() throws Exception {
         BDDMockito.given(this.userService.getDetailedInfoUser(1L))
                 .willReturn(new UserDetailedInfo(TestsHelper.UserHelper.userList().get(0)));
 
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/detailed-info")
+                        .queryParam("user_id", "3")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "1",
+                                        "user_id", "2",
                                         "authority", "ROLE_BASIC"))))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_myuser:read")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.user.id", is(1)))
-                .andExpect(jsonPath("$.user.firstName", is("Jose")))
-                .andExpect(jsonPath("$.user.lastName", is("Silva")))
-                .andExpect(jsonPath("$.user.username", is("jose_silva")))
-                .andExpect(jsonPath("$.user.email", is("jose@email.com")))
-                .andExpect(jsonPath("$.user.profile.profileName", is("BASIC")))
-                .andExpect(jsonPath("$.user.accountNonExpired", is(true)))
-                .andExpect(jsonPath("$.user.accountNonLocked", is(true)))
-                .andExpect(jsonPath("$.user.credentialsNonExpired", is(true)))
-                .andExpect(jsonPath("$.user.enabled", is(true)));
+                .andExpect(status().isBadRequest());
 
-
-        BDDMockito.verify(this.userService).getDetailedInfoUser(1L);
-        BDDMockito.verifyNoMoreInteractions(this.userService);
+        BDDMockito.verifyNoInteractions(this.userService);
 
     }
 
-    @DisplayName("MOD user should be able get detailed info your user with success if " +
-                 "user_id param is null")
+    @DisplayName("BASIC user should be able get detailed info your user with success if " +
+                 "has authority 'myuser:read' and user_id param is null")
     @Test
-    void modUserShouldGetDetailedInfoYourUserWithSuccessIfHasSuitableAuthority() throws Exception {
+    void basicUserShouldGetDetailedInfoYourUserWithSuccessIfHasSuitableAuthority() throws Exception {
         BDDMockito.given(this.userService.getDetailedInfoUser(2L))
                 .willReturn(new UserDetailedInfo(TestsHelper.UserHelper.userList().get(1)));
 
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/detailed-info")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "2",
-                                        "authority", "ROLE_MOD"))))
-                                .authorities(new SimpleGrantedAuthority("ROLE_MOD")))
+                                        "authority", "ROLE_BASIC"))))
+                                .authorities(new SimpleGrantedAuthority("SCOPE_myuser:read")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.user.id", is(2)))
-                .andExpect(jsonPath("$.user.firstName", is("Maria")))
+                .andExpect(jsonPath("$.user.firstName", is("Jose")))
                 .andExpect(jsonPath("$.user.lastName", is("Silva")))
-                .andExpect(jsonPath("$.user.username", is("maria_silva")))
-                .andExpect(jsonPath("$.user.email", is("maria@email.com")))
-                .andExpect(jsonPath("$.user.profile.profileName", is("MOD")))
+                .andExpect(jsonPath("$.user.username", is("jose_silva")))
+                .andExpect(jsonPath("$.user.email", is("jose@email.com")))
+                .andExpect(jsonPath("$.user.profile.profileName", is("BASIC")))
                 .andExpect(jsonPath("$.user.accountNonExpired", is(true)))
                 .andExpect(jsonPath("$.user.accountNonLocked", is(true)))
                 .andExpect(jsonPath("$.user.credentialsNonExpired", is(true)))
@@ -434,27 +444,27 @@ public class UserControllerTest {
 
     }
 
-    @DisplayName("ADM user should be able get detailed info your user with success if " +
+    @DisplayName("MOD user should be able get detailed info your user with success if " +
                  "user_id param is null")
     @Test
-    void admUserShouldGetDetailedInfoYourUserWithSuccessIfHasSuitableAuthority() throws Exception {
+    void modUserShouldGetDetailedInfoYourUserWithSuccessIfHasSuitableAuthority() throws Exception {
         BDDMockito.given(this.userService.getDetailedInfoUser(3L))
                 .willReturn(new UserDetailedInfo(TestsHelper.UserHelper.userList().get(2)));
 
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/detailed-info")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "3",
-                                        "authority", "ROLE_ADM"))))
-                                .authorities(new SimpleGrantedAuthority("ROLE_ADM")))
+                                        "authority", "ROLE_MOD"))))
+                                .authorities(new SimpleGrantedAuthority("ROLE_MOD")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.user.id", is(3)))
-                .andExpect(jsonPath("$.user.firstName", is("Joao")))
+                .andExpect(jsonPath("$.user.firstName", is("Maria")))
                 .andExpect(jsonPath("$.user.lastName", is("Silva")))
-                .andExpect(jsonPath("$.user.username", is("joao_silva")))
-                .andExpect(jsonPath("$.user.email", is("joao@email.com")))
-                .andExpect(jsonPath("$.user.profile.profileName", is("ADM")))
+                .andExpect(jsonPath("$.user.username", is("maria_silva")))
+                .andExpect(jsonPath("$.user.email", is("maria@email.com")))
+                .andExpect(jsonPath("$.user.profile.profileName", is("MOD")))
                 .andExpect(jsonPath("$.user.accountNonExpired", is(true)))
                 .andExpect(jsonPath("$.user.accountNonLocked", is(true)))
                 .andExpect(jsonPath("$.user.credentialsNonExpired", is(true)))
@@ -466,23 +476,55 @@ public class UserControllerTest {
 
     }
 
+    @DisplayName("ADM user should be able get detailed info your user with success if " +
+                 "user_id param is null")
+    @Test
+    void admUserShouldGetDetailedInfoYourUserWithSuccessIfHasSuitableAuthority() throws Exception {
+        BDDMockito.given(this.userService.getDetailedInfoUser(4L))
+                .willReturn(new UserDetailedInfo(TestsHelper.UserHelper.userList().get(3)));
+
+        this.mockMvc.perform(get("/forumhub.io/api/v1/users/detailed-info")
+                        .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
+                                        "user_id", "4",
+                                        "authority", "ROLE_ADM"))))
+                                .authorities(new SimpleGrantedAuthority("ROLE_ADM")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.user.id", is(4)))
+                .andExpect(jsonPath("$.user.firstName", is("Joao")))
+                .andExpect(jsonPath("$.user.lastName", is("Silva")))
+                .andExpect(jsonPath("$.user.username", is("joao_silva")))
+                .andExpect(jsonPath("$.user.email", is("joao@email.com")))
+                .andExpect(jsonPath("$.user.profile.profileName", is("ADM")))
+                .andExpect(jsonPath("$.user.accountNonExpired", is(true)))
+                .andExpect(jsonPath("$.user.accountNonLocked", is(true)))
+                .andExpect(jsonPath("$.user.credentialsNonExpired", is(true)))
+                .andExpect(jsonPath("$.user.enabled", is(true)));
+
+
+        BDDMockito.verify(this.userService).getDetailedInfoUser(4L);
+        BDDMockito.verifyNoMoreInteractions(this.userService);
+
+    }
+
     @DisplayName("MOD user should be able get detailed info of other user with success if " +
                  "user_id param isn't null")
     @Test
     void modUserShouldGetDetailedInfoOfOtherUserWithSuccessIfHasSuitableAuthority() throws Exception {
-        BDDMockito.given(this.userService.getDetailedInfoUser(1L))
-                .willReturn(new UserDetailedInfo(TestsHelper.UserHelper.userList().get(0)));
+        BDDMockito.given(this.userService.getDetailedInfoUser(2L))
+                .willReturn(new UserDetailedInfo(TestsHelper.UserHelper.userList().get(1)));
 
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/detailed-info")
-                        .queryParam("user_id", "1")
+                        .queryParam("user_id", "2")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "2",
+                                        "user_id", "3",
                                         "authority", "ROLE_MOD"))))
                                 .authorities(new SimpleGrantedAuthority("ROLE_MOD")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.user.id", is(1)))
+                .andExpect(jsonPath("$.user.id", is(2)))
                 .andExpect(jsonPath("$.user.firstName", is("Jose")))
                 .andExpect(jsonPath("$.user.lastName", is("Silva")))
                 .andExpect(jsonPath("$.user.username", is("jose_silva")))
@@ -494,7 +536,7 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.user.enabled", is(true)));
 
 
-        BDDMockito.verify(this.userService).getDetailedInfoUser(1L);
+        BDDMockito.verify(this.userService).getDetailedInfoUser(2L);
         BDDMockito.verifyNoMoreInteractions(this.userService);
 
     }
@@ -503,19 +545,19 @@ public class UserControllerTest {
                  "user_id param isn't null")
     @Test
     void admUserShouldGetDetailedInfoOfOtherUserWithSuccessIfHasSuitableAuthority() throws Exception {
-        BDDMockito.given(this.userService.getDetailedInfoUser(1L))
-                .willReturn(new UserDetailedInfo(TestsHelper.UserHelper.userList().get(0)));
+        BDDMockito.given(this.userService.getDetailedInfoUser(2L))
+                .willReturn(new UserDetailedInfo(TestsHelper.UserHelper.userList().get(1)));
 
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/detailed-info")
-                        .queryParam("user_id", "1")
+                        .queryParam("user_id", "2")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "3",
+                                        "user_id", "4",
                                         "authority", "ROLE_ADM"))))
                                 .authorities(new SimpleGrantedAuthority("ROLE_ADM")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.user.id", is(1)))
+                .andExpect(jsonPath("$.user.id", is(2)))
                 .andExpect(jsonPath("$.user.firstName", is("Jose")))
                 .andExpect(jsonPath("$.user.lastName", is("Silva")))
                 .andExpect(jsonPath("$.user.username", is("jose_silva")))
@@ -527,30 +569,8 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.user.enabled", is(true)));
 
 
-        BDDMockito.verify(this.userService).getDetailedInfoUser(1L);
+        BDDMockito.verify(this.userService).getDetailedInfoUser(2L);
         BDDMockito.verifyNoMoreInteractions(this.userService);
-
-    }
-
-
-    @DisplayName("Should raise exception if BASIC user to request detailed info of other user " +
-                 "or yourself with user_id param not null")
-    @Test
-    void shouldFailIfBasicUserToRequestDetailedInfoWithUserIdParamNotNull() throws Exception {
-        BDDMockito.given(this.userService.getDetailedInfoUser(1L))
-                .willReturn(new UserDetailedInfo(TestsHelper.UserHelper.userList().get(0)));
-
-        this.mockMvc.perform(get("/forumhub.io/api/v1/users/detailed-info")
-                        .queryParam("user_id", "2")
-                        .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "1",
-                                        "authority", "ROLE_BASIC"))))
-                                .authorities(new SimpleGrantedAuthority("SCOPE_myuser:read")))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .characterEncoding(StandardCharsets.UTF_8))
-                .andExpect(status().isBadRequest());
-
-        BDDMockito.verifyNoInteractions(this.userService);
 
     }
 
@@ -560,10 +580,25 @@ public class UserControllerTest {
     @Test
     void shouldFailToRequestSummaryInfoUserIfUnauthenticated() throws Exception {
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/summary-info")
-                        .queryParam("user_id", "1")
+                        .queryParam("user_id", "2")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isUnauthorized());
+
+        BDDMockito.verifyNoInteractions(this.userService);
+
+    }
+
+    @DisplayName("Should fail with status code 400 when request summary info user if user_id property " +
+                 "of query param is sent empty")
+    @Test
+    void shouldFailIfUserIdPropertyOfQueryParamIsEmptyWhenRequestSummaryInfoUser() throws Exception {
+        this.mockMvc.perform(get("/forumhub.io/api/v1/users/summary-info")
+                        .with(jwt())
+                        .queryParam("user_id", "")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isBadRequest());
 
         BDDMockito.verifyNoInteractions(this.userService);
 
@@ -573,23 +608,23 @@ public class UserControllerTest {
     @DisplayName("Authenticated user should be able of to request user summary info with success")
     @Test
     void AuthenticatedUserShouldToRequestSummaryInfoUserWithSuccess() throws Exception {
-        BDDMockito.given(this.userService.getUserById(1L))
-                .willReturn(TestsHelper.UserHelper.userList().get(0));
+        BDDMockito.given(this.userService.getUserById(2L))
+                .willReturn(TestsHelper.UserHelper.userList().get(1));
 
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/summary-info")
-                        .queryParam("user_id", "1")
+                        .queryParam("user_id", "2")
                         .with(jwt())
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.id", is(2)))
                 .andExpect(jsonPath("$.firstName", is("Jose")))
                 .andExpect(jsonPath("$.lastName", is("Silva")))
                 .andExpect(jsonPath("$.username", is("jose_silva")))
                 .andExpect(jsonPath("$.email", is("jose@email.com")))
                 .andExpect(jsonPath("$.profile.profileName", is("BASIC")));
 
-        BDDMockito.verify(this.userService).getUserById(1L);
+        BDDMockito.verify(this.userService).getUserById(2L);
         BDDMockito.verifyNoMoreInteractions(this.userService);
 
     }
@@ -645,7 +680,7 @@ public class UserControllerTest {
     void shouldFailIfBasicUserToRequestAllUsers() throws Exception {
         Page<UserSummaryInfo> userDetailedInfoPage =
                 new PageImpl<>(TestsHelper.UserHelper.userList(),
-                        Pageable.unpaged(), 3)
+                        Pageable.unpaged(), 4)
                         .map(UserSummaryInfo::new);
 
         BDDMockito.given(this.userService.usersList(any(Pageable.class)))
@@ -653,7 +688,7 @@ public class UserControllerTest {
 
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/listAll")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "1",
+                                        "user_id", "2",
                                         "authority", "ROLE_BASIC"))))
                                 .authorities(
                                         new SimpleGrantedAuthority("ROLE_BASIC"),
@@ -673,7 +708,7 @@ public class UserControllerTest {
     void modUserShouldToRequestAllUsersUnsortedWithSuccess() throws Exception {
         Page<UserSummaryInfo> userDetailedInfoPage =
                 new PageImpl<>(TestsHelper.UserHelper.userList(),
-                        Pageable.unpaged(), 3)
+                        Pageable.unpaged(), 4)
                         .map(UserSummaryInfo::new);
 
         BDDMockito.given(this.userService.usersList(any(Pageable.class)))
@@ -681,7 +716,7 @@ public class UserControllerTest {
 
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/listAll")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "2",
+                                        "user_id", "3",
                                         "authority", "ROLE_MOD"))))
                                 .authorities(
                                         new SimpleGrantedAuthority("ROLE_MOD"),
@@ -689,10 +724,10 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$..userSummaryInfoList.length()", is(3)))
+                .andExpect(jsonPath("$..userSummaryInfoList.length()", is(4)))
                 .andExpect(jsonPath("$..page.[?(@.number == 0)]").exists())
-                .andExpect(jsonPath("$..page.[?(@.size == 3)]").exists())
-                .andExpect(jsonPath("$..page.[?(@.totalElements == 3)]").exists())
+                .andExpect(jsonPath("$..page.[?(@.size == 4)]").exists())
+                .andExpect(jsonPath("$..page.[?(@.totalElements == 4)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.totalPages == 1)]").exists());
 
         BDDMockito.verify(this.userService).usersList(any(Pageable.class));
@@ -707,7 +742,7 @@ public class UserControllerTest {
     void admUserShouldToRequestAllUsersUnsortedWithSuccess() throws Exception {
         Page<UserSummaryInfo> userDetailedInfoPage =
                 new PageImpl<>(TestsHelper.UserHelper.userList(),
-                        Pageable.unpaged(), 3)
+                        Pageable.unpaged(), 4)
                         .map(UserSummaryInfo::new);
 
         BDDMockito.given(this.userService.usersList(any(Pageable.class)))
@@ -715,7 +750,7 @@ public class UserControllerTest {
 
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/listAll")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "3",
+                                        "user_id", "4",
                                         "authority", "ROLE_ADM"))))
                                 .authorities(
                                         new SimpleGrantedAuthority("ROLE_ADM"),
@@ -723,10 +758,10 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$..userSummaryInfoList.length()", is(3)))
+                .andExpect(jsonPath("$..userSummaryInfoList.length()", is(4)))
                 .andExpect(jsonPath("$..page.[?(@.number == 0)]").exists())
-                .andExpect(jsonPath("$..page.[?(@.size == 3)]").exists())
-                .andExpect(jsonPath("$..page.[?(@.totalElements == 3)]").exists())
+                .andExpect(jsonPath("$..page.[?(@.size == 4)]").exists())
+                .andExpect(jsonPath("$..page.[?(@.totalElements == 4)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.totalPages == 1)]").exists());
 
         BDDMockito.verify(this.userService).usersList(any(Pageable.class));
@@ -748,7 +783,7 @@ public class UserControllerTest {
                 .toList();
 
         Page<UserSummaryInfo> userSummaryInfoPage =
-                new PageImpl<>(sortedUserById, pageable, 3).map(UserSummaryInfo::new);
+                new PageImpl<>(sortedUserById, pageable, 4).map(UserSummaryInfo::new);
 
         BDDMockito.given(this.userService.usersList(pageable))
                 .willReturn(userSummaryInfoPage);
@@ -756,7 +791,7 @@ public class UserControllerTest {
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/listAll")
                         .queryParam("sort", "id,desc")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "2",
+                                        "user_id", "3",
                                         "authority", "ROLE_MOD"))))
                                 .authorities(
                                         new SimpleGrantedAuthority("ROLE_MOD"),
@@ -764,13 +799,14 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$..userSummaryInfoList[0].[?(@.id == 3)]").exists())
-                .andExpect(jsonPath("$..userSummaryInfoList[1].[?(@.id == 2)]").exists())
-                .andExpect(jsonPath("$..userSummaryInfoList[2].[?(@.id == 1)]").exists())
-                .andExpect(jsonPath("$..userSummaryInfoList.length()", is(3)))
+                .andExpect(jsonPath("$..userSummaryInfoList[0].[?(@.id == 4)]").exists())
+                .andExpect(jsonPath("$..userSummaryInfoList[1].[?(@.id == 3)]").exists())
+                .andExpect(jsonPath("$..userSummaryInfoList[2].[?(@.id == 2)]").exists())
+                .andExpect(jsonPath("$..userSummaryInfoList[3].[?(@.id == 1)]").exists())
+                .andExpect(jsonPath("$..userSummaryInfoList.length()", is(4)))
                 .andExpect(jsonPath("$..page.[?(@.number == 0)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.size == 10)]").exists())
-                .andExpect(jsonPath("$..page.[?(@.totalElements == 3)]").exists())
+                .andExpect(jsonPath("$..page.[?(@.totalElements == 4)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.totalPages == 1)]").exists());
 
         BDDMockito.verify(this.userService).usersList(pageable);
@@ -792,7 +828,7 @@ public class UserControllerTest {
                 .toList();
 
         Page<UserSummaryInfo> userSummaryInfoPage =
-                new PageImpl<>(sortedUserById, pageable, 3).map(UserSummaryInfo::new);
+                new PageImpl<>(sortedUserById, pageable, 4).map(UserSummaryInfo::new);
 
         BDDMockito.given(this.userService.usersList(pageable))
                 .willReturn(userSummaryInfoPage);
@@ -800,7 +836,7 @@ public class UserControllerTest {
         this.mockMvc.perform(get("/forumhub.io/api/v1/users/listAll")
                         .queryParam("sort", "id,desc")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "3",
+                                        "user_id", "4",
                                         "authority", "ROLE_ADM"))))
                                 .authorities(
                                         new SimpleGrantedAuthority("ROLE_ADM"),
@@ -808,13 +844,14 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$..userSummaryInfoList[0].[?(@.id == 3)]").exists())
-                .andExpect(jsonPath("$..userSummaryInfoList[1].[?(@.id == 2)]").exists())
-                .andExpect(jsonPath("$..userSummaryInfoList[2].[?(@.id == 1)]").exists())
-                .andExpect(jsonPath("$..userSummaryInfoList.length()", is(3)))
+                .andExpect(jsonPath("$..userSummaryInfoList[0].[?(@.id == 4)]").exists())
+                .andExpect(jsonPath("$..userSummaryInfoList[1].[?(@.id == 3)]").exists())
+                .andExpect(jsonPath("$..userSummaryInfoList[2].[?(@.id == 2)]").exists())
+                .andExpect(jsonPath("$..userSummaryInfoList[3].[?(@.id == 1)]").exists())
+                .andExpect(jsonPath("$..userSummaryInfoList.length()", is(4)))
                 .andExpect(jsonPath("$..page.[?(@.number == 0)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.size == 10)]").exists())
-                .andExpect(jsonPath("$..page.[?(@.totalElements == 3)]").exists())
+                .andExpect(jsonPath("$..page.[?(@.totalElements == 4)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.totalPages == 1)]").exists());
 
         BDDMockito.verify(this.userService).usersList(pageable);
@@ -832,7 +869,7 @@ public class UserControllerTest {
                 Sort.by(Sort.Direction.ASC, "firstName"));
 
         List<User> sortedUserByFirstName = TestsHelper.UserHelper.userList()
-                .stream().filter(user -> user.getId() == 1 || user.getId() == 3)
+                .stream().filter(user -> user.getId() == 2 || user.getId() == 4)
                 .sorted(Comparator.comparing(User::getFirstName))
                 .toList();
 
@@ -846,7 +883,7 @@ public class UserControllerTest {
                         .queryParam("size", "2")
                         .queryParam("sort", "firstName,asc")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "2",
+                                        "user_id", "3",
                                         "authority", "ROLE_MOD"))))
                                 .authorities(
                                         new SimpleGrantedAuthority("ROLE_MOD"),
@@ -854,8 +891,8 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$..userSummaryInfoList[0].[?(@.id == 3)]").exists())
-                .andExpect(jsonPath("$..userSummaryInfoList[1].[?(@.id == 1)]").exists())
+                .andExpect(jsonPath("$..userSummaryInfoList[0].[?(@.id == 4)]").exists())
+                .andExpect(jsonPath("$..userSummaryInfoList[1].[?(@.id == 2)]").exists())
                 .andExpect(jsonPath("$..userSummaryInfoList.length()", is(2)))
                 .andExpect(jsonPath("$..page.[?(@.number == 0)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.size == 2)]").exists())
@@ -875,7 +912,7 @@ public class UserControllerTest {
                 Sort.by(Sort.Direction.ASC, "firstName"));
 
         List<User> sortedUserByFirstName = TestsHelper.UserHelper.userList()
-                .stream().filter(user -> user.getId() == 1 || user.getId() == 3)
+                .stream().filter(user -> user.getId() == 2 || user.getId() == 4)
                 .sorted(Comparator.comparing(User::getFirstName))
                 .toList();
 
@@ -889,7 +926,7 @@ public class UserControllerTest {
                         .queryParam("size", "2")
                         .queryParam("sort", "firstName,asc")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "3",
+                                        "user_id", "4",
                                         "authority", "ROLE_ADM"))))
                                 .authorities(
                                         new SimpleGrantedAuthority("ROLE_ADM"),
@@ -897,8 +934,8 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$..userSummaryInfoList[0].[?(@.id == 3)]").exists())
-                .andExpect(jsonPath("$..userSummaryInfoList[1].[?(@.id == 1)]").exists())
+                .andExpect(jsonPath("$..userSummaryInfoList[0].[?(@.id == 4)]").exists())
+                .andExpect(jsonPath("$..userSummaryInfoList[1].[?(@.id == 2)]").exists())
                 .andExpect(jsonPath("$..userSummaryInfoList.length()", is(2)))
                 .andExpect(jsonPath("$..page.[?(@.number == 0)]").exists())
                 .andExpect(jsonPath("$..page.[?(@.size == 2)]").exists())
@@ -940,7 +977,7 @@ public class UserControllerTest {
                 true, true, true, true);
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
-                        .with(jwt().jwt(jwt -> jwt.claim("user_id", "1")))
+                        .with(jwt().jwt(jwt -> jwt.claim("user_id", "2")))
                         .content(new ObjectMapper().writeValueAsString(userUpdateDTO))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -961,7 +998,7 @@ public class UserControllerTest {
         this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
                         .queryParam("user_id", "unexpected")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "3",
+                                        "user_id", "4",
                                         "authority", "ROLE_ADM"))))
                                 .authorities(new SimpleGrantedAuthority("ROLE_ADM")))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -990,9 +1027,9 @@ public class UserControllerTest {
                 """;
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
-                        .queryParam("user_id", "1")
+                        .queryParam("user_id", "2")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "3",
+                                        "user_id", "4",
                                         "authority", "ROLE_ADM"))))
                                 .authorities(new SimpleGrantedAuthority("ROLE_ADM")))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -1013,23 +1050,23 @@ public class UserControllerTest {
                 "new_jose@email.com", Profile.ProfileName.BASIC,
                 true, true, true, true);
 
-        User user = TestsHelper.UserHelper.userList().get(0);
+        User user = TestsHelper.UserHelper.userList().get(1);
         user.setUsername("newJose");
         user.setEmail("new_jose@email.com");
 
-        BDDMockito.given(this.userService.updateUser(1L, Profile.ProfileName.BASIC, userUpdateDTO))
+        BDDMockito.given(this.userService.updateUser(2L, Profile.ProfileName.BASIC, userUpdateDTO))
                 .willReturn(new UserDetailedInfo(user));
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "1",
+                                        "user_id", "2",
                                         "authority", "ROLE_BASIC"))))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_myuser:edit")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(userUpdateDTO))
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.user.id", is(1)))
+                .andExpect(jsonPath("$.user.id", is(2)))
                 .andExpect(jsonPath("$.user.firstName", is("Jose")))
                 .andExpect(jsonPath("$.user.lastName", is("Silva")))
                 .andExpect(jsonPath("$.user.username", is("newJose")))
@@ -1041,7 +1078,7 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.user.enabled", is(true)));
 
 
-        BDDMockito.verify(this.userService).updateUser(1L, Profile.ProfileName.BASIC, userUpdateDTO);
+        BDDMockito.verify(this.userService).updateUser(2L, Profile.ProfileName.BASIC, userUpdateDTO);
         BDDMockito.verifyNoMoreInteractions(this.userService);
 
     }
@@ -1055,23 +1092,23 @@ public class UserControllerTest {
                 "new_maria@email.com", Profile.ProfileName.MOD,
                 true, true, true, true);
 
-        User user = TestsHelper.UserHelper.userList().get(1);
+        User user = TestsHelper.UserHelper.userList().get(2);
         user.setUsername("newMaria");
         user.setEmail("new_maria@email.com");
 
-        BDDMockito.given(this.userService.updateUser(2L, Profile.ProfileName.MOD, userUpdateDTO))
+        BDDMockito.given(this.userService.updateUser(3L, Profile.ProfileName.MOD, userUpdateDTO))
                 .willReturn(new UserDetailedInfo(user));
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "2",
+                                        "user_id", "3",
                                         "authority", "ROLE_MOD"))))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_myuser:edit")))
                         .content(new ObjectMapper().writeValueAsString(userUpdateDTO))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.user.id", is(2)))
+                .andExpect(jsonPath("$.user.id", is(3)))
                 .andExpect(jsonPath("$.user.firstName", is("Maria")))
                 .andExpect(jsonPath("$.user.lastName", is("Silva")))
                 .andExpect(jsonPath("$.user.username", is("newMaria")))
@@ -1083,7 +1120,7 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.user.enabled", is(true)));
 
 
-        BDDMockito.verify(this.userService).updateUser(2L, Profile.ProfileName.MOD, userUpdateDTO);
+        BDDMockito.verify(this.userService).updateUser(3L, Profile.ProfileName.MOD, userUpdateDTO);
         BDDMockito.verifyNoMoreInteractions(this.userService);
 
     }
@@ -1097,23 +1134,23 @@ public class UserControllerTest {
                 "new_joao@email.com", Profile.ProfileName.ADM,
                 true, true, true, true);
 
-        User user = TestsHelper.UserHelper.userList().get(2);
+        User user = TestsHelper.UserHelper.userList().get(3);
         user.setUsername("newJoao");
         user.setEmail("new_joao@email.com");
 
-        BDDMockito.given(this.userService.updateUser(3L, Profile.ProfileName.ADM, userUpdateDTO))
+        BDDMockito.given(this.userService.updateUser(4L, Profile.ProfileName.ADM, userUpdateDTO))
                 .willReturn(new UserDetailedInfo(user));
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "3",
+                                        "user_id", "4",
                                         "authority", "ROLE_ADM"))))
                                 .authorities(new SimpleGrantedAuthority("ROLE_ADM")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(userUpdateDTO))
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.user.id", is(3)))
+                .andExpect(jsonPath("$.user.id", is(4)))
                 .andExpect(jsonPath("$.user.firstName", is("Joao")))
                 .andExpect(jsonPath("$.user.lastName", is("Silva")))
                 .andExpect(jsonPath("$.user.username", is("newJoao")))
@@ -1125,7 +1162,7 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.user.enabled", is(true)));
 
 
-        BDDMockito.verify(this.userService).updateUser(3L, Profile.ProfileName.ADM, userUpdateDTO);
+        BDDMockito.verify(this.userService).updateUser(4L, Profile.ProfileName.ADM, userUpdateDTO);
         BDDMockito.verifyNoMoreInteractions(this.userService);
 
     }
@@ -1139,24 +1176,24 @@ public class UserControllerTest {
                 "maria@email.com", Profile.ProfileName.MOD, true, true,
                 true, true);
 
-        User user = TestsHelper.UserHelper.userList().get(1);
+        User user = TestsHelper.UserHelper.userList().get(2);
         user.setUsername("maria_silva");
         user.setEmail("maria@email.com");
 
-        BDDMockito.given(this.userService.updateUser(2L, Profile.ProfileName.ADM, userUpdateDTO))
+        BDDMockito.given(this.userService.updateUser(3L, Profile.ProfileName.ADM, userUpdateDTO))
                 .willReturn(new UserDetailedInfo(user));
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
-                        .queryParam("user_id", "2")
+                        .queryParam("user_id", "3")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "3",
+                                        "user_id", "4",
                                         "authority", "ROLE_ADM"))))
                                 .authorities(new SimpleGrantedAuthority("ROLE_ADM")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(userUpdateDTO))
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.user.id", is(2)))
+                .andExpect(jsonPath("$.user.id", is(3)))
                 .andExpect(jsonPath("$.user.firstName", is("Maria")))
                 .andExpect(jsonPath("$.user.lastName", is("Silva")))
                 .andExpect(jsonPath("$.user.username", is("maria_silva")))
@@ -1168,7 +1205,7 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.user.enabled", is(true)));
 
 
-        BDDMockito.verify(this.userService).updateUser(2L, Profile.ProfileName.ADM, userUpdateDTO);
+        BDDMockito.verify(this.userService).updateUser(3L, Profile.ProfileName.ADM, userUpdateDTO);
         BDDMockito.verifyNoMoreInteractions(this.userService);
 
     }
@@ -1182,13 +1219,10 @@ public class UserControllerTest {
                 "new_maria@email.com", Profile.ProfileName.MOD, true, true,
                 true, true);
 
-        BDDMockito.given(this.userService.updateUser(2L, Profile.ProfileName.BASIC, userUpdateDTO))
-                .willReturn(new UserDetailedInfo(TestsHelper.UserHelper.userList().get(1)));
-
         this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
-                        .queryParam("user_id", "2")
+                        .queryParam("user_id", "3")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "1",
+                                        "user_id", "2",
                                         "authority", "ROLE_BASIC"))))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_myuser:edit")))
                         .content(new ObjectMapper().writeValueAsString(userUpdateDTO))
@@ -1208,13 +1242,13 @@ public class UserControllerTest {
                 "new_jose@email.com", Profile.ProfileName.BASIC, true, true,
                 true, true);
 
-        BDDMockito.given(this.userService.updateUser(1L, Profile.ProfileName.MOD, userUpdateDTO))
-                .willReturn(new UserDetailedInfo(TestsHelper.UserHelper.userList().get(0)));
+        BDDMockito.given(this.userService.updateUser(2L, Profile.ProfileName.MOD, userUpdateDTO))
+                .willReturn(new UserDetailedInfo(TestsHelper.UserHelper.userList().get(1)));
 
         this.mockMvc.perform(put("/forumhub.io/api/v1/users/edit")
-                        .queryParam("user_id", "1")
+                        .queryParam("user_id", "2")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "2",
+                                        "user_id", "3",
                                         "authority", "ROLE_MOD"))))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_myuser:edit")))
                         .content(new ObjectMapper().writeValueAsString(userUpdateDTO))
@@ -1245,7 +1279,7 @@ public class UserControllerTest {
     @Test
     void shouldFailIfUserHasNotSuitableAuthorityWhenDeleteUser() throws Exception {
         this.mockMvc.perform(delete("/forumhub.io/api/v1/users/delete")
-                        .with(jwt().jwt(jwt -> jwt.claim("user_id", "1")))
+                        .with(jwt().jwt(jwt -> jwt.claim("user_id", "2")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isForbidden());
@@ -1261,7 +1295,7 @@ public class UserControllerTest {
         this.mockMvc.perform(delete("/forumhub.io/api/v1/users/delete")
                         .queryParam("user_id", "unexpected")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "3",
+                                        "user_id", "4",
                                         "authority", "ROLE_ADM"))))
                                 .authorities(new SimpleGrantedAuthority("ROLE_ADM")))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -1277,35 +1311,12 @@ public class UserControllerTest {
                  "user_id param is null and has authority 'myuser:delete'")
     @Test
     void basicUserShouldDeleteYourUserWithSuccessIfHasSuitableAuthority() throws Exception {
-        BDDMockito.doNothing().when(this.userService).deleteUser(1L);
-
-        this.mockMvc.perform(delete("/forumhub.io/api/v1/users/delete")
-                        .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "1",
-                                        "authority", "ROLE_BASIC"))))
-                                .authorities(new SimpleGrantedAuthority("SCOPE_myuser:delete")))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .characterEncoding(StandardCharsets.UTF_8))
-                .andExpect(status().isOk())
-                .andExpect(content().json("{\"message\":\"HttpStatusCode OK\"}"));
-
-
-        BDDMockito.verify(this.userService).deleteUser(1L);
-        BDDMockito.verifyNoMoreInteractions(this.userService);
-
-    }
-
-
-    @DisplayName("MOD user should be able of delete your user with success if " +
-                 "user_id param is null and has authority 'myuser:delete'")
-    @Test
-    void modUserShouldDeleteYourUserWithSuccessIfHasSuitableAuthority() throws Exception {
         BDDMockito.doNothing().when(this.userService).deleteUser(2L);
 
         this.mockMvc.perform(delete("/forumhub.io/api/v1/users/delete")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "2",
-                                        "authority", "ROLE_MOD"))))
+                                        "authority", "ROLE_BASIC"))))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_myuser:delete")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -1319,15 +1330,62 @@ public class UserControllerTest {
     }
 
 
-    @DisplayName("ADM user should be able of delete your user with success if " +
-                 "user_id param is null")
+    @DisplayName("MOD user should be able of delete your user with success if " +
+                 "user_id param is null and has authority 'myuser:delete'")
     @Test
-    void admUserShouldDeleteYourUserWithSuccessIfUserIdParamIsNull() throws Exception {
+    void modUserShouldDeleteYourUserWithSuccessIfHasSuitableAuthority() throws Exception {
         BDDMockito.doNothing().when(this.userService).deleteUser(3L);
 
         this.mockMvc.perform(delete("/forumhub.io/api/v1/users/delete")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
                                         "user_id", "3",
+                                        "authority", "ROLE_MOD"))))
+                                .authorities(new SimpleGrantedAuthority("SCOPE_myuser:delete")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isOk())
+                .andExpect(content().json("{\"message\":\"HttpStatusCode OK\"}"));
+
+
+        BDDMockito.verify(this.userService).deleteUser(3L);
+        BDDMockito.verifyNoMoreInteractions(this.userService);
+
+    }
+
+
+    @DisplayName("ADM user should be able of delete your user with success if " +
+                 "user_id param is null")
+    @Test
+    void admUserShouldDeleteYourUserWithSuccessIfUserIdParamIsNull() throws Exception {
+        BDDMockito.doNothing().when(this.userService).deleteUser(4L);
+
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/users/delete")
+                        .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
+                                        "user_id", "4",
+                                        "authority", "ROLE_ADM"))))
+                                .authorities(new SimpleGrantedAuthority("ROLE_ADM")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andExpect(status().isOk())
+                .andExpect(content().json("{\"message\":\"HttpStatusCode OK\"}"));
+
+
+        BDDMockito.verify(this.userService).deleteUser(4L);
+        BDDMockito.verifyNoMoreInteractions(this.userService);
+
+    }
+
+
+    @DisplayName("ADM user should be able of delete other user with success if " +
+                 "user_id param isn't null")
+    @Test
+    void admUserShouldDeleteOtherUserWithSuccessIfUserIdParamIsNotNull() throws Exception {
+        BDDMockito.doNothing().when(this.userService).deleteUser(3L);
+
+        this.mockMvc.perform(delete("/forumhub.io/api/v1/users/delete")
+                        .queryParam("user_id", "3")
+                        .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
+                                        "user_id", "4",
                                         "authority", "ROLE_ADM"))))
                                 .authorities(new SimpleGrantedAuthority("ROLE_ADM")))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -1342,40 +1400,16 @@ public class UserControllerTest {
     }
 
 
-    @DisplayName("ADM user should be able of delete other user with success if " +
-                 "user_id param isn't null")
-    @Test
-    void admUserShouldDeleteOtherUserWithSuccessIfUserIdParamIsNotNull() throws Exception {
-        BDDMockito.doNothing().when(this.userService).deleteUser(3L);
-
-        this.mockMvc.perform(delete("/forumhub.io/api/v1/users/delete")
-                        .queryParam("user_id", "2")
-                        .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "3",
-                                        "authority", "ROLE_ADM"))))
-                                .authorities(new SimpleGrantedAuthority("ROLE_ADM")))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .characterEncoding(StandardCharsets.UTF_8))
-                .andExpect(status().isOk())
-                .andExpect(content().json("{\"message\":\"HttpStatusCode OK\"}"));
-
-
-        BDDMockito.verify(this.userService).deleteUser(2L);
-        BDDMockito.verifyNoMoreInteractions(this.userService);
-
-    }
-
-
     @DisplayName("Should raise exception if BASIC user to try delete other user " +
                  "or yourself with user_id param not null")
     @Test
     void shouldFailIfBasicUserTryToDeleteWithUserIdParamNotNull() throws Exception {
-        BDDMockito.doNothing().when(this.userService).deleteUser(2L);
+        BDDMockito.doNothing().when(this.userService).deleteUser(3L);
 
         this.mockMvc.perform(delete("/forumhub.io/api/v1/users/delete")
-                        .queryParam("user_id", "2")
+                        .queryParam("user_id", "3")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "1",
+                                        "user_id", "2",
                                         "authority", "ROLE_BASIC"))))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_myuser:delete")))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -1390,12 +1424,12 @@ public class UserControllerTest {
                  "or yourself with user_id param not null")
     @Test
     void shouldFailIfModUserTryToDeleteWithUserIdParamNotNull() throws Exception {
-        BDDMockito.doNothing().when(this.userService).deleteUser(1L);
+        BDDMockito.doNothing().when(this.userService).deleteUser(2L);
 
         this.mockMvc.perform(delete("/forumhub.io/api/v1/users/delete")
-                        .queryParam("user_id", "1")
+                        .queryParam("user_id", "2")
                         .with(jwt().jwt(jwt -> jwt.claims(map -> map.putAll(Map.of(
-                                        "user_id", "2",
+                                        "user_id", "3",
                                         "authority", "ROLE_MOD"))))
                                 .authorities(new SimpleGrantedAuthority("SCOPE_myuser:delete")))
                         .contentType(MediaType.APPLICATION_JSON)
