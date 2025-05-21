@@ -113,29 +113,6 @@ INSERT INTO hub.users
 (user_id, first_name, last_name, username, email, "password", is_account_non_expired, is_account_non_locked,
  is_credentials_non_expired, is_enabled, profile_id)
 SELECT 2,
-       'adm',
-       'adm',
-       'adm',
-       'adm@email.com',
-       '$2a$10$dKvyjxi6gbqvGWzchu0dDedZsvTzDvhKp6rf5xVBlTg62pwtZwfCO',
-       true,
-       true,
-       true,
-       true,
-       2
-WHERE NOT EXISTS (SELECT 1
-                  FROM hub.users
-                  WHERE user_id = 2
-                    AND first_name = 'adm'
-                    AND last_name = 'adm'
-                    AND username = 'adm'
-                    AND email = 'adm@email.com'
-                    AND password = '$2a$10$dKvyjxi6gbqvGWzchu0dDedZsvTzDvhKp6rf5xVBlTg62pwtZwfCO');
-
-INSERT INTO hub.users
-(user_id, first_name, last_name, username, email, "password", is_account_non_expired, is_account_non_locked,
- is_credentials_non_expired, is_enabled, profile_id)
-SELECT 3,
        'mod',
        'mod',
        'mod',
@@ -148,12 +125,35 @@ SELECT 3,
        3
 WHERE NOT EXISTS (SELECT 1
                   FROM hub.users
-                  WHERE user_id = 3
+                  WHERE user_id = 2
                     AND first_name = 'mod'
                     AND last_name = 'mod'
                     AND username = 'mod'
                     AND email = 'mod@email.com'
                     AND password = '$2a$10$FqrmHjfPd026BGwbV56JO.OiNVZPIhZL8Y5d7VI3.yTscDjdO62Ze');
+
+INSERT INTO hub.users
+(user_id, first_name, last_name, username, email, "password", is_account_non_expired, is_account_non_locked,
+ is_credentials_non_expired, is_enabled, profile_id)
+SELECT 3,
+       'adm',
+       'adm',
+       'adm',
+       'adm@email.com',
+       '$2a$10$dKvyjxi6gbqvGWzchu0dDedZsvTzDvhKp6rf5xVBlTg62pwtZwfCO',
+       true,
+       true,
+       true,
+       true,
+       4
+WHERE NOT EXISTS (SELECT 1
+                  FROM hub.users
+                  WHERE user_id = 3
+                    AND first_name = 'adm'
+                    AND last_name = 'adm'
+                    AND username = 'adm'
+                    AND email = 'adm@email.com'
+                    AND password = '$2a$10$dKvyjxi6gbqvGWzchu0dDedZsvTzDvhKp6rf5xVBlTg62pwtZwfCO');
 ----------------------------------------------------------//----------------------------------------------------------
 
 -->Creation function for declare anonymous author<--
