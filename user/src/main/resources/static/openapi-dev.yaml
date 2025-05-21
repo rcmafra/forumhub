@@ -29,7 +29,7 @@ info:
     [Repositório do Forumhub](https://github.com/rcmafra/forumhub)
 servers:
   - url: http://localhost:8081/forumhub.io/api/v1/
-    description: Ambiente de produção.
+    description: Ambiente de desenvolvimento.
 tags:
   - name: User
     description: Operações sobre algum usuário.
