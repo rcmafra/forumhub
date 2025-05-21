@@ -31,6 +31,8 @@ public class UserController {
 
     private final UserService userService;
 
+    private static final String USER_ID = "user_id";
+
     public UserController(UserService userService) {
         this.userService = userService;
     }
@@ -50,15 +52,15 @@ public class UserController {
 
         Profile.ProfileName claimUserRole = this.extractUserRoleClaim(jwt);
 
-        Long claimUserId = Long.parseLong(jwt.getClaim("user_id"));
+        Long claimUserId = Long.parseLong(jwt.getClaim(USER_ID));
 
         boolean isADM = claimUserRole.equals(Profile.ProfileName.ADM);
         boolean isMOD = claimUserRole.equals(Profile.ProfileName.MOD);
         boolean isBASIC = claimUserRole.equals(Profile.ProfileName.BASIC);
 
         Optional<UserDetailedInfo> userDetailedInfo =
-                isADM || isMOD ? Optional.of(this.userService.getDetailedInfoUser(Objects.requireNonNullElse(user_id, claimUserId))) :
-                        isBASIC && user_id == null ? Optional.of(this.userService.getDetailedInfoUser(claimUserId)) :
+                isBASIC && user_id == null ? Optional.of(this.userService.getDetailedInfoUser(claimUserId)) :
+                        isADM || isMOD ? Optional.of(this.userService.getDetailedInfoUser(Objects.requireNonNullElse(user_id, claimUserId))) :
                                 Optional.empty();
 
         if (userDetailedInfo.isPresent()) {
@@ -92,7 +94,7 @@ public class UserController {
 
         Profile.ProfileName claimUserRole = this.extractUserRoleClaim(jwt);
 
-        Long claimUserId = Long.parseLong(jwt.getClaim("user_id"));
+        Long claimUserId = Long.parseLong(jwt.getClaim(USER_ID));
 
         boolean isADM = claimUserRole.equals(Profile.ProfileName.ADM);
         boolean isMOD = claimUserRole.equals(Profile.ProfileName.MOD);
@@ -100,9 +102,9 @@ public class UserController {
 
 
         Optional<UserDetailedInfo> userDetailedInfo =
-                isADM ? Optional.of(this.userService.updateUser(Objects.requireNonNullElse(user_id, claimUserId),
+                (isBASIC || isMOD) && user_id == null ? Optional.of(this.userService.updateUser(claimUserId,
                         claimUserRole, userUpdateDTO)) :
-                        (isBASIC || isMOD) && user_id == null ? Optional.of(this.userService.updateUser(claimUserId,
+                        isADM ? Optional.of(this.userService.updateUser(Objects.requireNonNullElse(user_id, claimUserId),
                                 claimUserRole, userUpdateDTO)) : Optional.empty();
 
         if (userDetailedInfo.isPresent()) {
@@ -118,18 +120,18 @@ public class UserController {
 
         Profile.ProfileName claimUserRole = this.extractUserRoleClaim(jwt);
 
-        Long claimUserId = Long.parseLong(jwt.getClaim("user_id"));
+        Long claimUserId = Long.parseLong(jwt.getClaim(USER_ID));
 
         boolean isBASIC = claimUserRole.equals(Profile.ProfileName.BASIC);
         boolean isMOD = claimUserRole.equals(Profile.ProfileName.MOD);
         boolean isADM = claimUserRole.equals(Profile.ProfileName.ADM);
 
 
-        if (isADM) {
-            this.userService.deleteUser(Objects.requireNonNullElse(user_id, claimUserId));
-            return ResponseEntity.ok(new HttpStatusMessage("HttpStatusCode OK"));
-        } else if ((isBASIC || isMOD) && Objects.isNull(user_id)) {
+        if ((isBASIC || isMOD) && user_id == null) {
             this.userService.deleteUser(claimUserId);
+            return ResponseEntity.ok(new HttpStatusMessage("HttpStatusCode OK"));
+        } else if (isADM) {
+            this.userService.deleteUser(Objects.requireNonNullElse(user_id, claimUserId));
             return ResponseEntity.ok(new HttpStatusMessage("HttpStatusCode OK"));
         }
         throw this.raiseMalFormatedParamUserException();
