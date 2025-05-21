@@ -1,14 +1,17 @@
 package com.raul.forumhub.user.security.password;
 
+import com.raul.forumhub.user.exception.PasswordRulesException;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.passay.*;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 import java.io.IOException;
 import java.util.Properties;
 
+@Component
 public class PasswordConstraintValidator implements ConstraintValidator<PasswordRules, String> {
 
     @Override
@@ -30,7 +33,6 @@ public class PasswordConstraintValidator implements ConstraintValidator<Password
 
         if (result.isValid()) {
             return true;
-
         }
 
         context.buildConstraintViolationWithTemplate(passwordValidator.getMessages(result)
@@ -45,7 +47,7 @@ public class PasswordConstraintValidator implements ConstraintValidator<Password
             ClassPathResource resource = new ClassPathResource("translated-passwd-rule-msg.properties");
             properties.load(resource.getInputStream());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new PasswordRulesException("Falha interna durante a validação da password");
         }
         return new PropertiesMessageResolver(properties);
 
