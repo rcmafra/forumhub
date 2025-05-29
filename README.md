@@ -104,6 +104,15 @@ nos módulos `topic` e `user` - para conhecer os detalhes de cada endpoint:
 >Observe que após 60s sem interação em um dos módulos, este ficará inativo, e será necessário
 o reenvio da requisição para o endpoint `<base_url>/actuator/health` novamente para o retorno de sua atividade.
 
+> Dois usuários com elevação estão disponíveis para testes: ADM (perfil ADM) e MOD (perfil MOD). 
+> 
+> <ins>Credenciais do user ADM</ins>:
+> * user: adm@email.com
+> * password: adm123
+>
+> <ins>Credenciais do user MOD</ins>:
+> * user: mod@email.com
+> * password: mod123
 
 ## Tecnologias Utilizadas
 
@@ -134,6 +143,7 @@ cd forumhub
 ### Execução do PostresSQL com Docker
 
 Dentro do diretório do projeto, execute a instrução abaixo para a inicialização do banco de dados PostegreSQL em um contêiner do Docker.
+Veja que as credenciais da base de dados estão descritos em [.env file](https://github.com/rcmafra/forumhub/blob/main/.env)
 ```shell
 docker-compose --env-file .env up --build
 ```
@@ -160,6 +170,8 @@ Após acessar o diretório de cada módulo, execute a instrução a seguir em ca
 ```shell
 .\mvnw spring-boot:run -Dspring-boot.run.profiles=dev
 ```
+
+Os usuários com elevação são os mesmos descritos em [Inicialização dos módulos do ambiente de produção](#Inicialização-dos-módulos-do-ambiente-de-produção).
 
 ## Autenticação e Segurança
 
