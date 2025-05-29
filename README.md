@@ -144,24 +144,22 @@ Para cada módulo, deverá ser utilizado um novo shell (Terminal, CMD, Powershel
 Caso o shell utilizado seja um bash, substituia `.\mvnw` por `./mvnw`, por exemplo:
 `./mvnw spring-boot:run -Dspring-boot.run.profiles=dev`
 
-Acesse o diretório do módulo em um shell na ordem em que se segue, e execute a instrução a seguir:
+Acesse o diretório do módulo em um shell na ordem em que se segue. Lembre-se de abrir um novo shell para cada módulo.
 
-1. `.../forumhub/authorization-server`
-2. `.../forumhub/topic`
-3. `.../forumhub/user`
+```shell
+cd .../forumhub/authorization-server
+```
+```shell
+cd .../forumhub/topic
+```
+```shell
+cd .../forumhub/user
+```
 
+Após acessar o diretório de cada módulo, execute a instrução a seguir em cada um deles para inicializar.
 ```shell
 .\mvnw spring-boot:run -Dspring-boot.run.profiles=dev
 ```
-
-
-Por exemplo, em um shell, após clonar o projeto, execute as instruções a seguir no diretório base em que o projeto foi clonado:
-``` shell
-cd <diretorio_base>/forumhub/authorization-server
-.\mvnw spring-boot:run -Dspring-boot.run.profiles=dev
-```
-Faça o mesmo processo para os módulos `forumhub/topic` e `forumhub/user` na ordem especificada anteriormente.
-
 
 ## Autenticação e Segurança
 
