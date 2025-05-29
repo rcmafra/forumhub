@@ -175,6 +175,7 @@ Após acessar o diretório de cada módulo, execute a instrução a seguir em ca
 * Coverage report: `JaCoCo`
 
 Para a execução dos testes dos módulos `topic` e `user`, execute a instrução abaixo no diretório de cada módulo a partir de um shell.
+Veja que é necessário interromper os módulos inicializados anteriormente antes da execução dos testes.
 ```shell 
 .\mvnw verify
 ```
