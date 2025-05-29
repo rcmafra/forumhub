@@ -55,7 +55,7 @@ class UserClientRequestTest {
     static void authorizationServerSetup() {
         authorizationServer = new MockWebServer();
         authorizationServer.setDispatcher(MockAuthorizationServer.dispatcher);
-        authorizationServer.start(8082);
+        authorizationServer.start(8092);
 
     }
 

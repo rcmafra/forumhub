@@ -20,7 +20,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://127.0.0.1:8082
+          issuer-uri: http://127.0.0.1:8092
 
 #Client User API registration
       client:
@@ -35,7 +35,7 @@ spring:
             scope: myuser:read
         provider:
           auth-server:
-            issuer-uri: http://127.0.0.1:8082
+            issuer-uri: http://127.0.0.1:8092
 
 #User client URL
 forumhub:

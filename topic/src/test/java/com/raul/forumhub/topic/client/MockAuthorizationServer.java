@@ -29,7 +29,7 @@ public class MockAuthorizationServer {
 
     static RSAKey rsaKey;
 
-    final static String JWT;
+    static final String JWT;
 
 
     static {
@@ -49,10 +49,10 @@ public class MockAuthorizationServer {
             Assert.notNull(JWT, "Jwt cannot be null");
 
             final Map<String, Object> wellKnowEndpoints = Map.of(
-                    "token_endpoint", "http://127.0.0.1:8082/oauth2/token",
-                    "issuer", "http://127.0.0.1:8082",
+                    "token_endpoint", "http://127.0.0.1:8092/oauth2/token",
+                    "issuer", "http://127.0.0.1:8092",
                     "subject_types_supported", List.of("public"),
-                    "jwks_uri", "http://127.0.0.1:8082/oauth2/jwks"
+                    "jwks_uri", "http://127.0.0.1:8092/oauth2/jwks"
 
             );
 
