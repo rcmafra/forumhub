@@ -127,15 +127,15 @@ o reenvio da requisição para o endpoint `<base_url>/actuator/health` novamente
 
 Clone o projeto e acesse o diretório `forumhub`.
 ```shell
-> git clone https://github.com/rcmafra/forumhub.git
-> cd forumhub
+git clone https://github.com/rcmafra/forumhub.git
+cd forumhub
 ```
 
 ### Execução do PostresSQL com Docker
 
 Dentro do diretório do projeto, execute a instrução abaixo para a inicialização do banco de dados PostegreSQL em um contêiner do Docker.
 ```shell
-> docker-compose --env-file .env up --build
+docker-compose --env-file .env up --build
 ```
 
 ### Execução dos módulos
@@ -151,14 +151,14 @@ Acesse o diretório do módulo em um shell na ordem em que se segue, e execute a
 3. `.../forumhub/user`
 
 ```shell
-> .\mvnw spring-boot:run -Dspring-boot.run.profiles=dev
+.\mvnw spring-boot:run -Dspring-boot.run.profiles=dev
 ```
 
 
 Por exemplo, em um shell, após clonar o projeto, execute as instruções a seguir no diretório base em que o projeto foi clonado:
 ``` shell
-> cd <diretorio_base>/forumhub/authorization-server
-> .\mvnw spring-boot:run -Dspring-boot.run.profiles=dev
+cd <diretorio_base>/forumhub/authorization-server
+.\mvnw spring-boot:run -Dspring-boot.run.profiles=dev
 ```
 Faça o mesmo processo para os módulos `forumhub/topic` e `forumhub/user` na ordem especificada anteriormente.
 
@@ -178,7 +178,7 @@ Faça o mesmo processo para os módulos `forumhub/topic` e `forumhub/user` na or
 
 Para a execução dos testes dos módulos `topic` e `user`, execute a instrução abaixo no diretório de cada módulo a partir de um shell.
 ```shell 
-> .\mvnw verify
+.\mvnw verify
 ```
 
 
