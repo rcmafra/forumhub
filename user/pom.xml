@@ -137,6 +137,7 @@
                             <excludes>
                                 <exclude>com/raul/forumhub/user/UserApplication*.class</exclude>
                                 <exclude>com/raul/forumhub/user/security/UserSecurityConfig*.class</exclude>
+                                <exclude>com/raul/forumhub/user/exception/handler/GlobalExceptionHandler*.class</exclude>
                             </excludes>
                         </configuration>
                     </execution>

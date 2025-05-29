@@ -166,6 +166,7 @@
                             <excludes>
                                 <exclude>com/raul/forumhub/topic/TopicApplication*.class</exclude>
                                 <exclude>com/raul/forumhub/topic/security/TopicSecurityConfig*.class</exclude>
+                                <exclude>com/raul/forumhub/topic/exception/handler/GlobalExceptionHandler*.class</exclude>
                             </excludes>
                         </configuration>
                     </execution>
@@ -179,6 +180,7 @@
                             <excludes>
                                 <exclude>com/raul/forumhub/topic/TopicApplication*.class</exclude>
                                 <exclude>com/raul/forumhub/topic/security/TopicSecurityConfig*.class</exclude>
+                                <exclude>com/raul/forumhub/topic/client/UserClientRequest*.class</exclude>
                             </excludes>
                         </configuration>
                     </execution>
