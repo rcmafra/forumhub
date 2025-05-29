@@ -94,7 +94,7 @@ SELECT 1,
        'Anonymous',
        'anonymous',
        'anonymous@email.com',
-       '$2a$10$xot6zqrQ3S8JHWEydAHtL.mN3/0YNM5AWjoL2sxnja/3bnnpXTucm',
+       '$2a$10$e.Mv6IhAvS2ueBEsi66fZeZl0S/WZW8vcRDBlH1jUSWvX0EiRhLFe',
        false,
        false,
        false,
@@ -107,7 +107,7 @@ WHERE NOT EXISTS (SELECT 1
                     AND last_name = 'Anonymous'
                     AND username = 'anonymous'
                     AND email = 'anonymous@email.com'
-                    AND password = '$2a$10$xot6zqrQ3S8JHWEydAHtL.mN3/0YNM5AWjoL2sxnja/3bnnpXTucm');
+                    AND password = '$2a$10$e.Mv6IhAvS2ueBEsi66fZeZl0S/WZW8vcRDBlH1jUSWvX0EiRhLFe');
 
 INSERT INTO hub.users
 (user_id, first_name, last_name, username, email, "password", is_account_non_expired, is_account_non_locked,
@@ -140,7 +140,7 @@ SELECT 3,
        'adm',
        'adm',
        'adm@email.com',
-       '$2a$10$dKvyjxi6gbqvGWzchu0dDedZsvTzDvhKp6rf5xVBlTg62pwtZwfCO',
+       '$2a$10$I5erH3K9BMliXtHe1.l7B.DGNGBzqdW2pUStIfnNtPYguWYEyRRaO',
        true,
        true,
        true,
@@ -153,7 +153,7 @@ WHERE NOT EXISTS (SELECT 1
                     AND last_name = 'adm'
                     AND username = 'adm'
                     AND email = 'adm@email.com'
-                    AND password = '$2a$10$dKvyjxi6gbqvGWzchu0dDedZsvTzDvhKp6rf5xVBlTg62pwtZwfCO');
+                    AND password = '$2a$10$I5erH3K9BMliXtHe1.l7B.DGNGBzqdW2pUStIfnNtPYguWYEyRRaO');
 ----------------------------------------------------------//----------------------------------------------------------
 
 -->Creation function for declare anonymous author<--
