@@ -179,7 +179,14 @@ Veja que é necessário interromper os módulos inicializados anteriormente ante
 ```shell 
 .\mvnw verify
 ```
+O relatório do code coverage estará disponível nos caminhos que se segue:
+* Caminho do teste de unitário: `.../<base_path_module>/target/site/jacoco/index.html`
+* Caminho do teste de integração: `.../<base_path_module>/target/site/jacoco-it/index.html` 
 
+Exemplo:
+```shell
+cd .../forumhub/topic/target/site/jacoco/index.html
+```
 
 ## Endpoints Principais
 
